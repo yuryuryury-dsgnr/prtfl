@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dopas.dp.ua — Yury</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F7F4; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ——— STICKY HEADER ——— */
+    .case-header {
+      position: sticky; top: 0; z-index: 100;
+      background: #F8F7F4;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 16px 24px;
+    }
+    .case-header-inner {
+      max-width: 760px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .case-header-back {
+      font-size: 14px; font-weight: 500; color: #1A1A1A;
+    }
+    .case-header-back:hover { color: #6B6B6B; }
+    .case-header-name {
+      font-size: 14px; color: #9A9A9A;
+    }
+
+    /* ——— CONTAINER ——— */
+    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+    /* ——— HERO ——— */
+    .case-hero { padding: 80px 0 48px; }
+    .case-hero h1 {
+      font-size: 48px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px;
+    }
+    .case-hero-meta { font-size: 14px; color: #9A9A9A; margin-bottom: 8px; }
+    .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
+    .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
+    .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
+
+    .case-hero-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #EEEDEA;
+      border-radius: 12px;
+      margin-top: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .case-hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 12px;
+    }
+    .case-hero-image-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #C5C4C0;
+      font-size: 14px;
+    }
+
+    /* ——— SECTIONS ——— */
+    .case-section { padding: 80px 0 0; }
+    .section-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 8px;
+    }
+    .section-heading {
+      font-size: 24px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 24px;
+    }
+    .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
+
+    /* ——— TIMELINE ——— */
+    .timeline { display: flex; gap: 0; margin-top: 32px; position: relative; }
+    .timeline::before {
+      content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
+    }
+    .timeline-step {
+      flex: 1; position: relative; padding-top: 48px; padding-right: 16px;
+    }
+    .timeline-step::before {
+      content: ''; position: absolute; top: 18px; left: 0;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #1A1A1A; border: 3px solid #F8F7F4;
+    }
+    .timeline-number { font-size: 12px; font-weight: 500; color: #9A9A9A; margin-bottom: 4px; }
+    .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
+    .timeline-tag {
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC;
+      padding: 3px 8px; border-radius: 4px;
+    }
+
+    /* ——— CARD GRID ——— */
+    .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .card-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+    .card {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 24px;
+    }
+    .card-number { font-size: 14px; font-weight: 500; color: #3B82F6; margin-bottom: 8px; }
+    .card-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .card-desc { font-size: 14px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .card-tag {
+      font-size: 11px; color: #6B6B6B; background: #F0EFEC;
+      padding: 3px 8px; border-radius: 4px;
+    }
+
+    /* Usability fix cards */
+    .fix-tag {
+      font-size: 11px; color: #16a34a; background: rgba(22,163,74,0.08);
+      padding: 3px 8px; border-radius: 4px; display: inline-block; margin-top: 8px;
+    }
+
+    /* ——— FLOW SVG CONTAINER ——— */
+    .flow-container { margin-top: 24px; text-align: center; }
+    .flow-caption { font-size: 13px; color: #9A9A9A; margin-top: 16px; text-align: center; }
+
+    /* ——— WIREFRAMES / MOCKUPS GRID ——— */
+    .wireframe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+    .wireframe-item {}
+    .wireframe-placeholder {
+      background: #E8E7E4; border-radius: 8px; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #9A9A9A; font-weight: 500;
+    }
+    .wireframe-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
+    .wireframe-full { grid-column: 1 / -1; max-width: 400px; margin: 0 auto; width: 100%; }
+
+    /* ——— BEFORE / AFTER ——— */
+    .ba-pair { margin-bottom: 40px; }
+    .ba-pair-title { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
+    .ba-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .ba-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #9A9A9A; margin-bottom: 8px;
+    }
+    .ba-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
+
+    /* ——— OUTCOME ——— */
+    .outcome-text { color: #6B6B6B; margin-bottom: 24px; max-width: 640px; }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .cta-pill {
+      display: inline-block; font-size: 14px; font-weight: 500;
+      padding: 10px 24px; border: 1.5px solid #1A1A1A;
+      border-radius: 100px; transition: all 200ms ease;
+    }
+    .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
+
+    /* ——— REFLECTION ——— */
+    .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
+    .reflection-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .reflection-text { font-size: 14px; color: #6B6B6B; line-height: 1.6; }
+
+    /* ——— NEXT CASE ——— */
+    .next-case {
+      margin-top: 80px; padding: 32px 0;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .next-case-label { font-size: 14px; color: #9A9A9A; }
+    .next-case-name { font-size: 14px; font-weight: 500; }
+    .next-case-name:hover { color: #6B6B6B; }
+
+    /* ——— FOOTER ——— */
+    .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
+    .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+    .footer-name { font-weight: 500; }
+    .footer-role { color: #6B6B6B; }
+    .footer-right { display: flex; gap: 24px; color: #6B6B6B; }
+    .footer-right a { position: relative; }
+    .footer-right a::after {
+      content: ''; position: absolute; bottom: -2px; left: 0;
+      width: 0; height: 1px; background: #6B6B6B; transition: width 200ms ease;
+    }
+    .footer-right a:hover::after { width: 100%; }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 768px) {
+      .case-hero h1 { font-size: 36px; }
+      .card-grid-3 { grid-template-columns: 1fr; }
+      .card-grid-2 { grid-template-columns: 1fr; }
+      .wireframe-grid { grid-template-columns: 1fr; }
+      .ba-columns { grid-template-columns: 1fr; }
+      .reflection-grid { grid-template-columns: 1fr; }
+      .timeline {
+        flex-direction: column; gap: 24px; padding-left: 24px;
+      }
+      .timeline::before {
+        top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto;
+      }
+      .timeline-step { padding-top: 0; padding-left: 16px; padding-right: 0; }
+      .timeline-step::before { top: 4px; left: -24px; }
+      .next-case { flex-direction: column; gap: 8px; text-align: center; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-right { flex-wrap: wrap; justify-content: center; }
+      .wireframe-full { max-width: 100%; }
+      .case-section { padding: 56px 0 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="case-header">
+    <div class="case-header-inner">
+      <a href="../index.html" class="case-header-back">← Back</a>
+      <span class="case-header-name">dopas.dp.ua</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="container">
+    <section class="case-hero">
+      <h1>dopas.dp.ua</h1>
+      <p class="case-hero-meta">Web platform · 2020</p>
+      <p class="case-hero-role">Lead UX — research, flows, prototyping</p>
+      <p class="case-hero-result">Designed from zero — platform launched and generating revenue</p>
+      <hr class="case-hero-divider">
+      <div class="case-hero-image">
+        <!-- <img src="../images/dopas-hero.jpg" alt="dopas.dp.ua project overview"> -->
+        <span class="case-hero-image-placeholder">Cover image coming soon</span>
+      </div>
+    </section>
+
+    <!-- 01 — PROBLEM & CONTEXT -->
+    <section class="case-section">
+      <p class="section-label">01 — Problem & Context</p>
+      <h2 class="section-heading">No online option existed</h2>
+      <p class="section-text">Before dopas.dp.ua, bus tickets in Dnipro were sold exclusively offline — at ticket offices and directly from drivers. For a city with diverse ridership spanning all age groups, this meant queues, cash dependency, and no record of purchase.</p>
+      <p class="section-text">The challenge: build an online ticketing platform from zero that works for everyone — from teenagers booking on a phone to elderly passengers unfamiliar with digital services.</p>
+    </section>
+
+    <!-- 02 — PROCESS -->
+    <section class="case-section">
+      <p class="section-label">02 — Process</p>
+      <h2 class="section-heading">From research to handoff</h2>
+      <div class="timeline">
+        <div class="timeline-step">
+          <p class="timeline-number">1.0</p>
+          <p class="timeline-title">Market Analysis</p>
+          <p class="timeline-desc">Audited existing ticketing platforms in Ukraine and nearby markets.</p>
+          <span class="timeline-tag">Competitive matrix</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">2.0</p>
+          <p class="timeline-title">Wireframes & Lo-fi</p>
+          <p class="timeline-desc">Mapped core user flows — search, seat selection, checkout, ticket storage.</p>
+          <span class="timeline-tag">User flow · Lo-fi wireframes</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">3.0</p>
+          <p class="timeline-title">Usability Study</p>
+          <p class="timeline-desc">Tested lo-fi prototype with users across age groups.</p>
+          <span class="timeline-tag">Usability report</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">4.0</p>
+          <p class="timeline-title">Mockups & Hi-fi</p>
+          <p class="timeline-desc">Translated validated flows into high-fidelity screens.</p>
+          <span class="timeline-tag">Hi-fi prototype</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">5.0</p>
+          <p class="timeline-title">Testing & Iterating</p>
+          <p class="timeline-desc">Refined edge cases — returns, errors, empty states.</p>
+          <span class="timeline-tag">Iteration log</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">6.0</p>
+          <p class="timeline-title">Hand-off</p>
+          <p class="timeline-desc">Full specs, annotations, developer handoff.</p>
+          <span class="timeline-tag">Figma handoff</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — MARKET ANALYSIS -->
+    <section class="case-section">
+      <p class="section-label">03 — Artifacts: Market Analysis</p>
+      <h2 class="section-heading">What the competition looked like</h2>
+      <div class="card-grid-3">
+        <div class="card">
+          <p class="card-number">01</p>
+          <p class="card-title">Direct competitive audit</p>
+          <p class="card-desc">Reviewed 6 Ukrainian and regional bus ticketing platforms — Busfor, Infobus, Ukrzaliznytsia and others.</p>
+          <div class="card-tags">
+            <span class="card-tag">6 platforms</span>
+            <span class="card-tag">UX audit</span>
+            <span class="card-tag">heuristic review</span>
+          </div>
+        </div>
+        <div class="card">
+          <p class="card-number">02</p>
+          <p class="card-title">Comparative analysis</p>
+          <p class="card-desc">Compared booking flows across competitors — search, seat selection, payment, post-purchase experience.</p>
+          <div class="card-tags">
+            <span class="card-tag">flow comparison</span>
+            <span class="card-tag">friction mapping</span>
+            <span class="card-tag">benchmarking</span>
+          </div>
+        </div>
+        <div class="card">
+          <p class="card-number">03</p>
+          <p class="card-title">Key insight</p>
+          <p class="card-desc">Most platforms forced 7+ steps before purchase. None offered ticket storage or self-service returns. This defined dopas's differentiators from day one.</p>
+          <div class="card-tags">
+            <span class="card-tag">7+ steps avg.</span>
+            <span class="card-tag">no returns flow</span>
+            <span class="card-tag">opportunity gap</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — USER FLOW -->
+    <section class="case-section">
+      <p class="section-label">04 — Artifacts: User Flow</p>
+      <h2 class="section-heading">End-to-end booking flow</h2>
+      <div class="flow-container">
+        <svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;">
+          <!-- Row 1: main flow -->
+          <circle cx="50" cy="60" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>
+          <text x="50" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Start</text>
+          <line x1="70" y1="60" x2="120" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <rect x="120" y="40" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="175" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Open website</text>
+          <line x1="230" y1="60" x2="280" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <rect x="280" y="40" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="335" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Search route</text>
+          <line x1="390" y1="60" x2="440" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <rect x="440" y="40" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="495" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">View results</text>
+          <line x1="550" y1="60" x2="600" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <!-- Decision diamond -->
+          <polygon points="660,20 720,60 660,100 600,60" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="660" y="56" text-anchor="middle" font-size="9" font-family="Inter" fill="#1A1A1A">Select</text>
+          <text x="660" y="68" text-anchor="middle" font-size="9" font-family="Inter" fill="#1A1A1A">trip?</text>
+
+          <!-- Yes path -->
+          <line x1="720" y1="60" x2="770" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="745" y="52" text-anchor="middle" font-size="9" font-family="Inter" fill="#16a34a">Yes</text>
+
+          <rect x="770" y="40" width="100" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="820" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Select seat</text>
+
+          <!-- No path (dashed) -->
+          <line x1="660" y1="100" x2="660" y2="140" stroke="#1A1A1A" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="675" y="125" font-size="9" font-family="Inter" fill="#dc2626">No</text>
+          <rect x="605" y="140" width="110" height="36" rx="6" stroke="#9A9A9A" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
+          <text x="660" y="162" text-anchor="middle" font-size="9" font-family="Inter" fill="#9A9A9A">Return to search</text>
+
+          <!-- Row 2 -->
+          <line x1="820" y1="80" x2="820" y2="120" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <rect x="760" y="120" width="120" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="820" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Passenger info</text>
+          <line x1="760" y1="140" x2="700" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
+
+          <rect x="590" y="120" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="645" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Payment</text>
+          <line x1="590" y1="140" x2="540" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
+
+          <rect x="420" y="120" width="120" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="480" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Confirmation</text>
+          <line x1="420" y1="140" x2="370" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
+
+          <rect x="250" y="120" width="120" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="310" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Download ticket</text>
+          <line x1="250" y1="140" x2="200" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
+
+          <circle cx="170" cy="140" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>
+          <circle cx="170" cy="140" r="14" stroke="#1A1A1A" stroke-width="2" fill="none"/>
+          <text x="170" y="144" text-anchor="middle" font-size="9" font-family="Inter" fill="#1A1A1A">End</text>
+
+          <!-- Legend -->
+          <rect x="30" y="220" width="40" height="1.5" fill="#1A1A1A"/>
+          <text x="80" y="224" font-size="10" font-family="Inter" fill="#6B6B6B">Main flow</text>
+          <line x1="30" y1="248" x2="70" y2="248" stroke="#9A9A9A" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="80" y="252" font-size="10" font-family="Inter" fill="#6B6B6B">Return path</text>
+          <polygon points="45,275 55,270 55,280" fill="#1A1A1A"/>
+          <text x="80" y="278" font-size="10" font-family="Inter" fill="#6B6B6B">Direction</text>
+
+          <!-- Arrow markers -->
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#1A1A1A"/>
+            </marker>
+            <marker id="arrowL" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto">
+              <polygon points="8 0, 0 3, 8 6" fill="#1A1A1A"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <p class="flow-caption">End-to-end booking flow — from opening the website to downloading a ticket. Dashed line shows the return path when user decides not to purchase.</p>
+    </section>
+
+    <!-- 05 — USABILITY FINDINGS -->
+    <section class="case-section">
+      <p class="section-label">05 — Artifacts: Usability Findings</p>
+      <h2 class="section-heading">What testing revealed</h2>
+      <div class="card-grid-2">
+        <div class="card">
+          <p class="card-number">01</p>
+          <p class="card-title">Seat selection too late in the flow</p>
+          <p class="card-desc">Users tried to go back mid-form to choose seats, causing confusion and drop-off.</p>
+          <span class="fix-tag">Fix: Moved seat selection before passenger info</span>
+        </div>
+        <div class="card">
+          <p class="card-number">02</p>
+          <p class="card-title">No luggage option at booking</p>
+          <p class="card-desc">Multiple users abandoned the flow thinking the platform didn't support extra luggage.</p>
+          <span class="fix-tag">Fix: Luggage toggle added on passenger info screen</span>
+        </div>
+        <div class="card">
+          <p class="card-number">03</p>
+          <p class="card-title">Price not visible until checkout</p>
+          <p class="card-desc">Total cost including fees wasn't shown on results page — felt like hidden costs, reducing trust.</p>
+          <span class="fix-tag">Fix: Full price shown on search results card</span>
+        </div>
+        <div class="card">
+          <p class="card-number">04</p>
+          <p class="card-title">Return ticket not discoverable</p>
+          <p class="card-desc">3 of 5 users assumed one-way was the only option.</p>
+          <span class="fix-tag">Fix: Round-trip toggle added to homepage search</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — WIREFRAMES -->
+    <section class="case-section">
+      <p class="section-label">06 — Wireframes</p>
+      <h2 class="section-heading">Defining the structure</h2>
+      <p class="section-text">Lo-fi wireframes defined the core structure before any visual design decisions were made.</p>
+      <div class="wireframe-grid">
+        <div class="wireframe-item">
+          <div class="wireframe-placeholder">Homepage</div>
+          <p class="wireframe-caption">Entry point. Search widget front and centre — destination, date, passenger count.</p>
+        </div>
+        <div class="wireframe-item">
+          <div class="wireframe-placeholder">Search results</div>
+          <p class="wireframe-caption">Filterable list. Price, duration, and departure time visible without opening the ticket.</p>
+        </div>
+        <div class="wireframe-item">
+          <div class="wireframe-placeholder">Seat selection</div>
+          <p class="wireframe-caption">Interactive bus map. Colour-coded by availability. One tap to select.</p>
+        </div>
+        <div class="wireframe-item">
+          <div class="wireframe-placeholder">Passenger info</div>
+          <p class="wireframe-caption">Minimal form — only required fields. Luggage toggle added after usability study.</p>
+        </div>
+        <div class="wireframe-item wireframe-full">
+          <div class="wireframe-placeholder">Checkout</div>
+          <p class="wireframe-caption">Full price breakdown and cancellation policy visible before payment.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 — MOCKUPS: BEFORE / AFTER -->
+    <section class="case-section">
+      <p class="section-label">07 — Mockups: Before / After</p>
+      <h2 class="section-heading">What changed after testing</h2>
+      <p class="section-text">High-fidelity screens reflecting changes made after two rounds of usability testing.</p>
+
+      <div style="margin-top: 32px;">
+        <div class="ba-pair">
+          <p class="ba-pair-title">01 — Homepage</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Search buried below fold, no round-trip option</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Search front and centre, round-trip toggle added</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">02 — Search results</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Price shown without fees, no filters</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Full price on card, filters by time and price</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">03 — Seat selection</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Appeared after passenger info form</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Moved before passenger info — matches mental model</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">04 — Passenger info</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">8 fields, optional and required mixed</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">5 required fields, luggage toggle inline</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">05 — Checkout</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">First time user sees total with fees</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Full breakdown + cancellation policy upfront</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 — OUTCOME -->
+    <section class="case-section">
+      <p class="section-label">08 — Outcome</p>
+      <h2 class="section-heading">Live and generating revenue</h2>
+      <p class="outcome-text">Launched in late autumn 2020. Users responded positively — the platform filled a real gap in the local market where no online alternative existed before.</p>
+      <p class="outcome-text">dopas.dp.ua has been live and generating revenue since launch.</p>
+      <div class="cta-row">
+        <a href="https://www.dopas.dp.ua/" target="_blank" rel="noopener" class="cta-pill">See it live →</a>
+      </div>
+    </section>
+
+    <!-- 09 — REFLECTION -->
+    <section class="case-section">
+      <p class="section-label">09 — Reflection</p>
+      <h2 class="section-heading">Looking back</h2>
+      <div class="reflection-grid">
+        <div>
+          <p class="reflection-title">What I'd do differently</p>
+          <p class="reflection-text">Start with a design system from day one. Building components ad hoc slowed the hi-fi phase and created inconsistencies fixed during handoff.</p>
+        </div>
+        <div>
+          <p class="reflection-title">What I learned</p>
+          <p class="reflection-text">Usability testing is non-negotiable — even two sessions caught four critical flow issues that would have shipped as bugs. No amount of design intuition replaces watching a real user get stuck.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEXT CASE -->
+    <a href="dobrodoc.html" class="next-case">
+      <span class="next-case-label">Next case →</span>
+      <span class="next-case-name">DobroDoc+ — Online Medical App</span>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><span class="footer-name">Yury</span> · <span class="footer-role">Lead UX Designer</span></div>
+      <div class="footer-right">
+        <a href="mailto:hello@yury.design">Email</a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <span>Batumi, GE</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

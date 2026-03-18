@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DobroDoc+ — Yury</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F7F4; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ——— STICKY HEADER ——— */
+    .case-header {
+      position: sticky; top: 0; z-index: 100;
+      background: #F8F7F4;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 16px 24px;
+    }
+    .case-header-inner {
+      max-width: 760px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .case-header-back { font-size: 14px; font-weight: 500; color: #1A1A1A; }
+    .case-header-back:hover { color: #6B6B6B; }
+    .case-header-name { font-size: 14px; color: #9A9A9A; }
+
+    /* ——— CONTAINER ——— */
+    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+    /* ——— HERO ——— */
+    .case-hero { padding: 80px 0 48px; }
+    .case-hero h1 { font-size: 48px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+    .case-hero-meta { font-size: 14px; color: #9A9A9A; margin-bottom: 8px; }
+    .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
+    .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
+    .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
+
+    .case-hero-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #EEEDEA;
+      border-radius: 12px;
+      margin-top: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .case-hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 12px;
+    }
+    .case-hero-image-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #C5C4C0;
+      font-size: 14px;
+    }
+
+    /* ——— SECTIONS ——— */
+    .case-section { padding: 80px 0 0; }
+    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 8px; }
+    .section-heading { font-size: 24px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 24px; }
+    .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
+
+    /* ——— TIMELINE ——— */
+    .timeline { display: flex; gap: 0; margin-top: 32px; position: relative; }
+    .timeline::before { content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08); }
+    .timeline-step { flex: 1; position: relative; padding-top: 48px; padding-right: 16px; }
+    .timeline-step::before {
+      content: ''; position: absolute; top: 18px; left: 0;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #1A1A1A; border: 3px solid #F8F7F4;
+    }
+    .timeline-number { font-size: 12px; font-weight: 500; color: #9A9A9A; margin-bottom: 4px; }
+    .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
+    .timeline-tag { display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC; padding: 3px 8px; border-radius: 4px; }
+
+    /* ——— CARD GRIDS ——— */
+    .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .card-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+    .card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; }
+    .card-number { font-size: 14px; font-weight: 500; color: #3B82F6; margin-bottom: 8px; }
+    .card-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .card-desc { font-size: 14px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .card-tag { font-size: 11px; color: #6B6B6B; background: #F0EFEC; padding: 3px 8px; border-radius: 4px; }
+
+    /* ——— TABLE ——— */
+    .strategy-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+    .strategy-table td {
+      padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+      font-size: 14px; vertical-align: top; line-height: 1.6;
+    }
+    .strategy-table td:first-child { font-weight: 500; width: 160px; padding-right: 24px; }
+    .strategy-table td:last-child { color: #6B6B6B; }
+
+    /* ——— USABILITY ROUNDS ——— */
+    .usability-round { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 32px; margin-top: 24px; }
+    .round-title { font-size: 16px; font-weight: 500; margin-bottom: 20px; }
+    .round-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .round-col-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 12px; }
+    .round-list { list-style: none; }
+    .round-list li { font-size: 14px; color: #6B6B6B; line-height: 1.6; padding: 6px 0; padding-left: 16px; position: relative; }
+    .round-list li::before { content: ''; position: absolute; left: 0; top: 14px; width: 6px; height: 6px; border-radius: 50%; }
+    .round-list.findings li::before { background: #dc2626; }
+    .round-list.changes li::before { background: #16a34a; }
+
+    /* ——— FLOW SVG ——— */
+    .flow-container { margin-top: 24px; text-align: center; }
+    .flow-caption { font-size: 13px; color: #9A9A9A; margin-top: 16px; text-align: center; }
+
+    /* ——— WIREFRAMES ——— */
+    .wireframe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+    .wireframe-placeholder {
+      background: #E8E7E4; border-radius: 8px; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #9A9A9A; font-weight: 500;
+    }
+    .wireframe-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
+
+    /* ——— BEFORE / AFTER ——— */
+    .ba-pair { margin-bottom: 40px; }
+    .ba-pair-title { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
+    .ba-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .ba-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 8px; }
+    .ba-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
+
+    /* ——— OUTCOME ——— */
+    .outcome-text { color: #6B6B6B; margin-bottom: 24px; max-width: 640px; }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .cta-pill {
+      display: inline-block; font-size: 14px; font-weight: 500;
+      padding: 10px 24px; border: 1.5px solid #1A1A1A;
+      border-radius: 100px; transition: all 200ms ease;
+    }
+    .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
+
+    /* ——— REFLECTION ——— */
+    .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
+    .reflection-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .reflection-text { font-size: 14px; color: #6B6B6B; line-height: 1.6; }
+
+    /* ——— NEXT CASE ——— */
+    .next-case {
+      margin-top: 80px; padding: 32px 0;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .next-case-label { font-size: 14px; color: #9A9A9A; }
+    .next-case-name { font-size: 14px; font-weight: 500; }
+    .next-case-name:hover { color: #6B6B6B; }
+
+    /* ——— FOOTER ——— */
+    .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
+    .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+    .footer-name { font-weight: 500; }
+    .footer-role { color: #6B6B6B; }
+    .footer-right { display: flex; gap: 24px; color: #6B6B6B; }
+    .footer-right a { position: relative; }
+    .footer-right a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #6B6B6B; transition: width 200ms ease; }
+    .footer-right a:hover::after { width: 100%; }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 768px) {
+      .case-hero h1 { font-size: 36px; }
+      .card-grid-3 { grid-template-columns: 1fr; }
+      .card-grid-2 { grid-template-columns: 1fr; }
+      .wireframe-grid { grid-template-columns: 1fr; }
+      .ba-columns { grid-template-columns: 1fr; }
+      .reflection-grid { grid-template-columns: 1fr; }
+      .round-columns { grid-template-columns: 1fr; }
+      .timeline { flex-direction: column; gap: 24px; padding-left: 24px; }
+      .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
+      .timeline-step { padding-top: 0; padding-left: 16px; padding-right: 0; }
+      .timeline-step::before { top: 4px; left: -24px; }
+      .next-case { flex-direction: column; gap: 8px; text-align: center; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-right { flex-wrap: wrap; justify-content: center; }
+      .case-section { padding: 56px 0 0; }
+      .strategy-table td:first-child { width: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="case-header">
+    <div class="case-header-inner">
+      <a href="../index.html" class="case-header-back">← Back</a>
+      <span class="case-header-name">DobroDoc+</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="container">
+    <section class="case-hero">
+      <h1>DobroDoc+</h1>
+      <p class="case-hero-meta">Mobile app · 2020</p>
+      <p class="case-hero-role">Lead UX — user interviews, IA, mobile prototyping</p>
+      <p class="case-hero-result">Redesign cut time-to-booking by 40% in usability tests</p>
+      <hr class="case-hero-divider">
+      <div class="case-hero-image">
+        <!-- <img src="../images/dobrodoc-hero.jpg" alt="DobroDoc+ project overview"> -->
+        <span class="case-hero-image-placeholder">Cover image coming soon</span>
+      </div>
+    </section>
+
+    <!-- 01 — PROBLEM & CONTEXT -->
+    <section class="case-section">
+      <p class="section-label">01 — Problem & Context</p>
+      <h2 class="section-heading">Booking was harder than the illness</h2>
+      <p class="section-text">DobroDoc+ already existed — but the original app was outdated and frustrating to use. Booking a doctor's appointment required more effort than the illness itself.</p>
+      <p class="section-text">The core pain: when you're sick, the last thing you want is to navigate a broken interface or travel to a clinic just to get in the queue. Busy adults needed a way to see a doctor without leaving home.</p>
+      <p class="section-text">The goal was a full redesign — faster booking, clearer navigation, and an experience that works when you feel your worst.</p>
+    </section>
+
+    <!-- 02 — PROCESS -->
+    <section class="case-section">
+      <p class="section-label">02 — Process</p>
+      <h2 class="section-heading">From audit to handoff</h2>
+      <div class="timeline">
+        <div class="timeline-step">
+          <p class="timeline-number">1.0</p>
+          <p class="timeline-title">UX Audit</p>
+          <p class="timeline-desc">Analysed existing app — broken flows, inconsistent patterns, key drop-off points.</p>
+          <span class="timeline-tag">Audit report</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">2.0</p>
+          <p class="timeline-title">User Research</p>
+          <p class="timeline-desc">Interviewed busy adults about medical apps and clinic visits.</p>
+          <span class="timeline-tag">Interview notes</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">3.0</p>
+          <p class="timeline-title">UX Strategy</p>
+          <p class="timeline-desc">Defined redesign priorities. Goal: booking under 3 taps, eliminate redundant screens.</p>
+          <span class="timeline-tag">Strategy doc</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">4.0</p>
+          <p class="timeline-title">Wireframes</p>
+          <p class="timeline-desc">Redesigned core flows — booking, doctor search, medical history.</p>
+          <span class="timeline-tag">Lo-fi wireframes</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">5.0</p>
+          <p class="timeline-title">Usability Study</p>
+          <p class="timeline-desc">Two rounds — lo-fi and hi-fi — with busy adults.</p>
+          <span class="timeline-tag">Usability report</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">6.0</p>
+          <p class="timeline-title">Mockups & Hi-fi</p>
+          <p class="timeline-desc">Full visual redesign with new component library.</p>
+          <span class="timeline-tag">Hi-fi prototype</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">7.0</p>
+          <p class="timeline-title">Hand-off</p>
+          <p class="timeline-desc">Specs, annotations, component documentation.</p>
+          <span class="timeline-tag">Figma handoff</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03A — UX STRATEGY TABLE -->
+    <section class="case-section">
+      <p class="section-label">03 — Artifacts: UX Strategy</p>
+      <h2 class="section-heading">Strategic foundation</h2>
+      <table class="strategy-table">
+        <tr>
+          <td>Vision</td>
+          <td>Accessible telemedicine platform for everyone, regardless of location or schedule</td>
+        </tr>
+        <tr>
+          <td>Project stage</td>
+          <td>Full product development and launch</td>
+        </tr>
+        <tr>
+          <td>Business goals</td>
+          <td>1. Reduce clinic overcrowding by 30%<br>2. 50,000 users within first 6 months<br>3. 90%+ patient satisfaction<br>4. Subscription + per-consultation revenue</td>
+        </tr>
+        <tr>
+          <td>User goals</td>
+          <td>1. Book without calling during business hours<br>2. Consult online for minor concerns<br>3. Access medical history in one place<br>4. Manage family appointments</td>
+        </tr>
+        <tr>
+          <td>Design principles</td>
+          <td>Trust & Security · Simplicity · Empathy · Reliability · Accessibility</td>
+        </tr>
+        <tr>
+          <td>Success metrics</td>
+          <td>Booking completion > 85%<br>Video success rate > 95%<br>NPS > 70<br>Avg booking time < 3 min</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- 03B — RESEARCH & DISCOVERY -->
+    <section class="case-section">
+      <p class="section-label">03 — Artifacts: Research & Discovery</p>
+      <h2 class="section-heading">Understanding the users</h2>
+      <div class="card-grid-3">
+        <div class="card">
+          <p class="card-number">01</p>
+          <p class="card-title">Stakeholder interviews</p>
+          <p class="card-desc">7 stakeholders: Medical Director, COO, Head of Product, Compliance Officer.</p>
+          <div class="card-tags">
+            <span class="card-tag">7 interviews</span>
+            <span class="card-tag">business alignment</span>
+          </div>
+        </div>
+        <div class="card">
+          <p class="card-number">02</p>
+          <p class="card-title">Surveys</p>
+          <p class="card-desc">250 patients and 35 healthcare providers. 84% wanted online consultations. 73% found traditional booking inconvenient.</p>
+          <div class="card-tags">
+            <span class="card-tag">285 participants</span>
+            <span class="card-tag">quantitative</span>
+          </div>
+        </div>
+        <div class="card">
+          <p class="card-number">03</p>
+          <p class="card-title">User interviews</p>
+          <p class="card-desc">15 patients + 8 doctors, 60-min sessions.</p>
+          <div class="card-tags">
+            <span class="card-tag">23 sessions</span>
+            <span class="card-tag">qualitative</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03C — USER FLOW -->
+    <section class="case-section">
+      <p class="section-label">03 — Artifacts: User Flow</p>
+      <h2 class="section-heading">Multi-scenario flow</h2>
+      <div class="flow-container">
+        <svg viewBox="0 0 900 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;">
+          <!-- Entry -->
+          <circle cx="60" cy="80" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>
+          <text x="60" y="84" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Start</text>
+
+          <!-- Branch out -->
+          <line x1="80" y1="80" x2="160" y2="80" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- Central hub -->
+          <rect x="160" y="60" width="100" height="40" rx="8" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <text x="210" y="84" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Home</text>
+
+          <!-- 5 paths branching right -->
+          <!-- Path 1: Symptom checker (teal) -->
+          <line x1="260" y1="68" x2="340" y2="30" stroke="#0d9488" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="340" y="10" width="120" height="36" rx="6" stroke="#0d9488" stroke-width="1.5" fill="#f0fdfa"/>
+          <text x="400" y="32" text-anchor="middle" font-size="10" font-family="Inter" fill="#0d9488">Symptom checker</text>
+          <line x1="460" y1="28" x2="520" y2="28" stroke="#0d9488" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="520" y="10" width="120" height="36" rx="6" stroke="#0d9488" stroke-width="1.5" fill="#f0fdfa"/>
+          <text x="580" y="32" text-anchor="middle" font-size="10" font-family="Inter" fill="#0d9488">Doctor match</text>
+
+          <!-- Path 2: Booking (blue) -->
+          <line x1="260" y1="75" x2="340" y2="90" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="340" y="70" width="120" height="36" rx="6" stroke="#3B82F6" stroke-width="1.5" fill="#eff6ff"/>
+          <text x="400" y="92" text-anchor="middle" font-size="10" font-family="Inter" fill="#3B82F6">Search doctor</text>
+          <line x1="460" y1="88" x2="520" y2="88" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="520" y="70" width="120" height="36" rx="6" stroke="#3B82F6" stroke-width="1.5" fill="#eff6ff"/>
+          <text x="580" y="92" text-anchor="middle" font-size="10" font-family="Inter" fill="#3B82F6">Select slot</text>
+          <line x1="640" y1="88" x2="700" y2="88" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="700" y="70" width="100" height="36" rx="6" stroke="#3B82F6" stroke-width="1.5" fill="#eff6ff"/>
+          <text x="750" y="92" text-anchor="middle" font-size="10" font-family="Inter" fill="#3B82F6">Confirm</text>
+
+          <!-- Connect symptom to booking -->
+          <line x1="640" y1="28" x2="700" y2="28" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="700" y1="28" x2="700" y2="70" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+
+          <!-- Path 3: Video consultation (purple) -->
+          <line x1="260" y1="85" x2="340" y2="155" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="340" y="137" width="120" height="36" rx="6" stroke="#7c3aed" stroke-width="1.5" fill="#f5f3ff"/>
+          <text x="400" y="159" text-anchor="middle" font-size="10" font-family="Inter" fill="#7c3aed">Pre-call check</text>
+          <line x1="460" y1="155" x2="520" y2="155" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="520" y="137" width="120" height="36" rx="6" stroke="#7c3aed" stroke-width="1.5" fill="#f5f3ff"/>
+          <text x="580" y="159" text-anchor="middle" font-size="10" font-family="Inter" fill="#7c3aed">Video call</text>
+          <line x1="640" y1="155" x2="700" y2="155" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="700" y="137" width="120" height="36" rx="6" stroke="#7c3aed" stroke-width="1.5" fill="#f5f3ff"/>
+          <text x="760" y="153" text-anchor="middle" font-size="9" font-family="Inter" fill="#7c3aed">Summary +</text>
+          <text x="760" y="165" text-anchor="middle" font-size="9" font-family="Inter" fill="#7c3aed">prescription</text>
+
+          <!-- Path 4: History (orange) -->
+          <line x1="260" y1="90" x2="340" y2="220" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="340" y="202" width="140" height="36" rx="6" stroke="#ea580c" stroke-width="1.5" fill="#fff7ed"/>
+          <text x="410" y="224" text-anchor="middle" font-size="10" font-family="Inter" fill="#ea580c">Consultation history</text>
+
+          <!-- Path 5: Certificates (gray) -->
+          <line x1="260" y1="95" x2="340" y2="280" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="340" y="262" width="140" height="36" rx="6" stroke="#6B6B6B" stroke-width="1.5" fill="#f9f9f9"/>
+          <text x="410" y="284" text-anchor="middle" font-size="10" font-family="Inter" fill="#6B6B6B">Medical certificates</text>
+
+          <!-- Legend -->
+          <rect x="40" y="340" width="20" height="3" rx="1" fill="#0d9488"/>
+          <text x="68" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Symptom checker</text>
+          <rect x="180" y="340" width="20" height="3" rx="1" fill="#3B82F6"/>
+          <text x="208" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Booking</text>
+          <rect x="280" y="340" width="20" height="3" rx="1" fill="#7c3aed"/>
+          <text x="308" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Consultation</text>
+          <rect x="410" y="340" width="20" height="3" rx="1" fill="#ea580c"/>
+          <text x="438" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">History</text>
+          <rect x="500" y="340" width="20" height="3" rx="1" fill="#6B6B6B"/>
+          <text x="528" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Certificates</text>
+
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#1A1A1A"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <p class="flow-caption">Overview flow covering 5 user scenarios: symptom search, appointment booking, video consultation, consultation history, and medical certificates.</p>
+    </section>
+
+    <!-- 04 — WIREFRAMES -->
+    <section class="case-section">
+      <p class="section-label">04 — Wireframes</p>
+      <h2 class="section-heading">Structuring the redesign</h2>
+      <div class="wireframe-grid">
+        <div>
+          <div class="wireframe-placeholder">Onboarding & symptom checker</div>
+          <p class="wireframe-caption">Entry flow with medical disclaimer. AI-guided symptom input leading to doctor recommendations.</p>
+        </div>
+        <div>
+          <div class="wireframe-placeholder">Doctor search & profiles</div>
+          <p class="wireframe-caption">Browse view with availability on cards. Profile: specialisation, ratings, available slots.</p>
+        </div>
+        <div>
+          <div class="wireframe-placeholder">Appointment booking</div>
+          <p class="wireframe-caption">Real-time slot selection. Family member switcher at top of screen.</p>
+        </div>
+        <div>
+          <div class="wireframe-placeholder">Video consultation</div>
+          <p class="wireframe-caption">Connection quality indicator before joining. In-call: chat, document sharing, prescription pad.</p>
+        </div>
+        <div>
+          <div class="wireframe-placeholder">Post-consultation</div>
+          <p class="wireframe-caption">Diagnosis summary + digital prescription. Automatic email after session ends.</p>
+        </div>
+        <div>
+          <div class="wireframe-placeholder">Medical history & certificates</div>
+          <p class="wireframe-caption">All past consultations in one place. Certificates available for instant download.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — USABILITY FINDINGS -->
+    <section class="case-section">
+      <p class="section-label">05 — Usability Findings</p>
+      <h2 class="section-heading">Two rounds of testing</h2>
+
+      <div class="usability-round">
+        <p class="round-title">Round 1 — Lo-fi prototype</p>
+        <div class="round-columns">
+          <div>
+            <p class="round-col-title">Findings</p>
+            <ul class="round-list findings">
+              <li>Users wanted doctor availability before clicking profiles</li>
+              <li>Symptom checker felt untrustworthy — no disclaimers</li>
+              <li>Family profile switching was confusing</li>
+            </ul>
+          </div>
+          <div>
+            <p class="round-col-title">Changes made</p>
+            <ul class="round-list changes">
+              <li>Availability indicators added on doctor cards</li>
+              <li>Symptom checker redesigned with disclaimer + emergency warnings</li>
+              <li>Persistent family switcher added at top of screens</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="usability-round">
+        <p class="round-title">Round 2 — Hi-fi prototype</p>
+        <div class="round-columns">
+          <div>
+            <p class="round-col-title">Findings</p>
+            <ul class="round-list findings">
+              <li>Users wanted connection status before video call</li>
+              <li>100% of users loved digital prescription feature</li>
+              <li>Users wanted appointment reminders before consultations</li>
+            </ul>
+          </div>
+          <div>
+            <p class="round-col-title">Changes made</p>
+            <ul class="round-list changes">
+              <li>Connection quality indicator + test call added</li>
+              <li>Push notifications with reminders + checklist</li>
+              <li>Post-consultation summary auto-sent to email</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — MOCKUPS: BEFORE / AFTER -->
+    <section class="case-section">
+      <p class="section-label">06 — Mockups: Before / After</p>
+      <h2 class="section-heading">What changed after testing</h2>
+
+      <div style="margin-top: 32px;">
+        <div class="ba-pair">
+          <p class="ba-pair-title">01 — Doctor card</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Name and specialisation only</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Availability indicator — green dot + next free slot on card</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">02 — Symptom checker</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Plain input form, no context</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Medical disclaimer + emergency warning, AI match with doctor recommendation</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">03 — Family switcher</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Buried in profile settings</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Persistent switcher at top of every screen</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">04 — Pre-call screen</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Direct join button only</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Connection quality check + test call option</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ba-pair">
+          <p class="ba-pair-title">05 — Post-consultation</p>
+          <div class="ba-columns">
+            <div>
+              <p class="ba-label">Before</p>
+              <div class="wireframe-placeholder">Before</div>
+              <p class="ba-caption">Session ends, nothing sent</p>
+            </div>
+            <div>
+              <p class="ba-label">After</p>
+              <div class="wireframe-placeholder">After</div>
+              <p class="ba-caption">Summary card in-app + auto email with diagnosis and prescription PDF</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 — OUTCOME -->
+    <section class="case-section">
+      <p class="section-label">07 — Outcome</p>
+      <h2 class="section-heading">40% faster booking</h2>
+      <p class="outcome-text">Redesign launched in late 2020. The updated app reduced time-to-booking by 40% in usability tests. Digital prescriptions and post-consultation summaries became the most praised features in early feedback.</p>
+      <p class="outcome-text">The app is live on both platforms today.</p>
+      <div class="cta-row">
+        <a href="https://apps.apple.com/us/app/dobrodoc/id1483029353" target="_blank" rel="noopener" class="cta-pill">App Store →</a>
+        <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc&hl=ru" target="_blank" rel="noopener" class="cta-pill">Google Play →</a>
+      </div>
+    </section>
+
+    <!-- 08 — REFLECTION -->
+    <section class="case-section">
+      <p class="section-label">08 — Reflection</p>
+      <h2 class="section-heading">Looking back</h2>
+      <div class="reflection-grid">
+        <div>
+          <p class="reflection-title">What I'd do differently</p>
+          <p class="reflection-text">Start with a design system from day one. Component inconsistencies between screens slowed the hi-fi phase and required cleanup before handoff.</p>
+        </div>
+        <div>
+          <p class="reflection-title">What I learned</p>
+          <p class="reflection-text">Two rounds of usability testing caught fundamentally different issues — lo-fi revealed structural problems, hi-fi surfaced emotional and trust concerns. Both are non-negotiable for a healthcare product.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEXT CASE -->
+    <a href="dopas.html" class="next-case">
+      <span class="next-case-label">← Previous case</span>
+      <span class="next-case-name">dopas.dp.ua — Bus Ticket Booking</span>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><span class="footer-name">Yury</span> · <span class="footer-role">Lead UX Designer</span></div>
+      <div class="footer-right">
+        <a href="mailto:hello@yury.design">Email</a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <span>Batumi, GE</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
