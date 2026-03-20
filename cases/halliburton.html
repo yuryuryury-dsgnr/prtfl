@@ -141,6 +141,37 @@
       border-radius: 0 6px 6px 0;
     }
 
+    /* ——— PHASE TOGGLE ——— */
+    .phase-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      width: fit-content;
+    }
+    .phase-toggle-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      border: none;
+      background: transparent;
+      color: #9A9A9A;
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+      border-right: 1px solid rgba(0,0,0,0.1);
+    }
+    .phase-toggle-btn:last-child { border-right: none; }
+    .phase-toggle-btn:hover { background: rgba(0,0,0,0.02); }
+    .phase-toggle-btn.active {
+      background: #1A1A1A;
+      color: #FFFFFF;
+    }
+    .phase-panel { display: none; }
+    .phase-panel.active { display: block; }
+
     /* ——— ACCORDION ——— */
     .accordion {
       border: 1px solid rgba(0,0,0,0.08);
@@ -467,292 +498,302 @@
       <div class="timeline">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
-          <p class="timeline-title">Stakeholder Interviews</p>
-          <p class="timeline-desc">Mapped pain points across data producers, consumers, and governance teams.</p>
-          <span class="timeline-tag">Interview synthesis</span>
+          <p class="timeline-title">Discovery</p>
+          <p class="timeline-desc">UX strategy and data architecture map &mdash; defining scope, goals, and system structure.</p>
+          <span class="timeline-tag">UX strategy</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">2.0</p>
-          <p class="timeline-title">Information Architecture</p>
-          <p class="timeline-desc">Defined data taxonomy, navigation model, and search patterns.</p>
-          <span class="timeline-tag">IA documentation</span>
+          <p class="timeline-title">User Research</p>
+          <p class="timeline-desc">Personas, UJM, JTBD, and detailed user flows for all interaction scenarios.</p>
+          <span class="timeline-tag">Personas &middot; JTBD &middot; Flows</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">3.0</p>
-          <p class="timeline-title">Wireframes &amp; Flows</p>
-          <p class="timeline-desc">Core user journeys &mdash; browse, search, preview, request access, manage datasets.</p>
-          <span class="timeline-tag">Lo-fi prototype</span>
+          <p class="timeline-title">Prototyping</p>
+          <p class="timeline-desc">Wireframes, mockups, design system setup, and early interactive prototype.</p>
+          <span class="timeline-tag">Design system &middot; Prototype</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">4.0</p>
           <p class="timeline-title">Usability Testing</p>
-          <p class="timeline-desc">Validated flows with internal users across multiple business units.</p>
-          <span class="timeline-tag">Usability report</span>
+          <p class="timeline-desc">Formative testing &mdash; synthesizing data and iterating prototype based on insights.</p>
+          <span class="timeline-tag">Formative &middot; Iteration</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">5.0</p>
-          <p class="timeline-title">Hi-fi Design</p>
-          <p class="timeline-desc">Final screens following corporate design system with custom components.</p>
-          <span class="timeline-tag">Hi-fi prototype</span>
+          <p class="timeline-title">Validation</p>
+          <p class="timeline-desc">Summative usability testing &mdash; second round to validate refined flows.</p>
+          <span class="timeline-tag">Summative testing</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">6.0</p>
           <p class="timeline-title">Hand-off</p>
-          <p class="timeline-desc">Developer specs, component documentation, interaction guidelines.</p>
-          <span class="timeline-tag">Figma handoff</span>
+          <p class="timeline-desc">Collaboration with dev team &mdash; specs, annotations, component documentation.</p>
+          <span class="timeline-tag">Dev collaboration</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">7.0</p>
+          <p class="timeline-title">Post-launch</p>
+          <p class="timeline-desc">Research and continuous improvements based on real usage data.</p>
+          <span class="timeline-tag">Analytics &middot; Iteration</span>
         </div>
       </div>
     </section>
 
-    <!-- 03 — UX STRATEGY: PHASE 1 MVP -->
+    <!-- 03 — UX STRATEGY (Phase 1 + Phase 2 toggle) -->
     <section class="case-section reveal">
       <p class="section-label">03 &mdash; UX Strategy</p>
-      <h2 class="section-heading">Phase 1 &mdash; MVP</h2>
+      <h2 class="section-heading">Two phases of product evolution</h2>
       <p class="section-text">UX strategy is a long-term plan that connects user insights, product vision, and business objectives into a coherent direction for designing and improving the user experience.</p>
 
-      <table class="strategy-table">
-        <tr><td>Vision</td><td>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</td></tr>
-        <tr><td>Problem</td><td>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</td></tr>
-        <tr><td>Success looks like</td><td>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</td></tr>
-      </table>
+      <div class="phase-toggle">
+        <button class="phase-toggle-btn active" data-phase="phase1">Phase 1 &mdash; MVP</button>
+        <button class="phase-toggle-btn" data-phase="phase2">Phase 2 &mdash; Trust, Social &amp; AI</button>
+      </div>
 
-      <div class="accordion">
-        <details>
-          <summary>Persona groups</summary>
-          <div class="accordion-body">
-            <div class="persona-grid">
-              <div class="persona-card">
-                <div class="persona-avatar">G1</div>
-                <div>
-                  <p class="persona-card-title">Data Scientist / Engineer</p>
-                  <p class="persona-card-desc">Browse data products, fast and relevant search, preview data, request &amp; obtain access quickly.</p>
+      <!-- PHASE 1 PANEL -->
+      <div class="phase-panel active" id="phase1">
+        <table class="strategy-table">
+          <tr><td>Vision</td><td>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</td></tr>
+          <tr><td>Problem</td><td>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</td></tr>
+          <tr><td>Success looks like</td><td>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</td></tr>
+        </table>
+
+        <div class="accordion">
+          <details>
+            <summary>Persona groups</summary>
+            <div class="accordion-body">
+              <div class="persona-grid">
+                <div class="persona-card">
+                  <div class="persona-avatar">G1</div>
+                  <div>
+                    <p class="persona-card-title">Data Scientist / Engineer</p>
+                    <p class="persona-card-desc">Browse data products, fast and relevant search, preview data, request &amp; obtain access quickly.</p>
+                  </div>
                 </div>
-              </div>
-              <div class="persona-card">
-                <div class="persona-avatar">G2</div>
-                <div>
-                  <p class="persona-card-title">Business User</p>
-                  <p class="persona-card-desc">Find existing reports (PBI, Tableau, Spotfire, Databricks) that answer questions from trusted data.</p>
+                <div class="persona-card">
+                  <div class="persona-avatar">G2</div>
+                  <div>
+                    <p class="persona-card-title">Business User</p>
+                    <p class="persona-card-desc">Find existing reports (PBI, Tableau, Spotfire, Databricks) that answer questions from trusted data.</p>
+                  </div>
                 </div>
-              </div>
-              <div class="persona-card">
-                <div class="persona-avatar">G3</div>
-                <div>
-                  <p class="persona-card-title">Data Product Owner</p>
-                  <p class="persona-card-desc">Manage data product info, approve/reject accesses, define level of access.</p>
+                <div class="persona-card">
+                  <div class="persona-avatar">G3</div>
+                  <div>
+                    <p class="persona-card-title">Data Product Owner</p>
+                    <p class="persona-card-desc">Manage data product info, approve/reject accesses, define level of access.</p>
+                  </div>
                 </div>
-              </div>
-              <div class="persona-card">
-                <div class="persona-avatar">G4</div>
-                <div>
-                  <p class="persona-card-title">Data POD Lead</p>
-                  <p class="persona-card-desc">Oversee data products across teams, monitor quality and access patterns.</p>
+                <div class="persona-card">
+                  <div class="persona-avatar">G4</div>
+                  <div>
+                    <p class="persona-card-title">Data POD Lead</p>
+                    <p class="persona-card-desc">Oversee data products across teams, monitor quality and access patterns.</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </details>
-        <details>
-          <summary>UX Goals</summary>
-          <div class="accordion-body">
-            <ul class="accordion-list">
-              <li>Validate whether users can find the right Data Product quickly</li>
-              <li>Check if users understand Data Product cards and details</li>
-              <li>Evaluate how easily users can request access</li>
-              <li>Validate clarity of access statuses and permissions</li>
-              <li>Test understanding of View vs Edit access levels</li>
-              <li>Validate that product owners can easily add existing products</li>
-            </ul>
-          </div>
-        </details>
-        <details>
-          <summary>Core user scenarios</summary>
-          <div class="accordion-body">
-            <ul class="accordion-list">
-              <li>Search and discover relevant data products</li>
-              <li>Filter and narrow down data products</li>
-              <li>Open dataset detail page and understand if it's usable</li>
-              <li>Request and get 1-click access directly from dataset page</li>
-              <li>Track access request status</li>
-              <li>Compare data sets</li>
-              <li>Add and manage data products</li>
-              <li>Manage access levels</li>
-            </ul>
-          </div>
-        </details>
-        <details>
-          <summary>UX Principles</summary>
-          <div class="accordion-body">
-            <ul class="accordion-list">
-              <li>Reduce user's cognitive load</li>
-              <li>Clarity and Simplicity</li>
-              <li>Visual Hierarchy</li>
-              <li>Consistency</li>
-              <li>Feedback and Interactivity</li>
-              <li>Efficiency and Speed</li>
-              <li>Accessibility and Readability</li>
-              <li>Desktop first</li>
-            </ul>
-          </div>
-        </details>
-        <details>
-          <summary><span>UX KPIs &amp; Business Goals</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>Efficiency</td><td>Search time: from weeks to under 5 minutes. Access request time: from months to under N days.</td></tr>
-                  <tr><td>Adoption</td><td>% of engineers actively using the marketplace. % of data products onboarded.</td></tr>
-                  <tr><td>Quality</td><td>User satisfaction score (CSAT). % of users who find the right product on first search.</td></tr>
-                  <tr><td>Business</td><td>1) Reduce search time. 2) Reduce access approval time. 3) Increase trust. 4) Support all user journeys.</td></tr>
-                </table>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+          </details>
+          <details>
+            <summary>UX Goals</summary>
+            <div class="accordion-body">
+              <ul class="accordion-list">
+                <li>Validate whether users can find the right Data Product quickly</li>
+                <li>Check if users understand Data Product cards and details</li>
+                <li>Evaluate how easily users can request access</li>
+                <li>Validate clarity of access statuses and permissions</li>
+                <li>Test understanding of View vs Edit access levels</li>
+                <li>Validate that product owners can easily add existing products</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Core user scenarios</summary>
+            <div class="accordion-body">
+              <ul class="accordion-list">
+                <li>Search and discover relevant data products</li>
+                <li>Filter and narrow down data products</li>
+                <li>Open dataset detail page and understand if it's usable</li>
+                <li>Request and get 1-click access directly from dataset page</li>
+                <li>Track access request status</li>
+                <li>Compare data sets</li>
+                <li>Add and manage data products</li>
+                <li>Manage access levels</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>UX Principles</summary>
+            <div class="accordion-body">
+              <ul class="accordion-list">
+                <li>Reduce user's cognitive load</li>
+                <li>Clarity and Simplicity</li>
+                <li>Visual Hierarchy</li>
+                <li>Consistency</li>
+                <li>Feedback and Interactivity</li>
+                <li>Efficiency and Speed</li>
+                <li>Accessibility and Readability</li>
+                <li>Desktop first</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary><span>UX KPIs &amp; Business Goals</span><span class="accordion-nda-tag">NDA</span></summary>
+            <div class="accordion-body">
+              <div class="nda-block">
+                <div class="nda-content" aria-hidden="true">
+                  <table class="strategy-table">
+                    <tr><td>Efficiency</td><td>Search time: from weeks to under 5 minutes. Access request time: from months to under N days.</td></tr>
+                    <tr><td>Adoption</td><td>% of engineers actively using the marketplace. % of data products onboarded.</td></tr>
+                    <tr><td>Quality</td><td>User satisfaction score (CSAT). % of users who find the right product on first search.</td></tr>
+                    <tr><td>Business</td><td>1) Reduce search time. 2) Reduce access approval time. 3) Increase trust. 4) Support all user journeys.</td></tr>
+                  </table>
+                </div>
+                <div class="nda-overlay">
+                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+                </div>
               </div>
             </div>
-          </div>
-        </details>
-        <details>
-          <summary><span>Roadmap &mdash; 7 phases</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>Phase 1</td><td>Discovery &mdash; UX strategy, Data architecture map</td></tr>
-                  <tr><td>Phase 2</td><td>User research &mdash; Personas, UJM, User flows, JTBD</td></tr>
-                  <tr><td>Phase 3</td><td>Market analysis &mdash; Competitor analysis</td></tr>
-                  <tr><td>Phase 4</td><td>Prototyping &mdash; Wireframes, Mockups, Design system</td></tr>
-                  <tr><td>Phase 5</td><td>Validation &mdash; Usability testing (2 rounds)</td></tr>
-                  <tr><td>Phase 6</td><td>Design hand-off &amp; dev collaboration</td></tr>
-                  <tr><td>Phase 7</td><td>Post launch research &amp; improvements</td></tr>
-                </table>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
-          </div>
-        </details>
-        <details>
-          <summary><span>Key deliverables</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <ul class="accordion-list">
-                  <li>UX strategy &amp; Roadmap</li>
-                  <li>Personas &amp; JTBD</li>
-                  <li>User journey maps &amp; Userflows</li>
-                  <li>Wireframes and mockups</li>
-                  <li>Interactive prototype</li>
-                  <li>Usability testing reports (2 rounds)</li>
-                  <li>Scalable design system</li>
-                  <li>Post launch research report</li>
-                </ul>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+          </details>
+          <details>
+            <summary><span>Roadmap &mdash; 7 phases</span><span class="accordion-nda-tag">NDA</span></summary>
+            <div class="accordion-body">
+              <div class="nda-block">
+                <div class="nda-content" aria-hidden="true">
+                  <table class="strategy-table">
+                    <tr><td>Phase 1</td><td>Discovery &mdash; UX strategy, Data architecture map</td></tr>
+                    <tr><td>Phase 2</td><td>User research &mdash; Personas, UJM, User flows, JTBD</td></tr>
+                    <tr><td>Phase 3</td><td>Market analysis &mdash; Competitor analysis</td></tr>
+                    <tr><td>Phase 4</td><td>Prototyping &mdash; Wireframes, Mockups, Design system</td></tr>
+                    <tr><td>Phase 5</td><td>Validation &mdash; Usability testing (2 rounds)</td></tr>
+                    <tr><td>Phase 6</td><td>Design hand-off &amp; dev collaboration</td></tr>
+                    <tr><td>Phase 7</td><td>Post launch research &amp; improvements</td></tr>
+                  </table>
+                </div>
+                <div class="nda-overlay">
+                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+                </div>
               </div>
             </div>
-          </div>
-        </details>
+          </details>
+          <details>
+            <summary><span>Key deliverables</span><span class="accordion-nda-tag">NDA</span></summary>
+            <div class="accordion-body">
+              <div class="nda-block">
+                <div class="nda-content" aria-hidden="true">
+                  <ul class="accordion-list">
+                    <li>UX strategy &amp; Roadmap</li>
+                    <li>Personas &amp; JTBD</li>
+                    <li>User journey maps &amp; Userflows</li>
+                    <li>Wireframes and mockups</li>
+                    <li>Interactive prototype</li>
+                    <li>Usability testing reports (2 rounds)</li>
+                    <li>Scalable design system</li>
+                    <li>Post launch research report</li>
+                  </ul>
+                </div>
+                <div class="nda-overlay">
+                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- PHASE 2 PANEL -->
+      <div class="phase-panel" id="phase2">
+        <table class="strategy-table">
+          <tr><td>Vision</td><td>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</td></tr>
+          <tr><td>Problem</td><td>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</td></tr>
+          <tr><td>Success looks like</td><td>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</td></tr>
+        </table>
+
+        <div class="accordion">
+          <details>
+            <summary>Structural changes</summary>
+            <div class="accordion-body">
+              <table class="strategy-table">
+                <tr><td>Phase 1 &rarr; 2</td><td>Main page becomes Explore page (browse + filters, unchanged). New Main page = AI-powered Home page with large search bar + 6 personalized recommendation boxes. Intent-first entry point.</td></tr>
+              </table>
+            </div>
+          </details>
+          <details>
+            <summary>UX Goals</summary>
+            <div class="accordion-body">
+              <ul class="accordion-list">
+                <li>Reduce time to find the right data product from weeks to minutes</li>
+                <li>Give users confidence to trust data before requesting access</li>
+                <li>Make approval decisions faster for owners</li>
+                <li>Surface peer knowledge that currently lives only in people's heads</li>
+                <li>Support both technical (G1) and non-technical (G2) user journeys</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary><span>AI-powered features</span><span class="accordion-nda-tag">NDA</span></summary>
+            <div class="accordion-body">
+              <div class="nda-block">
+                <div class="nda-content" aria-hidden="true">
+                  <table class="strategy-table">
+                    <tr><td>AI Home</td><td>Natural language input &mdash; user describes what they need. AI response + ranked dataset cards.</td></tr>
+                    <tr><td>Recommendations</td><td>6 personalized boxes: Continue exploring, Most trusted, New since last visit, Pending action, Colleagues using, For you.</td></tr>
+                    <tr><td>AI Ranking</td><td>Relevance + Quality score + Certification status + Access availability</td></tr>
+                  </table>
+                </div>
+                <div class="nda-overlay">
+                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details>
+            <summary><span>Feature clusters</span><span class="accordion-nda-tag">NDA</span></summary>
+            <div class="accordion-body">
+              <div class="nda-block">
+                <div class="nda-content" aria-hidden="true">
+                  <table class="strategy-table">
+                    <tr><td>Trust</td><td>Quality score, Certified badges, Lineage visualization, Approval workflow</td></tr>
+                    <tr><td>Social</td><td>Reviews &amp; Usage tab, Peer recommendations, Owner reputation</td></tr>
+                    <tr><td>Governance</td><td>Sensitivity classification, auto-tagging, Adoption analytics</td></tr>
+                    <tr><td>AI Discovery</td><td>NL search, Hybrid AI response, Personalized recommendations</td></tr>
+                    <tr><td>Billing</td><td>Subscription model, Plan comparison, Transparent pricing</td></tr>
+                  </table>
+                </div>
+                <div class="nda-overlay">
+                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+                </div>
+              </div>
+            </div>
+          </details>
+          <details>
+            <summary><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></summary>
+            <div class="accordion-body">
+              <div class="nda-block">
+                <div class="nda-content" aria-hidden="true">
+                  <table class="strategy-table">
+                    <tr><td>Efficiency</td><td>Search-to-access conversion &uarr;, time to find dataset &darr;, approval time &darr;</td></tr>
+                    <tr><td>Adoption</td><td>% engineers using marketplace &uarr;, certified vs uncertified &uarr;</td></tr>
+                    <tr><td>Trust</td><td>Quality badge CTR &uarr;, preview-to-request conversion &uarr;</td></tr>
+                    <tr><td>Social</td><td>Reviews per dataset &uarr;, peer recommendation CTR &uarr;</td></tr>
+                    <tr><td>Billing</td><td>Plan upgrade rate &uarr;, checkout completion &uarr;, cart abandonment &darr;</td></tr>
+                  </table>
+                </div>
+                <div class="nda-overlay">
+                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
       </div>
     </section>
 
-    <!-- 04 — UX STRATEGY: PHASE 2 -->
+    <!-- 04 — WIREFRAMES (blurred) -->
     <section class="case-section reveal">
-      <p class="section-label">04 &mdash; UX Strategy</p>
-      <h2 class="section-heading">Phase 2 &mdash; Trust, Social &amp; AI-Powered</h2>
-      <p class="section-text">Phase 2 evolved the marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</p>
-
-      <table class="strategy-table">
-        <tr><td>Vision</td><td>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</td></tr>
-        <tr><td>Problem</td><td>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</td></tr>
-        <tr><td>Success looks like</td><td>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</td></tr>
-      </table>
-
-      <div class="accordion">
-        <details>
-          <summary>Structural changes</summary>
-          <div class="accordion-body">
-            <table class="strategy-table">
-              <tr><td>Phase 1 &rarr; 2</td><td>Main page becomes Explore page (browse + filters, unchanged). New Main page = AI-powered Home page with large search bar + 6 personalized recommendation boxes. Intent-first entry point.</td></tr>
-            </table>
-          </div>
-        </details>
-        <details>
-          <summary>UX Goals</summary>
-          <div class="accordion-body">
-            <ul class="accordion-list">
-              <li>Reduce time to find the right data product from weeks to minutes</li>
-              <li>Give users confidence to trust data before requesting access</li>
-              <li>Make approval decisions faster for owners</li>
-              <li>Surface peer knowledge that currently lives only in people's heads</li>
-              <li>Support both technical (G1) and non-technical (G2) user journeys</li>
-            </ul>
-          </div>
-        </details>
-        <details>
-          <summary><span>AI-powered features</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>AI Home</td><td>Natural language input &mdash; user describes what they need. AI response + ranked dataset cards.</td></tr>
-                  <tr><td>Recommendations</td><td>6 personalized boxes: Continue exploring, Most trusted, New since last visit, Pending action, Colleagues using, For you.</td></tr>
-                  <tr><td>AI Ranking</td><td>Relevance + Quality score + Certification status + Access availability</td></tr>
-                </table>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
-          </div>
-        </details>
-        <details>
-          <summary><span>Feature clusters</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>Trust</td><td>Quality score, Certified badges, Lineage visualization, Approval workflow</td></tr>
-                  <tr><td>Social</td><td>Reviews &amp; Usage tab, Peer recommendations, Owner reputation</td></tr>
-                  <tr><td>Governance</td><td>Sensitivity classification, auto-tagging, Adoption analytics</td></tr>
-                  <tr><td>AI Discovery</td><td>NL search, Hybrid AI response, Personalized recommendations</td></tr>
-                  <tr><td>Billing</td><td>Subscription model, Plan comparison, Transparent pricing</td></tr>
-                </table>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
-          </div>
-        </details>
-        <details>
-          <summary><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>Efficiency</td><td>Search-to-access conversion &uarr;, time to find dataset &darr;, approval time &darr;</td></tr>
-                  <tr><td>Adoption</td><td>% engineers using marketplace &uarr;, certified vs uncertified &uarr;</td></tr>
-                  <tr><td>Trust</td><td>Quality badge CTR &uarr;, preview-to-request conversion &uarr;</td></tr>
-                  <tr><td>Social</td><td>Reviews per dataset &uarr;, peer recommendation CTR &uarr;</td></tr>
-                  <tr><td>Billing</td><td>Plan upgrade rate &uarr;, checkout completion &uarr;, cart abandonment &darr;</td></tr>
-                </table>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- 05 — WIREFRAMES (blurred) -->
-    <section class="case-section reveal">
-      <p class="section-label">05 &mdash; Wireframes</p>
+      <p class="section-label">04 &mdash; Wireframes</p>
       <h2 class="section-heading">Defining the structure</h2>
       <p class="section-text">Lo-fi wireframes defined the core layout before any visual design decisions were made.</p>
 
@@ -785,7 +826,7 @@
 
     <!-- 06 — MOCKUPS (blurred) -->
     <section class="case-section reveal">
-      <p class="section-label">06 &mdash; Mockups</p>
+      <p class="section-label">05 &mdash; Mockups</p>
       <h2 class="section-heading">High-fidelity screens</h2>
       <p class="section-text">Final designs built on top of the corporate design system with custom marketplace components.</p>
 
@@ -818,7 +859,7 @@
 
     <!-- 07 — OUTCOME -->
     <section class="case-section reveal">
-      <p class="section-label">07 &mdash; Outcome</p>
+      <p class="section-label">06 &mdash; Outcome</p>
       <h2 class="section-heading">Shipped to internal teams</h2>
       <p class="outcome-text">The Data Marketplace was delivered to Halliburton's internal engineering teams in 2026. The platform unified data discovery across the organization and introduced a governed access request workflow for the first time.</p>
       <p class="outcome-text">Specific metrics and adoption data are confidential under NDA.</p>
@@ -826,7 +867,7 @@
 
     <!-- 08 — REFLECTION -->
     <section class="case-section reveal">
-      <p class="section-label">08 &mdash; Reflection</p>
+      <p class="section-label">07 &mdash; Reflection</p>
       <h2 class="section-heading">Looking back</h2>
       <div class="reflection-grid">
         <div class="reflection-col">
@@ -886,6 +927,16 @@
     }, { threshold: 0.2 });
 
     document.querySelectorAll('.timeline').forEach(el => timelineObserver.observe(el));
+
+    // Phase toggle
+    document.querySelectorAll('.phase-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.phase-toggle-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.phase).classList.add('active');
+      });
+    });
   </script>
 
 </body>

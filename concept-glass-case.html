@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Marketplace · Halliburton — Yury | Glassmorphism Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #1A1A1A;
+      background: #F5F3EF;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* -- Concept label -- */
+    .concept-label {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #6B6B6B;
+    }
+
+    /* -- Background blobs -- */
+    .blobs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      will-change: transform;
+    }
+
+    .blob-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(244,180,190,0.35) 0%, transparent 70%);
+      top: -8%;
+      left: -5%;
+      animation: float1 20s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(190,180,240,0.3) 0%, transparent 70%);
+      top: 35%;
+      right: -5%;
+      animation: float2 24s ease-in-out infinite;
+    }
+
+    .blob-3 {
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(180,220,200,0.3) 0%, transparent 70%);
+      bottom: -8%;
+      left: 25%;
+      animation: float3 22s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 80px) scale(1.05); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-70px, -50px) scale(1.06); }
+    }
+
+    @keyframes float3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(50px, -60px) scale(1.04); }
+    }
+
+    /* -- Glass utility -- */
+    .glass {
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+    }
+
+    /* -- STICKY HEADER -- */
+    .case-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 16px 24px;
+    }
+    .case-header-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .case-header-back {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1A1A1A;
+      transition: color 0.3s ease;
+    }
+    .case-header-back:hover { color: #6B6B6B; }
+    .case-header-name {
+      font-size: 14px;
+      color: #9A9A9A;
+    }
+
+    /* -- CONTAINER -- */
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* -- HERO -- */
+    .case-hero {
+      padding: 80px 0 48px;
+    }
+    .case-hero h1 {
+      font-size: 48px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .case-hero-meta {
+      font-size: 14px;
+      color: #9A9A9A;
+      margin-bottom: 8px;
+    }
+    .case-hero-role {
+      font-size: 14px;
+      color: #6B6B6B;
+      margin-bottom: 4px;
+    }
+    .case-hero-result {
+      font-size: 14px;
+      color: #6B6B6B;
+      font-style: italic;
+      margin-bottom: 32px;
+    }
+    .case-hero-divider {
+      border: none;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .case-hero-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      margin-top: 40px;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    }
+    .case-hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 16px;
+    }
+    .case-hero-image-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9A9A9A;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      background: linear-gradient(135deg, rgba(210,180,230,0.3) 0%, rgba(180,210,240,0.25) 50%, rgba(180,225,210,0.2) 100%);
+    }
+
+    /* -- NDA BANNER -- */
+    .nda-banner {
+      margin-top: 24px;
+      padding: 16px 20px;
+      background: #1A1A1A;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.5;
+    }
+    .nda-banner-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: rgba(255,255,255,0.5);
+    }
+    .nda-banner strong {
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    /* -- SECTIONS -- */
+    .case-section {
+      padding: 80px 0 0;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #9A9A9A;
+      margin-bottom: 8px;
+    }
+    .section-heading {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+    }
+    .section-text {
+      color: #6B6B6B;
+      margin-bottom: 16px;
+      max-width: 640px;
+    }
+
+    /* -- STRATEGY TABLE (glass rows) -- */
+    .strategy-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 4px;
+      margin-top: 16px;
+    }
+    .strategy-table td {
+      padding: 14px 16px;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.6;
+      background: rgba(255,255,255,0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .strategy-table tr td:first-child {
+      font-weight: 500;
+      color: #1A1A1A;
+      width: 140px;
+      padding-right: 20px;
+      border-radius: 10px 0 0 10px;
+      border: 1px solid rgba(0,0,0,0.04);
+      border-right: none;
+    }
+    .strategy-table tr td:last-child {
+      color: #6B6B6B;
+      border-radius: 0 10px 10px 0;
+      border: 1px solid rgba(0,0,0,0.04);
+      border-left: none;
+    }
+
+    /* -- ACCORDION (glass panels) -- */
+    .accordion {
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 14px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+    .accordion details {
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .accordion details:last-child {
+      border-bottom: none;
+    }
+    .accordion summary {
+      padding: 16px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 150ms ease;
+    }
+    .accordion summary:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    .accordion summary::-webkit-details-marker { display: none; }
+    .accordion summary::after {
+      content: '+';
+      font-size: 18px;
+      font-weight: 400;
+      color: #9A9A9A;
+      transition: transform 200ms ease;
+    }
+    .accordion details[open] summary::after {
+      content: '\2212';
+    }
+    .accordion .accordion-body {
+      padding: 0 20px 20px;
+    }
+    .accordion .accordion-body .strategy-table {
+      margin-top: 0;
+    }
+    .accordion .accordion-body .strategy-table td:first-child {
+      width: 120px;
+    }
+    .accordion-nda-tag {
+      font-size: 11px;
+      color: #9A9A9A;
+      background: rgba(0,0,0,0.04);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      font-weight: 400;
+    }
+    .accordion-list {
+      list-style: none;
+      padding: 0;
+      font-size: 14px;
+      color: #6B6B6B;
+    }
+    .accordion-list li {
+      margin-bottom: 6px;
+      padding-left: 16px;
+      position: relative;
+    }
+    .accordion-list li::before {
+      content: '\00B7';
+      position: absolute;
+      left: 0;
+      color: #9A9A9A;
+      font-weight: 700;
+    }
+
+    /* -- PERSONA CARDS (glass) -- */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .persona-card {
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: background 0.3s ease;
+    }
+    .persona-card:hover {
+      background: rgba(255,255,255,0.7);
+    }
+    .persona-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #9A9A9A;
+      flex-shrink: 0;
+    }
+    .persona-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .persona-card-desc {
+      font-size: 12px;
+      color: #6B6B6B;
+      line-height: 1.5;
+    }
+
+    /* -- NDA BLOCK (glass overlay) -- */
+    .nda-block {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.06);
+      margin-top: 4px;
+    }
+    .nda-content {
+      filter: blur(8px);
+      user-select: none;
+      pointer-events: none;
+    }
+    .nda-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(245,243,239,0.35);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+    .nda-badge {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 100px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6B6B6B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+    .nda-badge svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.5;
+    }
+    .nda-block-standalone {
+      margin-top: 24px;
+    }
+    .accordion .nda-block {
+      border: none;
+      border-radius: 10px;
+      margin-top: 0;
+    }
+
+    /* -- TIMELINE (glassy) -- */
+    .timeline {
+      display: flex;
+      gap: 0;
+      margin-top: 32px;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(0,0,0,0.06);
+      border-radius: 1px;
+    }
+    .timeline-step {
+      flex: 1;
+      position: relative;
+      padding-top: 48px;
+      padding-right: 16px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 500ms ease, transform 500ms ease;
+    }
+    .timeline-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .timeline-step::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+      border: 2px solid rgba(0,0,0,0.15);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .timeline-number {
+      font-size: 12px;
+      font-weight: 500;
+      color: #9A9A9A;
+      margin-bottom: 4px;
+    }
+    .timeline-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .timeline-desc {
+      font-size: 12px;
+      color: #6B6B6B;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .timeline-tag {
+      display: inline-block;
+      font-size: 11px;
+      color: #6B6B6B;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(0,0,0,0.06);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* -- WIREFRAMES / MOCKUPS GRID -- */
+    .wireframe-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .wireframe-item {
+      position: relative;
+    }
+    .wireframe-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 12px;
+      display: block;
+      object-fit: cover;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .wireframe-placeholder {
+      border-radius: 12px;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #9A9A9A;
+      background: linear-gradient(135deg, rgba(210,180,230,0.25) 0%, rgba(180,210,240,0.2) 50%, rgba(180,225,210,0.15) 100%);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .wireframe-caption {
+      font-size: 13px;
+      color: #6B6B6B;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* -- OUTCOME -- */
+    .outcome-text {
+      color: #6B6B6B;
+      margin-bottom: 16px;
+      max-width: 640px;
+    }
+
+    /* -- REFLECTION (glass columns) -- */
+    .reflection-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .reflection-col {
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 14px;
+      padding: 24px;
+    }
+    .reflection-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .reflection-text {
+      font-size: 14px;
+      color: #6B6B6B;
+      line-height: 1.6;
+    }
+
+    /* -- NEXT CASE (glass) -- */
+    .next-case {
+      margin-top: 80px;
+      padding: 24px 28px;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .next-case:hover {
+      background: rgba(255,255,255,0.7);
+      transform: translateY(-2px);
+    }
+    .next-case-label {
+      font-size: 14px;
+      color: #9A9A9A;
+      transition: transform 200ms ease;
+    }
+    .next-case:hover .next-case-label {
+      transform: translateX(4px);
+    }
+    .next-case-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* -- FOOTER (glass) -- */
+    .footer {
+      padding: 40px 0;
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+    .footer-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+    }
+    .footer-name {
+      font-weight: 500;
+    }
+    .footer-role {
+      color: #6B6B6B;
+    }
+    .footer-right {
+      display: flex;
+      gap: 24px;
+      color: #6B6B6B;
+    }
+    .footer-right a {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .footer-right a:hover {
+      color: #1A1A1A;
+    }
+    .footer-right a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #6B6B6B;
+      transition: width 200ms ease;
+    }
+    .footer-right a:hover::after {
+      width: 100%;
+    }
+
+    /* -- SCROLL REVEAL -- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 600ms ease, transform 600ms ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* -- RESPONSIVE -- */
+    @media (max-width: 768px) {
+      .case-hero h1 { font-size: 36px; }
+      .persona-grid { grid-template-columns: 1fr; }
+      .strategy-table td:first-child { width: 100px; }
+      .wireframe-grid { grid-template-columns: 1fr; }
+      .reflection-grid { grid-template-columns: 1fr; }
+      .timeline { flex-direction: column; gap: 0; }
+      .timeline::before {
+        top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto;
+      }
+      .timeline-step { padding-top: 0; padding-left: 32px; padding-bottom: 32px; }
+      .timeline-step::before { top: 4px; left: 0; }
+      .next-case { flex-direction: column; gap: 8px; align-items: flex-start; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-right { justify-content: center; }
+
+      .blob { opacity: 0.25; }
+      .blob-1 { width: 300px; height: 300px; }
+      .blob-2 { width: 280px; height: 280px; }
+      .blob-3 { width: 260px; height: 260px; }
+
+      .concept-label {
+        top: 12px;
+        right: 12px;
+        font-size: 11px;
+        padding: 6px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Concept label -->
+  <div class="concept-label">Concept: Glassmorphism</div>
+
+  <!-- Background blobs -->
+  <div class="blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- STICKY HEADER -->
+  <header class="case-header">
+    <div class="case-header-inner">
+      <a href="concept-glass.html" class="case-header-back">&larr; Back</a>
+      <span class="case-header-name">Data Marketplace</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="container">
+    <section class="case-hero">
+      <h1>Data Marketplace</h1>
+      <p class="case-hero-meta">Enterprise tool &middot; 2026</p>
+      <p class="case-hero-role">Lead UX &mdash; Halliburton</p>
+      <p class="case-hero-result">Internal enterprise platform for managing and distributing geoscience data</p>
+      <hr class="case-hero-divider">
+      <div class="case-hero-image">
+        <img src="assets/images/halliburton/cover.webp" alt="Data Marketplace — project overview" width="1440" height="810" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="case-hero-image-placeholder" style="display:none;">Cover image coming soon</span>
+      </div>
+
+      <!-- NDA NOTICE -->
+      <div class="nda-banner">
+        <svg class="nda-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span><strong>This project is under NDA.</strong> Sensitive details are blurred. General process and approach are shown.</span>
+      </div>
+    </section>
+
+    <!-- 01 — PROBLEM & CONTEXT -->
+    <section class="case-section reveal">
+      <p class="section-label">01 &mdash; Problem &amp; Context</p>
+      <h2 class="section-heading">Fragmented data across the organization</h2>
+      <p class="section-text">Halliburton's geoscience teams relied on scattered internal systems to find, request, and access critical data sets. There was no unified platform &mdash; engineers spent significant time locating data instead of using it.</p>
+      <p class="section-text">The goal: design a centralized marketplace where teams can discover, preview, and request access to internal data products &mdash; with clear ownership, metadata, and governance built in.</p>
+    </section>
+
+    <!-- 02 — PROCESS -->
+    <section class="case-section reveal">
+      <p class="section-label">02 &mdash; Process</p>
+      <h2 class="section-heading">From discovery to delivery</h2>
+      <div class="timeline">
+        <div class="timeline-step">
+          <p class="timeline-number">1.0</p>
+          <p class="timeline-title">Discovery</p>
+          <p class="timeline-desc">UX strategy and data architecture map &mdash; defining scope, goals, and system structure.</p>
+          <span class="timeline-tag">UX strategy</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">2.0</p>
+          <p class="timeline-title">User Research</p>
+          <p class="timeline-desc">Personas, UJM, JTBD, and detailed user flows for all interaction scenarios.</p>
+          <span class="timeline-tag">Personas &middot; JTBD &middot; Flows</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">3.0</p>
+          <p class="timeline-title">Prototyping</p>
+          <p class="timeline-desc">Wireframes, mockups, design system setup, and early interactive prototype.</p>
+          <span class="timeline-tag">Design system &middot; Prototype</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">4.0</p>
+          <p class="timeline-title">Usability Testing</p>
+          <p class="timeline-desc">Formative testing &mdash; synthesizing data and iterating prototype based on insights.</p>
+          <span class="timeline-tag">Formative &middot; Iteration</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">5.0</p>
+          <p class="timeline-title">Validation</p>
+          <p class="timeline-desc">Summative usability testing &mdash; second round to validate refined flows.</p>
+          <span class="timeline-tag">Summative testing</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">6.0</p>
+          <p class="timeline-title">Hand-off</p>
+          <p class="timeline-desc">Collaboration with dev team &mdash; specs, annotations, component documentation.</p>
+          <span class="timeline-tag">Dev collaboration</span>
+        </div>
+        <div class="timeline-step">
+          <p class="timeline-number">7.0</p>
+          <p class="timeline-title">Post-launch</p>
+          <p class="timeline-desc">Research and continuous improvements based on real usage data.</p>
+          <span class="timeline-tag">Analytics &middot; Iteration</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — UX STRATEGY: PHASE 1 MVP -->
+    <section class="case-section reveal">
+      <p class="section-label">03 &mdash; UX Strategy</p>
+      <h2 class="section-heading">Phase 1 &mdash; MVP</h2>
+      <p class="section-text">UX strategy is a long-term plan that connects user insights, product vision, and business objectives into a coherent direction for designing and improving the user experience.</p>
+
+      <table class="strategy-table">
+        <tr><td>Vision</td><td>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</td></tr>
+        <tr><td>Problem</td><td>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</td></tr>
+        <tr><td>Success looks like</td><td>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</td></tr>
+      </table>
+
+      <div class="accordion">
+        <details>
+          <summary>Persona groups</summary>
+          <div class="accordion-body">
+            <div class="persona-grid">
+              <div class="persona-card">
+                <div class="persona-avatar">G1</div>
+                <div>
+                  <p class="persona-card-title">Data Scientist / Engineer</p>
+                  <p class="persona-card-desc">Browse data products, fast and relevant search, preview data, request &amp; obtain access quickly.</p>
+                </div>
+              </div>
+              <div class="persona-card">
+                <div class="persona-avatar">G2</div>
+                <div>
+                  <p class="persona-card-title">Business User</p>
+                  <p class="persona-card-desc">Find existing reports (PBI, Tableau, Spotfire, Databricks) that answer questions from trusted data.</p>
+                </div>
+              </div>
+              <div class="persona-card">
+                <div class="persona-avatar">G3</div>
+                <div>
+                  <p class="persona-card-title">Data Product Owner</p>
+                  <p class="persona-card-desc">Manage data product info, approve/reject accesses, define level of access.</p>
+                </div>
+              </div>
+              <div class="persona-card">
+                <div class="persona-avatar">G4</div>
+                <div>
+                  <p class="persona-card-title">Data POD Lead</p>
+                  <p class="persona-card-desc">Oversee data products across teams, monitor quality and access patterns.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary>UX Goals</summary>
+          <div class="accordion-body">
+            <ul class="accordion-list">
+              <li>Validate whether users can find the right Data Product quickly</li>
+              <li>Check if users understand Data Product cards and details</li>
+              <li>Evaluate how easily users can request access</li>
+              <li>Validate clarity of access statuses and permissions</li>
+              <li>Test understanding of View vs Edit access levels</li>
+              <li>Validate that product owners can easily add existing products</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>Core user scenarios</summary>
+          <div class="accordion-body">
+            <ul class="accordion-list">
+              <li>Search and discover relevant data products</li>
+              <li>Filter and narrow down data products</li>
+              <li>Open dataset detail page and understand if it's usable</li>
+              <li>Request and get 1-click access directly from dataset page</li>
+              <li>Track access request status</li>
+              <li>Compare data sets</li>
+              <li>Add and manage data products</li>
+              <li>Manage access levels</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>UX Principles</summary>
+          <div class="accordion-body">
+            <ul class="accordion-list">
+              <li>Reduce user's cognitive load</li>
+              <li>Clarity and Simplicity</li>
+              <li>Visual Hierarchy</li>
+              <li>Consistency</li>
+              <li>Feedback and Interactivity</li>
+              <li>Efficiency and Speed</li>
+              <li>Accessibility and Readability</li>
+              <li>Desktop first</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary><span>UX KPIs &amp; Business Goals</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Efficiency</td><td>Search time: from weeks to under 5 minutes. Access request time: from months to under N days.</td></tr>
+                  <tr><td>Adoption</td><td>% of engineers actively using the marketplace. % of data products onboarded.</td></tr>
+                  <tr><td>Quality</td><td>User satisfaction score (CSAT). % of users who find the right product on first search.</td></tr>
+                  <tr><td>Business</td><td>1) Reduce search time. 2) Reduce access approval time. 3) Increase trust. 4) Support all user journeys.</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary><span>Roadmap &mdash; 7 phases</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Phase 1</td><td>Discovery &mdash; UX strategy, Data architecture map</td></tr>
+                  <tr><td>Phase 2</td><td>User research &mdash; Personas, UJM, User flows, JTBD</td></tr>
+                  <tr><td>Phase 3</td><td>Market analysis &mdash; Competitor analysis</td></tr>
+                  <tr><td>Phase 4</td><td>Prototyping &mdash; Wireframes, Mockups, Design system</td></tr>
+                  <tr><td>Phase 5</td><td>Validation &mdash; Usability testing (2 rounds)</td></tr>
+                  <tr><td>Phase 6</td><td>Design hand-off &amp; dev collaboration</td></tr>
+                  <tr><td>Phase 7</td><td>Post launch research &amp; improvements</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary><span>Key deliverables</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <ul class="accordion-list">
+                  <li>UX strategy &amp; Roadmap</li>
+                  <li>Personas &amp; JTBD</li>
+                  <li>User journey maps &amp; Userflows</li>
+                  <li>Wireframes and mockups</li>
+                  <li>Interactive prototype</li>
+                  <li>Usability testing reports (2 rounds)</li>
+                  <li>Scalable design system</li>
+                  <li>Post launch research report</li>
+                </ul>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 04 — UX STRATEGY: PHASE 2 -->
+    <section class="case-section reveal">
+      <p class="section-label">04 &mdash; UX Strategy</p>
+      <h2 class="section-heading">Phase 2 &mdash; Trust, Social &amp; AI-Powered</h2>
+      <p class="section-text">Phase 2 evolved the marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</p>
+
+      <table class="strategy-table">
+        <tr><td>Vision</td><td>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</td></tr>
+        <tr><td>Problem</td><td>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</td></tr>
+        <tr><td>Success looks like</td><td>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</td></tr>
+      </table>
+
+      <div class="accordion">
+        <details>
+          <summary>Structural changes</summary>
+          <div class="accordion-body">
+            <table class="strategy-table">
+              <tr><td>Phase 1 &rarr; 2</td><td>Main page becomes Explore page (browse + filters, unchanged). New Main page = AI-powered Home page with large search bar + 6 personalized recommendation boxes. Intent-first entry point.</td></tr>
+            </table>
+          </div>
+        </details>
+        <details>
+          <summary>UX Goals</summary>
+          <div class="accordion-body">
+            <ul class="accordion-list">
+              <li>Reduce time to find the right data product from weeks to minutes</li>
+              <li>Give users confidence to trust data before requesting access</li>
+              <li>Make approval decisions faster for owners</li>
+              <li>Surface peer knowledge that currently lives only in people's heads</li>
+              <li>Support both technical (G1) and non-technical (G2) user journeys</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary><span>AI-powered features</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>AI Home</td><td>Natural language input &mdash; user describes what they need. AI response + ranked dataset cards.</td></tr>
+                  <tr><td>Recommendations</td><td>6 personalized boxes: Continue exploring, Most trusted, New since last visit, Pending action, Colleagues using, For you.</td></tr>
+                  <tr><td>AI Ranking</td><td>Relevance + Quality score + Certification status + Access availability</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary><span>Feature clusters</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Trust</td><td>Quality score, Certified badges, Lineage visualization, Approval workflow</td></tr>
+                  <tr><td>Social</td><td>Reviews &amp; Usage tab, Peer recommendations, Owner reputation</td></tr>
+                  <tr><td>Governance</td><td>Sensitivity classification, auto-tagging, Adoption analytics</td></tr>
+                  <tr><td>AI Discovery</td><td>NL search, Hybrid AI response, Personalized recommendations</td></tr>
+                  <tr><td>Billing</td><td>Subscription model, Plan comparison, Transparent pricing</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Efficiency</td><td>Search-to-access conversion &uarr;, time to find dataset &darr;, approval time &darr;</td></tr>
+                  <tr><td>Adoption</td><td>% engineers using marketplace &uarr;, certified vs uncertified &uarr;</td></tr>
+                  <tr><td>Trust</td><td>Quality badge CTR &uarr;, preview-to-request conversion &uarr;</td></tr>
+                  <tr><td>Social</td><td>Reviews per dataset &uarr;, peer recommendation CTR &uarr;</td></tr>
+                  <tr><td>Billing</td><td>Plan upgrade rate &uarr;, checkout completion &uarr;, cart abandonment &darr;</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 05 — WIREFRAMES (blurred) -->
+    <section class="case-section reveal">
+      <p class="section-label">05 &mdash; Wireframes</p>
+      <h2 class="section-heading">Defining the structure</h2>
+      <p class="section-text">Lo-fi wireframes defined the core layout before any visual design decisions were made.</p>
+
+      <div class="nda-block nda-block-standalone">
+        <div class="nda-content" aria-hidden="true">
+          <div class="wireframe-grid">
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/wireframe-1.webp" alt="Marketplace home wireframe" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Marketplace home</div>';">
+              <p class="wireframe-caption">Dashboard &mdash; search and filter flow</p>
+            </div>
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/wireframe-2.webp" alt="Dataset detail wireframe" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Dataset detail</div>';">
+              <p class="wireframe-caption">Metadata overview, preview, and access request</p>
+            </div>
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/wireframe-3.webp" alt="Access request wireframe" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Access request</div>';">
+              <p class="wireframe-caption">Request flow with justification and routing</p>
+            </div>
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/wireframe-4.webp" alt="Admin dashboard wireframe" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Admin dashboard</div>';">
+              <p class="wireframe-caption">Data owner view &mdash; manage and monitor</p>
+            </div>
+          </div>
+        </div>
+        <div class="nda-overlay">
+          <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — MOCKUPS (blurred) -->
+    <section class="case-section reveal">
+      <p class="section-label">06 &mdash; Mockups</p>
+      <h2 class="section-heading">High-fidelity screens</h2>
+      <p class="section-text">Final designs built on top of the corporate design system with custom marketplace components.</p>
+
+      <div class="nda-block nda-block-standalone">
+        <div class="nda-content" aria-hidden="true">
+          <div class="wireframe-grid">
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/mockup-1.webp" alt="AI Home page mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>AI Home page</div>';">
+              <p class="wireframe-caption">AI-powered home &mdash; search and recommendations</p>
+            </div>
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/mockup-2.webp" alt="Explore page mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Explore page</div>';">
+              <p class="wireframe-caption">Browse with filters, cards, certification badges</p>
+            </div>
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/mockup-3.webp" alt="Dataset detail mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Dataset detail</div>';">
+              <p class="wireframe-caption">Data catalog &mdash; detail view</p>
+            </div>
+            <div class="wireframe-item">
+              <img class="wireframe-img" src="assets/images/halliburton/mockup-4.webp" alt="Access request flow mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Access request flow</div>';">
+              <p class="wireframe-caption">In-app request with approval status</p>
+            </div>
+          </div>
+        </div>
+        <div class="nda-overlay">
+          <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 — OUTCOME -->
+    <section class="case-section reveal">
+      <p class="section-label">07 &mdash; Outcome</p>
+      <h2 class="section-heading">Shipped to internal teams</h2>
+      <p class="outcome-text">The Data Marketplace was delivered to Halliburton's internal engineering teams in 2026. The platform unified data discovery across the organization and introduced a governed access request workflow for the first time.</p>
+      <p class="outcome-text">Specific metrics and adoption data are confidential under NDA.</p>
+    </section>
+
+    <!-- 08 — REFLECTION -->
+    <section class="case-section reveal">
+      <p class="section-label">08 &mdash; Reflection</p>
+      <h2 class="section-heading">Looking back</h2>
+      <div class="reflection-grid">
+        <div class="reflection-col">
+          <p class="reflection-title">What I'd do differently</p>
+          <p class="reflection-text">Involve data governance stakeholders earlier in the process. Their requirements surfaced late and required reworking the access request flow mid-project.</p>
+        </div>
+        <div class="reflection-col">
+          <p class="reflection-title">What I learned</p>
+          <p class="reflection-text">Enterprise data products need trust-building at every layer &mdash; from metadata quality to access transparency. Users won't adopt a tool if they can't trust the data inside it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEXT CASE -->
+    <a href="dogly.html" class="next-case">
+      <span class="next-case-label">Next case &rarr;</span>
+      <span class="next-case-name">Dogly &mdash; Mobile App</span>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><span class="footer-name">Yury</span> &middot; <span class="footer-role">Lead UX Designer</span></div>
+      <div class="footer-right">
+        <a href="mailto:hello@yury.design">Email</a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <span>Batumi, GE</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal for sections
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Timeline steps stagger animation
+    const timelineObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const steps = entry.target.querySelectorAll('.timeline-step');
+          steps.forEach((step, i) => {
+            setTimeout(() => step.classList.add('visible'), i * 100);
+          });
+          timelineObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.timeline').forEach(el => timelineObserver.observe(el));
+  </script>
+
+</body>
+</html>

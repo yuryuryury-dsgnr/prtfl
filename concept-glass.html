@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yury — Lead UX Designer | Glassmorphism Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      color: #1A1A1A;
+      background: #F5F3EF;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* -- Concept label -- */
+    .concept-label {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #6B6B6B;
+    }
+
+    /* -- Background blobs -- */
+    .blobs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      will-change: transform;
+    }
+
+    .blob-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(244,180,190,0.35) 0%, transparent 70%);
+      top: -8%;
+      left: -5%;
+      animation: float1 20s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(190,180,240,0.3) 0%, transparent 70%);
+      top: 35%;
+      right: -5%;
+      animation: float2 24s ease-in-out infinite;
+    }
+
+    .blob-3 {
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(180,220,200,0.3) 0%, transparent 70%);
+      bottom: -8%;
+      left: 25%;
+      animation: float3 22s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 80px) scale(1.05); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-70px, -50px) scale(1.06); }
+    }
+
+    @keyframes float3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(50px, -60px) scale(1.04); }
+    }
+
+    /* -- Glass utility -- */
+    .glass {
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+    }
+
+    /* -- Layout -- */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* -- Hero -- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .hero-inner {
+      max-width: 700px;
+    }
+
+    .hero h1 {
+      font-size: 72px;
+      font-weight: 500;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+      color: #1A1A1A;
+    }
+
+    .hero .subtitle {
+      font-size: 22px;
+      font-weight: 400;
+      color: #6B6B6B;
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero .bio {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #6B6B6B;
+      max-width: 520px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-glass {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.08);
+      color: #1A1A1A;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btn-glass:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.8);
+      border-color: rgba(0,0,0,0.12);
+    }
+
+    .btn-glass.primary {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .btn-glass.primary:hover {
+      background: rgba(255,255,255,0.85);
+      border-color: rgba(0,0,0,0.15);
+    }
+
+    /* -- About -- */
+    .about {
+      padding: 100px 0;
+    }
+
+    .about-card {
+      padding: 48px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .about-text h2 {
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+      color: #1A1A1A;
+    }
+
+    .about-text p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #6B6B6B;
+    }
+
+    .about-skills h3 {
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-pill {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,0,0,0.06);
+      font-size: 13px;
+      font-weight: 400;
+      color: #6B6B6B;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .skill-pill:hover {
+      background: rgba(255,255,255,0.75);
+      border-color: rgba(0,0,0,0.1);
+    }
+
+    /* -- Cases -- */
+    .cases {
+      padding: 60px 0 100px;
+    }
+
+    .cases .section-title {
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: -1px;
+      margin-bottom: 48px;
+      color: #1A1A1A;
+    }
+
+    .cases-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .case-card {
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.35s ease, background 0.35s ease;
+    }
+
+    .case-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.75);
+    }
+
+    .case-thumb {
+      height: 220px;
+      border-radius: 15px 15px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .case-thumb-1 {
+      background: linear-gradient(135deg, rgba(210,180,230,0.5) 0%, rgba(180,210,240,0.4) 50%, rgba(180,225,210,0.3) 100%);
+    }
+
+    .case-thumb-2 {
+      background: linear-gradient(135deg, rgba(240,190,190,0.5) 0%, rgba(240,210,170,0.4) 50%, rgba(240,230,170,0.3) 100%);
+    }
+
+    .case-thumb-3 {
+      background: linear-gradient(135deg, rgba(180,200,240,0.5) 0%, rgba(180,225,210,0.4) 50%, rgba(200,235,200,0.3) 100%);
+    }
+
+    .case-thumb-4 {
+      background: linear-gradient(135deg, rgba(220,190,240,0.5) 0%, rgba(240,190,210,0.4) 50%, rgba(240,200,190,0.3) 100%);
+    }
+
+    .case-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.15) 40px,
+        rgba(255,255,255,0.15) 41px
+      );
+    }
+
+    .case-info {
+      padding: 24px;
+    }
+
+    .case-info h3 {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #1A1A1A;
+    }
+
+    .case-info .case-client {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 14px;
+    }
+
+    .case-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .case-tag {
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 400;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,0,0,0.06);
+      color: #6B6B6B;
+    }
+
+    .case-tag.nda {
+      background: rgba(230,120,150,0.12);
+      border-color: rgba(230,120,150,0.25);
+      color: rgba(200,70,100,0.85);
+    }
+
+    /* -- Footer -- */
+    .footer {
+      padding: 32px 0;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      padding: 24px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #6B6B6B;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: #999;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #1A1A1A;
+    }
+
+    /* -- Scroll-reveal -- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* -- Responsive -- */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 44px;
+        letter-spacing: -1px;
+      }
+
+      .hero .subtitle {
+        font-size: 18px;
+      }
+
+      .hero .bio {
+        font-size: 15px;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .about-card {
+        padding: 28px;
+      }
+
+      .cases-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .case-thumb {
+        height: 180px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .blob {
+        opacity: 0.25;
+      }
+
+      .blob-1 { width: 300px; height: 300px; }
+      .blob-2 { width: 280px; height: 280px; }
+      .blob-3 { width: 260px; height: 260px; }
+
+      .concept-label {
+        top: 12px;
+        right: 12px;
+        font-size: 11px;
+        padding: 6px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Concept label -->
+  <div class="concept-label">Concept: Glassmorphism</div>
+
+  <!-- Background blobs -->
+  <div class="blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Yury</h1>
+      <p class="subtitle">Lead UX Designer</p>
+      <p class="bio">Designing intuitive digital experiences at the intersection of user needs and business goals. Focused on enterprise platforms, mobile apps, and design systems that scale.</p>
+      <div class="hero-buttons">
+        <a href="#cases" class="btn-glass primary">View work &#8595;</a>
+        <a href="#footer" class="btn-glass">Get in touch &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about">
+    <div class="container">
+      <div class="about-card glass reveal">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2>About</h2>
+            <p>I craft user-centered experiences for complex products, translating business requirements into clean, functional interfaces. With years of experience spanning enterprise tools, consumer mobile apps, and web platforms, I bring a systematic approach to design &mdash; balancing aesthetics with usability, and vision with pragmatism.</p>
+          </div>
+          <div class="about-skills">
+            <h3>Skills &amp; tools</h3>
+            <div class="skills-list">
+              <span class="skill-pill">UX Research</span>
+              <span class="skill-pill">UI Design</span>
+              <span class="skill-pill">Design Systems</span>
+              <span class="skill-pill">Prototyping</span>
+              <span class="skill-pill">Figma</span>
+              <span class="skill-pill">User Testing</span>
+              <span class="skill-pill">Interaction Design</span>
+              <span class="skill-pill">Information Architecture</span>
+              <span class="skill-pill">Wireframing</span>
+              <span class="skill-pill">Mobile Design</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cases -->
+  <section class="cases" id="cases">
+    <div class="container">
+      <h2 class="section-title reveal">Selected work</h2>
+      <div class="cases-grid">
+
+        <div class="case-card glass reveal">
+          <div class="case-thumb case-thumb-1"></div>
+          <div class="case-info">
+            <h3>Data Marketplace</h3>
+            <p class="case-client">Halliburton &middot; 2026</p>
+            <div class="case-tags">
+              <span class="case-tag">Enterprise tool</span>
+              <span class="case-tag nda">NDA</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-card glass reveal">
+          <div class="case-thumb case-thumb-2"></div>
+          <div class="case-info">
+            <h3>Dogly</h3>
+            <p class="case-client">2025</p>
+            <div class="case-tags">
+              <span class="case-tag">Mobile app</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-card glass reveal">
+          <div class="case-thumb case-thumb-3"></div>
+          <div class="case-info">
+            <h3>DobroDoc+</h3>
+            <p class="case-client">2020</p>
+            <div class="case-tags">
+              <span class="case-tag">Mobile app</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-card glass reveal">
+          <div class="case-thumb case-thumb-4"></div>
+          <div class="case-info">
+            <h3>dopas.dp.ua</h3>
+            <p class="case-client">2020</p>
+            <div class="case-tags">
+              <span class="case-tag">Web platform</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-inner glass">
+        <span class="footer-name">Yury &mdash; Lead UX Designer</span>
+        <div class="footer-links">
+          <a href="#">LinkedIn</a>
+          <a href="#">Dribbble</a>
+          <a href="#">Email</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal'));
+          const index = siblings.indexOf(entry.target);
+          entry.target.style.transitionDelay = (index * 0.1) + 's';
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
