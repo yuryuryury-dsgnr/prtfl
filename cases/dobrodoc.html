@@ -40,18 +40,17 @@
     .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
 
     .case-hero-image {
-      width: 100%;
-      aspect-ratio: 16 / 9;
+      width: calc(100% + 160px);
+      margin-left: -80px;
       background: #EEEDEA;
-      border-radius: 12px;
-      margin-top: 40px;
+      border-radius: 16px;
+      margin-top: 48px;
       position: relative;
       overflow: hidden;
     }
     .case-hero-image img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
       border-radius: 12px;
     }
@@ -210,8 +209,8 @@
       <p class="case-hero-result">Redesign cut time-to-booking by 40% in usability tests</p>
       <hr class="case-hero-divider">
       <div class="case-hero-image">
-        <!-- <img src="../images/dobrodoc-hero.jpg" alt="DobroDoc+ project overview"> -->
-        <span class="case-hero-image-placeholder">Cover image coming soon</span>
+        <img src="../assets/images/dobrodoc/DobroDoc cover.png" alt="DobroDoc+ project overview" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
       </div>
     </section>
 

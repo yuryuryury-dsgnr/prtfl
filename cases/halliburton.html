@@ -46,19 +46,18 @@
     .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
 
     .case-hero-image {
-      width: 100%;
-      aspect-ratio: 16 / 9;
+      width: calc(100% + 160px);
+      margin-left: -80px;
       background: #E8E6E1;
-      border-radius: 12px;
-      margin-top: 40px;
+      border-radius: 16px;
+      margin-top: 48px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 4px 24px rgba(0,0,0,0.06);
     }
     .case-hero-image img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
       border-radius: 12px;
     }
@@ -499,42 +498,36 @@
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
           <p class="timeline-title">Discovery</p>
-          <p class="timeline-desc">UX strategy and data architecture map &mdash; defining scope, goals, and system structure.</p>
-          <span class="timeline-tag">UX strategy</span>
+          <p class="timeline-desc">2 UX strategies for 2 product phases &mdash; defining vision, goals, and system direction.</p>
+          <span class="timeline-tag">UX strategy &middot; 2 phases</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">2.0</p>
-          <p class="timeline-title">User Research</p>
+          <p class="timeline-title">Research</p>
           <p class="timeline-desc">Personas, UJM, JTBD, and detailed user flows for all interaction scenarios.</p>
           <span class="timeline-tag">Personas &middot; JTBD &middot; Flows</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">3.0</p>
-          <p class="timeline-title">Prototyping</p>
-          <p class="timeline-desc">Wireframes, mockups, design system setup, and early interactive prototype.</p>
-          <span class="timeline-tag">Design system &middot; Prototype</span>
+          <p class="timeline-title">Prototype &amp; Design System</p>
+          <p class="timeline-desc">AI-based prototype, Figma mockups, wireframes, and design system setup.</p>
+          <span class="timeline-tag">AI prototype &middot; Figma &middot; Wireframes</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">4.0</p>
-          <p class="timeline-title">Usability Testing</p>
-          <p class="timeline-desc">Formative testing &mdash; synthesizing data and iterating prototype based on insights.</p>
-          <span class="timeline-tag">Formative &middot; Iteration</span>
+          <p class="timeline-title">Validation</p>
+          <p class="timeline-desc">2 rounds of usability testing &mdash; formative and summative, iterating based on insights.</p>
+          <span class="timeline-tag">2 rounds &middot; Usability testing</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">5.0</p>
-          <p class="timeline-title">Validation</p>
-          <p class="timeline-desc">Summative usability testing &mdash; second round to validate refined flows.</p>
-          <span class="timeline-tag">Summative testing</span>
+          <p class="timeline-title">Hand-off to Dev</p>
+          <p class="timeline-desc">AI-powered dev collaboration with MCP &mdash; specs, annotations, component documentation.</p>
+          <span class="timeline-tag">AI dev &middot; MCP</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">6.0</p>
-          <p class="timeline-title">Hand-off</p>
-          <p class="timeline-desc">Collaboration with dev team &mdash; specs, annotations, component documentation.</p>
-          <span class="timeline-tag">Dev collaboration</span>
-        </div>
-        <div class="timeline-step">
-          <p class="timeline-number">7.0</p>
-          <p class="timeline-title">Post-launch</p>
+          <p class="timeline-title">Post-launch Research</p>
           <p class="timeline-desc">Research and continuous improvements based on real usage data.</p>
           <span class="timeline-tag">Analytics &middot; Iteration</span>
         </div>
@@ -791,9 +784,103 @@
       </div>
     </section>
 
-    <!-- 04 — WIREFRAMES (blurred) -->
+    <!-- 04 — RESEARCH -->
     <section class="case-section reveal">
-      <p class="section-label">04 &mdash; Wireframes</p>
+      <p class="section-label">04 &mdash; Research</p>
+      <h2 class="section-heading">Understanding users and their journeys</h2>
+      <p class="section-text">Deep research phase to map out who uses the platform, how they interact with it, and where the friction points are.</p>
+
+      <div class="accordion">
+        <details>
+          <summary><span>Personas</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">4 persona groups were defined based on interviews and stakeholder workshops, each with distinct goals, pain points, and access patterns.</p>
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <div class="persona-grid">
+                  <div class="persona-card">
+                    <div class="persona-avatar">G1</div>
+                    <div>
+                      <p class="persona-card-title">Data Scientist / Engineer</p>
+                      <p class="persona-card-desc">Needs fast search, data preview, and quick access requests. Works with raw datasets daily.</p>
+                    </div>
+                  </div>
+                  <div class="persona-card">
+                    <div class="persona-avatar">G2</div>
+                    <div>
+                      <p class="persona-card-title">Business User</p>
+                      <p class="persona-card-desc">Looks for ready-made reports and dashboards. Non-technical, needs clear trust signals.</p>
+                    </div>
+                  </div>
+                  <div class="persona-card">
+                    <div class="persona-avatar">G3</div>
+                    <div>
+                      <p class="persona-card-title">Data Product Owner</p>
+                      <p class="persona-card-desc">Manages product metadata, approves access, defines permissions and governance rules.</p>
+                    </div>
+                  </div>
+                  <div class="persona-card">
+                    <div class="persona-avatar">G4</div>
+                    <div>
+                      <p class="persona-card-title">Data POD Lead</p>
+                      <p class="persona-card-desc">Oversees multiple data products across teams, monitors quality and adoption metrics.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary><span>User Flows</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Detailed user flows were mapped for every key interaction scenario across all persona groups.</p>
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Search &amp; Discover</td><td>Landing &rarr; Search/Browse &rarr; Filter &rarr; Preview dataset &rarr; View details</td></tr>
+                  <tr><td>Request Access</td><td>Dataset page &rarr; Request access &rarr; Justification &rarr; Owner approval &rarr; Access granted</td></tr>
+                  <tr><td>Manage Products</td><td>Owner dashboard &rarr; Add/edit product &rarr; Set metadata &rarr; Define access levels &rarr; Publish</td></tr>
+                  <tr><td>Compare Datasets</td><td>Search results &rarr; Select multiple &rarr; Side-by-side comparison &rarr; Choose best fit</td></tr>
+                  <tr><td>Track Requests</td><td>My requests &rarr; View status &rarr; Pending/Approved/Rejected &rarr; Re-request if needed</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+        <details>
+          <summary><span>User Journey Map</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">End-to-end journey maps captured the full experience from awareness to daily usage, highlighting emotions, pain points, and opportunities at each stage.</p>
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Awareness</td><td>User hears about the marketplace from a colleague or internal announcement. Pain: unclear what it offers.</td></tr>
+                  <tr><td>First Visit</td><td>Explores the platform, browses categories. Pain: overwhelming amount of data, no trust signals.</td></tr>
+                  <tr><td>Search &amp; Filter</td><td>Tries to find a specific dataset. Pain: too many results, unclear which is the right one.</td></tr>
+                  <tr><td>Evaluate</td><td>Opens dataset details, checks metadata and preview. Pain: can't judge data quality or freshness.</td></tr>
+                  <tr><td>Request Access</td><td>Submits access request with justification. Pain: long approval times, no visibility into status.</td></tr>
+                  <tr><td>Daily Use</td><td>Returns regularly to find and consume data. Opportunity: recommendations, saved searches, notifications.</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 05 — WIREFRAMES (blurred) -->
+    <section class="case-section reveal">
+      <p class="section-label">05 &mdash; Wireframes</p>
       <h2 class="section-heading">Defining the structure</h2>
       <p class="section-text">Lo-fi wireframes defined the core layout before any visual design decisions were made.</p>
 
@@ -826,7 +913,7 @@
 
     <!-- 06 — MOCKUPS (blurred) -->
     <section class="case-section reveal">
-      <p class="section-label">05 &mdash; Mockups</p>
+      <p class="section-label">06 &mdash; Mockups</p>
       <h2 class="section-heading">High-fidelity screens</h2>
       <p class="section-text">Final designs built on top of the corporate design system with custom marketplace components.</p>
 
@@ -859,7 +946,7 @@
 
     <!-- 07 — OUTCOME -->
     <section class="case-section reveal">
-      <p class="section-label">06 &mdash; Outcome</p>
+      <p class="section-label">07 &mdash; Outcome</p>
       <h2 class="section-heading">Shipped to internal teams</h2>
       <p class="outcome-text">The Data Marketplace was delivered to Halliburton's internal engineering teams in 2026. The platform unified data discovery across the organization and introduced a governed access request workflow for the first time.</p>
       <p class="outcome-text">Specific metrics and adoption data are confidential under NDA.</p>
@@ -867,7 +954,7 @@
 
     <!-- 08 — REFLECTION -->
     <section class="case-section reveal">
-      <p class="section-label">07 &mdash; Reflection</p>
+      <p class="section-label">08 &mdash; Reflection</p>
       <h2 class="section-heading">Looking back</h2>
       <div class="reflection-grid">
         <div class="reflection-col">
