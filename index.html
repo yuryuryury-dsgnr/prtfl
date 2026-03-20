@@ -93,9 +93,7 @@
 
     /* ——— HERO ——— */
     .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
+      padding: 120px 0 0;
       position: relative;
       overflow: hidden;
     }
@@ -210,7 +208,7 @@
 
     /* ——— CASES ——— */
     .cases {
-      padding: 120px 0;
+      padding: 64px 0 120px;
     }
 
     .section-title {
@@ -462,7 +460,7 @@
       <p class="hero-title">Lead UX Designer</p>
       <p class="hero-bio">Designing digital products from research to launch. Focused on enterprise tools, mobile apps, and design systems.</p>
       <div class="hero-links">
-        <a href="#work" class="hero-link">View work ↓</a>
+        <a href="#about" class="hero-link">About me ↓</a>
         <a href="mailto:hello@yury.design" class="hero-link">Get in touch →</a>
       </div>
     </div>
@@ -545,36 +543,9 @@
     </svg>
   </section>
 
-  <!-- ABOUT -->
-  <section class="about">
-    <div class="container">
-      <div class="about-grid">
-        <div>
-          <p class="about-text">I help companies turn complex problems into clear, usable products. With experience across enterprise platforms, mobile apps, and web products, I lead the design process end-to-end — from user research and information architecture to prototyping and launch.</p>
-        </div>
-        <div>
-          <p class="about-skills-title">Skills & tools</p>
-          <ul class="about-skills-list">
-            <li>Figma</li>
-            <li>FigJam</li>
-            <li>User Research</li>
-            <li>Usability Testing</li>
-            <li>Design Systems</li>
-            <li>Prototyping</li>
-            <li>JTBD</li>
-            <li>Journey Mapping</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- CASES -->
   <section class="cases" id="work">
     <div class="container">
-      <h2 class="section-title">Selected work</h2>
-      <p class="section-subtitle">2020 — 2026</p>
-
       <div class="cases-grid">
 
         <!-- Card 1: Data Marketplace -->
@@ -615,8 +586,8 @@
         <!-- Card 3: DobroDoc+ -->
         <a href="cases/dobrodoc.html" class="case-card">
           <div class="case-thumb">
-            <!-- <img src="images/dobrodoc-cover.jpg" alt="DobroDoc+"> -->
-            <span class="case-thumb-placeholder">Image coming soon</span>
+            <img src="assets/images/dobrodoc/DobroDoc cover.png" alt="DobroDoc+" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
           </div>
           <div class="case-body">
             <p class="case-meta">2020</p>
@@ -631,8 +602,8 @@
         <!-- Card 4: dopas.dp.ua -->
         <a href="cases/dopas.html" class="case-card">
           <div class="case-thumb">
-            <!-- <img src="images/dopas-cover.jpg" alt="dopas.dp.ua"> -->
-            <span class="case-thumb-placeholder">Image coming soon</span>
+            <img src="assets/images/dopas/Dopas cover.png" alt="dopas.dp.ua" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
           </div>
           <div class="case-body">
             <p class="case-meta">2020</p>
@@ -644,6 +615,30 @@
           </div>
         </a>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <p class="about-text">I help companies turn complex problems into clear, usable products. With experience across enterprise platforms, mobile apps, and web products, I lead the design process end-to-end — from user research and information architecture to prototyping and launch.</p>
+        </div>
+        <div>
+          <p class="about-skills-title">Skills & tools</p>
+          <ul class="about-skills-list">
+            <li>Figma</li>
+            <li>FigJam</li>
+            <li>User Research</li>
+            <li>Usability Testing</li>
+            <li>Design Systems</li>
+            <li>Prototyping</li>
+            <li>JTBD</li>
+            <li>Journey Mapping</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
