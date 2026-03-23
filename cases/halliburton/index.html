@@ -1219,9 +1219,44 @@
       </div>
     </section>
 
-    <!-- 06 — OUTCOME -->
+    <!-- 06 — HAND-OFF TO DEV -->
     <section class="case-section reveal">
-      <p class="section-label">06 &mdash; Outcome</p>
+      <p class="section-label">06 &mdash; Hand-off to Dev</p>
+      <h2 class="section-heading">AI-powered design-to-code pipeline</h2>
+      <p class="section-text">Instead of traditional hand-off with static specs and redlines, we connected the dev team directly to the design system through an MCP (Model Context Protocol) server linked to Figma.</p>
+      <p class="section-text">This meant developers could query the design system programmatically &mdash; pulling component specs, tokens, spacing values, and interaction states directly into their code environment. No more guessing from screenshots or outdated documentation.</p>
+
+      <div class="accordion">
+        <details open>
+          <summary><span>How MCP + Figma worked</span></summary>
+          <div class="accordion-body">
+            <table class="strategy-table">
+              <tr><td>Connection</td><td>MCP server connected to Figma file, exposing the design system as structured data that dev tools could consume in real time.</td></tr>
+              <tr><td>Components</td><td>Developers accessed component specs, props, variants, and usage guidelines directly from their IDE &mdash; no context switching to Figma.</td></tr>
+              <tr><td>Tokens</td><td>Design tokens (colors, typography, spacing, elevation) synced automatically &mdash; any update in Figma propagated to code.</td></tr>
+              <tr><td>Result</td><td>Significantly reduced back-and-forth between design and dev. Components were built accurately on the first pass, matching the design system 1:1.</td></tr>
+            </table>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>What made this successful</span></summary>
+          <div class="accordion-body">
+            <ul class="accordion-list">
+              <li>Design system was structured with clear naming conventions and consistent component architecture</li>
+              <li>Every component had documented states, variants, and responsive behavior</li>
+              <li>MCP eliminated the "lost in translation" problem &mdash; devs worked with the source of truth, not interpretations</li>
+              <li>Reduced QA cycles: fewer visual bugs, fewer "this doesn't match the design" tickets</li>
+              <li>Team could focus on logic and performance instead of pixel-pushing</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 07 — OUTCOME -->
+    <section class="case-section reveal">
+      <p class="section-label">07 &mdash; Outcome</p>
       <h2 class="section-heading">Shipped to internal teams</h2>
       <p class="outcome-text">The Data Marketplace was delivered to Halliburton's internal engineering teams in 2026. The platform unified data discovery across the organization and introduced a governed access request workflow for the first time.</p>
       <p class="outcome-text">Specific metrics and adoption data are confidential under NDA.</p>
@@ -1229,7 +1264,7 @@
 
     <!-- 08 — REFLECTION -->
     <section class="case-section reveal">
-      <p class="section-label">07 &mdash; Reflection</p>
+      <p class="section-label">08 &mdash; Reflection</p>
       <h2 class="section-heading">Looking back</h2>
       <div class="reflection-grid">
         <div class="reflection-col">
