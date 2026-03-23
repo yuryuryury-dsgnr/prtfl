@@ -93,7 +93,7 @@
 
     /* ——— HERO ——— */
     .hero {
-      padding: 120px 0 0;
+      padding: 120px 0 48px;
       position: relative;
       overflow: hidden;
     }
@@ -208,7 +208,7 @@
 
     /* ——— CASES ——— */
     .cases {
-      padding: 64px 0 120px;
+      padding: 0 0 120px;
     }
 
     .section-title {
@@ -329,16 +329,24 @@
     .case-link {
       font-size: 14px;
       font-weight: 500;
-      opacity: 0;
-      transition: opacity 200ms ease;
       margin-top: auto;
       position: relative;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
       width: fit-content;
     }
 
-    .case-card:hover .case-link {
+    .case-link .case-link-arrow {
+      display: inline-block;
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+
+    .case-card:hover .case-link .case-link-arrow {
       opacity: 1;
+      transform: translateX(0);
     }
 
     .case-link::after {
@@ -352,7 +360,7 @@
       transition: width 200ms ease;
     }
 
-    .case-link:hover::after {
+    .case-card:hover .case-link::after {
       width: 100%;
     }
 
@@ -550,7 +558,7 @@
       <div class="cases-grid">
 
         <!-- Card 1: Data Marketplace -->
-        <a href="cases/halliburton.html" class="case-card">
+        <a href="cases/halliburton/" class="case-card">
           <div class="case-thumb">
             <!-- <img src="images/halliburton-cover.jpg" alt="Data Marketplace"> -->
             <span class="case-thumb-placeholder">Image coming soon</span>
@@ -564,12 +572,12 @@
             </div>
             <p class="case-role">Lead UX</p>
             <p class="case-result">Sensitive details blurred to comply with NDA</p>
-            <span class="case-link">View case →</span>
+            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
         </a>
 
         <!-- Card 2: Dogly -->
-        <a href="cases/dogly.html" class="case-card">
+        <a href="cases/dogly/" class="case-card">
           <div class="case-thumb">
             <!-- <img src="images/dogly-cover.jpg" alt="Dogly"> -->
             <span class="case-thumb-placeholder">Image coming soon</span>
@@ -580,12 +588,12 @@
             <span class="case-tag">Mobile app</span>
             <p class="case-role">Solo Lead UX + AI — discovery, design system, launch</p>
             <p class="case-result">One designer, full product shipped in 14 weeks</p>
-            <span class="case-link">View case →</span>
+            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
         </a>
 
         <!-- Card 3: DobroDoc+ -->
-        <a href="cases/dobrodoc.html" class="case-card">
+        <a href="cases/dobrodoc/" class="case-card">
           <div class="case-thumb">
             <img src="assets/images/dobrodoc/DobroDoc cover.png" alt="DobroDoc+" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
@@ -596,12 +604,12 @@
             <span class="case-tag">Mobile app</span>
             <p class="case-role">Lead UX — user interviews, IA, mobile prototyping</p>
             <p class="case-result">Redesign cut time-to-booking by 40% in usability tests</p>
-            <span class="case-link">View case →</span>
+            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
         </a>
 
         <!-- Card 4: dopas.dp.ua -->
-        <a href="cases/dopas.html" class="case-card">
+        <a href="cases/dopas/" class="case-card">
           <div class="case-thumb">
             <img src="assets/images/dopas/Dopas cover.png" alt="dopas.dp.ua" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
@@ -612,7 +620,7 @@
             <span class="case-tag">Web platform</span>
             <p class="case-role">Lead UX — research, flows, prototyping</p>
             <p class="case-result">Designed from zero — platform launched and generating revenue</p>
-            <span class="case-link">View case →</span>
+            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
         </a>
 
