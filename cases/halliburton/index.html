@@ -72,6 +72,138 @@
       letter-spacing: 0.02em;
     }
 
+    /* ——— PROBLEM CARDS ——— */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .problem-card {
+      background: #F2F0EC;
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+    }
+    .problem-card-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9A9A9A;
+      margin-bottom: 12px;
+    }
+    .problem-card h3 {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #1A1A1A;
+      margin-bottom: 8px;
+    }
+    .problem-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #6B6B6B;
+    }
+    .problem-highlight {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .problem-highlight .problem-card {
+      flex: 1;
+    }
+
+    /* ——— DETAILED PERSONA CARDS ——— */
+    .persona-section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .persona-section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9A9A9A;
+      margin-bottom: 16px;
+      grid-column: 1 / -1;
+    }
+    .persona-detail-card {
+      background: #F2F0EC;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .persona-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .persona-detail-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #D9D6D0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6B6B6B;
+      flex-shrink: 0;
+    }
+    .persona-detail-avatar.users { background: #D4E4F7; color: #4A7AB5; }
+    .persona-detail-avatar.creators { background: #E8D4F0; color: #8B5CA0; }
+    .persona-detail-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1A1A1A;
+      line-height: 1.3;
+    }
+    .persona-detail-group {
+      font-size: 12px;
+      color: #9A9A9A;
+    }
+    .persona-detail-who {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6B6B6B;
+      margin-bottom: 16px;
+    }
+    .persona-detail-section {
+      margin-bottom: 12px;
+    }
+    .persona-detail-section:last-child {
+      margin-bottom: 0;
+    }
+    .persona-detail-section-title {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #9A9A9A;
+      margin-bottom: 6px;
+    }
+    .persona-detail-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .persona-detail-section li {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6B6B6B;
+      padding-left: 14px;
+      position: relative;
+    }
+    .persona-detail-section li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: #9A9A9A;
+      font-weight: 700;
+    }
+
     /* ——— NDA BANNER ——— */
     .nda-banner {
       margin-top: 24px;
@@ -485,9 +617,29 @@
     <!-- 01 — PROBLEM & CONTEXT -->
     <section class="case-section reveal">
       <p class="section-label">01 &mdash; Problem &amp; Context</p>
-      <h2 class="section-heading">Fragmented data across the organization</h2>
-      <p class="section-text">Halliburton's geoscience teams relied on scattered internal systems to find, request, and access critical data sets. There was no unified platform &mdash; engineers spent significant time locating data instead of using it.</p>
-      <p class="section-text">The goal: design a centralized marketplace where teams can discover, preview, and request access to internal data products &mdash; with clear ownership, metadata, and governance built in.</p>
+      <h2 class="section-heading">Data is everywhere &mdash; but nowhere useful</h2>
+      <p class="section-text">Engineers across Halliburton spend more time searching for data than actually using it. Critical assets &mdash; reports, models, datasets, AI agents &mdash; are scattered across disconnected systems with no unified access point, inconsistent metadata, and unclear ownership.</p>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <p class="problem-card-label">Problem</p>
+          <h3>Fragmented access to critical data</h3>
+          <p>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources. There is no single entry point to the organization's data ecosystem.</p>
+        </div>
+
+        <div class="problem-highlight">
+          <div class="problem-card">
+            <p class="problem-card-label">Goal</p>
+            <h3>One platform for all data assets</h3>
+            <p>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents &mdash; as part of Halliburton's Data Ribbon initiative.</p>
+          </div>
+          <div class="problem-card">
+            <p class="problem-card-label">Success looks like</p>
+            <h3>Minutes, not days</h3>
+            <p>Data engineers use the marketplace daily to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- 02 — PROCESS -->
@@ -788,42 +940,125 @@
     <section class="case-section reveal">
       <p class="section-label">04 &mdash; Research</p>
       <h2 class="section-heading">Understanding users and their journeys</h2>
-      <p class="section-text">Deep research phase to map out who uses the platform, how they interact with it, and where the friction points are.</p>
+      <p class="section-text">Deep research phase to map out who uses the platform, how they interact with it, and where the friction points are. 4 persona groups, detailed user flows, and end-to-end journey maps shaped every design decision.</p>
 
       <div class="accordion">
+        <!-- PERSONAS -->
         <details>
-          <summary><span>Personas</span><span class="accordion-nda-tag">NDA</span></summary>
+          <summary><span>Personas &mdash; 4 groups</span><span class="accordion-nda-tag">NDA</span></summary>
           <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">4 persona groups were defined based on interviews and stakeholder workshops, each with distinct goals, pain points, and access patterns.</p>
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">4 persona groups defined based on interviews and stakeholder workshops, split into Users and Creators &amp; Approvers.</p>
             <div class="nda-block">
               <div class="nda-content" aria-hidden="true">
-                <div class="persona-grid">
-                  <div class="persona-card">
-                    <div class="persona-avatar">G1</div>
-                    <div>
-                      <p class="persona-card-title">Data Scientist / Engineer</p>
-                      <p class="persona-card-desc">Needs fast search, data preview, and quick access requests. Works with raw datasets daily.</p>
+                <div class="persona-section-grid">
+                  <p class="persona-section-label">Users</p>
+                  <div class="persona-detail-card">
+                    <div class="persona-detail-header">
+                      <div class="persona-detail-avatar users">G1</div>
+                      <div>
+                        <p class="persona-detail-group">Group 1</p>
+                        <p class="persona-detail-name">Data Scientist / Engineer</p>
+                      </div>
+                    </div>
+                    <p class="persona-detail-who">Technical specialist working with Python, ML models, and data integrations.</p>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Goals</p>
+                      <ul>
+                        <li>Quickly find relevant datasets and evaluate schema, quality, lineage</li>
+                        <li>Get access fast with minimal approvals</li>
+                        <li>Ensure data is reliable and stable for production use</li>
+                      </ul>
+                    </div>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Pain Points</p>
+                      <ul>
+                        <li>Hard to find datasets across multiple sources</li>
+                        <li>Long access approval cycles</li>
+                        <li>Lack of clear owners or documentation</li>
+                        <li>Data quality issues (freshness, missing values, drift)</li>
+                      </ul>
                     </div>
                   </div>
-                  <div class="persona-card">
-                    <div class="persona-avatar">G2</div>
-                    <div>
-                      <p class="persona-card-title">Business User</p>
-                      <p class="persona-card-desc">Looks for ready-made reports and dashboards. Non-technical, needs clear trust signals.</p>
+                  <div class="persona-detail-card">
+                    <div class="persona-detail-header">
+                      <div class="persona-detail-avatar users">G2</div>
+                      <div>
+                        <p class="persona-detail-group">Group 2</p>
+                        <p class="persona-detail-name">Business User</p>
+                      </div>
+                    </div>
+                    <p class="persona-detail-who">Analysts, product managers, and business stakeholders using BI tools (Power BI, Tableau, Spotfire, Databricks SQL).</p>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Goals</p>
+                      <ul>
+                        <li>Focused on insights rather than discovering raw data</li>
+                        <li>Easily find existing reports and dashboards</li>
+                        <li>Use officially validated (trusted) datasets and metrics</li>
+                      </ul>
+                    </div>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Pain Points</p>
+                      <ul>
+                        <li>Too many raw technical datasets; too few curated business-ready ones</li>
+                        <li>Hard to understand metric definitions</li>
+                        <li>Data may be outdated or inconsistent</li>
+                        <li>Requires technical support for access or interpretation</li>
+                      </ul>
                     </div>
                   </div>
-                  <div class="persona-card">
-                    <div class="persona-avatar">G3</div>
-                    <div>
-                      <p class="persona-card-title">Data Product Owner</p>
-                      <p class="persona-card-desc">Manages product metadata, approves access, defines permissions and governance rules.</p>
+                  <p class="persona-section-label" style="margin-top: 8px;">Creators &amp; Approvers</p>
+                  <div class="persona-detail-card">
+                    <div class="persona-detail-header">
+                      <div class="persona-detail-avatar creators">G3</div>
+                      <div>
+                        <p class="persona-detail-group">Group 3</p>
+                        <p class="persona-detail-name">Data Product Owner</p>
+                      </div>
+                    </div>
+                    <p class="persona-detail-who">Data product/platform product manager responsible for governance and lifecycle of data products.</p>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Goals</p>
+                      <ul>
+                        <li>Increase adoption of data products and marketplace</li>
+                        <li>Ensure data governance, quality, and trust</li>
+                        <li>Reduce manual work for data teams</li>
+                      </ul>
+                    </div>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Pain Points</p>
+                      <ul>
+                        <li>Fragmented ownership across teams</li>
+                        <li>Too many manual approval steps</li>
+                        <li>Data products without proper documentation or quality</li>
+                        <li>Slow onboarding of new users or teams</li>
+                      </ul>
                     </div>
                   </div>
-                  <div class="persona-card">
-                    <div class="persona-avatar">G4</div>
-                    <div>
-                      <p class="persona-card-title">Data POD Lead</p>
-                      <p class="persona-card-desc">Oversees multiple data products across teams, monitors quality and adoption metrics.</p>
+                  <div class="persona-detail-card">
+                    <div class="persona-detail-header">
+                      <div class="persona-detail-avatar creators">G4</div>
+                      <div>
+                        <p class="persona-detail-group">Group 4</p>
+                        <p class="persona-detail-name">Data POD Lead</p>
+                      </div>
+                    </div>
+                    <p class="persona-detail-who">Team Lead / Tech Lead for a data engineering POD or domain.</p>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Goals</p>
+                      <ul>
+                        <li>Deliver high-quality, reliable data products</li>
+                        <li>Ensure data pipelines meet SLA and quality standards</li>
+                        <li>Provide correct documentation and metadata</li>
+                      </ul>
+                    </div>
+                    <div class="persona-detail-section">
+                      <p class="persona-detail-section-title">Pain Points</p>
+                      <ul>
+                        <li>Heavy manual work (documentation, access requests)</li>
+                        <li>Difficulty ensuring data quality across many pipelines</li>
+                        <li>Poor visibility of who uses their data products</li>
+                        <li>Managing incidents and schema-breaking changes</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -834,18 +1069,20 @@
             </div>
           </div>
         </details>
+
+        <!-- USER FLOWS -->
         <details>
-          <summary><span>User Flows</span><span class="accordion-nda-tag">NDA</span></summary>
+          <summary><span>User Flows &mdash; 5 flows</span><span class="accordion-nda-tag">NDA</span></summary>
           <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Detailed user flows were mapped for every key interaction scenario across all persona groups.</p>
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">End-to-end user flows mapped for every persona group, covering search, access requests, data product creation, and governance workflows.</p>
             <div class="nda-block">
               <div class="nda-content" aria-hidden="true">
                 <table class="strategy-table">
-                  <tr><td>Search &amp; Discover</td><td>Landing &rarr; Search/Browse &rarr; Filter &rarr; Preview dataset &rarr; View details</td></tr>
-                  <tr><td>Request Access</td><td>Dataset page &rarr; Request access &rarr; Justification &rarr; Owner approval &rarr; Access granted</td></tr>
-                  <tr><td>Manage Products</td><td>Owner dashboard &rarr; Add/edit product &rarr; Set metadata &rarr; Define access levels &rarr; Publish</td></tr>
-                  <tr><td>Compare Datasets</td><td>Search results &rarr; Select multiple &rarr; Side-by-side comparison &rarr; Choose best fit</td></tr>
-                  <tr><td>Track Requests</td><td>My requests &rarr; View status &rarr; Pending/Approved/Rejected &rarr; Re-request if needed</td></tr>
+                  <tr><td>Data Scientist</td><td>Sign in &rarr; Search marketplace &rarr; Filter by type/domain &rarr; Preview dataset &rarr; Evaluate schema &amp; quality &rarr; Request access &rarr; Integrate into pipeline</td></tr>
+                  <tr><td>Business User</td><td>Sign in &rarr; Browse reports &amp; dashboards &rarr; Search by topic &rarr; View trusted datasets &rarr; Request access &rarr; Connect to BI tool</td></tr>
+                  <tr><td>Data Product Owner</td><td>Review proposals &rarr; Approve/reject access &rarr; Set governance rules &rarr; Monitor adoption &rarr; Manage lifecycle</td></tr>
+                  <tr><td>Data POD Lead</td><td>Create data product &rarr; Define metadata &amp; schema &rarr; Set quality standards &rarr; Submit for validation &rarr; Publish to marketplace</td></tr>
+                  <tr><td>Add Data Product</td><td>DPO opens creation form &rarr; Select product type &rarr; Fill metadata fields &rarr; System validates completeness &rarr; DPO reviews &amp; publishes &rarr; Product live on marketplace</td></tr>
                 </table>
               </div>
               <div class="nda-overlay">
@@ -854,6 +1091,8 @@
             </div>
           </div>
         </details>
+
+        <!-- USER JOURNEY MAP -->
         <details>
           <summary><span>User Journey Map</span><span class="accordion-nda-tag">NDA</span></summary>
           <div class="accordion-body">
