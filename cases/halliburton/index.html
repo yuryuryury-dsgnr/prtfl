@@ -495,14 +495,26 @@
 
     /* ——— WIREFRAMES / MOCKUPS GRID ——— */
     .wireframe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+    .wireframe-grid--wide {
+      width: calc(100% + 320px);
+      margin-left: -160px;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
     .wireframe-item { position: relative; }
+    .wireframe-item--zoomable { cursor: zoom-in; }
     .wireframe-img {
       width: 100%;
-      aspect-ratio: 4/3;
       border-radius: 8px;
       display: block;
       object-fit: cover;
       background: #E8E6E1;
+    }
+    .wireframe-grid:not(.wireframe-grid--wide) .wireframe-img {
+      aspect-ratio: 4/3;
+    }
+    .wireframe-grid--wide .wireframe-img {
+      aspect-ratio: auto;
     }
     .wireframe-placeholder {
       background: #E8E6E1; border-radius: 8px; aspect-ratio: 4/3;
@@ -510,6 +522,40 @@
       font-size: 13px; color: #B5B3AE;
     }
     .wireframe-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
+
+    /* ——— LIGHTBOX ——— */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.85);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 300ms ease;
+      cursor: zoom-out;
+      padding: 40px;
+    }
+    .lightbox.active { opacity: 1; pointer-events: auto; }
+    .lightbox img {
+      max-width: 95vw; max-height: 90vh;
+      border-radius: 8px;
+      object-fit: contain;
+      transform: scale(0.92);
+      transition: transform 300ms ease;
+    }
+    .lightbox.active img { transform: scale(1); }
+    .lightbox-caption {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.7);
+      font-size: 13px; white-space: nowrap;
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      color: #fff; font-size: 32px; line-height: 1;
+      cursor: pointer; opacity: 0.7;
+      transition: opacity 200ms;
+      background: none; border: none;
+    }
+    .lightbox-close:hover { opacity: 1; }
 
     /* ——— OUTCOME ——— */
     .outcome-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
@@ -569,6 +615,7 @@
       .persona-grid { grid-template-columns: 1fr; }
       .strategy-table td:first-child { width: 100px; }
       .wireframe-grid { grid-template-columns: 1fr; }
+      .wireframe-grid--wide { width: 100%; margin-left: 0; }
       .reflection-grid { grid-template-columns: 1fr; }
       .timeline { flex-direction: column; gap: 0; }
       .timeline::before {
@@ -1139,21 +1186,21 @@
             <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Used AI tools to rapidly generate and iterate on layout concepts, testing different approaches to search, filtering, data cards, and access flows. This phase was about speed and exploration &mdash; finding the right direction before committing to a design system.</p>
             <div class="nda-block">
               <div class="nda-content" aria-hidden="true">
-                <div class="wireframe-grid">
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-1.webp" alt="AI prototype - search" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Search concept</div>';">
+                <div class="wireframe-grid wireframe-grid--wide">
+                  <div class="wireframe-item wireframe-item--zoomable">
+                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-1.webp" alt="AI prototype - search" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Search concept</div>';">
                     <p class="wireframe-caption">Search &amp; filter exploration</p>
                   </div>
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-2.webp" alt="AI prototype - detail" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Detail concept</div>';">
+                  <div class="wireframe-item wireframe-item--zoomable">
+                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-2.webp" alt="AI prototype - detail" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Detail concept</div>';">
                     <p class="wireframe-caption">Dataset detail page concept</p>
                   </div>
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-3.webp" alt="AI prototype - access" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Access flow concept</div>';">
+                  <div class="wireframe-item wireframe-item--zoomable">
+                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-3.webp" alt="AI prototype - access" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Access flow concept</div>';">
                     <p class="wireframe-caption">Access request flow iteration</p>
                   </div>
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-4.webp" alt="AI prototype - admin" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Admin concept</div>';">
+                  <div class="wireframe-item wireframe-item--zoomable">
+                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-4.webp" alt="AI prototype - admin" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Admin concept</div>';">
                     <p class="wireframe-caption">Owner dashboard exploration</p>
                   </div>
                 </div>
@@ -1387,6 +1434,39 @@
         btn.classList.add('active');
         document.getElementById(btn.dataset.phase).classList.add('active');
       });
+    });
+
+    // Lightbox for wireframes
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    lightbox.innerHTML = '<button class="lightbox-close">&times;</button><img src="" alt=""><span class="lightbox-caption"></span>';
+    document.body.appendChild(lightbox);
+    const lbImg = lightbox.querySelector('img');
+    const lbCaption = lightbox.querySelector('.lightbox-caption');
+
+    document.querySelectorAll('.wireframe-item--zoomable').forEach(item => {
+      item.addEventListener('click', () => {
+        const img = item.querySelector('.wireframe-img');
+        const caption = item.querySelector('.wireframe-caption');
+        if (!img) return;
+        lbImg.src = img.src;
+        lbImg.alt = img.alt;
+        lbCaption.textContent = caption ? caption.textContent : '';
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
     });
   </script>
 
