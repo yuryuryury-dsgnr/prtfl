@@ -1266,9 +1266,83 @@
       </div>
     </section>
 
-    <!-- 06 — HAND-OFF TO DEV -->
+    <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
     <section class="case-section reveal">
-      <p class="section-label">06 &mdash; Hand-off to Dev</p>
+      <p class="section-label">06 &mdash; Validation</p>
+      <h2 class="section-heading">Direct feedback from real users</h2>
+      <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
+
+      <div class="accordion">
+        <details open>
+          <summary><span>Session 1 &mdash; Data POD Leads</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Design review &amp; feedback session with Data POD Leads &mdash; the technical owners who create and maintain data products in Databricks. Focused on validating roles, publishing workflows, and access management.</p>
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Roles</td><td>Validated 4 user groups: Data Engineers, Business Users, Data Product Owners (DPO), and Data POD Leads. Confirmed separation between technical ownership (POD Lead) and business ownership (DPO) as critical.</td></tr>
+                  <tr><td>Publishing</td><td>Agreed on two models: manual review or automated pipeline. In automation, products auto-appear as "Ready for review" &mdash; DPO decides when to publish to end users.</td></tr>
+                  <tr><td>Editing scope</td><td>Data Product Owners do not edit schemas or tables. DPO edits: thumbnail, image, description, tags. All technical validation happens upstream in Databricks.</td></tr>
+                  <tr><td>Data preview</td><td>Marketplace shows read-only previews pulled from Databricks: schema, sample data, technical metadata. Positioned as a presentation layer, not a source of truth.</td></tr>
+                  <tr><td>Access management</td><td>Three access levels: Owner, Editor, Viewer. Groups managed through AD integration. Users must understand AD to manage access properly.</td></tr>
+                  <tr><td>Sensitivity</td><td>Sensitivity treated as a UI-level attribute &mdash; no column-level or row-level sensitivity in scope. Managing access at the product level only.</td></tr>
+                  <tr><td>User context</td><td>Access requests must include: Name, Role, Team/POD, Domain, Requested level, Environment, and Justification &mdash; so owners can make informed decisions.</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+            <div style="margin-top:20px; padding:16px 20px; background:#F2F0EC; border-radius:8px;">
+              <p style="font-size:13px; font-weight:500; margin-bottom:8px;">Key takeaways</p>
+              <ul class="accordion-list" style="margin:0;">
+                <li>Overall Marketplace concept is supported</li>
+                <li>Clear separation between POD Lead and DPO responsibilities</li>
+                <li>Access management should be user-centric</li>
+                <li>Sensitivity column removed from UI</li>
+                <li>Dev access management remains an open exploration topic</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary><span>Session 2 &mdash; Data Product Owners</span><span class="accordion-nda-tag">NDA</span></summary>
+          <div class="accordion-body">
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Feedback &amp; alignment session with Data Product Owners &mdash; the business-side stakeholders responsible for publication decisions and access governance.</p>
+            <div class="nda-block">
+              <div class="nda-content" aria-hidden="true">
+                <table class="strategy-table">
+                  <tr><td>Role alignment</td><td>DPOs confirmed their role as business owners of data products &mdash; deciding when a product is ready for consumption and appropriate for broader visibility.</td></tr>
+                  <tr><td>Publication flow</td><td>Products are created and validated by POD Leads, then become available for review. DPOs perform final business review and publish to the marketplace.</td></tr>
+                  <tr><td>Review scope</td><td>DPO review focuses on business readiness: product description, naming, intended usage, and audience. Technical validation handled upstream by POD Leads.</td></tr>
+                  <tr><td>Access approvals</td><td>DPOs expect clear user context to support informed decisions. Permission handling remains abstracted &mdash; focusing on who is requesting access and for what purpose.</td></tr>
+                  <tr><td>Landing page</td><td>First impression matters: needs to clearly show what data products exist. Tagging should be useful and well-structured.</td></tr>
+                  <tr><td>Data detail page</td><td>Add tabs to switch between Description and Sample Data for easier preview. Edit options for Name, Description, Tags, or schema view.</td></tr>
+                </table>
+              </div>
+              <div class="nda-overlay">
+                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              </div>
+            </div>
+            <div style="margin-top:20px; padding:16px 20px; background:#F2F0EC; border-radius:8px;">
+              <p style="font-size:13px; font-weight:500; margin-bottom:8px;">Key takeaways</p>
+              <ul class="accordion-list" style="margin:0;">
+                <li>Overall Marketplace concept is supported by DPOs</li>
+                <li>Clear separation between technical and business ownership is essential</li>
+                <li>Access management should be user-centric with clear "access reason"</li>
+                <li>Publication and access decisions should remain lightweight and efficient</li>
+                <li>Marketplace should enable confident decisions without exposing technical complexity</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 07 — HAND-OFF TO DEV -->
+    <section class="case-section reveal">
+      <p class="section-label">07 &mdash; Hand-off to Dev</p>
       <h2 class="section-heading">AI-powered design-to-code pipeline</h2>
       <p class="section-text">Instead of traditional hand-off with static specs and redlines, we connected the dev team directly to the design system through an MCP (Model Context Protocol) server linked to Figma.</p>
       <p class="section-text">This meant developers could query the design system programmatically &mdash; pulling component specs, tokens, spacing values, and interaction states directly into their code environment. No more guessing from screenshots or outdated documentation.</p>
@@ -1301,9 +1375,9 @@
       </div>
     </section>
 
-    <!-- 07 — POST-LAUNCH RESEARCH -->
+    <!-- 08 — POST-LAUNCH RESEARCH -->
     <section class="case-section reveal">
-      <p class="section-label">07 &mdash; Post-launch Research</p>
+      <p class="section-label">08 &mdash; Post-launch Research</p>
       <h2 class="section-heading">Measuring impact and iterating</h2>
       <p class="section-text">Launch wasn't the finish line. After the platform went live, I ran a structured research program to track real usage, validate earlier assumptions, and identify areas for continuous improvement.</p>
 
@@ -1355,9 +1429,9 @@
       </div>
     </section>
 
-    <!-- 08 — OUTCOME -->
+    <!-- 09 — OUTCOME -->
     <section class="case-section reveal">
-      <p class="section-label">08 &mdash; Outcome</p>
+      <p class="section-label">09 &mdash; Outcome</p>
       <h2 class="section-heading">Shipped to internal teams</h2>
       <p class="outcome-text">The Data Marketplace was delivered to Halliburton's internal engineering teams in 2026. The platform unified data discovery across the organization and introduced a governed access request workflow for the first time.</p>
       <p class="outcome-text">Specific metrics and adoption data are confidential under NDA.</p>
@@ -1365,7 +1439,7 @@
 
     <!-- 08 — REFLECTION -->
     <section class="case-section reveal">
-      <p class="section-label">09 &mdash; Reflection</p>
+      <p class="section-label">10 &mdash; Reflection</p>
       <h2 class="section-heading">Looking back</h2>
       <div class="reflection-grid">
         <div class="reflection-col">
