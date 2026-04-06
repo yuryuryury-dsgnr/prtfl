@@ -35,6 +35,58 @@
     /* ——— CONTAINER ——— */
     .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
 
+    /* ——— PAGE LAYOUT WITH TOC ——— */
+    .page-layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 64px;
+      align-items: start;
+    }
+    .page-main { min-width: 0; }
+
+    /* ——— STICKY TOC ——— */
+    .toc {
+      position: sticky;
+      top: 80px;
+      padding-top: 80px;
+    }
+    .toc-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9A9A9A;
+      margin-bottom: 16px;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .toc-item a {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13px;
+      color: #9A9A9A;
+      padding: 5px 0;
+      transition: color 0.2s;
+      line-height: 1.4;
+    }
+    .toc-item a:hover { color: #1A1A1A; }
+    .toc-item.active a { color: #1A1A1A; font-weight: 500; }
+    .toc-item .toc-num {
+      font-size: 11px;
+      color: #C0BDB8;
+      flex-shrink: 0;
+      transition: color 0.2s;
+    }
+    .toc-item.active .toc-num { color: #9A9A9A; }
+
     /* ——— HERO ——— */
     .case-hero { padding: 80px 0 48px; }
     .case-hero h1 {
@@ -639,7 +691,7 @@
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- HERO (full width container) -->
   <div class="container">
     <section class="case-hero">
       <h1>Data Marketplace</h1>
@@ -660,9 +712,14 @@
         <span><strong>This project is under NDA.</strong> Sensitive details are blurred. General process and approach are shown.</span>
       </div>
     </section>
+  </div>
+
+  <!-- PAGE LAYOUT WITH TOC -->
+  <div class="page-layout">
+    <div class="page-main">
 
     <!-- 01 — PROBLEM & CONTEXT -->
-    <section class="case-section reveal">
+    <section id="section-01" class="case-section reveal">
       <p class="section-label">01 &mdash; Problem &amp; Context</p>
       <h2 class="section-heading">Data is everywhere &mdash; but nowhere useful</h2>
       <p class="section-text">Engineers across Halliburton spend more time searching for data than actually using it. Critical assets &mdash; reports, models, datasets, AI agents &mdash; are scattered across disconnected systems with no unified access point, inconsistent metadata, and unclear ownership.</p>
@@ -688,7 +745,7 @@
     </section>
 
     <!-- 02 — PROCESS -->
-    <section class="case-section reveal">
+    <section id="section-02" class="case-section reveal">
       <p class="section-label">02 &mdash; Process</p>
       <h2 class="section-heading">From discovery to delivery</h2>
       <div class="timeline">
@@ -732,7 +789,7 @@
     </section>
 
     <!-- 03 — UX STRATEGY (Phase 1 + Phase 2 toggle) -->
-    <section class="case-section reveal">
+    <section id="section-03" class="case-section reveal">
       <p class="section-label">03 &mdash; UX Strategy</p>
       <h2 class="section-heading">Two phases of product evolution</h2>
       <p class="section-text">UX strategy is a long-term plan that connects user insights, product vision, and business objectives into a coherent direction for designing and improving the user experience.</p>
@@ -990,7 +1047,7 @@
     </section>
 
     <!-- 04 — RESEARCH -->
-    <section class="case-section reveal">
+    <section id="section-04" class="case-section reveal">
       <p class="section-label">04 &mdash; Research</p>
       <h2 class="section-heading">Understanding users and their journeys</h2>
       <p class="section-text">Deep research phase to map out who uses the platform, how they interact with it, and where the friction points are. 4 persona groups, detailed user flows, and end-to-end journey maps shaped every design decision.</p>
@@ -1171,7 +1228,7 @@
     </section>
 
     <!-- 05 — PROTOTYPE & DESIGN SYSTEM -->
-    <section class="case-section reveal">
+    <section id="section-05" class="case-section reveal">
       <p class="section-label">05 &mdash; Prototype &amp; Design System</p>
       <h2 class="section-heading">From AI brainstorm to production-ready screens</h2>
       <p class="section-text">Instead of jumping straight into pixel-perfect mockups, I started with an AI-based prototype to quickly test concepts, layouts, and interaction patterns. This let me brainstorm and validate what works and what doesn't &mdash; before investing time in high-fidelity design.</p>
@@ -1265,7 +1322,7 @@
     </section>
 
     <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
-    <section class="case-section reveal">
+    <section id="section-06" class="case-section reveal">
       <p class="section-label">06 &mdash; Validation</p>
       <h2 class="section-heading">Direct feedback from real users</h2>
       <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
@@ -1339,7 +1396,7 @@
     </section>
 
     <!-- 07 — HAND-OFF TO DEV -->
-    <section class="case-section reveal">
+    <section id="section-07" class="case-section reveal">
       <p class="section-label">07 &mdash; Hand-off to Dev</p>
       <h2 class="section-heading">AI-powered design-to-code pipeline</h2>
       <p class="section-text">Instead of traditional hand-off with static specs and redlines, we connected the dev team directly to the design system through an MCP (Model Context Protocol) server linked to Figma.</p>
@@ -1374,7 +1431,7 @@
     </section>
 
     <!-- 08 — POST-LAUNCH RESEARCH -->
-    <section class="case-section reveal">
+    <section id="section-08" class="case-section reveal">
       <p class="section-label">08 &mdash; Post-launch Research</p>
       <h2 class="section-heading">Measuring impact and iterating</h2>
       <p class="section-text">Launch wasn't the finish line. After the platform went live, I ran a structured research program to track real usage, validate earlier assumptions, and identify areas for continuous improvement.</p>
@@ -1428,7 +1485,7 @@
     </section>
 
     <!-- 09 — OUTCOME -->
-    <section class="case-section reveal">
+    <section id="section-09" class="case-section reveal">
       <p class="section-label">09 &mdash; Outcome</p>
       <h2 class="section-heading">Shipped to internal teams</h2>
       <p class="outcome-text">The Data Marketplace was delivered to Halliburton's internal engineering teams in 2026. The platform unified data discovery across the organization and introduced a governed access request workflow for the first time.</p>
@@ -1436,7 +1493,7 @@
     </section>
 
     <!-- 08 — REFLECTION -->
-    <section class="case-section reveal">
+    <section id="section-10" class="case-section reveal">
       <p class="section-label">10 &mdash; Reflection</p>
       <h2 class="section-heading">Looking back</h2>
       <div class="reflection-grid">
@@ -1456,7 +1513,27 @@
       <span class="next-case-label">Next case &rarr;</span>
       <span class="next-case-name">Dogly &mdash; Mobile App</span>
     </a>
-  </div>
+
+    </div><!-- end .page-main -->
+
+    <!-- STICKY TOC -->
+    <aside class="toc">
+      <p class="toc-label">Contents</p>
+      <ul class="toc-list">
+        <li class="toc-item" data-section="section-01"><a href="#section-01"><span class="toc-num">01</span> Problem</a></li>
+        <li class="toc-item" data-section="section-02"><a href="#section-02"><span class="toc-num">02</span> Process</a></li>
+        <li class="toc-item" data-section="section-03"><a href="#section-03"><span class="toc-num">03</span> UX Strategy</a></li>
+        <li class="toc-item" data-section="section-04"><a href="#section-04"><span class="toc-num">04</span> Research</a></li>
+        <li class="toc-item" data-section="section-05"><a href="#section-05"><span class="toc-num">05</span> Prototype</a></li>
+        <li class="toc-item" data-section="section-06"><a href="#section-06"><span class="toc-num">06</span> Validation</a></li>
+        <li class="toc-item" data-section="section-07"><a href="#section-07"><span class="toc-num">07</span> Hand-off</a></li>
+        <li class="toc-item" data-section="section-08"><a href="#section-08"><span class="toc-num">08</span> Post-launch</a></li>
+        <li class="toc-item" data-section="section-09"><a href="#section-09"><span class="toc-num">09</span> Outcome</a></li>
+        <li class="toc-item" data-section="section-10"><a href="#section-10"><span class="toc-num">10</span> Reflection</a></li>
+      </ul>
+    </aside>
+
+  </div><!-- end .page-layout -->
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -1540,6 +1617,25 @@
         document.body.style.overflow = '';
       }
     });
+
+    // ——— TOC SCROLL SPY ———
+    const tocItems = document.querySelectorAll('.toc-item[data-section]');
+    const sections = Array.from(tocItems).map(item =>
+      document.getElementById(item.dataset.section)
+    ).filter(Boolean);
+
+    const onScroll = () => {
+      const scrollY = window.scrollY + 120;
+      let active = sections[0];
+      for (const section of sections) {
+        if (section.offsetTop <= scrollY) active = section;
+      }
+      tocItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.section === active?.id);
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   </script>
 
 </body>
