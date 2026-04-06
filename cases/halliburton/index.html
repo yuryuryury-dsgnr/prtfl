@@ -678,6 +678,83 @@
       .next-case { flex-direction: column; gap: 8px; align-items: flex-start; }
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { justify-content: center; }
+      /* Hide desktop sidebar TOC on mobile */
+      .page-layout { grid-template-columns: 1fr; gap: 0; }
+      .toc { display: none; }
+      .problem-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ——— MOBILE FLOATING TOC PILL ——— */
+    .toc-pill {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+    }
+    .toc-pill-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(26,26,26,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      padding: 10px 18px 10px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .toc-pill-num {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 400;
+    }
+    .toc-pill-chevron {
+      width: 14px; height: 14px;
+      transition: transform 0.2s;
+      opacity: 0.6;
+    }
+    .toc-pill.open .toc-pill-chevron { transform: rotate(180deg); }
+    .toc-pill-menu {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(26,26,26,0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 8px;
+      min-width: 200px;
+      display: none;
+    }
+    .toc-pill.open .toc-pill-menu { display: block; }
+    .toc-pill-menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      transition: background 0.15s, color 0.15s;
+    }
+    .toc-pill-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
+    .toc-pill-menu .pill-num {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+    .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.5); }
+    @media (max-width: 768px) {
+      .toc-pill { display: flex; }
     }
   </style>
 </head>
@@ -1535,6 +1612,27 @@
 
   </div><!-- end .page-layout -->
 
+  <!-- MOBILE TOC PILL -->
+  <div class="toc-pill" id="tocPill">
+    <div class="toc-pill-menu" id="tocPillMenu">
+      <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
+      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Process</a>
+      <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> UX Strategy</a>
+      <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Research</a>
+      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Prototype</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Validation</a>
+      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Hand-off</a>
+      <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Post-launch</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Outcome</a>
+      <a href="#section-10" data-section="section-10"><span class="pill-num">10</span> Reflection</a>
+    </div>
+    <button class="toc-pill-trigger" id="tocPillTrigger">
+      <span class="toc-pill-num" id="tocPillNum">01</span>
+      <span id="tocPillLabel">Problem</span>
+      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -1620,9 +1718,26 @@
 
     // ——— TOC SCROLL SPY ———
     const tocItems = document.querySelectorAll('.toc-item[data-section]');
+    const pillLinks = document.querySelectorAll('.toc-pill-menu a[data-section]');
     const sections = Array.from(tocItems).map(item =>
       document.getElementById(item.dataset.section)
     ).filter(Boolean);
+
+    const sectionLabels = {
+      'section-01': ['01', 'Problem'],
+      'section-02': ['02', 'Process'],
+      'section-03': ['03', 'UX Strategy'],
+      'section-04': ['04', 'Research'],
+      'section-05': ['05', 'Prototype'],
+      'section-06': ['06', 'Validation'],
+      'section-07': ['07', 'Hand-off'],
+      'section-08': ['08', 'Post-launch'],
+      'section-09': ['09', 'Outcome'],
+      'section-10': ['10', 'Reflection'],
+    };
+
+    const pillNum = document.getElementById('tocPillNum');
+    const pillLabel = document.getElementById('tocPillLabel');
 
     const onScroll = () => {
       const scrollY = window.scrollY + 120;
@@ -1630,12 +1745,27 @@
       for (const section of sections) {
         if (section.offsetTop <= scrollY) active = section;
       }
-      tocItems.forEach(item => {
-        item.classList.toggle('active', item.dataset.section === active?.id);
-      });
+      const activeId = active?.id;
+      tocItems.forEach(item => item.classList.toggle('active', item.dataset.section === activeId));
+      pillLinks.forEach(a => a.classList.toggle('active', a.dataset.section === activeId));
+      if (activeId && sectionLabels[activeId]) {
+        pillNum.textContent = sectionLabels[activeId][0];
+        pillLabel.textContent = sectionLabels[activeId][1];
+      }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    // ——— PILL TOGGLE ———
+    const pill = document.getElementById('tocPill');
+    const pillTrigger = document.getElementById('tocPillTrigger');
+    pillTrigger.addEventListener('click', () => pill.classList.toggle('open'));
+    pillLinks.forEach(a => {
+      a.addEventListener('click', () => pill.classList.remove('open'));
+    });
+    document.addEventListener('click', e => {
+      if (!pill.contains(e.target)) pill.classList.remove('open');
+    });
   </script>
 
 </body>
