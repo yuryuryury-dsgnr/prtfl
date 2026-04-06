@@ -87,6 +87,32 @@
     }
     .toc-item.active .toc-num { color: #9A9A9A; }
 
+    /* ——— DISABLED ACCORDION (NDA, no content) ——— */
+    .accordion-row-disabled {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      cursor: default;
+      user-select: none;
+    }
+    .accordion-row-disabled .accordion-row-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: #C0BDB8;
+    }
+    .accordion-row-disabled .accordion-nda-tag {
+      opacity: 0.6;
+    }
+    .accordion-row-disabled .accordion-row-icon {
+      width: 16px; height: 16px;
+      color: #D0CEC9;
+      flex-shrink: 0;
+    }
+
     /* ——— HERO ——— */
     .case-hero { padding: 80px 0 48px; }
     .case-hero h1 {
@@ -967,67 +993,18 @@
               </ul>
             </div>
           </details>
-          <details>
-            <summary><span>UX KPIs &amp; Business Goals</span><span class="accordion-nda-tag">NDA</span></summary>
-            <div class="accordion-body">
-              <div class="nda-block">
-                <div class="nda-content" aria-hidden="true">
-                  <table class="strategy-table">
-                    <tr><td>Efficiency</td><td>Search time: from weeks to under 5 minutes. Access request time: from months to under N days.</td></tr>
-                    <tr><td>Adoption</td><td>% of engineers actively using the marketplace. % of data products onboarded.</td></tr>
-                    <tr><td>Quality</td><td>User satisfaction score (CSAT). % of users who find the right product on first search.</td></tr>
-                    <tr><td>Business</td><td>1) Reduce search time. 2) Reduce access approval time. 3) Increase trust. 4) Support all user journeys.</td></tr>
-                  </table>
-                </div>
-                <div class="nda-overlay">
-                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-                </div>
-              </div>
-            </div>
-          </details>
-          <details>
-            <summary><span>Roadmap &mdash; 7 phases</span><span class="accordion-nda-tag">NDA</span></summary>
-            <div class="accordion-body">
-              <div class="nda-block">
-                <div class="nda-content" aria-hidden="true">
-                  <table class="strategy-table">
-                    <tr><td>Phase 1</td><td>Discovery &mdash; UX strategy, Data architecture map</td></tr>
-                    <tr><td>Phase 2</td><td>User research &mdash; Personas, UJM, User flows, JTBD</td></tr>
-                    <tr><td>Phase 3</td><td>Market analysis &mdash; Competitor analysis</td></tr>
-                    <tr><td>Phase 4</td><td>Prototyping &mdash; Wireframes, Mockups, Design system</td></tr>
-                    <tr><td>Phase 5</td><td>Validation &mdash; Usability testing (2 rounds)</td></tr>
-                    <tr><td>Phase 6</td><td>Design hand-off &amp; dev collaboration</td></tr>
-                    <tr><td>Phase 7</td><td>Post launch research &amp; improvements</td></tr>
-                  </table>
-                </div>
-                <div class="nda-overlay">
-                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-                </div>
-              </div>
-            </div>
-          </details>
-          <details>
-            <summary><span>Key deliverables</span><span class="accordion-nda-tag">NDA</span></summary>
-            <div class="accordion-body">
-              <div class="nda-block">
-                <div class="nda-content" aria-hidden="true">
-                  <ul class="accordion-list">
-                    <li>UX strategy &amp; Roadmap</li>
-                    <li>Personas &amp; JTBD</li>
-                    <li>User journey maps &amp; Userflows</li>
-                    <li>Wireframes and mockups</li>
-                    <li>Interactive prototype</li>
-                    <li>Usability testing reports (2 rounds)</li>
-                    <li>Scalable design system</li>
-                    <li>Post launch research report</li>
-                  </ul>
-                </div>
-                <div class="nda-overlay">
-                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-                </div>
-              </div>
-            </div>
-          </details>
+          <div class="accordion-row-disabled">
+            <span class="accordion-row-left"><span>UX KPIs &amp; Business Goals</span><span class="accordion-nda-tag">NDA</span></span>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="accordion-row-disabled">
+            <span class="accordion-row-left"><span>Roadmap &mdash; 7 phases</span><span class="accordion-nda-tag">NDA</span></span>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="accordion-row-disabled">
+            <span class="accordion-row-left"><span>Key deliverables</span><span class="accordion-nda-tag">NDA</span></span>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
         </div>
       </div>
 
@@ -1064,61 +1041,18 @@
               </ul>
             </div>
           </details>
-          <details>
-            <summary><span>AI-powered features</span><span class="accordion-nda-tag">NDA</span></summary>
-            <div class="accordion-body">
-              <div class="nda-block">
-                <div class="nda-content" aria-hidden="true">
-                  <table class="strategy-table">
-                    <tr><td>AI Home</td><td>Natural language input &mdash; user describes what they need. AI response + ranked dataset cards.</td></tr>
-                    <tr><td>Recommendations</td><td>6 personalized boxes: Continue exploring, Most trusted, New since last visit, Pending action, Colleagues using, For you.</td></tr>
-                    <tr><td>AI Ranking</td><td>Relevance + Quality score + Certification status + Access availability</td></tr>
-                  </table>
-                </div>
-                <div class="nda-overlay">
-                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-                </div>
-              </div>
-            </div>
-          </details>
-          <details>
-            <summary><span>Feature clusters</span><span class="accordion-nda-tag">NDA</span></summary>
-            <div class="accordion-body">
-              <div class="nda-block">
-                <div class="nda-content" aria-hidden="true">
-                  <table class="strategy-table">
-                    <tr><td>Trust</td><td>Quality score, Certified badges, Lineage visualization, Approval workflow</td></tr>
-                    <tr><td>Social</td><td>Reviews &amp; Usage tab, Peer recommendations, Owner reputation</td></tr>
-                    <tr><td>Governance</td><td>Sensitivity classification, auto-tagging, Adoption analytics</td></tr>
-                    <tr><td>AI Discovery</td><td>NL search, Hybrid AI response, Personalized recommendations</td></tr>
-                    <tr><td>Billing</td><td>Subscription model, Plan comparison, Transparent pricing</td></tr>
-                  </table>
-                </div>
-                <div class="nda-overlay">
-                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-                </div>
-              </div>
-            </div>
-          </details>
-          <details>
-            <summary><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></summary>
-            <div class="accordion-body">
-              <div class="nda-block">
-                <div class="nda-content" aria-hidden="true">
-                  <table class="strategy-table">
-                    <tr><td>Efficiency</td><td>Search-to-access conversion &uarr;, time to find dataset &darr;, approval time &darr;</td></tr>
-                    <tr><td>Adoption</td><td>% engineers using marketplace &uarr;, certified vs uncertified &uarr;</td></tr>
-                    <tr><td>Trust</td><td>Quality badge CTR &uarr;, preview-to-request conversion &uarr;</td></tr>
-                    <tr><td>Social</td><td>Reviews per dataset &uarr;, peer recommendation CTR &uarr;</td></tr>
-                    <tr><td>Billing</td><td>Plan upgrade rate &uarr;, checkout completion &uarr;, cart abandonment &darr;</td></tr>
-                  </table>
-                </div>
-                <div class="nda-overlay">
-                  <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-                </div>
-              </div>
-            </div>
-          </details>
+          <div class="accordion-row-disabled">
+            <span class="accordion-row-left"><span>AI-powered features</span><span class="accordion-nda-tag">NDA</span></span>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="accordion-row-disabled">
+            <span class="accordion-row-left"><span>Feature clusters</span><span class="accordion-nda-tag">NDA</span></span>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="accordion-row-disabled">
+            <span class="accordion-row-left"><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></span>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
         </div>
       </div>
     </section>
