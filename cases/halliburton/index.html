@@ -124,6 +124,63 @@
     .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
     .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
 
+    /* ——— HERO INTRO UPDATES ——— */
+    .case-hero-hook {
+      font-size: 18px;
+      color: #6B6B6B;
+      line-height: 1.6;
+      margin-top: 12px;
+      margin-bottom: 32px;
+    }
+    .case-hero-meta-grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 8px 0;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+    .case-hero-meta-grid dt {
+      color: #9A9A9A;
+      font-weight: 400;
+      padding-right: 16px;
+    }
+    .case-hero-meta-grid dd {
+      color: #1A1A1A;
+      margin: 0;
+    }
+    .case-hero-nda-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #EFEDE6;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #6B6B6B;
+      line-height: 1.6;
+      margin-top: 24px;
+      margin-bottom: 28px;
+    }
+    .case-hero-nda-box svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: #9A9A9A;
+    }
+    .case-hero-nda-box strong {
+      color: #1A1A1A;
+      font-weight: 500;
+    }
+    .case-hero-stakes {
+      font-size: 15px;
+      font-style: italic;
+      color: #6B6B6B;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
     .case-hero-image {
       width: calc(100% + 160px);
       margin-left: -80px;
@@ -556,6 +613,7 @@
       flex: 1; position: relative; padding-top: 48px; padding-right: 16px;
       opacity: 0; transform: translateY(12px);
       transition: opacity 500ms ease, transform 500ms ease;
+      display: flex; flex-direction: column;
     }
     .timeline-step.visible {
       opacity: 1; transform: translateY(0);
@@ -570,7 +628,7 @@
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
     .timeline-tag {
       display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC;
-      padding: 3px 8px; border-radius: 4px;
+      padding: 3px 8px; border-radius: 4px; margin-top: auto; align-self: flex-start;
     }
 
     /* ——— WIREFRAMES / MOCKUPS GRID ——— */
@@ -800,22 +858,29 @@
   <div class="page-layout" style="padding-top:0;padding-bottom:0;display:block;max-width:1100px;">
     <section class="case-hero">
       <h1>Data Marketplace</h1>
-      <p class="case-hero-meta">Enterprise tool &middot; 2026</p>
-      <p class="case-hero-role">Lead UX &mdash; Halliburton</p>
-      <p class="case-hero-result">Internal enterprise platform for managing and distributing geoscience data</p>
-      <hr class="case-hero-divider">
+      <p class="case-hero-hook">Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.</p>
+
+      <dl class="case-hero-meta-grid">
+        <dt>Role</dt><dd>Lead UX, sole designer</dd>
+        <dt>Core team</dt><dd>3 engineers, PO, AI lead, Technology Director</dd>
+        <dt>Research</dt><dd>10 participants across 4 roles</dd>
+        <dt>Timeline</dt><dd>2025&ndash;2026</dd>
+        <dt>Status</dt><dd>Shipped, in active use</dd>
+      </dl>
+
       <div class="case-hero-image">
         <img src="../../assets/images/halliburton/cover.webp" alt="Data Marketplace — project overview" width="1440" height="810" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="case-hero-image-placeholder">Cover image coming soon</span>
       </div>
 
-      <!-- NDA NOTICE -->
-      <div class="nda-banner">
-        <svg class="nda-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
+      <div class="case-hero-nda-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <span><strong>This project is under NDA.</strong> Sensitive details are blurred. General process and approach are shown.</span>
       </div>
+
+      <p class="case-hero-stakes">The first tool at Halliburton where engineers can find, trust, and access any data asset in minutes.</p>
+
+      <hr class="case-hero-divider">
     </section>
   </div>
 
@@ -826,25 +891,24 @@
     <!-- 01 — PROBLEM & CONTEXT -->
     <section id="section-01" class="case-section reveal">
       <p class="section-label">01 &mdash; Problem &amp; Context</p>
-      <h2 class="section-heading">Data is everywhere &mdash; but nowhere useful</h2>
-      <p class="section-text">Engineers across Halliburton spend more time searching for data than actually using it. Critical assets &mdash; reports, models, datasets, AI agents &mdash; are scattered across disconnected systems with no unified access point, inconsistent metadata, and unclear ownership.</p>
+      <h2 class="section-heading">From days of searching to minutes of finding</h2>
 
-      <div class="problem-grid">
+      <div class="problem-grid" style="margin-top:48px;">
         <div class="problem-card">
           <p class="problem-card-label">Problem</p>
-          <h3>Fragmented access to critical data</h3>
-          <p>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources. There is no single entry point to the organization's data ecosystem.</p>
+          <h3>Scattered and unfindable</h3>
+          <p>Data assets live across disconnected systems with inconsistent metadata and unclear ownership.</p>
         </div>
 
         <div class="problem-card">
           <p class="problem-card-label">Goal</p>
-          <h3>One platform for all data assets</h3>
-          <p>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents &mdash; as part of Halliburton's Data Ribbon initiative.</p>
+          <h3>One entry point</h3>
+          <p>A unified marketplace for curated data, reports, models, and AI agents &mdash; part of Halliburton's Data Ribbon.</p>
         </div>
         <div class="problem-card">
-          <p class="problem-card-label">Success looks like</p>
+          <p class="problem-card-label">Success</p>
           <h3>Minutes, not days</h3>
-          <p>Data engineers use the marketplace daily to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</p>
+          <p>Engineers find, validate, and request access to any data asset in under a few minutes.</p>
         </div>
       </div>
     </section>
@@ -852,43 +916,43 @@
     <!-- 02 — PROCESS -->
     <section id="section-02" class="case-section reveal">
       <p class="section-label">02 &mdash; Process</p>
-      <h2 class="section-heading">From discovery to delivery</h2>
+      <h2 class="section-heading">From vision to shipped product</h2>
       <div class="timeline">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
           <p class="timeline-title">Discovery</p>
-          <p class="timeline-desc">2 UX strategies for 2 product phases &mdash; defining vision, goals, and system direction.</p>
-          <span class="timeline-tag">UX strategy &middot; 2 phases</span>
+          <p class="timeline-desc">Aligned with the Technology Director and AI lead on vision, then defined two product phases &mdash; MVP and Trust/AI &mdash; so the design system could scale without rework.</p>
+          <span class="timeline-tag">2 strategies &middot; 1 foundation</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">2.0</p>
           <p class="timeline-title">Research</p>
-          <p class="timeline-desc">Personas, UJM, JTBD, and detailed user flows for all interaction scenarios.</p>
-          <span class="timeline-tag">Personas &middot; JTBD &middot; Flows</span>
+          <p class="timeline-desc">Mapped 4 persona groups, 5 user flows, user journey maps, and the information architecture that later powered the MCP hand-off.</p>
+          <span class="timeline-tag">4 personas &middot; 5 flows &middot; IA</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">3.0</p>
           <p class="timeline-title">Prototype &amp; Design System</p>
-          <p class="timeline-desc">AI-based prototype, Figma mockups, wireframes, and design system setup.</p>
-          <span class="timeline-tag">AI prototype &middot; Figma &middot; Wireframes</span>
+          <p class="timeline-desc">Started with AI-generated prototypes to validate structure fast, then built a scalable design system with reusable tokens and components.</p>
+          <span class="timeline-tag">AI prototype &middot; Figma system</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">4.0</p>
           <p class="timeline-title">Validation</p>
-          <p class="timeline-desc">2 rounds of usability testing &mdash; formative and summative, iterating based on insights.</p>
-          <span class="timeline-tag">2 rounds &middot; Usability testing</span>
+          <p class="timeline-desc">Two rounds of testing with real users &mdash; Data POD Leads and Product Owners. Caught blind spots before a single line of code was written.</p>
+          <span class="timeline-tag">2 rounds &middot; 10 users</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">5.0</p>
           <p class="timeline-title">Hand-off to Dev</p>
-          <p class="timeline-desc">AI-powered dev collaboration with MCP &mdash; specs, annotations, component documentation.</p>
-          <span class="timeline-tag">AI dev &middot; MCP</span>
+          <p class="timeline-desc">Connected dev team to Figma through an MCP server. Developers pulled specs, tokens, and components directly into their IDE &mdash; no screenshots, no outdated docs.</p>
+          <span class="timeline-tag">Figma MCP &middot; live specs</span>
         </div>
         <div class="timeline-step">
           <p class="timeline-number">6.0</p>
           <p class="timeline-title">Post-launch Research</p>
-          <p class="timeline-desc">Research and continuous improvements based on real usage data.</p>
-          <span class="timeline-tag">Analytics &middot; Iteration</span>
+          <p class="timeline-desc">Tracked adoption, task success, and friction points after launch. The platform keeps evolving based on real usage data.</p>
+          <span class="timeline-tag">Analytics &middot; iteration</span>
         </div>
       </div>
     </section>
