@@ -339,6 +339,99 @@
       color: #9A9A9A;
       font-weight: 700;
     }
+    .persona-field-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+    }
+    .persona-field-table td {
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      vertical-align: top;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .persona-field-table tr:last-child td { border-bottom: none; }
+    .persona-field-table td:first-child {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9A9A9A;
+      width: 44px;
+      padding-right: 12px;
+      padding-top: 9px;
+    }
+    .persona-field-table td:last-child { color: #6B6B6B; }
+
+    /* ——— DESIGN SYSTEM SHOWCASE ——— */
+    .ds-eyebrow {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #9A9A9A; margin: 28px 0 12px;
+    }
+    .ds-eyebrow:first-child { margin-top: 0; }
+    .ds-prompt-block {
+      background: #F2F0EC; border-radius: 8px; padding: 20px 24px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 13px; line-height: 1.7; color: #2A2F30;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .ds-caption { font-size: 13px; color: #9A9A9A; line-height: 1.6; margin-top: 16px; }
+    .ds-color-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
+    .ds-swatch { display: flex; flex-direction: column; gap: 5px; }
+    .ds-swatch-box { width: 100%; aspect-ratio: 1; border-radius: 6px; border: 1px solid rgba(0,0,0,0.08); }
+    .ds-swatch-name { font-size: 10px; color: #6B6B6B; line-height: 1.3; font-weight: 500; }
+    .ds-swatch-hex { font-size: 10px; color: #9A9A9A; font-family: 'Menlo','Monaco',monospace; }
+    .ds-type-stack { display: flex; flex-direction: column; }
+    .ds-type-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.05); gap: 16px;
+    }
+    .ds-type-row:last-child { border-bottom: none; }
+    .ds-type-sample { flex: 1; font-family: Arial, sans-serif; color: #1A1A1A; }
+    .ds-type-meta { font-size: 11px; color: #9A9A9A; font-family: 'Menlo',monospace; white-space: nowrap; flex-shrink: 0; }
+    .ds-component-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .ds-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 4px; height: 40px; padding: 4px 16px; border-radius: 8px;
+      font-family: Arial, sans-serif; font-size: 14px; font-weight: 700;
+      line-height: 1.4; cursor: default; white-space: nowrap; border: none;
+    }
+    .ds-btn-primary { background: #CC0000; color: #FFFFFF; }
+    .ds-btn-secondary { background: #ECEFF0; color: #000000; border: 1px solid #D4DADD !important; }
+    .ds-btn-ghost { background: transparent; color: #CC0000; }
+    .ds-btn-disabled { opacity: 0.6; }
+    .ds-input-wrap { display: flex; flex-direction: column; gap: 4px; }
+    .ds-input-label { font-family: Arial, sans-serif; font-size: 12px; color: #6D757A; line-height: 1.4; }
+    .ds-input {
+      height: 40px; padding: 8px 12px; border-radius: 8px;
+      font-family: Arial, sans-serif; font-size: 14px; line-height: 1.4;
+      background: #FFFFFF; display: flex; align-items: center;
+      width: 200px; box-sizing: border-box;
+    }
+    .ds-input-default { border: 1px solid #D4DADD; }
+    .ds-input-focused { border: 2px solid #1E2224; }
+    .ds-input-error { border: 1px solid #CC0000; }
+    .ds-search {
+      height: 40px; border: 1px solid #D4DADD; border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center;
+      overflow: hidden; width: 340px;
+    }
+    .ds-search-input-area {
+      flex: 1; padding: 8px 12px; font-family: Arial, sans-serif;
+      font-size: 14px; color: #6D757A; display: flex; align-items: center; gap: 8px;
+    }
+    .ds-search-btn {
+      background: #CC0000; height: 32px; padding: 4px 12px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center; margin-right: 4px; flex-shrink: 0;
+    }
+    .ds-badge {
+      display: inline-flex; align-items: center; gap: 4px; height: 24px;
+      padding: 4px 8px; border-radius: 8px; font-family: Arial, sans-serif;
+      font-size: 12px; font-weight: 400; line-height: 1.4; white-space: nowrap;
+    }
+    .accordion-row-label-group { display: flex; flex-direction: column; gap: 2px; }
+    .accordion-nda-caption { font-size: 11px; color: #C0BDB8; line-height: 1.3; font-weight: 400; }
 
     /* ——— NDA BANNER ——— */
     .nda-banner {
@@ -1143,177 +1236,68 @@
       <p class="section-text">Deep research phase to map out who uses the platform, how they interact with it, and where the friction points are. 4 persona groups, detailed user flows, and end-to-end journey maps shaped every design decision.</p>
 
       <div class="accordion">
-        <!-- PERSONAS -->
-        <details>
-          <summary><span>Personas &mdash; 4 groups</span><span class="accordion-nda-tag">NDA</span></summary>
+        <!-- PERSONAS — open, no NDA -->
+        <details open>
+          <summary><span>Personas &mdash; 4 groups</span></summary>
           <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">4 persona groups defined based on interviews and stakeholder workshops, split into Users and Creators &amp; Approvers.</p>
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <div class="persona-section-grid">
-                  <p class="persona-section-label">Users</p>
-                  <div class="persona-detail-card">
-                    <div class="persona-detail-header">
-                      <div class="persona-detail-avatar users">G1</div>
-                      <div>
-                        <p class="persona-detail-group">Group 1</p>
-                        <p class="persona-detail-name">Data Scientist / Engineer</p>
-                      </div>
-                    </div>
-                    <p class="persona-detail-who">Technical specialist working with Python, ML models, and data integrations.</p>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Goals</p>
-                      <ul>
-                        <li>Quickly find relevant datasets and evaluate schema, quality, lineage</li>
-                        <li>Get access fast with minimal approvals</li>
-                        <li>Ensure data is reliable and stable for production use</li>
-                      </ul>
-                    </div>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Pain Points</p>
-                      <ul>
-                        <li>Hard to find datasets across multiple sources</li>
-                        <li>Long access approval cycles</li>
-                        <li>Lack of clear owners or documentation</li>
-                        <li>Data quality issues (freshness, missing values, drift)</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="persona-detail-card">
-                    <div class="persona-detail-header">
-                      <div class="persona-detail-avatar users">G2</div>
-                      <div>
-                        <p class="persona-detail-group">Group 2</p>
-                        <p class="persona-detail-name">Business User</p>
-                      </div>
-                    </div>
-                    <p class="persona-detail-who">Analysts, product managers, and business stakeholders using BI tools (Power BI, Tableau, Spotfire, Databricks SQL).</p>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Goals</p>
-                      <ul>
-                        <li>Focused on insights rather than discovering raw data</li>
-                        <li>Easily find existing reports and dashboards</li>
-                        <li>Use officially validated (trusted) datasets and metrics</li>
-                      </ul>
-                    </div>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Pain Points</p>
-                      <ul>
-                        <li>Too many raw technical datasets; too few curated business-ready ones</li>
-                        <li>Hard to understand metric definitions</li>
-                        <li>Data may be outdated or inconsistent</li>
-                        <li>Requires technical support for access or interpretation</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <p class="persona-section-label" style="margin-top: 8px;">Creators &amp; Approvers</p>
-                  <div class="persona-detail-card">
-                    <div class="persona-detail-header">
-                      <div class="persona-detail-avatar creators">G3</div>
-                      <div>
-                        <p class="persona-detail-group">Group 3</p>
-                        <p class="persona-detail-name">Data Product Owner</p>
-                      </div>
-                    </div>
-                    <p class="persona-detail-who">Data product/platform product manager responsible for governance and lifecycle of data products.</p>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Goals</p>
-                      <ul>
-                        <li>Increase adoption of data products and marketplace</li>
-                        <li>Ensure data governance, quality, and trust</li>
-                        <li>Reduce manual work for data teams</li>
-                      </ul>
-                    </div>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Pain Points</p>
-                      <ul>
-                        <li>Fragmented ownership across teams</li>
-                        <li>Too many manual approval steps</li>
-                        <li>Data products without proper documentation or quality</li>
-                        <li>Slow onboarding of new users or teams</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="persona-detail-card">
-                    <div class="persona-detail-header">
-                      <div class="persona-detail-avatar creators">G4</div>
-                      <div>
-                        <p class="persona-detail-group">Group 4</p>
-                        <p class="persona-detail-name">Data POD Lead</p>
-                      </div>
-                    </div>
-                    <p class="persona-detail-who">Team Lead / Tech Lead for a data engineering POD or domain.</p>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Goals</p>
-                      <ul>
-                        <li>Deliver high-quality, reliable data products</li>
-                        <li>Ensure data pipelines meet SLA and quality standards</li>
-                        <li>Provide correct documentation and metadata</li>
-                      </ul>
-                    </div>
-                    <div class="persona-detail-section">
-                      <p class="persona-detail-section-title">Pain Points</p>
-                      <ul>
-                        <li>Heavy manual work (documentation, access requests)</li>
-                        <li>Difficulty ensuring data quality across many pipelines</li>
-                        <li>Poor visibility of who uses their data products</li>
-                        <li>Managing incidents and schema-breaking changes</li>
-                      </ul>
-                    </div>
-                  </div>
+            <div class="persona-section-grid">
+              <p class="persona-section-label">Users</p>
+              <div class="persona-detail-card">
+                <div class="persona-detail-header">
+                  <div class="persona-detail-avatar users">G1</div>
+                  <div><p class="persona-detail-name">Data Scientist / Engineer</p></div>
                 </div>
+                <table class="persona-field-table">
+                  <tr><td>Who</td><td>Technical specialist working with Python, ML models, and data integrations.</td></tr>
+                  <tr><td>Pain</td><td>Hard to find datasets across sources; long approval cycles; unclear ownership.</td></tr>
+                </table>
               </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              <div class="persona-detail-card">
+                <div class="persona-detail-header">
+                  <div class="persona-detail-avatar users">G2</div>
+                  <div><p class="persona-detail-name">Business User</p></div>
+                </div>
+                <table class="persona-field-table">
+                  <tr><td>Who</td><td>Analysts, PMs, and business stakeholders using BI tools.</td></tr>
+                  <tr><td>Pain</td><td>Too much raw data, too few curated business-ready reports; hard to trust freshness.</td></tr>
+                </table>
+              </div>
+              <p class="persona-section-label" style="margin-top:8px;">Creators &amp; Approvers</p>
+              <div class="persona-detail-card">
+                <div class="persona-detail-header">
+                  <div class="persona-detail-avatar creators">G3</div>
+                  <div><p class="persona-detail-name">Data Product Owner</p></div>
+                </div>
+                <table class="persona-field-table">
+                  <tr><td>Who</td><td>Product manager responsible for governance and lifecycle of data products.</td></tr>
+                  <tr><td>Pain</td><td>Fragmented ownership; too many manual approval steps; slow onboarding.</td></tr>
+                </table>
+              </div>
+              <div class="persona-detail-card">
+                <div class="persona-detail-header">
+                  <div class="persona-detail-avatar creators">G4</div>
+                  <div><p class="persona-detail-name">Data POD Lead</p></div>
+                </div>
+                <table class="persona-field-table">
+                  <tr><td>Who</td><td>Team/Tech Lead for a data engineering POD or domain.</td></tr>
+                  <tr><td>Pain</td><td>Heavy manual documentation work; poor visibility into who uses their products.</td></tr>
+                </table>
               </div>
             </div>
           </div>
         </details>
 
-        <!-- USER FLOWS -->
-        <details>
-          <summary><span>User Flows &mdash; 5 flows</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">End-to-end user flows mapped for every persona group, covering search, access requests, data product creation, and governance workflows.</p>
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>Data Scientist</td><td>Sign in &rarr; Search marketplace &rarr; Filter by type/domain &rarr; Preview dataset &rarr; Evaluate schema &amp; quality &rarr; Request access &rarr; Integrate into pipeline</td></tr>
-                  <tr><td>Business User</td><td>Sign in &rarr; Browse reports &amp; dashboards &rarr; Search by topic &rarr; View trusted datasets &rarr; Request access &rarr; Connect to BI tool</td></tr>
-                  <tr><td>Data Product Owner</td><td>Review proposals &rarr; Approve/reject access &rarr; Set governance rules &rarr; Monitor adoption &rarr; Manage lifecycle</td></tr>
-                  <tr><td>Data POD Lead</td><td>Create data product &rarr; Define metadata &amp; schema &rarr; Set quality standards &rarr; Submit for validation &rarr; Publish to marketplace</td></tr>
-                  <tr><td>Add Data Product</td><td>DPO opens creation form &rarr; Select product type &rarr; Fill metadata fields &rarr; System validates completeness &rarr; DPO reviews &amp; publishes &rarr; Product live on marketplace</td></tr>
-                </table>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
-          </div>
-        </details>
+        <!-- USER FLOWS — NDA locked -->
+        <div class="accordion-row-disabled">
+          <span class="accordion-row-left"><span>User Flows &mdash; 5 flows</span><span class="accordion-nda-tag">NDA</span></span>
+          <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
 
-        <!-- USER JOURNEY MAP -->
-        <details>
-          <summary><span>User Journey Map</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">End-to-end journey maps captured the full experience from awareness to daily usage, highlighting emotions, pain points, and opportunities at each stage.</p>
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>Awareness</td><td>User hears about the marketplace from a colleague or internal announcement. Pain: unclear what it offers.</td></tr>
-                  <tr><td>First Visit</td><td>Explores the platform, browses categories. Pain: overwhelming amount of data, no trust signals.</td></tr>
-                  <tr><td>Search &amp; Filter</td><td>Tries to find a specific dataset. Pain: too many results, unclear which is the right one.</td></tr>
-                  <tr><td>Evaluate</td><td>Opens dataset details, checks metadata and preview. Pain: can't judge data quality or freshness.</td></tr>
-                  <tr><td>Request Access</td><td>Submits access request with justification. Pain: long approval times, no visibility into status.</td></tr>
-                  <tr><td>Daily Use</td><td>Returns regularly to find and consume data. Opportunity: recommendations, saved searches, notifications.</td></tr>
-                </table>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
-          </div>
-        </details>
+        <!-- USER JOURNEY MAP — NDA locked -->
+        <div class="accordion-row-disabled">
+          <span class="accordion-row-left"><span>User Journey Map</span><span class="accordion-nda-tag">NDA</span></span>
+          <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
       </div>
     </section>
 
@@ -1325,89 +1309,112 @@
       <p class="section-text">Once the structure was proven, I built a scalable design system with reusable components, tokens, and patterns &mdash; then created the final mockups for the dev team.</p>
 
       <div class="accordion">
+        <!-- AI PROTOTYPE APPROACH — open, no NDA -->
         <details open>
-          <summary><span>AI-based prototype</span></summary>
+          <summary><span>AI prototype approach</span></summary>
           <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Used AI tools to rapidly generate and iterate on layout concepts, testing different approaches to search, filtering, data cards, and access flows. This phase was about speed and exploration &mdash; finding the right direction before committing to a design system.</p>
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <div class="wireframe-grid wireframe-grid--wide">
-                  <div class="wireframe-item wireframe-item--zoomable">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-1.webp" alt="AI prototype - search" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Search concept</div>';">
-                    <p class="wireframe-caption">Search &amp; filter exploration</p>
-                  </div>
-                  <div class="wireframe-item wireframe-item--zoomable">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-2.webp" alt="AI prototype - detail" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Detail concept</div>';">
-                    <p class="wireframe-caption">Dataset detail page concept</p>
-                  </div>
-                  <div class="wireframe-item wireframe-item--zoomable">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-3.webp" alt="AI prototype - access" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Access flow concept</div>';">
-                    <p class="wireframe-caption">Access request flow iteration</p>
-                  </div>
-                  <div class="wireframe-item wireframe-item--zoomable">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/wireframe-4.webp" alt="AI prototype - admin" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Admin concept</div>';">
-                    <p class="wireframe-caption">Owner dashboard exploration</p>
-                  </div>
-                </div>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:24px; line-height:1.6;">Used AI tools to rapidly generate and iterate on layout concepts, testing different approaches to search, filtering, data cards, and access flows. This phase was about speed and exploration &mdash; finding the right direction before committing to a design system.</p>
+            <p class="ds-eyebrow" style="margin-top:0;">Prompt</p>
+            <div class="ds-prompt-block">Generate a data marketplace homepage layout with: a prominent search bar at the top for natural language queries, a left sidebar with category filters (data type, domain, certification status), and a main grid of data product cards showing name, owner, quality score, and access status. Use a clean editorial style with generous whitespace. Focus on information density without clutter — engineers should scan 20+ items without fatigue.</div>
+            <p class="ds-caption">Multiple iterations across layout, search, filtering, and access flow concepts — tested structurally before any high-fidelity work began.</p>
           </div>
         </details>
 
-        <details>
-          <summary><span>Design system</span><span class="accordion-nda-tag">NDA</span></summary>
+        <!-- DESIGN SYSTEM FOUNDATIONS — open, no NDA -->
+        <details open>
+          <summary><span>Design system foundations</span></summary>
           <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Built on top of Halliburton's corporate foundation with custom marketplace components: data cards, trust badges, quality indicators, access status chips, comparison views, and governance controls.</p>
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <table class="strategy-table">
-                  <tr><td>Tokens</td><td>Colors, typography, spacing, elevation &mdash; aligned with corporate brand</td></tr>
-                  <tr><td>Components</td><td>Data product cards, search bars, filter panels, status badges, access chips</td></tr>
-                  <tr><td>Patterns</td><td>Card layouts, detail pages, comparison views, request flows, admin dashboards</td></tr>
-                  <tr><td>Documentation</td><td>Usage guidelines, component specs, interaction states for dev hand-off</td></tr>
-                </table>
+
+            <p class="ds-eyebrow" style="margin-top:0;">Colors</p>
+            <div class="ds-color-grid">
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#FFFFFF;"></div><span class="ds-swatch-name">White</span><span class="ds-swatch-hex">#FFFFFF</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#ECEFF0;"></div><span class="ds-swatch-name">Grey-5</span><span class="ds-swatch-hex">#ECEFF0</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#E1E5E7;"></div><span class="ds-swatch-name">Grey-10</span><span class="ds-swatch-hex">#E1E5E7</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#D4DADD;"></div><span class="ds-swatch-name">Grey-20</span><span class="ds-swatch-hex">#D4DADD</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#7F878D;"></div><span class="ds-swatch-name">Grey-50</span><span class="ds-swatch-hex">#7F878D</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#6D757A;"></div><span class="ds-swatch-name">Grey-60</span><span class="ds-swatch-hex">#6D757A</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#43494E;"></div><span class="ds-swatch-name">Grey-80</span><span class="ds-swatch-hex">#43494E</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#1E2224;"></div><span class="ds-swatch-name">Grey-95</span><span class="ds-swatch-hex">#1E2224</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#000000;"></div><span class="ds-swatch-name">Black</span><span class="ds-swatch-hex">#000000</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#FDECEC;"></div><span class="ds-swatch-name">Red-5</span><span class="ds-swatch-hex">#FDECEC</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#CC0000;"></div><span class="ds-swatch-name">Red-50</span><span class="ds-swatch-hex">#CC0000</span></div>
+              <div class="ds-swatch"><div class="ds-swatch-box" style="background:#8F0000;"></div><span class="ds-swatch-name">Red-70</span><span class="ds-swatch-hex">#8F0000</span></div>
+            </div>
+
+            <p class="ds-eyebrow">Typography</p>
+            <div class="ds-type-stack">
+              <div class="ds-type-row"><span class="ds-type-sample" style="font-size:28px;font-weight:700;line-height:1.4;">Data Marketplace</span><span class="ds-type-meta">Heading 28 · Bold · Arial</span></div>
+              <div class="ds-type-row"><span class="ds-type-sample" style="font-size:24px;font-weight:700;line-height:1.4;">Explore datasets</span><span class="ds-type-meta">Heading 24 · Bold · Arial</span></div>
+              <div class="ds-type-row"><span class="ds-type-sample" style="font-size:18px;font-weight:700;line-height:1.4;">Filter by domain</span><span class="ds-type-meta">Heading 18 · Bold · Arial</span></div>
+              <div class="ds-type-row"><span class="ds-type-sample" style="font-size:14px;font-weight:400;line-height:1.4;">Search for datasets, reports, and AI models across the data ecosystem.</span><span class="ds-type-meta">Text 14 · Regular · Arial</span></div>
+              <div class="ds-type-row"><span class="ds-type-sample" style="font-size:12px;font-weight:400;line-height:1.4;">Last updated · 3 min ago · Owner: J. Doe</span><span class="ds-type-meta">Text 12 · Regular · Arial</span></div>
+            </div>
+
+            <p class="ds-eyebrow">Buttons</p>
+            <div class="ds-component-row">
+              <button class="ds-btn ds-btn-primary">Request access</button>
+              <button class="ds-btn ds-btn-secondary">View details</button>
+              <button class="ds-btn ds-btn-ghost">Cancel</button>
+              <button class="ds-btn ds-btn-primary ds-btn-disabled" disabled>Submitting&hellip;</button>
+            </div>
+
+            <p class="ds-eyebrow">Inputs &amp; Search</p>
+            <div class="ds-component-row" style="align-items:flex-start; flex-wrap:wrap;">
+              <div class="ds-input-wrap">
+                <span class="ds-input-label">Dataset name</span>
+                <div class="ds-input ds-input-default"><span style="color:#6D757A;">Enter a name&hellip;</span></div>
+                <span class="ds-input-label">Default</span>
               </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
+              <div class="ds-input-wrap">
+                <span class="ds-input-label">Dataset name</span>
+                <div class="ds-input ds-input-focused"><span style="color:#000;">Quarterly revenue</span></div>
+                <span class="ds-input-label">Focused</span>
+              </div>
+              <div class="ds-input-wrap">
+                <span class="ds-input-label">Dataset name</span>
+                <div class="ds-input ds-input-error"><span style="color:#000;">Q4-2025</span></div>
+                <span class="ds-input-label" style="color:#CC0000;">Error</span>
               </div>
             </div>
+            <div style="margin-top:16px;">
+              <div class="ds-search">
+                <div class="ds-search-input-area">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D757A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                  <span style="font-family:Arial,sans-serif;font-size:14px;color:#6D757A;line-height:1.4;">Search datasets, reports, models&hellip;</span>
+                  <span style="font-family:Arial,sans-serif;font-size:12px;color:#6D757A;margin-left:auto;opacity:0.7;">&#8984; P</span>
+                </div>
+                <div class="ds-search-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <p class="ds-eyebrow">Badges</p>
+            <div class="ds-component-row">
+              <span class="ds-badge" style="background:#E3ECF7;color:#243B5E;">Data product</span>
+              <span class="ds-badge" style="background:#E8E9FC;color:#404697;">ML model</span>
+              <span class="ds-badge" style="background:#CFF0DD;color:#0C7135;">BI dashboard</span>
+              <span class="ds-badge" style="background:#D6ECEC;color:#0C5254;">Domain</span>
+              <span class="ds-badge" style="background:#FFE4D6;color:#A94722;">PSL</span>
+              <span class="ds-badge" style="background:#F7D6D6;color:#8F0000;">Sensitive</span>
+              <span class="ds-badge" style="background:#FFF3D4;color:#B88300;">Dev</span>
+              <span class="ds-badge" style="background:#E1EBD5;color:#3E5821;">Prod</span>
+            </div>
+
           </div>
         </details>
 
-        <details>
-          <summary><span>Final mockups</span><span class="accordion-nda-tag">NDA</span></summary>
-          <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Production-ready screens delivered to the dev team with full specs, annotations, and interactive prototype for testing.</p>
-            <div class="nda-block">
-              <div class="nda-content" aria-hidden="true">
-                <div class="wireframe-grid">
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/mockup-1.webp" alt="AI Home page mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>AI Home page</div>';">
-                    <p class="wireframe-caption">AI-powered home &mdash; search and recommendations</p>
-                  </div>
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/mockup-2.webp" alt="Explore page mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Explore page</div>';">
-                    <p class="wireframe-caption">Browse with filters, cards, certification badges</p>
-                  </div>
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/mockup-3.webp" alt="Dataset detail mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Dataset detail</div>';">
-                    <p class="wireframe-caption">Data catalog &mdash; detail view</p>
-                  </div>
-                  <div class="wireframe-item">
-                    <img class="wireframe-img" src="../../assets/images/halliburton/mockup-4.webp" alt="Access request flow mockup" width="800" height="600" loading="lazy" onerror="this.outerHTML='<div class=\'wireframe-placeholder\'>Access request flow</div>';">
-                    <p class="wireframe-caption">In-app request with approval status</p>
-                  </div>
-                </div>
-              </div>
-              <div class="nda-overlay">
-                <span class="nda-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Protected under NDA</span>
-              </div>
-            </div>
-          </div>
-        </details>
+        <!-- FINAL MOCKUPS — NDA locked disabled row -->
+        <div class="accordion-row-disabled">
+          <span class="accordion-row-left">
+            <span class="accordion-row-label-group">
+              <span>Final mockups</span>
+              <span class="accordion-nda-caption">Protected under NDA &mdash; available on request</span>
+            </span>
+            <span class="accordion-nda-tag">NDA</span>
+          </span>
+          <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
       </div>
     </section>
 
