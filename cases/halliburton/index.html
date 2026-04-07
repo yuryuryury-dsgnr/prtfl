@@ -451,11 +451,16 @@
     .tg-card-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
     .tg-card-name { font-family: 'Menlo','Monaco','Courier New',monospace; font-size: 11px; color: #1A1A1A; line-height: 1.4; word-break: break-all; }
     .tg-card-val { font-family: 'Menlo','Monaco','Courier New',monospace; font-size: 10px; color: #9A9A9A; line-height: 1.4; }
-    .tg-card-badge { font-size: 10px; color: #B0ADA8; line-height: 1.4; margin-top: 4px; display: none; }
-    .tg-card.tg-hovered .tg-card-badge { display: block; }
     @media (max-width: 600px) {
       .tg-graph { grid-template-columns: 1fr; gap: 24px; }
     }
+    .proto-placeholder {
+      width: 100%; height: 500px; background: #F0EFEC;
+      border: 1px dashed #C8C5C0; border-radius: 10px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px; margin-top: 4px;
+    }
+    @media (max-width: 600px) { .proto-placeholder { height: 400px; } }
 
     /* ——— NDA BANNER ——— */
     .nda-banner {
@@ -1341,6 +1346,14 @@
             <p class="ds-eyebrow" style="margin-top:0;">Prompt</p>
             <div class="ds-prompt-block">Generate a data marketplace homepage layout with: a prominent search bar at the top for natural language queries, a left sidebar with category filters (data type, domain, certification status), and a main grid of data product cards showing name, owner, quality score, and access status. Use a clean editorial style with generous whitespace. Focus on information density without clutter — engineers should scan 20+ items without fatigue.</div>
             <p class="ds-caption">Multiple iterations across layout, search, filtering, and access flow concepts — tested structurally before any high-fidelity work began.</p>
+            <p class="ds-eyebrow" style="margin-top:24px;">Interactive Prototype</p>
+            <div class="proto-placeholder">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8C5C0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span class="ds-caption" style="margin:0;">Interactive prototype — coming soon</span>
+            </div>
           </div>
         </details>
 
@@ -1370,9 +1383,7 @@
                       <span class="tg-swatch" style="background:#CC0000"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">red-50</span>
-                        <span class="tg-card-val">#CC0000</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#CC0000</span>                      </div>
                     </div>
                   </div>
 
@@ -1381,9 +1392,7 @@
                       <span class="tg-swatch" style="background:#FFFFFF"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">white</span>
-                        <span class="tg-card-val">#FFFFFF</span>
-                        <span class="tg-card-badge">Used in 2 semantic · 2 component</span>
-                      </div>
+                        <span class="tg-card-val">#FFFFFF</span>                      </div>
                     </div>
                   </div>
 
@@ -1392,9 +1401,7 @@
                       <span class="tg-swatch" style="background:#000000"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">black</span>
-                        <span class="tg-card-val">#000000</span>
-                        <span class="tg-card-badge">Used in 2 semantic · 2 component</span>
-                      </div>
+                        <span class="tg-card-val">#000000</span>                      </div>
                     </div>
                   </div>
 
@@ -1403,9 +1410,7 @@
                       <span class="tg-swatch" style="background:#ECEFF0"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">grey-5</span>
-                        <span class="tg-card-val">#ECEFF0</span>
-                        <span class="tg-card-badge">Used in 2 semantic · 2 component</span>
-                      </div>
+                        <span class="tg-card-val">#ECEFF0</span>                      </div>
                     </div>
                   </div>
 
@@ -1414,9 +1419,7 @@
                       <span class="tg-swatch" style="background:#D4DADD"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">grey-20</span>
-                        <span class="tg-card-val">#D4DADD</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#D4DADD</span>                      </div>
                     </div>
                   </div>
 
@@ -1425,9 +1428,7 @@
                       <span class="tg-swatch" style="background:#7F878D"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">grey-50</span>
-                        <span class="tg-card-val">#7F878D</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#7F878D</span>                      </div>
                     </div>
                   </div>
 
@@ -1436,9 +1437,7 @@
                       <span class="tg-swatch" style="background:#6D757A"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">grey-60</span>
-                        <span class="tg-card-val">#6D757A</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#6D757A</span>                      </div>
                     </div>
                   </div>
 
@@ -1447,9 +1446,7 @@
                       <span class="tg-swatch" style="background:#1E2224"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">grey-95</span>
-                        <span class="tg-card-val">#1E2224</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#1E2224</span>                      </div>
                     </div>
                   </div>
 
@@ -1458,9 +1455,7 @@
                       <span class="tg-swatch" style="background:#CFF0DD"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">green-10</span>
-                        <span class="tg-card-val">#CFF0DD</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#CFF0DD</span>                      </div>
                     </div>
                   </div>
 
@@ -1469,9 +1464,7 @@
                       <span class="tg-swatch" style="background:#0C7135"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">green-70</span>
-                        <span class="tg-card-val">#0C7135</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#0C7135</span>                      </div>
                     </div>
                   </div>
 
@@ -1480,9 +1473,7 @@
                       <span class="tg-swatch" style="background:#A94722"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">orange-70</span>
-                        <span class="tg-card-val">#A94722</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#A94722</span>                      </div>
                     </div>
                   </div>
 
@@ -1491,9 +1482,7 @@
                       <span class="tg-swatch" style="background:#E3ECF7"></span>
                       <div class="tg-card-body">
                         <span class="tg-card-name">blue-10</span>
-                        <span class="tg-card-val">#E3ECF7</span>
-                        <span class="tg-card-badge">Used in 1 semantic · 1 component</span>
-                      </div>
+                        <span class="tg-card-val">#E3ECF7</span>                      </div>
                     </div>
                   </div>
 
@@ -1508,121 +1497,91 @@
                   <div class="tg-card" data-id="sem-prim-bg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">primary-background</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#CC0000" data-dark="#CC0000">#CC0000</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#CC0000" data-dark="#CC0000">#CC0000</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-prim-fg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">primary-foreground</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#FFFFFF" data-dark="#FFFFFF">#FFFFFF</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#FFFFFF" data-dark="#FFFFFF">#FFFFFF</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-sec-fg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">secondary-foreground</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#000000" data-dark="#FFFFFF">#000000</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#000000" data-dark="#FFFFFF">#000000</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-sec-bg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">secondary-background</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#ECEFF0" data-dark="#1E2224">#ECEFF0</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#ECEFF0" data-dark="#1E2224">#ECEFF0</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-surf-bg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">surface-background</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#FFFFFF" data-dark="#2A2F30">#FFFFFF</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#FFFFFF" data-dark="#2A2F30">#FFFFFF</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-surf-bgm" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">surface-bg-muted</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#ECEFF0" data-dark="#000000">#ECEFF0</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#ECEFF0" data-dark="#000000">#ECEFF0</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-surf-fg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">surface-foreground</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#000000" data-dark="#FFFFFF">#000000</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#000000" data-dark="#FFFFFF">#000000</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-surf-fgm" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">surface-fg-muted</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#6D757A" data-dark="#A8AFB5">#6D757A</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#6D757A" data-dark="#A8AFB5">#6D757A</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-brd-def" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">border-default</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#D4DADD" data-dark="#43494E">#D4DADD</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#D4DADD" data-dark="#43494E">#D4DADD</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-brd-str" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">border-strong</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#7F878D" data-dark="#7F878D">#7F878D</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#7F878D" data-dark="#7F878D">#7F878D</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-brd-foc" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">border-focus</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#1E2224" data-dark="#ECEFF0">#1E2224</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#1E2224" data-dark="#ECEFF0">#1E2224</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-succ-bg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">success-background</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#CFF0DD" data-dark="#074622">#CFF0DD</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#CFF0DD" data-dark="#074622">#CFF0DD</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-succ-fg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">success-foreground</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#0C7135" data-dark="#A7E4C5">#0C7135</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#0C7135" data-dark="#A7E4C5">#0C7135</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-warn-fg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">warning-foreground</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#A94722" data-dark="#F3C7AF">#A94722</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#A94722" data-dark="#F3C7AF">#A94722</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="sem-data-bg" data-tier="semantic">
                     <div class="tg-card-body">
                       <span class="tg-card-name">data-bg</span>
-                      <span class="tg-card-val tg-theme-val" data-light="#E3ECF7" data-dark="#0B1522">#E3ECF7</span>
-                      <span class="tg-card-badge">Used in 1 component</span>
-                    </div>
+                      <span class="tg-card-val tg-theme-val" data-light="#E3ECF7" data-dark="#0B1522">#E3ECF7</span>                    </div>
                   </div>
 
                 </div>
@@ -1635,107 +1594,77 @@
 
                   <div class="tg-card" data-id="comp-btn-prim-bg" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">button/primary/bg</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">button/primary/bg</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-btn-prim-txt" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">button/primary/text</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">button/primary/text</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-btn-sec-txt" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">button/secondary/text</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">button/secondary/text</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-btn-sec-bg" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">button/secondary/bg</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">button/secondary/bg</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-body-bg" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">body/background</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">body/background</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-page-bg" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">page/page-bg</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">page/page-bg</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-content-txt" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">content/text</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">content/text</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-inp-txt" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">input/text-title</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">input/text-title</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-inp-brd" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">input/border-default</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">input/border-default</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-inp-brd-hov" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">input/border-hover</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">input/border-hover</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-inp-brd-foc" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">input/border-focused</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">input/border-focused</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-succ-bg" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">statuses/success-bg</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">statuses/success-bg</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-succ-txt" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">statuses/success-text</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">statuses/success-text</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-warn-txt" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">statuses/warning-text</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">statuses/warning-text</span>                    </div>
                   </div>
 
                   <div class="tg-card" data-id="comp-data-bg" data-tier="component">
                     <div class="tg-card-body">
-                      <span class="tg-card-name">data product/bg</span>
-                      <span class="tg-card-badge">Inherits from 1 semantic · 1 primitive</span>
-                    </div>
+                      <span class="tg-card-name">data product/bg</span>                    </div>
                   </div>
 
                 </div>
