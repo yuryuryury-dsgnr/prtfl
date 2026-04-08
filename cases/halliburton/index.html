@@ -462,6 +462,20 @@
     }
     @media (max-width: 600px) { .proto-placeholder { height: 400px; } }
 
+    /* ——— PROMPT TABS ——— */
+    .ds-tab-bar { display: flex; border-bottom: 1px solid rgba(0,0,0,0.08); margin-bottom: 16px; overflow-x: auto; gap: 0; }
+    .ds-tab-btn { padding: 8px 16px 9px; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; cursor: pointer; font-size: 12px; font-weight: 500; color: #9A9A9A; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
+    .ds-tab-btn.active { color: #1A1A1A; border-bottom-color: #1A1A1A; }
+    .ds-tab-btn:hover:not(.active) { color: #6B6B6B; }
+    .ds-tab-panel { display: none; }
+    .ds-tab-panel.active { display: block; }
+    .ds-prompt-wrap { position: relative; }
+    .ds-prompt-wrap.collapsed .ds-prompt-block { max-height: 88px; overflow: hidden; }
+    .ds-prompt-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 44px; background: linear-gradient(transparent, #F2F0EC); border-radius: 0 0 8px 8px; pointer-events: none; display: none; }
+    .ds-prompt-wrap.collapsed .ds-prompt-fade { display: block; }
+    .ds-expand-btn { display: block; width: 100%; margin-top: 8px; padding: 8px; background: none; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; font-size: 12px; color: #6B6B6B; cursor: pointer; text-align: center; transition: border-color 0.15s, color 0.15s; font-family: inherit; }
+    .ds-expand-btn:hover { border-color: rgba(0,0,0,0.22); color: #1A1A1A; }
+
     /* ——— NDA BANNER ——— */
     .nda-banner {
       margin-top: 24px;
@@ -1343,8 +1357,50 @@
           <summary><span>AI prototype approach</span></summary>
           <div class="accordion-body">
             <p style="font-size:14px; color:#6B6B6B; margin-bottom:24px; line-height:1.6;">Used AI tools to rapidly generate and iterate on layout concepts, testing different approaches to search, filtering, data cards, and access flows. This phase was about speed and exploration &mdash; finding the right direction before committing to a design system.</p>
-            <p class="ds-eyebrow" style="margin-top:0;">Prompt</p>
-            <div class="ds-prompt-block">Generate a data marketplace homepage layout with: a prominent search bar at the top for natural language queries, a left sidebar with category filters (data type, domain, certification status), and a main grid of data product cards showing name, owner, quality score, and access status. Use a clean editorial style with generous whitespace. Focus on information density without clutter — engineers should scan 20+ items without fatigue.</div>
+            <p class="ds-eyebrow" style="margin-top:0;">Prompts</p>
+            <div class="ds-prompt-tabs">
+              <div class="ds-tab-bar">
+                <button class="ds-tab-btn active" data-tab="0">General layout</button>
+                <button class="ds-tab-btn" data-tab="1">Data product page</button>
+                <button class="ds-tab-btn" data-tab="2">Add data product</button>
+                <button class="ds-tab-btn" data-tab="3">Request access</button>
+              </div>
+              <div class="ds-tab-panels">
+
+                <div class="ds-tab-panel active" data-panel="0">
+                  <div class="ds-prompt-wrap collapsed">
+                    <div class="ds-prompt-block">Generate a data marketplace homepage layout with: a prominent search bar at the top for natural language queries, a left sidebar with category filters (data type, domain, certification status), and a main grid of data product cards showing name, owner, quality score, and access status. Use a clean editorial style with generous whitespace. Focus on information density without clutter — engineers should scan 20+ items without fatigue.</div>
+                    <div class="ds-prompt-fade"></div>
+                  </div>
+                  <button class="ds-expand-btn">Expand to see more</button>
+                </div>
+
+                <div class="ds-tab-panel" data-panel="1">
+                  <div class="ds-prompt-wrap collapsed">
+                    <div class="ds-prompt-block">Design a detail page for a single data product in a data marketplace. Include: a top header with product name, domain badge, quality score indicator, certification status, and access level chip; a tabbed body with Overview, Schema, Sample Data, and Lineage sections; a persistent right sidebar with metadata (owner, last updated, row count, format, sensitivity level) and a primary CTA button. The Overview tab should show description, use cases, and update frequency. The Schema tab should display a table of column names, data types, nullable flag, and descriptions. Use a clean, information-dense layout — this is a technical page for engineers who need to evaluate a dataset quickly.</div>
+                    <div class="ds-prompt-fade"></div>
+                  </div>
+                  <button class="ds-expand-btn">Expand to see more</button>
+                </div>
+
+                <div class="ds-tab-panel" data-panel="2">
+                  <div class="ds-prompt-wrap collapsed">
+                    <div class="ds-prompt-block">Design a multi-step publishing form for adding a new data product to a data marketplace. Step 1 — Basic info: product name, short description, domain selector, data format, thumbnail upload. Step 2 — Schema: auto-import schema from Databricks with a column list showing name, type, and nullable; allow editors to add descriptions and toggle sensitivity flags per column. Step 3 — Ownership and access: assign a Data Product Owner from an AD-synced user list, set default access level (Open / Restricted / Private), add editors by team or individual. Include a sticky preview panel on the right showing how the product card will appear in the marketplace. Keep the flow approachable for non-technical DPOs who don't work directly in Databricks.</div>
+                    <div class="ds-prompt-fade"></div>
+                  </div>
+                  <button class="ds-expand-btn">Expand to see more</button>
+                </div>
+
+                <div class="ds-tab-panel" data-panel="3">
+                  <div class="ds-prompt-wrap collapsed">
+                    <div class="ds-prompt-block">Design an access request modal for a data marketplace. The form should include: requester name and role (pre-filled from profile), team and POD, domain, requested access level (Viewer or Editor), target environment (Development or Production), and a mandatory justification field with a 50-character minimum. Show a read-only summary of the requested data product on the right side of the modal. On submission, display a confirmation screen with a unique request ID, the assigned reviewer's name, and an estimated review timeline. Ensure the form validates all required fields inline before allowing submission.</div>
+                    <div class="ds-prompt-fade"></div>
+                  </div>
+                  <button class="ds-expand-btn">Expand to see more</button>
+                </div>
+
+              </div>
+            </div>
             <p class="ds-caption">Multiple iterations across layout, search, filtering, and access flow concepts — tested structurally before any high-fidelity work began.</p>
             <p class="ds-eyebrow" style="margin-top:24px;">Interactive Prototype</p>
             <div class="proto-placeholder">
@@ -1694,15 +1750,15 @@
     <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
     <section id="section-06" class="case-section reveal">
       <p class="section-label">06 &mdash; Validation</p>
-      <h2 class="section-heading">Direct feedback from real users</h2>
+      <h2 class="section-heading">Testing with the people who'd actually use it</h2>
       <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
 
       <div class="accordion">
         <details open>
           <summary><span>Session 1 &mdash; Data POD Leads</span><span class="accordion-nda-tag">NDA</span></summary>
           <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Design review &amp; feedback session with Data POD Leads &mdash; the technical owners who create and maintain data products in Databricks. Focused on validating roles, publishing workflows, and access management.</p>
-            <div class="nda-block">
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Design review &amp; feedback session with Data POD Leads &mdash; the technical owners who create and maintain data products on the internal data platform. Focused on validating roles, publishing workflows, and access management.</p>
+            <div class="nda-block" style="max-height:180px;">
               <div class="nda-content" aria-hidden="true">
                 <table class="strategy-table">
                   <tr><td>Roles</td><td>Validated 4 user groups: Data Engineers, Business Users, Data Product Owners (DPO), and Data POD Leads. Confirmed separation between technical ownership (POD Lead) and business ownership (DPO) as critical.</td></tr>
@@ -1722,7 +1778,8 @@
               <p style="font-size:13px; font-weight:500; margin-bottom:8px;">Key takeaways</p>
               <ul class="accordion-list" style="margin:0;">
                 <li>Overall Marketplace concept is supported</li>
-                <li>Clear separation between POD Lead and DPO responsibilities</li>
+                <li>Clear separation between POD Lead and Data Product Owner responsibilities</li>
+                <li>Automation-first approach validated</li>
                 <li>Access management should be user-centric</li>
                 <li>Sensitivity column removed from UI</li>
                 <li>Dev access management remains an open exploration topic</li>
@@ -1731,11 +1788,11 @@
           </div>
         </details>
 
-        <details>
+        <details open>
           <summary><span>Session 2 &mdash; Data Product Owners</span><span class="accordion-nda-tag">NDA</span></summary>
           <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Feedback &amp; alignment session with Data Product Owners &mdash; the business-side stakeholders responsible for publication decisions and access governance.</p>
-            <div class="nda-block">
+            <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px;">Design review &amp; feedback session with Data Product Owners &mdash; the business owners of data products, responsible for final approval and publication decisions. Focused on publication flow, access governance, and role alignment.</p>
+            <div class="nda-block" style="max-height:180px;">
               <div class="nda-content" aria-hidden="true">
                 <table class="strategy-table">
                   <tr><td>Role alignment</td><td>DPOs confirmed their role as business owners of data products &mdash; deciding when a product is ready for consumption and appropriate for broader visibility.</td></tr>
@@ -1753,11 +1810,11 @@
             <div style="margin-top:20px; padding:16px 20px; background:#F2F0EC; border-radius:8px;">
               <p style="font-size:13px; font-weight:500; margin-bottom:8px;">Key takeaways</p>
               <ul class="accordion-list" style="margin:0;">
-                <li>Overall Marketplace concept is supported by DPOs</li>
-                <li>Clear separation between technical and business ownership is essential</li>
-                <li>Access management should be user-centric with clear "access reason"</li>
-                <li>Publication and access decisions should remain lightweight and efficient</li>
-                <li>Marketplace should enable confident decisions without exposing technical complexity</li>
+                <li>Overall Marketplace concept is supported</li>
+                <li>Clear separation between technical and business ownership</li>
+                <li>Access management should be user-centric with clear access reasons</li>
+                <li>Publication and access decisions should stay lightweight</li>
+                <li>Marketplace enables confident decisions without exposing technical complexity</li>
               </ul>
             </div>
           </div>
@@ -2059,6 +2116,27 @@
     document.addEventListener('click', e => {
       if (!pill.contains(e.target)) pill.classList.remove('open');
     });
+
+    // ——— PROMPT TABS ———
+    (function() {
+      var tabBtns = document.querySelectorAll('.ds-tab-btn');
+      var tabPanels = document.querySelectorAll('.ds-tab-panel');
+      if (!tabBtns.length) return;
+      tabBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var tab = btn.dataset.tab;
+          tabBtns.forEach(function(b) { b.classList.toggle('active', b === btn); });
+          tabPanels.forEach(function(p) { p.classList.toggle('active', p.dataset.panel === tab); });
+        });
+      });
+      document.querySelectorAll('.ds-expand-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var wrap = btn.previousElementSibling;
+          var isCollapsed = wrap.classList.toggle('collapsed');
+          btn.textContent = isCollapsed ? 'Expand to see more' : 'Show less';
+        });
+      });
+    })();
 
     // ——— TOKEN GRAPH ———
     (function() {
