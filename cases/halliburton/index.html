@@ -476,6 +476,21 @@
     .ds-expand-btn { display: block; width: 100%; margin-top: 8px; padding: 8px; background: none; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; font-size: 12px; color: #6B6B6B; cursor: pointer; text-align: center; transition: border-color 0.15s, color 0.15s; font-family: inherit; }
     .ds-expand-btn:hover { border-color: rgba(0,0,0,0.22); color: #1A1A1A; }
 
+    /* ——— HANDOFF ——— */
+    .handoff-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 4px 0 32px; }
+    .handoff-col { padding: 20px; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; }
+    .handoff-col-header { font-size: 12px; font-weight: 600; color: #9A9A9A; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .pipeline-flow { display: flex; align-items: flex-start; gap: 8px; margin: 4px 0 32px; }
+    .pipeline-node { flex: 1; padding: 14px 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .pipeline-node-title { font-family: 'Menlo','Monaco','Courier New',monospace; font-size: 11px; font-weight: 600; color: #1A1A1A; line-height: 1.4; }
+    .pipeline-node-caption { font-size: 11px; color: #9A9A9A; line-height: 1.5; }
+    .pipeline-arrow { color: #C0BDB8; font-size: 18px; padding-top: 17px; flex-shrink: 0; line-height: 1; }
+    @media (max-width: 640px) {
+      .handoff-compare { grid-template-columns: 1fr; }
+      .pipeline-flow { flex-direction: column; gap: 4px; }
+      .pipeline-arrow { padding-top: 0; text-align: center; }
+    }
+
     /* ——— NDA BANNER ——— */
     .nda-banner {
       margin-top: 24px;
@@ -1826,10 +1841,68 @@
     <section id="section-07" class="case-section reveal">
       <p class="section-label">07 &mdash; Hand-off to Dev</p>
       <h2 class="section-heading">AI-powered design-to-code pipeline</h2>
-      <p class="section-text">Instead of traditional hand-off with static specs and redlines, we connected the dev team directly to the design system through an MCP (Model Context Protocol) server linked to Figma.</p>
-      <p class="section-text">This meant developers could query the design system programmatically &mdash; pulling component specs, tokens, spacing values, and interaction states directly into their code environment. No more guessing from screenshots or outdated documentation.</p>
+      <p class="section-text">Traditional hand-off means screenshots, redlines, and a PDF that's out of date the moment you save it. On this project, I tried something else: connect developers directly to the Figma design system through MCP &mdash; Model Context Protocol &mdash; so they could pull component specs, tokens, and interaction states from their IDE in real time. No more guessing from static docs.</p>
 
-      <div class="accordion">
+      <p class="ds-eyebrow">Traditional vs MCP Pipeline</p>
+      <div class="handoff-compare">
+        <div class="handoff-col">
+          <p class="handoff-col-header">Traditional hand-off</p>
+          <ul class="accordion-list" style="margin:0;">
+            <li>Static specs in Figma</li>
+            <li>Screenshots in tickets</li>
+            <li>Dev asks designer for clarification</li>
+            <li>Components drift from source over time</li>
+          </ul>
+        </div>
+        <div class="handoff-col">
+          <p class="handoff-col-header">MCP pipeline</p>
+          <ul class="accordion-list" style="margin:0;">
+            <li>Live component specs pulled from Figma</li>
+            <li>Tokens synced automatically to code</li>
+            <li>Dev queries the design system from the IDE</li>
+            <li>One source of truth, always current</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="ds-eyebrow">How it flows</p>
+      <div class="pipeline-flow">
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">Figma file</span>
+          <span class="pipeline-node-caption">Design system, tokens, variables</span>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">MCP server</span>
+          <span class="pipeline-node-caption">Structured data layer</span>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">Claude Code / IDE</span>
+          <span class="pipeline-node-caption">Live queries from dev environment</span>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">Production code</span>
+          <span class="pipeline-node-caption">Components built 1:1 with design</span>
+        </div>
+      </div>
+
+      <p class="ds-eyebrow">What this looks like in code</p>
+      <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px; line-height:1.6;">Every prop, every style, every token &mdash; traced back to a Figma variable. Update the variable in Figma, and the next sync updates the code.</p>
+      <div class="ds-prompt-block">// Component generated via MCP pull from Figma
+&lt;Button
+  variant="primary"
+  size="md"
+  background="var(--color-primary-background)"  // &rarr; Figma: primary-background
+  color="var(--color-primary-foreground)"        // &rarr; Figma: primary-foreground
+  radius="var(--radius-md)"                      // &rarr; Figma: radius-md
+&gt;
+  Request access
+&lt;/Button&gt;</div>
+      <p class="ds-caption">Generic example &mdash; structure shown, real component names under NDA.</p>
+
+      <div class="accordion" style="margin-top:32px;">
         <details open>
           <summary><span>How MCP + Figma worked</span></summary>
           <div class="accordion-body">
@@ -1839,19 +1912,19 @@
               <tr><td>Tokens</td><td>Design tokens (colors, typography, spacing, elevation) synced automatically &mdash; any update in Figma propagated to code.</td></tr>
               <tr><td>Result</td><td>Significantly reduced back-and-forth between design and dev. Components were built accurately on the first pass, matching the design system 1:1.</td></tr>
             </table>
+            <p style="margin-top:16px; padding:12px 16px; background:#F2F0EC; border-radius:8px; font-size:13px; color:#6B6B6B; line-height:1.6;">Result: components delivered significantly faster than traditional handoff cycles &mdash; fewer iterations, higher first-pass accuracy.</p>
           </div>
         </details>
 
-        <details>
+        <details open>
           <summary><span>What made this successful</span></summary>
           <div class="accordion-body">
-            <ul class="accordion-list">
-              <li>Design system was structured with clear naming conventions and consistent component architecture</li>
-              <li>Every component had documented states, variants, and responsive behavior</li>
-              <li>MCP eliminated the "lost in translation" problem &mdash; devs worked with the source of truth, not interpretations</li>
-              <li>Reduced QA cycles: fewer visual bugs, fewer "this doesn't match the design" tickets</li>
-              <li>Team could focus on logic and performance instead of pixel-pushing</li>
-            </ul>
+            <table class="strategy-table">
+              <tr><td>Structured Figma file</td><td>MCP reads layer names, frame structure, and component hierarchy. A well-organized Figma file with clear section naming made the design system legible to the AI &mdash; messy files produce messy output.</td></tr>
+              <tr><td>Token discipline</td><td>Three-tier token architecture (primitives &rarr; semantic &rarr; component) gave MCP a stable interface. Any token change in Figma propagated cleanly to code.</td></tr>
+              <tr><td>Shared vocabulary</td><td>Dev and design aligned on component names, prop names, and variant terminology up front. Naming consistency turned out to be the biggest unlock.</td></tr>
+              <tr><td>Iteration speed</td><td>Fewer back-and-forth cycles meant design could iterate on edge cases while dev built the core in parallel.</td></tr>
+            </table>
           </div>
         </details>
       </div>
