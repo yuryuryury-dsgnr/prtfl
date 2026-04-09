@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Design System — Yury</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F7F4; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ——— STICKY HEADER ——— */
+    .case-header { position: sticky; top: 0; z-index: 100; background: #F8F7F4; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 16px 24px; }
+    .case-header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .case-header-back { font-size: 14px; font-weight: 500; color: #1A1A1A; }
+    .case-header-back:hover { color: #6B6B6B; }
+    .case-header-name { font-size: 14px; color: #9A9A9A; }
+
+    /* ——— CONTAINER ——— */
+    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+    /* ——— PAGE LAYOUT WITH TOC ——— */
+    .page-layout { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 200px; gap: 64px; align-items: start; }
+    .page-main { min-width: 0; }
+
+    /* ——— STICKY TOC ——— */
+    .toc { position: sticky; top: 80px; padding-top: 80px; }
+    .toc-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 16px; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .toc-item a { display: flex; align-items: baseline; gap: 8px; font-size: 13px; color: #9A9A9A; padding: 5px 0; transition: color 0.2s; line-height: 1.4; }
+    .toc-item a:hover { color: #1A1A1A; }
+    .toc-item.active a { color: #1A1A1A; font-weight: 500; }
+    .toc-item .toc-num { font-size: 11px; color: #C0BDB8; flex-shrink: 0; transition: color 0.2s; }
+    .toc-item.active .toc-num { color: #9A9A9A; }
+
+    /* ——— HERO ——— */
+    .case-hero { padding: 80px 0 48px; }
+    .case-hero h1 { font-size: 48px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+    .case-hero-hook { font-size: 18px; color: #6B6B6B; line-height: 1.6; margin-top: 12px; margin-bottom: 32px; }
+    .case-hero-meta-grid { display: grid; grid-template-columns: 140px 1fr; gap: 8px 0; margin-bottom: 32px; font-size: 14px; }
+    .case-hero-meta-grid dt { color: #9A9A9A; font-weight: 400; padding-right: 16px; }
+    .case-hero-meta-grid dd { color: #1A1A1A; margin: 0; }
+    .case-hero-stakes { font-size: 15px; font-style: italic; color: #6B6B6B; line-height: 1.7; margin-bottom: 32px; }
+    .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin-top: 0; }
+    .case-hero-image { width: calc(100% + 160px); margin-left: -80px; background: #E8E6E1; border-radius: 16px; margin-top: 0; margin-bottom: 32px; position: relative; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06); height: 320px; display: flex; align-items: center; justify-content: center; }
+    .case-hero-image-placeholder { color: #B5B3AE; font-size: 13px; letter-spacing: 0.02em; }
+
+    /* ——— SECTIONS ——— */
+    .case-section { padding: 80px 0 0; }
+    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 8px; }
+    .section-heading { font-size: 24px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 24px; }
+    .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
+
+    /* ——— PROBLEM CARDS ——— */
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .problem-card { background: #F2F0EC; border-radius: 12px; padding: 28px 28px 24px; }
+    .problem-card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 12px; }
+    .problem-card h3 { font-size: 16px; font-weight: 500; line-height: 1.5; color: #1A1A1A; margin-bottom: 8px; }
+    .problem-card p { font-size: 15px; line-height: 1.7; color: #6B6B6B; }
+
+    /* ——— STRATEGY TABLE ——— */
+    .strategy-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .strategy-table tr:nth-child(even) td { background: #F2F0EC; }
+    .strategy-table td { padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,0.04); vertical-align: top; font-size: 14px; line-height: 1.6; }
+    .strategy-table tr:last-child td { border-bottom: none; }
+    .strategy-table td:first-child { font-weight: 500; color: #1A1A1A; width: 160px; padding-right: 20px; border-radius: 6px 0 0 6px; }
+    .strategy-table td:last-child { color: #6B6B6B; border-radius: 0 6px 6px 0; }
+
+    /* ——— ACCORDION ——— */
+    .accordion { border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+    .accordion details { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .accordion details:last-child { border-bottom: none; }
+    .accordion summary { padding: 16px 20px; font-size: 14px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; transition: background 150ms ease; }
+    .accordion summary:hover { background: rgba(0,0,0,0.02); }
+    .accordion summary::-webkit-details-marker { display: none; }
+    .accordion summary::after { content: '+'; font-size: 18px; font-weight: 400; color: #9A9A9A; transition: transform 200ms ease; }
+    .accordion details[open] summary::after { content: '\2212'; }
+    .accordion .accordion-body { padding: 0 20px 20px; }
+    .accordion-list { list-style: none; padding: 0; font-size: 14px; color: #6B6B6B; }
+    .accordion-list li { margin-bottom: 6px; padding-left: 16px; position: relative; }
+    .accordion-list li::before { content: '\00B7'; position: absolute; left: 0; color: #9A9A9A; font-weight: 700; }
+
+    /* ——— DS EYEBROW + PROMPT ——— */
+    .ds-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 28px 0 12px; }
+    .ds-eyebrow:first-child { margin-top: 0; }
+    .ds-prompt-block { background: #F2F0EC; border-radius: 8px; padding: 20px 24px; font-family: 'Menlo', 'Monaco', 'Courier New', monospace; font-size: 13px; line-height: 1.7; color: #2A2F30; white-space: pre-wrap; word-break: break-word; }
+    .ds-caption { font-size: 13px; color: #9A9A9A; line-height: 1.6; margin-top: 16px; }
+
+    /* ——— HANDOFF COMPARE + PIPELINE ——— */
+    .handoff-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 32px; }
+    .handoff-col { padding: 20px; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; }
+    .handoff-col-header { font-size: 12px; font-weight: 600; color: #9A9A9A; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .handoff-col ul { list-style: none; padding: 0; }
+    .handoff-col li { font-size: 14px; color: #6B6B6B; line-height: 1.6; padding-left: 16px; position: relative; margin-bottom: 6px; }
+    .handoff-col li::before { content: '\00B7'; position: absolute; left: 0; color: #9A9A9A; font-weight: 700; }
+    .pipeline-flow { display: flex; align-items: flex-start; gap: 8px; margin: 4px 0 32px; }
+    .pipeline-node { flex: 1; padding: 14px 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .pipeline-node-title { font-family: 'Menlo', 'Monaco', 'Courier New', monospace; font-size: 11px; font-weight: 600; color: #1A1A1A; line-height: 1.4; }
+    .pipeline-node-caption { font-size: 11px; color: #9A9A9A; line-height: 1.5; }
+    .pipeline-arrow { color: #C0BDB8; font-size: 18px; padding-top: 17px; flex-shrink: 0; line-height: 1; }
+
+    /* ——— IMAGE PLACEHOLDERS ——— */
+    .img-placeholder { background: #E8E6E1; border-radius: 8px; min-height: 160px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #B5B3AE; text-align: center; padding: 24px; margin-top: 12px; }
+    .img-placeholder--tall { min-height: 240px; }
+    .img-placeholder--hero { min-height: 320px; margin: 32px 0; border: 1px dashed #D0CEC9; background: #F2F0EC; }
+
+    /* ——— STAT GRID (outcomes) ——— */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .stat-card { background: #F2F0EC; border-radius: 12px; padding: 24px 24px 20px; }
+    .stat-card-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 10px; }
+    .stat-card-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; color: #1A1A1A; line-height: 1.2; margin-bottom: 4px; }
+    .stat-card-desc { font-size: 13px; color: #6B6B6B; line-height: 1.5; }
+
+    /* ——— REFLECTION ——— */
+    .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
+    .reflection-col { border-top: 2px solid rgba(0,0,0,0.06); padding-top: 20px; }
+    .reflection-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .reflection-text { font-size: 14px; color: #6B6B6B; line-height: 1.6; }
+
+    /* ——— NEXT CASE ——— */
+    .next-case { margin-top: 80px; padding: 32px 0; border-top: 1px solid rgba(0,0,0,0.08); background: rgba(0,0,0,0.015); margin-left: -24px; margin-right: -24px; padding-left: 24px; padding-right: 24px; display: flex; justify-content: space-between; align-items: center; transition: background 200ms ease; }
+    .next-case:hover { background: rgba(0,0,0,0.03); }
+    .next-case-label { font-size: 14px; color: #9A9A9A; transition: transform 200ms ease; }
+    .next-case:hover .next-case-label { transform: translateX(4px); }
+    .next-case-name { font-size: 14px; font-weight: 500; }
+
+    /* ——— FOOTER ——— */
+    .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
+    .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+    .footer-name { font-weight: 500; }
+    .footer-role { color: #6B6B6B; }
+    .footer-right { display: flex; gap: 24px; color: #6B6B6B; }
+    .footer-right a { position: relative; }
+    .footer-right a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #6B6B6B; transition: width 200ms ease; }
+    .footer-right a:hover::after { width: 100%; }
+
+    /* ——— SCROLL REVEAL ——— */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ——— MOBILE TOC PILL ——— */
+    .toc-pill { display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; }
+    .toc-pill-trigger { display: flex; align-items: center; gap: 8px; background: rgba(26,26,26,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #fff; border: none; border-radius: 100px; padding: 10px 18px 10px 14px; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+    .toc-pill-num { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; }
+    .toc-pill-chevron { width: 14px; height: 14px; transition: transform 0.2s; opacity: 0.6; }
+    .toc-pill.open .toc-pill-chevron { transform: rotate(180deg); }
+    .toc-pill-menu { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(26,26,26,0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 16px; padding: 8px; min-width: 200px; display: none; }
+    .toc-pill.open .toc-pill-menu { display: block; }
+    .toc-pill-menu a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; font-size: 13px; color: rgba(255,255,255,0.6); transition: background 0.15s, color 0.15s; }
+    .toc-pill-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
+    .toc-pill-menu .pill-num { font-size: 11px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
+    .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.5); }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 768px) {
+      .case-hero h1 { font-size: 36px; }
+      .page-layout { grid-template-columns: 1fr; gap: 0; }
+      .toc { display: none; }
+      .toc-pill { display: flex; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .handoff-compare { grid-template-columns: 1fr; }
+      .pipeline-flow { flex-direction: column; gap: 4px; }
+      .pipeline-arrow { padding-top: 0; text-align: center; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .reflection-grid { grid-template-columns: 1fr; }
+      .next-case { flex-direction: column; gap: 8px; align-items: flex-start; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .footer-right { justify-content: center; }
+      .case-hero-image { width: 100%; margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STICKY HEADER -->
+  <header class="case-header">
+    <div class="case-header-inner">
+      <a href="../../" class="case-header-back">&larr; Back</a>
+      <span class="case-header-name">Enterprise Design System</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="page-layout" style="padding-top:0;padding-bottom:0;display:block;max-width:1100px;">
+    <section class="case-hero">
+      <h1>Enterprise Design System</h1>
+      <p class="case-hero-hook">Three-tier tokens, two themes, one pipeline from Figma to production code.</p>
+
+      <dl class="case-hero-meta-grid">
+        <dt>Role</dt><dd>Sole designer</dd>
+        <dt>Focus</dt><dd>Architecture, tokens, dev pipeline</dd>
+        <dt>Timeline</dt><dd>2025 &ndash; 2026</dd>
+        <dt>Status</dt><dd>In production, used by the dev team</dd>
+      </dl>
+
+      <div class="case-hero-image">
+        <span class="case-hero-image-placeholder">[Hero image &mdash; design system overview]</span>
+      </div>
+
+      <p class="case-hero-stakes">Components shipped 1:1 with the design system on the first pass.</p>
+
+      <hr class="case-hero-divider">
+    </section>
+  </div>
+
+  <!-- PAGE LAYOUT WITH TOC -->
+  <div class="page-layout">
+    <div class="page-main">
+
+    <!-- 01 — CONTEXT -->
+    <section id="section-01" class="case-section reveal">
+      <p class="section-label">01 &mdash; Context</p>
+      <h2 class="section-heading">Context</h2>
+      <p class="section-text">The product this system was built for is an internal enterprise data platform &mdash; a place where engineers find, evaluate, and access data assets. The specifics are kept vague here by design. What mattered for the system: it needed two themes, a small but focused component set, and a direct path from design file to production code.</p>
+      <p class="section-text">Off-the-shelf systems like Material or Fluent were not the right fit. They solve for breadth. This product needed depth in a specific interaction model, with a visual language that matched the platform's tone. A custom system also meant every token and component had a clear owner and a clear reason to exist.</p>
+      <p class="section-text">I was the only designer. The system grew in parallel with the product &mdash; not before it. There was no separate design system phase. Every new screen was an opportunity to extract a pattern. Every extracted pattern reduced the cost of the next screen.</p>
+    </section>
+
+    <!-- 02 — THE PROBLEM -->
+    <section id="section-02" class="case-section reveal">
+      <p class="section-label">02 &mdash; The problem</p>
+      <h2 class="section-heading">The problem</h2>
+      <p class="section-text">Four things made early handoffs slow and error-prone.</p>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <p class="problem-card-label">Handoff gap</p>
+          <h3>Screenshots in Jira</h3>
+          <p>Figma files were shared as static exports. Developers re-interpreted specs by eye. Documentation drifted as soon as the next design iteration started.</p>
+        </div>
+        <div class="problem-card">
+          <p class="problem-card-label">Duplication</p>
+          <h3>Two files per component</h3>
+          <p>Light and dark mode were handled at the component level &mdash; copy the component, override the colors. Any fix required touching two places.</p>
+        </div>
+        <div class="problem-card">
+          <p class="problem-card-label">No shared language</p>
+          <h3>Designers used layer names, devs used hex values</h3>
+          <p>There was no token layer connecting the two. Color changes in Figma did not propagate to code. Every update was a manual conversation.</p>
+        </div>
+        <div class="problem-card">
+          <p class="problem-card-label">Reinvention</p>
+          <h3>Each screen rebuilt existing patterns</h3>
+          <p>The filter row, the card, the empty state &mdash; each re-solved on new screens without a shared reference. Inconsistencies accumulated faster than they could be caught.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — APPROACH -->
+    <section id="section-03" class="case-section reveal">
+      <p class="section-label">03 &mdash; Approach</p>
+      <h2 class="section-heading">How the system grew</h2>
+      <p class="section-text">The system was never a separate project. There was no design system phase before the product phase. The two ran together from the start.</p>
+      <p class="section-text">Every screen that was designed went through a two-step check: does this use a pattern that already exists in the system? If yes, use it. If no, does this pattern belong in the system? If yes, extract it. A pattern was promoted to the library only after it appeared in at least two separate product screens. No speculative components. No patterns that hadn't been used.</p>
+    </section>
+
+    <!-- 04 — TOKEN ARCHITECTURE -->
+    <section id="section-04" class="case-section reveal">
+      <p class="section-label">04 &mdash; Token architecture</p>
+      <h2 class="section-heading">Three tiers &mdash; Primitives, Semantic, Component</h2>
+      <p class="section-text">Three tiers solve a problem that two tiers do not: you want components to be theme-aware without coupling component logic to raw color values. Two tiers almost works. Three tiers actually works, because the semantic layer acts as a stable interface between what changes (the theme) and what doesn't (the component).</p>
+
+      <p class="ds-eyebrow">Primitives</p>
+      <p class="section-text" style="margin-bottom:12px;">Raw values with no semantic meaning. Every color, spacing step, and type size in the system lives here. <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">red-50</code>, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">space-4</code>, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">font-size-14</code>. Primitives never appear in components directly.</p>
+      <div class="img-placeholder">[Token example: primitive values &mdash; color scale, spacing scale, type scale]</div>
+
+      <p class="ds-eyebrow" style="margin-top:28px;">Semantic</p>
+      <p class="section-text" style="margin-bottom:12px;">Intent-based tokens that map to a primitive based on the active theme. <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">surface.primary</code>, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">text.muted</code>, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">border.default</code>. In light mode, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">surface.primary</code> resolves to one primitive. In dark mode, it resolves to another. Components never know which.</p>
+      <div class="img-placeholder">[Token example: semantic layer &mdash; light vs. dark resolution table]</div>
+
+      <p class="ds-eyebrow" style="margin-top:28px;">Component</p>
+      <p class="section-text" style="margin-bottom:12px;">Scoped to specific components. <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">button.primary.background</code>, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">card.border</code>, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">input.text</code>. These reference semantic tokens, never primitives. The component tier is what the MCP pipeline reads when it generates code.</p>
+      <div class="img-placeholder">[Token example: component layer &mdash; button token stack from component to primitive]</div>
+
+      <div class="img-placeholder img-placeholder--tall" style="margin-top:32px;">[Architecture diagram &mdash; three columns, primitive &rarr; semantic &rarr; component, with theme switching shown on the semantic layer]</div>
+    </section>
+
+    <!-- 05 — NAMING AS THE UNLOCK -->
+    <section id="section-05" class="case-section reveal">
+      <p class="section-label">05 &mdash; Naming</p>
+      <h2 class="section-heading">Naming was the unlock</h2>
+      <p class="section-text">The Figma MCP server reads the Figma file structure &mdash; layer names, variable names, component names &mdash; and exposes them as structured data the dev's IDE can query. If a token in Figma is called <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">surface.primary</code> and the same token in code is called <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">color-bg-main</code>, the pipeline produces a mismatch on every component.</p>
+      <p class="section-text">The naming conventions were agreed on before the first component was built: tier prefix, semantic category, variant. That one decision turned a manual process into an automated one. It also meant token renames became breaking changes &mdash; which made the team careful about when and why names changed.</p>
+    </section>
+
+    <!-- 06 — DESIGN-TO-CODE PIPELINE -->
+    <section id="section-06" class="case-section reveal">
+      <p class="section-label">06 &mdash; Pipeline</p>
+      <h2 class="section-heading">From Figma to production code</h2>
+      <p class="section-text">The pipeline connects Figma to the developer's IDE through a Figma MCP server. A developer queries a component by node ID and gets back the structure, tokens, and variants. Claude Code generates the component from that output. The design file is the source of truth &mdash; not a screenshot of it.</p>
+
+      <div class="handoff-compare">
+        <div class="handoff-col">
+          <p class="handoff-col-header">Before</p>
+          <ul>
+            <li>Annotated screenshots attached to Jira tickets</li>
+            <li>Developers re-interpret specs by eye</li>
+            <li>Documentation goes stale between design iterations</li>
+            <li>Code reviewed against static exports, not live design</li>
+            <li>Token changes communicated in Slack, applied manually</li>
+          </ul>
+        </div>
+        <div class="handoff-col">
+          <p class="handoff-col-header">After</p>
+          <ul>
+            <li>Developer queries the Figma node directly from the IDE</li>
+            <li>Claude Code generates the component from live design data</li>
+            <li>Token updates in Figma propagate to the next build automatically</li>
+            <li>First-pass output matches the design system 1:1</li>
+            <li>No back-and-forth on spacing, color, or naming</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pipeline-flow">
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">Figma file</span>
+          <span class="pipeline-node-caption">Design system, tokens, variables</span>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">MCP server</span>
+          <span class="pipeline-node-caption">Structured data layer &mdash; read-only</span>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">Claude Code / IDE</span>
+          <span class="pipeline-node-caption">Live queries from dev environment</span>
+        </div>
+        <span class="pipeline-arrow">&rarr;</span>
+        <div class="pipeline-node">
+          <span class="pipeline-node-title">Production code</span>
+          <span class="pipeline-node-caption">Components built 1:1 with design</span>
+        </div>
+      </div>
+
+      <p class="ds-eyebrow">How it works under the hood</p>
+      <p class="section-text" style="margin-bottom:0;">The Figma MCP server exposes three operations used in this pipeline. All operations are read-only &mdash; the server never writes to the Figma file.</p>
+      <table class="strategy-table">
+        <tr>
+          <td><code style="font-family:'Menlo',monospace;font-size:12px;">get_design_context</code></td>
+          <td>Returns component structure, layout constraints, and variant data for a given node ID.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:'Menlo',monospace;font-size:12px;">get_metadata</code></td>
+          <td>Returns layer name, type, visibility, and parent/child relationships.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:'Menlo',monospace;font-size:12px;">get_variable_defs</code></td>
+          <td>Returns all token values resolved for the active theme &mdash; primitives, semantic, and component tiers.</td>
+        </tr>
+      </table>
+      <p class="ds-caption">Figma file key for this project: <code style="font-family:'Menlo',monospace;font-size:12px;">1yEn24FNbHfdrvdJdNT6fz</code></p>
+
+      <p class="ds-eyebrow" style="margin-top:32px;">Example prompt</p>
+      <div class="ds-prompt-block">Using the Figma MCP server, read the design context for node [node-id] from file key 1yEn24FNbHfdrvdJdNT6fz. Generate the component in React using our existing token system. Match the Figma source 1:1.</div>
+
+      <p class="ds-eyebrow" style="margin-top:32px;">Button: from Figma node to production code</p>
+      <div class="img-placeholder img-placeholder--tall">[Step-by-step walkthrough &mdash; Figma node selected &rarr; MCP query &rarr; generated React component with tokens annotated]</div>
+      <p class="ds-caption">Placeholder for a detailed walkthrough of one component moving through the full pipeline.</p>
+    </section>
+
+    <!-- 07 — THEMES WITHOUT DUPLICATION -->
+    <section id="section-07" class="case-section reveal">
+      <p class="section-label">07 &mdash; Themes</p>
+      <h2 class="section-heading">Two themes, one component</h2>
+      <p class="section-text">Component tokens do not change between light and dark mode. Only the semantic layer resolves differently. <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">button.primary.background</code> always points to <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">interactive.primary</code>. In light mode, <code style="font-family:'Menlo',monospace;font-size:12px;background:#F2F0EC;padding:2px 6px;border-radius:4px;">interactive.primary</code> resolves to one primitive. In dark mode, it resolves to another. The component has no knowledge of which theme is active.</p>
+
+      <div class="handoff-compare" style="margin-top:24px;">
+        <div class="handoff-col">
+          <p class="handoff-col-header">Light</p>
+          <div class="img-placeholder" style="min-height:200px;margin-top:0;">[Light mode component &mdash; button, card, or input]</div>
+        </div>
+        <div class="handoff-col">
+          <p class="handoff-col-header">Dark</p>
+          <div class="img-placeholder" style="min-height:200px;margin-top:0;">[Dark mode &mdash; same component, semantic layer resolves differently]</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 — GOVERNANCE -->
+    <section id="section-08" class="case-section reveal">
+      <p class="section-label">08 &mdash; Governance</p>
+      <h2 class="section-heading">Governance</h2>
+      <p class="section-text">The system is used in production. Changes have consequences. Four rules keep it stable.</p>
+
+      <table class="strategy-table" style="margin-top:24px;">
+        <tr>
+          <td>Naming</td>
+          <td>Every token follows the tier/category/variant convention. Variables added to Figma outside the convention are flagged before they're published. The same rules apply in code.</td>
+        </tr>
+        <tr>
+          <td>Promotion</td>
+          <td>A pattern enters the system only after it has been used in at least two separate product screens. Local-first, then promoted. No hypothetical components.</td>
+        </tr>
+        <tr>
+          <td>Propagation</td>
+          <td>Token updates move through the tier chain automatically. Changing a primitive updates all semantic tokens that reference it, which updates all component tokens in turn. The update surfaces in code on the next build.</td>
+        </tr>
+        <tr>
+          <td>Changelog</td>
+          <td>Every system change ships with a changelog entry: token renamed, component prop added, variant deprecated. The changelog lives in the same repository as the production code.</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- 09 — OUTCOMES -->
+    <section id="section-09" class="case-section reveal">
+      <p class="section-label">09 &mdash; Outcomes</p>
+      <h2 class="section-heading">Outcomes</h2>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <p class="stat-card-label">Components in system</p>
+          <p class="stat-card-value">[TBD]</p>
+          <p class="stat-card-desc">Total components shipped and in active use</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">Tokens across three tiers</p>
+          <p class="stat-card-value">[TBD]</p>
+          <p class="stat-card-desc">Primitive, semantic, and component tokens combined</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">Themes supported</p>
+          <p class="stat-card-value">2</p>
+          <p class="stat-card-desc">Light and dark &mdash; one component definition each</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">First-pass dev accuracy</p>
+          <p class="stat-card-value">[TBD]</p>
+          <p class="stat-card-desc">Components matching design system on first implementation</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">Handoff time saved</p>
+          <p class="stat-card-value">[TBD]</p>
+          <p class="stat-card-desc">Per component, compared to previous screenshot-based process</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 — REFLECTION -->
+    <section id="section-10" class="case-section reveal">
+      <p class="section-label">10 &mdash; Reflection</p>
+      <h2 class="section-heading">What is next</h2>
+
+      <div class="reflection-grid">
+        <div class="reflection-col">
+          <p class="reflection-title">Where the system is heading</p>
+          <p class="reflection-text">The pipeline works. The next step is documentation good enough that a new engineer can use it without asking the designer. The MCP server connection, the Figma file key, the prompt structure &mdash; all of it needs a README that stands on its own. The goal is zero onboarding conversations needed.</p>
+        </div>
+        <div class="reflection-col">
+          <p class="reflection-title">What I learned</p>
+          <p class="reflection-text">The token tier structure is right, but the semantic layer is still under-specified in places. Some component tokens skip semantic entirely and reference primitives directly &mdash; a shortcut that made sense early and now needs cleaning up. Building a system in parallel with a product teaches you which decisions age well and which ones don't. Naming ages well. Shortcuts don't.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEXT CASE -->
+    <a href="../../cases/halliburton/" class="next-case">
+      <span class="next-case-label">Next case &rarr;</span>
+      <span class="next-case-name">Data Marketplace &mdash; Halliburton</span>
+    </a>
+
+    </div><!-- end .page-main -->
+
+    <!-- STICKY TOC -->
+    <aside class="toc">
+      <p class="toc-label">Contents</p>
+      <ul class="toc-list">
+        <li class="toc-item" data-section="section-01"><a href="#section-01"><span class="toc-num">01</span> Context</a></li>
+        <li class="toc-item" data-section="section-02"><a href="#section-02"><span class="toc-num">02</span> Problem</a></li>
+        <li class="toc-item" data-section="section-03"><a href="#section-03"><span class="toc-num">03</span> Approach</a></li>
+        <li class="toc-item" data-section="section-04"><a href="#section-04"><span class="toc-num">04</span> Tokens</a></li>
+        <li class="toc-item" data-section="section-05"><a href="#section-05"><span class="toc-num">05</span> Naming</a></li>
+        <li class="toc-item" data-section="section-06"><a href="#section-06"><span class="toc-num">06</span> Pipeline</a></li>
+        <li class="toc-item" data-section="section-07"><a href="#section-07"><span class="toc-num">07</span> Themes</a></li>
+        <li class="toc-item" data-section="section-08"><a href="#section-08"><span class="toc-num">08</span> Governance</a></li>
+        <li class="toc-item" data-section="section-09"><a href="#section-09"><span class="toc-num">09</span> Outcomes</a></li>
+        <li class="toc-item" data-section="section-10"><a href="#section-10"><span class="toc-num">10</span> Reflection</a></li>
+      </ul>
+    </aside>
+
+  </div><!-- end .page-layout -->
+
+  <!-- MOBILE TOC PILL -->
+  <div class="toc-pill" id="tocPill">
+    <div class="toc-pill-menu" id="tocPillMenu">
+      <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Context</a>
+      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Problem</a>
+      <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> Approach</a>
+      <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Tokens</a>
+      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Naming</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Pipeline</a>
+      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Themes</a>
+      <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Governance</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Outcomes</a>
+      <a href="#section-10" data-section="section-10"><span class="pill-num">10</span> Reflection</a>
+    </div>
+    <button class="toc-pill-trigger" id="tocPillTrigger">
+      <span class="toc-pill-num" id="tocPillNum">01</span>
+      <span id="tocPillLabel">Context</span>
+      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><span class="footer-name">Yury</span> &middot; <span class="footer-role">Lead UX Designer</span></div>
+      <div class="footer-right">
+        <a href="mailto:hello@yury.design">Email</a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <span>Batumi, GE</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // TOC scroll spy
+    const tocItems = document.querySelectorAll('.toc-item[data-section]');
+    const pillLinks = document.querySelectorAll('.toc-pill-menu a[data-section]');
+    const sections = Array.from(tocItems).map(item =>
+      document.getElementById(item.dataset.section)
+    ).filter(Boolean);
+
+    const sectionLabels = {
+      'section-01': ['01', 'Context'],
+      'section-02': ['02', 'Problem'],
+      'section-03': ['03', 'Approach'],
+      'section-04': ['04', 'Tokens'],
+      'section-05': ['05', 'Naming'],
+      'section-06': ['06', 'Pipeline'],
+      'section-07': ['07', 'Themes'],
+      'section-08': ['08', 'Governance'],
+      'section-09': ['09', 'Outcomes'],
+      'section-10': ['10', 'Reflection'],
+    };
+
+    const pillNum = document.getElementById('tocPillNum');
+    const pillLabel = document.getElementById('tocPillLabel');
+
+    const onScroll = () => {
+      const scrollY = window.scrollY + 120;
+      let active = sections[0];
+      for (const section of sections) {
+        if (section.offsetTop <= scrollY) active = section;
+      }
+      const activeId = active?.id;
+      tocItems.forEach(item => item.classList.toggle('active', item.dataset.section === activeId));
+      pillLinks.forEach(a => a.classList.toggle('active', a.dataset.section === activeId));
+      if (activeId && sectionLabels[activeId]) {
+        pillNum.textContent = sectionLabels[activeId][0];
+        pillLabel.textContent = sectionLabels[activeId][1];
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Pill toggle
+    const pill = document.getElementById('tocPill');
+    const pillTrigger = document.getElementById('tocPillTrigger');
+    pillTrigger.addEventListener('click', () => pill.classList.toggle('open'));
+    pillLinks.forEach(a => {
+      a.addEventListener('click', () => pill.classList.remove('open'));
+    });
+    document.addEventListener('click', e => {
+      if (!pill.contains(e.target)) pill.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
