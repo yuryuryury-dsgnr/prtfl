@@ -121,8 +121,45 @@
       font-size: 16px;
       color: #6B6B6B;
       max-width: 480px;
+      margin-bottom: 12px;
+    }
+
+    .hero-bio-hook {
+      font-size: 16px;
+      color: #1A1A1A;
+      max-width: 480px;
       margin-bottom: 32px;
     }
+
+    .hero-bio-hook strong {
+      font-weight: 500;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 6px 0;
+      margin-bottom: 32px;
+      font-size: 14px;
+      max-width: 480px;
+    }
+
+    .hero-meta dt { color: #9A9A9A; font-weight: 400; }
+    .hero-meta dd { color: #1A1A1A; margin: 0; }
+
+    .hero-link--primary {
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 6px;
+      padding: 7px 15px;
+      transition: border-color 200ms ease, background 200ms ease;
+    }
+
+    .hero-link--primary:hover {
+      border-color: rgba(0,0,0,0.36);
+      background: rgba(0,0,0,0.025);
+    }
+
+    .hero-link--primary::after { display: none; }
 
     .hero-links {
       display: flex;
@@ -314,6 +351,57 @@
       margin-left: 6px;
     }
 
+    .case-nda-soft {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: #B0ADA8;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .case-nda-soft svg {
+      width: 11px;
+      height: 11px;
+      flex-shrink: 0;
+    }
+
+    .case-thumb-preview {
+      position: absolute;
+      inset: 0;
+      background: #1C1C1A;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .case-thumb-preview-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .case-thumb-preview-title {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+
+    .case-thumb-preview-keywords {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.02em;
+    }
+
     .case-role {
       font-size: 14px;
       color: #6B6B6B;
@@ -465,11 +553,16 @@
   <section class="hero">
     <div class="container hero-content">
       <h1 class="hero-name">Yurii Fokin</h1>
-      <p class="hero-title">Lead UX Designer · 8 years of experience</p>
-      <p class="hero-bio">Designing digital products from research to launch. Focused on enterprise tools, mobile apps, and design systems.</p>
+      <p class="hero-bio">Lead UX Designer. Eight years across enterprise tools, mobile apps, and design systems.</p>
+      <p class="hero-bio-hook">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <dl class="hero-meta">
+        <dt>Location</dt><dd>Batumi, Georgia · open to EU/US remote</dd>
+        <dt>Status</dt><dd>Open to senior and lead design roles</dd>
+        <dt>Languages</dt><dd>English · Russian · Ukrainian</dd>
+      </dl>
       <div class="hero-links">
+        <a href="mailto:yuryuryury@icloud.com" class="hero-link hero-link--primary">Get in touch →</a>
         <a href="#work" class="hero-link">Projects ↓</a>
-        <a href="mailto:yuryuryury@icloud.com" class="hero-link">Get in touch →</a>
         <a href="assets/CV_Yurii_Fokin.pdf" download class="hero-link">Download CV ↓</a>
       </div>
     </div>
@@ -557,29 +650,14 @@
     <div class="container">
       <div class="cases-grid">
 
-        <!-- Card 1: Data Marketplace -->
-        <a href="cases/halliburton/" class="case-card">
-          <div class="case-thumb">
-            <!-- <img src="images/halliburton-cover.jpg" alt="Data Marketplace"> -->
-            <span class="case-thumb-placeholder">Image coming soon</span>
-          </div>
-          <div class="case-body">
-            <p class="case-meta">2026</p>
-            <h3 class="case-name">Data Marketplace · Halliburton</h3>
-            <div>
-              <span class="case-tag">Enterprise tool</span>
-              <span class="case-nda">Under NDA</span>
-            </div>
-            <p class="case-role">Lead UX</p>
-            <p class="case-result">Sensitive details blurred to comply with NDA</p>
-            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
-          </div>
-        </a>
-
-        <!-- Card 2: Enterprise Design System -->
+        <!-- Card 1: Enterprise Design System -->
         <a href="projects/enterprise-design-system/" class="case-card">
           <div class="case-thumb">
-            <span class="case-thumb-placeholder">Image coming soon</span>
+            <div class="case-thumb-preview">
+              <span class="case-thumb-preview-label">Design System</span>
+              <span class="case-thumb-preview-title">Enterprise Design System</span>
+              <span class="case-thumb-preview-keywords">Tokens · MCP · Figma-to-code</span>
+            </div>
           </div>
           <div class="case-body">
             <p class="case-meta">2025 — 2026</p>
@@ -589,6 +667,30 @@
             </div>
             <p class="case-role">Sole designer · Architecture, tokens, dev pipeline</p>
             <p class="case-result">Three-tier tokens, light/dark themes, Figma MCP → Claude Code pipeline.<br>Built in parallel with the product, used by the dev team in production.</p>
+            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
+          </div>
+        </a>
+
+        <!-- Card 2: Data Marketplace -->
+        <a href="cases/halliburton/" class="case-card">
+          <div class="case-thumb">
+            <div class="case-thumb-preview">
+              <span class="case-thumb-preview-label">Enterprise Product</span>
+              <span class="case-thumb-preview-title">Data Marketplace</span>
+              <span class="case-thumb-preview-keywords">Sole lead · AI-native · Halliburton</span>
+            </div>
+          </div>
+          <div class="case-body">
+            <p class="case-meta">2026</p>
+            <h3 class="case-name">Data Marketplace · Halliburton</h3>
+            <div>
+              <span class="case-tag">Enterprise tool</span>
+              <span class="case-nda-soft">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>NDA
+              </span>
+            </div>
+            <p class="case-role">Lead UX</p>
+            <p class="case-result">Sensitive details blurred to comply with NDA</p>
             <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
         </a>
