@@ -993,6 +993,297 @@
     @media (max-width: 768px) {
       .toc-pill { display: flex; }
     }
+
+    /* ——————————————————————————————————————————————————
+       FROSTED SYSTEM LAYERS — Final Mockups Composition
+       Scoped to .mc-* prefix. No external dependencies.
+       ————
+       Depth layers (front → back):
+         .mc-front  rotate(-3deg)  blur:none   opacity:1.00  base
+         .mc-mid    rotate(0deg)   blur:6px    opacity:0.78  +16%x −40px
+         .mc-back   rotate(+2deg)  blur:20px   opacity:0.55  +32%x −80px
+       ————
+       Quick-tune via CSS vars on .mc-wrap:
+         --mc-blur-mid / --mc-blur-back   blur per layer
+         --mc-op-mid / --mc-op-back       opacity per layer
+         --mc-frost-h                     frosted area height %
+       —————————————————————————————————————————————————— */
+
+    .mc-wrap {
+      --mc-accent:    #CC0000;
+      --mc-surface:   #FFFFFF;
+      --mc-muted:     #ECEFF0;
+      --mc-border:    #D4DADD;
+      --mc-fg-muted:  #6D757A;
+      --mc-blur-mid:  6px;
+      --mc-blur-back: 20px;
+      --mc-op-mid:    0.78;
+      --mc-op-back:   0.55;
+      --mc-frost-h:   35%;
+      position: relative;
+      width: 100%;
+      height: 480px;
+      overflow: hidden;
+      background: linear-gradient(145deg, var(--mc-surface) 0%, var(--mc-muted) 100%);
+      border-radius: 8px;
+      margin: 4px 0 0;
+    }
+    /* Vignette */
+    .mc-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 55%, transparent 40%, rgba(0,0,0,0.045) 100%);
+      pointer-events: none;
+      z-index: 30;
+      border-radius: inherit;
+    }
+
+    /* — Depth layers — */
+    .mc-layer { position: absolute; width: 64%; }
+    .mc-front {
+      left: 0; top: 80px; z-index: 10;
+      transform: rotate(-3deg);
+      transform-origin: 50% 100%;
+      will-change: transform;
+    }
+    .mc-mid {
+      left: 16%; top: 40px; z-index: 6;
+      opacity: var(--mc-op-mid);
+      filter: blur(var(--mc-blur-mid));
+      transform: rotate(0deg);
+      transform-origin: 50% 100%;
+      will-change: transform;
+    }
+    .mc-back {
+      left: 32%; top: 0; z-index: 2;
+      opacity: var(--mc-op-back);
+      filter: blur(var(--mc-blur-back));
+      transform: rotate(2deg);
+      transform-origin: 50% 100%;
+      will-change: transform;
+    }
+
+    /* — Browser shell — */
+    .mc-browser {
+      width: 100%;
+      border-radius: 10px 10px 4px 4px;
+      overflow: hidden;
+      border: 1px solid var(--mc-border);
+      background: var(--mc-surface);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .mc-front .mc-browser {
+      box-shadow: 0 24px 72px rgba(0,0,0,0.13), 0 4px 18px rgba(0,0,0,0.06);
+    }
+    .mc-chrome {
+      height: 36px;
+      background: #F2F0EC;
+      border-bottom: 1px solid var(--mc-border);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .mc-dots { display: flex; gap: 5px; flex-shrink: 0; }
+    .mc-dots span { display: block; width: 10px; height: 10px; border-radius: 50%; }
+    .mc-dots span:nth-child(1) { background: #E0A8A5; }
+    .mc-dots span:nth-child(2) { background: #E0D3A5; }
+    .mc-dots span:nth-child(3) { background: #ABD9B9; }
+    .mc-addr {
+      flex: 1; height: 18px;
+      background: var(--mc-border);
+      border-radius: 4px;
+      max-width: 260px;
+      opacity: 0.6;
+    }
+
+    /* — App nav — */
+    .mc-appnav {
+      height: 50px;
+      background: var(--mc-muted);
+      border-bottom: 1px solid var(--mc-border);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 10px;
+    }
+    .mc-nav-logo {
+      width: 24px; height: 24px;
+      border-radius: 5px;
+      background: var(--mc-accent);
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+    .mc-nav-spacer { flex: 1; display: flex; gap: 8px; }
+    .mc-nav-spacer span { display: block; height: 14px; border-radius: 3px; background: var(--mc-border); }
+    .mc-nav-spacer span:nth-child(1) { width: 52px; }
+    .mc-nav-spacer span:nth-child(2) { width: 44px; }
+    .mc-nav-spacer span:nth-child(3) { width: 40px; }
+    .mc-nav-btn {
+      width: 62px; height: 26px;
+      border-radius: 5px;
+      background: var(--mc-accent);
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+
+    /* — Body shell — */
+    .mc-body-shell { display: flex; height: 310px; }
+    .mc-sidebar {
+      width: 148px;
+      flex-shrink: 0;
+      background: #F4F2EF;
+      border-right: 1px solid var(--mc-border);
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .mc-si {
+      height: 27px;
+      border-radius: 5px;
+      background: rgba(0,0,0,0.04);
+      flex-shrink: 0;
+    }
+    .mc-si:nth-child(2) { opacity: 0.70; }
+    .mc-si:nth-child(3) { opacity: 0.85; }
+    .mc-si:nth-child(4) { opacity: 0.60; }
+    .mc-si:nth-child(5) { opacity: 0.75; }
+    .mc-si:nth-child(6) { opacity: 0.50; }
+    .mc-si:nth-child(7) { opacity: 0.65; }
+    .mc-si--act {
+      background: rgba(204, 0, 0, 0.11);
+      border-left: 2px solid rgba(204, 0, 0, 0.45);
+      border-radius: 0 5px 5px 0;
+    }
+    .mc-main {
+      flex: 1;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .mc-bar { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+    .mc-bar-search {
+      flex: 1; height: 28px;
+      border-radius: 5px;
+      border: 1px solid var(--mc-border);
+      background: var(--mc-surface);
+    }
+    .mc-bar-btn {
+      width: 64px; height: 28px;
+      border-radius: 5px;
+      background: var(--mc-accent);
+      opacity: 0.82;
+      flex-shrink: 0;
+    }
+    .mc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      flex: 1;
+    }
+    .mc-card {
+      border-radius: 7px;
+      background: var(--mc-muted);
+      border: 1px solid var(--mc-border);
+      position: relative;
+      overflow: hidden;
+      min-height: 78px;
+    }
+    /* Two-line content skeleton per card */
+    .mc-card::before {
+      content: '';
+      position: absolute;
+      top: 10px; left: 10px; right: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: var(--mc-border);
+    }
+    .mc-card::after {
+      content: '';
+      position: absolute;
+      top: 28px; left: 10px;
+      width: 55%;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--mc-border);
+      opacity: 0.5;
+    }
+    /* Organic height variation */
+    .mc-card:nth-child(3n)   { min-height: 96px; }
+    .mc-card:nth-child(3n+1) { min-height: 78px; }
+    .mc-card:nth-child(3n+2) { min-height: 87px; }
+
+    /* — Frosted overlay (top third) — */
+    .mc-frost {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: var(--mc-frost-h);
+      backdrop-filter: blur(12px) saturate(1.1);
+      -webkit-backdrop-filter: blur(12px) saturate(1.1);
+      background: rgba(248, 247, 244, 0.18);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* — Blueprint annotation — */
+    .mc-annotation {
+      position: absolute;
+      bottom: 66px; right: 5%;
+      z-index: 22;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      pointer-events: none;
+    }
+    .mc-ann-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #B8C4CC;
+      flex-shrink: 0;
+    }
+    .mc-ann-line {
+      display: block;
+      width: 44px; height: 0;
+      border-top: 1px dashed #C0CCD4;
+    }
+    .mc-ann-text {
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 10px;
+      color: var(--mc-fg-muted);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      opacity: 0.75;
+    }
+
+    /* — Corner watermark — */
+    .mc-watermark {
+      position: absolute;
+      bottom: 12px; right: 16px;
+      font-family: inherit;
+      font-size: 11px;
+      color: var(--mc-fg-muted);
+      opacity: 0.5;
+      letter-spacing: 0.025em;
+      z-index: 22;
+      pointer-events: none;
+      margin: 0;
+      user-select: none;
+    }
+
+    /* — Responsive — */
+    @media (max-width: 768px) {
+      .mc-wrap { height: 300px; }
+      .mc-layer { width: 88%; }
+      .mc-front { left: 6%; top: 36px; transform: rotate(0deg); }
+      .mc-mid   { left: 9%; top: 18px; opacity: 0.3; filter: blur(3px); }
+      .mc-back  { left: 12%; top: 4px; opacity: 0.15; filter: blur(6px); transform: rotate(0deg); }
+      .mc-annotation { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -1748,17 +2039,143 @@
           </div>
         </details>
 
-        <!-- FINAL MOCKUPS — NDA locked disabled row -->
-        <div class="accordion-row-disabled">
-          <span class="accordion-row-left">
-            <span class="accordion-row-label-group">
-              <span>Final mockups</span>
-              <span class="accordion-nda-caption">Protected under NDA &mdash; available on request</span>
-            </span>
-            <span class="accordion-nda-tag">NDA</span>
-          </span>
-          <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
+        <!-- FINAL MOCKUPS — Frosted System Layers -->
+        <details open>
+          <summary><span>Final mockups</span></summary>
+          <div class="accordion-body" style="padding-bottom:0;">
+            <!--
+              Three browser-window mockups at staggered depth.
+              Tune blur / tilt / opacity via CSS vars on .mc-wrap.
+            -->
+            <figure class="mc-wrap" aria-label="Stylized representation of desktop interface layouts — content omitted under NDA">
+
+              <!-- ── Back: furthest depth, heavy blur ── -->
+              <div class="mc-layer mc-back" aria-hidden="true">
+                <div class="mc-browser">
+                  <div class="mc-chrome">
+                    <div class="mc-dots"><span></span><span></span><span></span></div>
+                    <div class="mc-addr"></div>
+                  </div>
+                  <div class="mc-appnav">
+                    <div class="mc-nav-logo"></div>
+                    <div class="mc-nav-spacer"><span></span><span></span><span></span></div>
+                    <div class="mc-nav-btn"></div>
+                  </div>
+                  <div class="mc-body-shell">
+                    <nav class="mc-sidebar">
+                      <div class="mc-si mc-si--act"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                    </nav>
+                    <div class="mc-main">
+                      <div class="mc-bar">
+                        <div class="mc-bar-search"></div>
+                        <div class="mc-bar-btn"></div>
+                      </div>
+                      <div class="mc-grid">
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── Middle: light blur, neutral tilt ── -->
+              <div class="mc-layer mc-mid" aria-hidden="true">
+                <div class="mc-browser">
+                  <div class="mc-chrome">
+                    <div class="mc-dots"><span></span><span></span><span></span></div>
+                    <div class="mc-addr"></div>
+                  </div>
+                  <div class="mc-appnav">
+                    <div class="mc-nav-logo"></div>
+                    <div class="mc-nav-spacer"><span></span><span></span><span></span></div>
+                    <div class="mc-nav-btn"></div>
+                  </div>
+                  <div class="mc-body-shell">
+                    <nav class="mc-sidebar">
+                      <div class="mc-si"></div>
+                      <div class="mc-si mc-si--act"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                    </nav>
+                    <div class="mc-main">
+                      <div class="mc-bar">
+                        <div class="mc-bar-search"></div>
+                        <div class="mc-bar-btn"></div>
+                      </div>
+                      <div class="mc-grid">
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── Front: crisp, −3° tilt, full shadow ── -->
+              <div class="mc-layer mc-front" aria-hidden="true">
+                <div class="mc-browser">
+                  <div class="mc-chrome">
+                    <div class="mc-dots"><span></span><span></span><span></span></div>
+                    <div class="mc-addr"></div>
+                  </div>
+                  <div class="mc-appnav">
+                    <div class="mc-nav-logo"></div>
+                    <div class="mc-nav-spacer"><span></span><span></span><span></span></div>
+                    <div class="mc-nav-btn"></div>
+                  </div>
+                  <div class="mc-body-shell">
+                    <nav class="mc-sidebar">
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si mc-si--act"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                      <div class="mc-si"></div>
+                    </nav>
+                    <div class="mc-main">
+                      <div class="mc-bar">
+                        <div class="mc-bar-search"></div>
+                        <div class="mc-bar-btn"></div>
+                      </div>
+                      <div class="mc-grid">
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Frosted glass: softens top third of composition -->
+              <div class="mc-frost" aria-hidden="true"></div>
+
+              <!-- Blueprint annotation line -->
+              <div class="mc-annotation" aria-hidden="true">
+                <span class="mc-ann-dot"></span>
+                <span class="mc-ann-line"></span>
+                <span class="mc-ann-text">card/background</span>
+              </div>
+
+              <!-- Corner watermark -->
+              <p class="mc-watermark" aria-hidden="true">Structure shown &middot; content under NDA</p>
+
+            </figure>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -2296,6 +2713,25 @@
       document.addEventListener('touchstart', function(e) {
         if (tappedId && !e.target.closest('#tg-graph')) { tappedId = null; clearHighlight(); }
       });
+    })();
+
+    // ——— Mockup Composition: Parallax on scroll ———
+    (function() {
+      var comp = document.querySelector('.mc-wrap');
+      if (!comp || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var back = comp.querySelector('.mc-back');
+      var mid  = comp.querySelector('.mc-mid');
+      function onParallax() {
+        var rect = comp.getBoundingClientRect();
+        var vh = window.innerHeight;
+        if (rect.bottom < 0 || rect.top > vh) return;
+        var p = Math.max(0, Math.min(1, (vh - rect.top) / (vh + rect.height)));
+        var shift = p - 0.5;
+        back.style.transform = 'rotate(2deg) translateY('  + (shift * -36).toFixed(1) + 'px)';
+        mid.style.transform  = 'rotate(0deg) translateY('  + (shift * -18).toFixed(1) + 'px)';
+      }
+      window.addEventListener('scroll', onParallax, { passive: true });
+      onParallax();
     })();
   </script>
 
