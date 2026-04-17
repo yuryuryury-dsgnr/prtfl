@@ -476,6 +476,63 @@
     .ds-expand-btn { display: block; width: 100%; margin-top: 8px; padding: 8px; background: none; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; font-size: 12px; color: #6B6B6B; cursor: pointer; text-align: center; transition: border-color 0.15s, color 0.15s; font-family: inherit; }
     .ds-expand-btn:hover { border-color: rgba(0,0,0,0.22); color: #1A1A1A; }
 
+    /* ——— MOCKUP GALLERY ——— */
+    .mockup-gallery { display: flex; flex-direction: column; gap: 16px; }
+    .mockup-gallery .ds-theme-bar { margin-bottom: 0; }
+    .mockup-gallery .phase-toggle {
+      margin-bottom: 0; max-width: 100%;
+      overflow-x: auto; flex-wrap: nowrap;
+      scrollbar-width: none;
+    }
+    .mockup-gallery .phase-toggle::-webkit-scrollbar { display: none; }
+
+    .mg-browser {
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #F5F4F1;
+      transition: background 200ms ease, border-color 200ms ease;
+    }
+    .mg-browser[data-mg-theme="dark"] {
+      background: #1A1A1A;
+      border-color: rgba(255,255,255,0.08);
+    }
+    .mg-chrome {
+      display: flex; align-items: center; gap: 12px;
+      height: 32px; padding: 0 12px;
+      background: #EDECEA;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      transition: background 200ms ease, border-color 200ms ease;
+    }
+    .mg-browser[data-mg-theme="dark"] .mg-chrome {
+      background: #222;
+      border-bottom-color: rgba(255,255,255,0.06);
+    }
+    .mg-dots { display: flex; gap: 6px; }
+    .mg-dots span { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .mg-dots span:nth-child(1) { background: #FF5F57; }
+    .mg-dots span:nth-child(2) { background: #FEBC2E; }
+    .mg-dots span:nth-child(3) { background: #28C840; }
+    .mg-url {
+      flex: 1; text-align: center;
+      font-size: 11px; color: #9A9A9A; font-weight: 500;
+    }
+    .mg-browser[data-mg-theme="dark"] .mg-url { color: #6B6B6B; }
+    .mg-canvas { position: relative; width: 100%; }
+    .mg-img {
+      width: 100%; height: auto; display: block;
+      opacity: 0; position: absolute; top: 0; left: 0;
+      transition: opacity 200ms ease;
+    }
+    .mg-img.active { opacity: 1; position: relative; }
+    .mg-caption {
+      font-size: 13px; color: #9A9A9A;
+      text-align: center; line-height: 1.5; margin: 0;
+    }
+    @media (max-width: 640px) {
+      .mockup-gallery .ds-theme-bar { justify-content: flex-start; }
+    }
+
     /* ——— HANDOFF ——— */
     .handoff-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 4px 0 32px; }
     .handoff-col { padding: 20px; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; }
@@ -2059,143 +2116,57 @@
           </div>
         </details>
 
-        <!-- FINAL MOCKUPS — Frosted System Layers -->
+        <!-- FINAL MOCKUPS — Tab gallery with Light/Dark toggle -->
         <details open>
           <summary><span>Final mockups</span></summary>
-          <div class="accordion-body" style="padding-bottom:0;">
-            <!--
-              Three browser-window mockups at staggered depth.
-              Tune blur / tilt / opacity via CSS vars on .mc-wrap.
-            -->
-            <figure class="mc-wrap" aria-label="Stylized representation of desktop interface layouts — content omitted under NDA">
+          <div class="accordion-body">
+            <div class="mockup-gallery">
 
-              <!-- ── Back: furthest depth, heavy blur ── -->
-              <div class="mc-layer mc-back" aria-hidden="true">
-                <div class="mc-browser">
-                  <div class="mc-chrome">
-                    <div class="mc-dots"><span></span><span></span><span></span></div>
-                    <div class="mc-addr"></div>
-                  </div>
-                  <div class="mc-appnav">
-                    <div class="mc-nav-logo"></div>
-                    <div class="mc-nav-spacer"><span></span><span></span><span></span></div>
-                    <div class="mc-nav-btn"></div>
-                  </div>
-                  <div class="mc-body-shell">
-                    <nav class="mc-sidebar">
-                      <div class="mc-si mc-si--act"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                    </nav>
-                    <div class="mc-main">
-                      <div class="mc-bar">
-                        <div class="mc-bar-search"></div>
-                        <div class="mc-bar-btn"></div>
-                      </div>
-                      <div class="mc-grid">
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                      </div>
-                    </div>
-                  </div>
+              <div class="ds-theme-bar">
+                <div class="ds-theme-toggle" id="mg-theme-toggle">
+                  <button class="ds-theme-btn active" data-mg-theme="light">Light</button>
+                  <button class="ds-theme-btn" data-mg-theme="dark">Dark</button>
                 </div>
               </div>
 
-              <!-- ── Middle: light blur, neutral tilt ── -->
-              <div class="mc-layer mc-mid" aria-hidden="true">
-                <div class="mc-browser">
-                  <div class="mc-chrome">
-                    <div class="mc-dots"><span></span><span></span><span></span></div>
-                    <div class="mc-addr"></div>
-                  </div>
-                  <div class="mc-appnav">
-                    <div class="mc-nav-logo"></div>
-                    <div class="mc-nav-spacer"><span></span><span></span><span></span></div>
-                    <div class="mc-nav-btn"></div>
-                  </div>
-                  <div class="mc-body-shell">
-                    <nav class="mc-sidebar">
-                      <div class="mc-si"></div>
-                      <div class="mc-si mc-si--act"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                    </nav>
-                    <div class="mc-main">
-                      <div class="mc-bar">
-                        <div class="mc-bar-search"></div>
-                        <div class="mc-bar-btn"></div>
-                      </div>
-                      <div class="mc-grid">
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                      </div>
-                    </div>
-                  </div>
+              <div class="phase-toggle mg-tabs">
+                <button class="phase-toggle-btn active" data-mg-tab="main">Main</button>
+                <button class="phase-toggle-btn" data-mg-tab="explore">Explore</button>
+                <button class="phase-toggle-btn" data-mg-tab="detail">Detail</button>
+                <button class="phase-toggle-btn" data-mg-tab="request">Request Access</button>
+                <button class="phase-toggle-btn" data-mg-tab="admin">Admin</button>
+              </div>
+
+              <div class="mg-browser" data-mg-theme="light">
+                <div class="mg-chrome">
+                  <div class="mg-dots"><span></span><span></span><span></span></div>
+                  <div class="mg-url">Data Marketplace</div>
+                </div>
+                <div class="mg-canvas">
+                  <img class="mg-img active" data-mg-tab="main"
+                       data-mg-light="images/mockups/main-light.png"
+                       data-mg-dark="images/mockups/main-dark.png"
+                       src="images/mockups/main-light.png" alt="Main — home page" loading="lazy">
+                  <img class="mg-img" data-mg-tab="explore"
+                       data-mg-light="images/mockups/explore-light.png"
+                       data-mg-dark="images/mockups/explore-dark.png" alt="Explore" loading="lazy">
+                  <img class="mg-img" data-mg-tab="detail"
+                       data-mg-light="images/mockups/detail-light.png"
+                       data-mg-dark="images/mockups/detail-dark.png" alt="Detail" loading="lazy">
+                  <img class="mg-img" data-mg-tab="request"
+                       data-mg-light="images/mockups/request-light.png"
+                       data-mg-dark="images/mockups/request-dark.png" alt="Request Access" loading="lazy">
+                  <img class="mg-img" data-mg-tab="admin"
+                       data-mg-light="images/mockups/admin-light.png"
+                       data-mg-dark="images/mockups/admin-dark.png" alt="Admin" loading="lazy">
                 </div>
               </div>
 
-              <!-- ── Front: crisp, −3° tilt, full shadow ── -->
-              <div class="mc-layer mc-front" aria-hidden="true">
-                <div class="mc-browser">
-                  <div class="mc-chrome">
-                    <div class="mc-dots"><span></span><span></span><span></span></div>
-                    <div class="mc-addr"></div>
-                  </div>
-                  <div class="mc-appnav">
-                    <div class="mc-nav-logo"></div>
-                    <div class="mc-nav-spacer"><span></span><span></span><span></span></div>
-                    <div class="mc-nav-btn"></div>
-                  </div>
-                  <div class="mc-body-shell">
-                    <nav class="mc-sidebar">
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si mc-si--act"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                      <div class="mc-si"></div>
-                    </nav>
-                    <div class="mc-main">
-                      <div class="mc-bar">
-                        <div class="mc-bar-search"></div>
-                        <div class="mc-bar-btn"></div>
-                      </div>
-                      <div class="mc-grid">
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                        <div class="mc-card"></div><div class="mc-card"></div><div class="mc-card"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Frosted glass: softens top third of composition -->
-              <div class="mc-frost" aria-hidden="true"></div>
-
-              <!-- Blueprint annotation line -->
-              <div class="mc-annotation" aria-hidden="true">
-                <span class="mc-ann-dot"></span>
-                <span class="mc-ann-line"></span>
-                <span class="mc-ann-text">card/background</span>
-              </div>
-
-              <!-- Corner watermark -->
-              <p class="mc-watermark" aria-hidden="true">Structure shown &middot; content under NDA</p>
-
-            </figure>
+              <p class="mg-caption" id="mg-caption">AI-powered home page with natural language search and personalized recommendations</p>
+            </div>
           </div>
         </details>
+
       </div>
     </section>
 
@@ -2752,6 +2723,50 @@
       }
       window.addEventListener('scroll', onParallax, { passive: true });
       onParallax();
+    })();
+
+    // Mockup gallery — tab switch + light/dark toggle
+    (function() {
+      var captions = {
+        main:    'AI-powered home page with natural language search and personalized recommendations',
+        explore: 'Browse and filter data products across the organization',
+        detail:  'Dataset detail page with metadata, quality score, and access controls',
+        request: 'Multi-step access request flow with governance context',
+        admin:   'Admin panel for managing data products and access permissions'
+      };
+      var tabs = document.querySelectorAll('.mg-tabs .phase-toggle-btn');
+      var imgs = document.querySelectorAll('.mg-img');
+      var browser = document.querySelector('.mg-browser');
+      var caption = document.getElementById('mg-caption');
+      var themeBtns = document.querySelectorAll('#mg-theme-toggle .ds-theme-btn');
+      if (!tabs.length || !imgs.length) return;
+      var state = { theme: 'light', tab: 'main' };
+
+      function apply() {
+        imgs.forEach(function(img) {
+          var src = state.theme === 'dark' ? img.getAttribute('data-mg-dark') : img.getAttribute('data-mg-light');
+          if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
+          img.classList.toggle('active', img.getAttribute('data-mg-tab') === state.tab);
+        });
+        if (browser) browser.setAttribute('data-mg-theme', state.theme);
+        if (caption) caption.textContent = captions[state.tab] || '';
+      }
+      tabs.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          tabs.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          state.tab = btn.getAttribute('data-mg-tab');
+          apply();
+        });
+      });
+      themeBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          themeBtns.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          state.theme = btn.getAttribute('data-mg-theme');
+          apply();
+        });
+      });
     })();
   </script>
 
