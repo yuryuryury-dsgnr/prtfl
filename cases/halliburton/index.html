@@ -591,6 +591,32 @@
     .phase-panel { display: none; }
     .phase-panel.active { display: block; }
 
+    /* ——— RESEARCH TAB DISABLED STATE (NDA) ——— */
+    .phase-toggle-btn.disabled {
+      color: #C0BDB8;
+      cursor: default;
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .phase-toggle-btn.disabled:hover { background: transparent; }
+    .phase-toggle-btn .tab-lock-icon {
+      width: 12px; height: 12px;
+      color: #D0CEC9;
+      flex-shrink: 0;
+    }
+    .phase-toggle-btn .tab-nda-tag {
+      font-size: 10px;
+      color: #9A9A9A;
+      background: rgba(0,0,0,0.04);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 400;
+      opacity: 0.6;
+      margin-left: 2px;
+    }
+
     /* ——— ACCORDION ——— */
     .accordion {
       border: 1px solid rgba(0,0,0,0.08);
@@ -1583,68 +1609,62 @@
       <h2 class="section-heading">Understanding users and their journeys</h2>
       <p class="section-text">Deep research phase to map out who uses the platform, how they interact with it, and where the friction points are. 4 persona groups, detailed user flows, and end-to-end journey maps shaped every design decision.</p>
 
-      <div class="accordion">
-        <!-- PERSONAS — open, no NDA -->
-        <details open>
-          <summary><span>Personas &mdash; 4 groups</span></summary>
-          <div class="accordion-body">
-            <div class="persona-section-grid">
-              <p class="persona-section-label">Users</p>
-              <div class="persona-detail-card">
-                <div class="persona-detail-header">
-                  <div class="persona-detail-avatar users">G1</div>
-                  <div><p class="persona-detail-name">Data Scientist / Engineer</p></div>
-                </div>
-                <table class="persona-field-table">
-                  <tr><td>Who</td><td>Technical specialist working with Python, ML models, and data integrations.</td></tr>
-                  <tr><td>Pain</td><td>Hard to find datasets across sources; long approval cycles; unclear ownership.</td></tr>
-                </table>
-              </div>
-              <div class="persona-detail-card">
-                <div class="persona-detail-header">
-                  <div class="persona-detail-avatar users">G2</div>
-                  <div><p class="persona-detail-name">Business User</p></div>
-                </div>
-                <table class="persona-field-table">
-                  <tr><td>Who</td><td>Analysts, PMs, and business stakeholders using BI tools.</td></tr>
-                  <tr><td>Pain</td><td>Too much raw data, too few curated business-ready reports; hard to trust freshness.</td></tr>
-                </table>
-              </div>
-              <p class="persona-section-label" style="margin-top:8px;">Creators &amp; Approvers</p>
-              <div class="persona-detail-card">
-                <div class="persona-detail-header">
-                  <div class="persona-detail-avatar creators">G3</div>
-                  <div><p class="persona-detail-name">Data Product Owner</p></div>
-                </div>
-                <table class="persona-field-table">
-                  <tr><td>Who</td><td>Product manager responsible for governance and lifecycle of data products.</td></tr>
-                  <tr><td>Pain</td><td>Fragmented ownership; too many manual approval steps; slow onboarding.</td></tr>
-                </table>
-              </div>
-              <div class="persona-detail-card">
-                <div class="persona-detail-header">
-                  <div class="persona-detail-avatar creators">G4</div>
-                  <div><p class="persona-detail-name">Data POD Lead</p></div>
-                </div>
-                <table class="persona-field-table">
-                  <tr><td>Who</td><td>Team/Tech Lead for a data engineering POD or domain.</td></tr>
-                  <tr><td>Pain</td><td>Heavy manual documentation work; poor visibility into who uses their products.</td></tr>
-                </table>
-              </div>
-            </div>
+      <div class="phase-toggle">
+        <button class="phase-toggle-btn active">Personas &mdash; 4 groups</button>
+        <button class="phase-toggle-btn disabled" aria-disabled="true" tabindex="-1">
+          <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>User Flows &mdash; 5 flows</span>
+          <span class="tab-nda-tag">NDA</span>
+        </button>
+        <button class="phase-toggle-btn disabled" aria-disabled="true" tabindex="-1">
+          <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>User Journey Map</span>
+          <span class="tab-nda-tag">NDA</span>
+        </button>
+      </div>
+
+      <div class="persona-section-grid" style="margin-top:24px;">
+        <p class="persona-section-label">Users</p>
+        <div class="persona-detail-card">
+          <div class="persona-detail-header">
+            <div class="persona-detail-avatar users">G1</div>
+            <div><p class="persona-detail-name">Data Scientist / Engineer</p></div>
           </div>
-        </details>
-
-        <!-- USER FLOWS — NDA locked -->
-        <div class="accordion-row-disabled">
-          <span class="accordion-row-left"><span>User Flows &mdash; 5 flows</span><span class="accordion-nda-tag">NDA</span></span>
-          <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <table class="persona-field-table">
+            <tr><td>Who</td><td>Technical specialist working with Python, ML models, and data integrations.</td></tr>
+            <tr><td>Pain</td><td>Hard to find datasets across sources; long approval cycles; unclear ownership.</td></tr>
+          </table>
         </div>
-
-        <!-- USER JOURNEY MAP — NDA locked -->
-        <div class="accordion-row-disabled">
-          <span class="accordion-row-left"><span>User Journey Map</span><span class="accordion-nda-tag">NDA</span></span>
-          <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="persona-detail-card">
+          <div class="persona-detail-header">
+            <div class="persona-detail-avatar users">G2</div>
+            <div><p class="persona-detail-name">Business User</p></div>
+          </div>
+          <table class="persona-field-table">
+            <tr><td>Who</td><td>Analysts, PMs, and business stakeholders using BI tools.</td></tr>
+            <tr><td>Pain</td><td>Too much raw data, too few curated business-ready reports; hard to trust freshness.</td></tr>
+          </table>
+        </div>
+        <p class="persona-section-label" style="margin-top:8px;">Creators &amp; Approvers</p>
+        <div class="persona-detail-card">
+          <div class="persona-detail-header">
+            <div class="persona-detail-avatar creators">G3</div>
+            <div><p class="persona-detail-name">Data Product Owner</p></div>
+          </div>
+          <table class="persona-field-table">
+            <tr><td>Who</td><td>Product manager responsible for governance and lifecycle of data products.</td></tr>
+            <tr><td>Pain</td><td>Fragmented ownership; too many manual approval steps; slow onboarding.</td></tr>
+          </table>
+        </div>
+        <div class="persona-detail-card">
+          <div class="persona-detail-header">
+            <div class="persona-detail-avatar creators">G4</div>
+            <div><p class="persona-detail-name">Data POD Lead</p></div>
+          </div>
+          <table class="persona-field-table">
+            <tr><td>Who</td><td>Team/Tech Lead for a data engineering POD or domain.</td></tr>
+            <tr><td>Pain</td><td>Heavy manual documentation work; poor visibility into who uses their products.</td></tr>
+          </table>
         </div>
       </div>
     </section>
