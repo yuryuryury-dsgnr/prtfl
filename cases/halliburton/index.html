@@ -581,6 +581,12 @@
     .section-heading {
       font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 24px;
     }
+    .subsection-heading {
+      font-size: 18px; font-weight: 600; letter-spacing: -0.01em;
+      color: #1A1A1A;
+      margin: 48px 0 20px;
+    }
+    .subsection-heading:first-of-type { margin-top: 32px; }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
 
     /* ——— STRATEGY TABLE ——— */
@@ -1734,74 +1740,58 @@
       <p class="section-text">Instead of jumping straight into pixel-perfect mockups, I started with an AI-based prototype to quickly test concepts, layouts, and interaction patterns. This let me brainstorm and validate what works and what doesn't &mdash; before investing time in high-fidelity design.</p>
       <p class="section-text">Once the structure was proven, I built a scalable design system with reusable components, tokens, and patterns &mdash; then created the final mockups for the dev team.</p>
 
-      <div class="accordion">
-        <!-- AI PROTOTYPE APPROACH — open, no NDA -->
-        <details open>
-          <summary><span>AI prototype approach</span></summary>
-          <div class="accordion-body">
-            <p style="font-size:14px; color:#6B6B6B; margin-bottom:24px; line-height:1.6;">Used AI tools to rapidly generate and iterate on layout concepts, testing different approaches to search, filtering, data cards, and access flows. This phase was about speed and exploration &mdash; finding the right direction before committing to a design system.</p>
-            <p class="ds-eyebrow" style="margin-top:0;">Prompts</p>
-            <div class="ds-prompt-tabs">
-              <div class="ds-tab-bar">
-                <button class="ds-tab-btn active" data-tab="0">General layout</button>
-                <button class="ds-tab-btn" data-tab="1">Data product page</button>
-                <button class="ds-tab-btn" data-tab="2">Add data product</button>
-                <button class="ds-tab-btn" data-tab="3">Request access</button>
+      <h3 class="subsection-heading">AI prototype approach</h3>
+      <p class="section-text" style="font-size:14px; margin-bottom:16px; max-width:100%;">Used AI tools to rapidly generate and iterate on layout concepts, testing different approaches to search, filtering, data cards, and access flows. This phase was about speed and exploration &mdash; finding the right direction before committing to a design system.</p>
+      <p class="ds-caption">Multiple iterations across layout, search, filtering, and access flow concepts &mdash; tested structurally before any high-fidelity work began.</p>
+
+      <h3 class="subsection-heading">Final mockups</h3>
+      <div class="mockup-gallery">
+
+              <div class="ds-theme-bar">
+                <div class="ds-theme-toggle" id="mg-theme-toggle">
+                  <button class="ds-theme-btn active" data-mg-theme="light">Light</button>
+                  <button class="ds-theme-btn" data-mg-theme="dark">Dark</button>
+                </div>
               </div>
-              <div class="ds-tab-panels">
 
-                <div class="ds-tab-panel active" data-panel="0">
-                  <div class="ds-prompt-wrap collapsed">
-                    <div class="ds-prompt-block">Generate a data marketplace homepage layout with: a prominent search bar at the top for natural language queries, a left sidebar with category filters (data type, domain, certification status), and a main grid of data product cards showing name, owner, quality score, and access status. Use a clean editorial style with generous whitespace. Focus on information density without clutter — engineers should scan 20+ items without fatigue.</div>
-                    <div class="ds-prompt-fade"></div>
-                  </div>
-                  <button class="ds-expand-btn">Expand to see more</button>
-                </div>
-
-                <div class="ds-tab-panel" data-panel="1">
-                  <div class="ds-prompt-wrap collapsed">
-                    <div class="ds-prompt-block">Design a detail page for a single data product in a data marketplace. Include: a top header with product name, domain badge, quality score indicator, certification status, and access level chip; a tabbed body with Overview, Schema, Sample Data, and Lineage sections; a persistent right sidebar with metadata (owner, last updated, row count, format, sensitivity level) and a primary CTA button. The Overview tab should show description, use cases, and update frequency. The Schema tab should display a table of column names, data types, nullable flag, and descriptions. Use a clean, information-dense layout — this is a technical page for engineers who need to evaluate a dataset quickly.</div>
-                    <div class="ds-prompt-fade"></div>
-                  </div>
-                  <button class="ds-expand-btn">Expand to see more</button>
-                </div>
-
-                <div class="ds-tab-panel" data-panel="2">
-                  <div class="ds-prompt-wrap collapsed">
-                    <div class="ds-prompt-block">Design a multi-step publishing form for adding a new data product to a data marketplace. Step 1 — Basic info: product name, short description, domain selector, data format, thumbnail upload. Step 2 — Schema: auto-import schema from Databricks with a column list showing name, type, and nullable; allow editors to add descriptions and toggle sensitivity flags per column. Step 3 — Ownership and access: assign a Data Product Owner from an AD-synced user list, set default access level (Open / Restricted / Private), add editors by team or individual. Include a sticky preview panel on the right showing how the product card will appear in the marketplace. Keep the flow approachable for non-technical DPOs who don't work directly in Databricks.</div>
-                    <div class="ds-prompt-fade"></div>
-                  </div>
-                  <button class="ds-expand-btn">Expand to see more</button>
-                </div>
-
-                <div class="ds-tab-panel" data-panel="3">
-                  <div class="ds-prompt-wrap collapsed">
-                    <div class="ds-prompt-block">Design an access request modal for a data marketplace. The form should include: requester name and role (pre-filled from profile), team and POD, domain, requested access level (Viewer or Editor), target environment (Development or Production), and a mandatory justification field with a 50-character minimum. Show a read-only summary of the requested data product on the right side of the modal. On submission, display a confirmation screen with a unique request ID, the assigned reviewer's name, and an estimated review timeline. Ensure the form validates all required fields inline before allowing submission.</div>
-                    <div class="ds-prompt-fade"></div>
-                  </div>
-                  <button class="ds-expand-btn">Expand to see more</button>
-                </div>
-
+              <div class="phase-toggle mg-tabs">
+                <button class="phase-toggle-btn active" data-mg-tab="main">Main</button>
+                <button class="phase-toggle-btn" data-mg-tab="explore">Explore</button>
+                <button class="phase-toggle-btn" data-mg-tab="detail">Detail</button>
+                <button class="phase-toggle-btn" data-mg-tab="request">Request Access</button>
+                <button class="phase-toggle-btn" data-mg-tab="admin">Admin</button>
               </div>
+
+              <div class="mg-browser" data-mg-theme="light">
+                <div class="mg-chrome">
+                  <div class="mg-dots"><span></span><span></span><span></span></div>
+                  <div class="mg-url">Data Marketplace</div>
+                </div>
+                <div class="mg-canvas">
+                  <img class="mg-img active" data-mg-tab="main"
+                       data-mg-light="images/mockups/main-light.png"
+                       data-mg-dark="images/mockups/main-dark.png"
+                       src="images/mockups/main-light.png" alt="Main — home page" loading="lazy">
+                  <img class="mg-img" data-mg-tab="explore"
+                       data-mg-light="images/mockups/explore-light.png"
+                       data-mg-dark="images/mockups/explore-dark.png" alt="Explore" loading="lazy">
+                  <img class="mg-img" data-mg-tab="detail"
+                       data-mg-light="images/mockups/detail-light.png"
+                       data-mg-dark="images/mockups/detail-dark.png" alt="Detail" loading="lazy">
+                  <img class="mg-img" data-mg-tab="request"
+                       data-mg-light="images/mockups/request-light.png"
+                       data-mg-dark="images/mockups/request-dark.png" alt="Request Access" loading="lazy">
+                  <img class="mg-img" data-mg-tab="admin"
+                       data-mg-light="images/mockups/admin-light.png"
+                       data-mg-dark="images/mockups/admin-dark.png" alt="Admin" loading="lazy">
+                </div>
+              </div>
+
+              <p class="mg-caption" id="mg-caption">AI-powered home page with natural language search and personalized recommendations</p>
             </div>
-            <p class="ds-caption">Multiple iterations across layout, search, filtering, and access flow concepts — tested structurally before any high-fidelity work began.</p>
-            <p class="ds-eyebrow" style="margin-top:24px;">Interactive Prototype</p>
-            <div class="proto-placeholder">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8C5C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
-                <span style="font-size:13px; color:#9A9A9A; line-height:1.5;">Interactive prototype protected under NDA</span>
-                <span class="ds-caption" style="margin:0;">Available on request</span>
-              </div>
-            </div>
-          </div>
-        </details>
 
-        <!-- THREE-TIER TOKEN ARCHITECTURE — open, no NDA -->
-        <details open>
-          <summary><span>Three-tier token architecture</span></summary>
-          <div class="accordion-body">
-
-            <p class="ds-token-intro">One system, two themes, zero duplication. Every color in the product traces through three layers — primitives at the base, semantic tokens that swap between light and dark modes, and component tokens that apply them consistently.</p>
+      <h3 class="subsection-heading">Three-tier token architecture</h3>
+      <p class="ds-token-intro">One system, two themes, zero duplication. Every color in the product traces through three layers — primitives at the base, semantic tokens that swap between light and dark modes, and component tokens that apply them consistently.</p>
 
             <div class="ds-theme-bar">
               <div class="ds-theme-toggle" id="tg-theme-toggle">
@@ -2112,62 +2102,6 @@
             </div><!-- /tg-graph -->
 
             <p class="ds-caption" style="margin-top:20px;">~158 primitive &middot; ~45 semantic &middot; ~459 component tokens across 2 themes. Showing a selection of key chains.</p>
-
-          </div>
-        </details>
-
-        <!-- FINAL MOCKUPS — Tab gallery with Light/Dark toggle -->
-        <details open>
-          <summary><span>Final mockups</span></summary>
-          <div class="accordion-body">
-            <div class="mockup-gallery">
-
-              <div class="ds-theme-bar">
-                <div class="ds-theme-toggle" id="mg-theme-toggle">
-                  <button class="ds-theme-btn active" data-mg-theme="light">Light</button>
-                  <button class="ds-theme-btn" data-mg-theme="dark">Dark</button>
-                </div>
-              </div>
-
-              <div class="phase-toggle mg-tabs">
-                <button class="phase-toggle-btn active" data-mg-tab="main">Main</button>
-                <button class="phase-toggle-btn" data-mg-tab="explore">Explore</button>
-                <button class="phase-toggle-btn" data-mg-tab="detail">Detail</button>
-                <button class="phase-toggle-btn" data-mg-tab="request">Request Access</button>
-                <button class="phase-toggle-btn" data-mg-tab="admin">Admin</button>
-              </div>
-
-              <div class="mg-browser" data-mg-theme="light">
-                <div class="mg-chrome">
-                  <div class="mg-dots"><span></span><span></span><span></span></div>
-                  <div class="mg-url">Data Marketplace</div>
-                </div>
-                <div class="mg-canvas">
-                  <img class="mg-img active" data-mg-tab="main"
-                       data-mg-light="images/mockups/main-light.png"
-                       data-mg-dark="images/mockups/main-dark.png"
-                       src="images/mockups/main-light.png" alt="Main — home page" loading="lazy">
-                  <img class="mg-img" data-mg-tab="explore"
-                       data-mg-light="images/mockups/explore-light.png"
-                       data-mg-dark="images/mockups/explore-dark.png" alt="Explore" loading="lazy">
-                  <img class="mg-img" data-mg-tab="detail"
-                       data-mg-light="images/mockups/detail-light.png"
-                       data-mg-dark="images/mockups/detail-dark.png" alt="Detail" loading="lazy">
-                  <img class="mg-img" data-mg-tab="request"
-                       data-mg-light="images/mockups/request-light.png"
-                       data-mg-dark="images/mockups/request-dark.png" alt="Request Access" loading="lazy">
-                  <img class="mg-img" data-mg-tab="admin"
-                       data-mg-light="images/mockups/admin-light.png"
-                       data-mg-dark="images/mockups/admin-dark.png" alt="Admin" loading="lazy">
-                </div>
-              </div>
-
-              <p class="mg-caption" id="mg-caption">AI-powered home page with natural language search and personalized recommendations</p>
-            </div>
-          </div>
-        </details>
-
-      </div>
     </section>
 
     <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
