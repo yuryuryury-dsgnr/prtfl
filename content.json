@@ -1,0 +1,1212 @@
+{
+  "meta": {
+    "page_title": "Portfolio — Yurii Fokin"
+  },
+
+  "hero": {
+    "name": "Yurii Fokin",
+    "tagline": [
+      "Lead UX Designer. Eight years across enterprise tools, mobile apps, and design systems.",
+      "Currently building through an AI-native design-to-code pipeline."
+    ],
+    "meta": {
+      "location": "Batumi, Georgia · open to EU/US remote",
+      "status": "Open to senior and lead design roles",
+      "languages": "English · Russian · Ukrainian"
+    },
+    "links": [
+      { "label": "Get in touch →", "href": "mailto:yuryuryury@icloud.com" },
+      { "label": "Projects ↓", "href": "#work" },
+      { "label": "Download CV ↓", "href": "assets/CV_Yurii_Fokin.pdf" }
+    ]
+  },
+
+  "about": {
+    "text": "I help companies turn complex problems into clear, usable products. With experience across enterprise platforms, mobile apps, and web products, I lead the design process end-to-end — from user research and information architecture to prototyping and launch.",
+    "skills": [
+      "Figma",
+      "FigJam",
+      "User Research",
+      "Usability Testing",
+      "Design Systems",
+      "Prototyping",
+      "JTBD",
+      "Journey Mapping"
+    ]
+  },
+
+  "case_cards": [
+    {
+      "id": "enterprise-design-system",
+      "href": "projects/enterprise-design-system/",
+      "year": "2025 — 2026",
+      "title": "Enterprise Design System",
+      "tag": "Design system",
+      "role": "Sole designer · Architecture, tokens, dev pipeline",
+      "result": "Three-tier tokens, light/dark themes, Figma MCP → Claude Code pipeline. Built in parallel with the product, used by the dev team in production.",
+      "preview_label": "Design System",
+      "preview_keywords": "Tokens · MCP · Figma-to-code"
+    },
+    {
+      "id": "halliburton",
+      "href": "cases/halliburton/",
+      "year": "2026",
+      "title": "Data Marketplace · Halliburton",
+      "tag": "Enterprise tool",
+      "nda": true,
+      "role": "Lead UX",
+      "result": "Sensitive details blurred to comply with NDA",
+      "preview_label": "Enterprise Product",
+      "preview_keywords": "Sole lead · AI-native · Halliburton"
+    },
+    {
+      "id": "dogly",
+      "href": "cases/dogly/",
+      "year": "2025 · 14 weeks",
+      "title": "Dogly",
+      "tag": "Mobile app",
+      "role": "Solo Lead UX + AI — discovery, design system, launch",
+      "result": "One designer, full product shipped in 14 weeks"
+    },
+    {
+      "id": "dobrodoc",
+      "href": "cases/dobrodoc/",
+      "year": "2020",
+      "title": "DobroDoc+",
+      "tag": "Mobile app",
+      "role": "Lead UX — user interviews, IA, mobile prototyping",
+      "result": "Redesign cut time-to-booking by 40% in usability tests",
+      "cover_image": "assets/images/dobrodoc/DobroDoc cover.png"
+    },
+    {
+      "id": "dopas",
+      "href": "cases/dopas/",
+      "year": "2020",
+      "title": "dopas.dp.ua",
+      "tag": "Web platform",
+      "role": "Lead UX — research, flows, prototyping",
+      "result": "Designed from zero — platform launched and generating revenue",
+      "cover_image": "assets/images/dopas/Dopas cover.png"
+    }
+  ],
+
+  "footer": {
+    "left": "Portfolio · Yurii Fokin",
+    "links": [
+      { "label": "Email", "href": "mailto:hello@yury.design" },
+      { "label": "LinkedIn", "href": "https://linkedin.com" },
+      { "label": "Batumi, GE" }
+    ]
+  },
+
+  "case_studies": {
+
+    "enterprise_design_system": {
+      "title": "Enterprise Design System",
+      "hook": "Three-tier tokens, two themes, one pipeline from Figma to production code.",
+      "meta": {
+        "role": "Sole designer",
+        "focus": "Architecture, tokens, dev pipeline",
+        "timeline": "2025 – 2026",
+        "status": "In production, used by the dev team"
+      },
+      "stakes": "Components shipped 1:1 with the design system on the first pass.",
+      "toc": [
+        "01 Context",
+        "02 Problem",
+        "03 Approach",
+        "04 Tokens",
+        "05 Naming",
+        "06 Pipeline",
+        "07 Themes",
+        "08 Governance",
+        "09 Outcomes",
+        "10 Reflection"
+      ],
+      "sections": {
+        "01_context": {
+          "label": "01 — Context",
+          "heading": "Context",
+          "body": [
+            "The product this system was built for is an internal enterprise data platform — a place where engineers find, evaluate, and access data assets. The specifics are kept vague here by design. What mattered for the system: it needed two themes, a small but focused component set, and a direct path from design file to production code.",
+            "Off-the-shelf systems like Material or Fluent were not the right fit. They solve for breadth. This product needed depth in a specific interaction model, with a visual language that matched the platform's tone. A custom system also meant every token and component had a clear owner and a clear reason to exist.",
+            "I was the only designer. The system grew in parallel with the product — not before it. There was no separate design system phase. Every new screen was an opportunity to extract a pattern. Every extracted pattern reduced the cost of the next screen."
+          ]
+        },
+        "02_problem": {
+          "label": "02 — The problem",
+          "heading": "The problem",
+          "intro": "Four things made early handoffs slow and error-prone.",
+          "cards": [
+            {
+              "label": "Handoff gap",
+              "title": "Screenshots in Jira",
+              "body": "Figma files were shared as static exports. Developers re-interpreted specs by eye. Documentation drifted as soon as the next design iteration started."
+            },
+            {
+              "label": "Duplication",
+              "title": "Two files per component",
+              "body": "Light and dark mode were handled at the component level — copy the component, override the colors. Any fix required touching two places."
+            },
+            {
+              "label": "No shared language",
+              "title": "Designers used layer names, devs used hex values",
+              "body": "There was no token layer connecting the two. Color changes in Figma did not propagate to code. Every update was a manual conversation."
+            },
+            {
+              "label": "Reinvention",
+              "title": "Each screen rebuilt existing patterns",
+              "body": "The filter row, the card, the empty state — each re-solved on new screens without a shared reference. Inconsistencies accumulated faster than they could be caught."
+            }
+          ]
+        },
+        "03_approach": {
+          "label": "03 — Approach",
+          "heading": "How the system grew",
+          "body": [
+            "The system was never a separate project. There was no design system phase before the product phase. The two ran together from the start.",
+            "Every screen that was designed went through a two-step check: does this use a pattern that already exists in the system? If yes, use it. If no, does this pattern belong in the system? If yes, extract it. A pattern was promoted to the library only after it appeared in at least two separate product screens. No speculative components. No patterns that hadn't been used."
+          ]
+        },
+        "04_token_architecture": {
+          "label": "04 — Token architecture",
+          "heading": "Three tiers — Primitives, Semantic, Component",
+          "intro": "Three tiers solve a problem that two tiers do not: you want components to be theme-aware without coupling component logic to raw color values. Two tiers almost works. Three tiers actually works, because the semantic layer acts as a stable interface between what changes (the theme) and what doesn't (the component).",
+          "tiers": [
+            {
+              "name": "Primitives",
+              "description": "Raw values with no semantic meaning. Every color, spacing step, and type size in the system lives here. red-50, space-4, font-size-14. Primitives never appear in components directly."
+            },
+            {
+              "name": "Semantic",
+              "description": "Intent-based tokens that map to a primitive based on the active theme. surface.primary, text.muted, border.default. In light mode, surface.primary resolves to one primitive. In dark mode, it resolves to another. Components never know which."
+            },
+            {
+              "name": "Component",
+              "description": "Scoped to specific components. button.primary.background, card.border, input.text. These reference semantic tokens, never primitives. The component tier is what the MCP pipeline reads when it generates code."
+            }
+          ]
+        },
+        "05_naming": {
+          "label": "05 — Naming",
+          "heading": "Naming was the unlock",
+          "body": [
+            "The Figma MCP server reads the Figma file structure — layer names, variable names, component names — and exposes them as structured data the dev's IDE can query. If a token in Figma is called surface.primary and the same token in code is called color-bg-main, the pipeline produces a mismatch on every component.",
+            "The naming conventions were agreed on before the first component was built: tier prefix, semantic category, variant. That one decision turned a manual process into an automated one. It also meant token renames became breaking changes — which made the team careful about when and why names changed."
+          ]
+        },
+        "06_pipeline": {
+          "label": "06 — Pipeline",
+          "heading": "From Figma to production code",
+          "intro": "The pipeline connects Figma to the developer's IDE through a Figma MCP server. A developer queries a component by node ID and gets back the structure, tokens, and variants. Claude Code generates the component from that output. The design file is the source of truth — not a screenshot of it.",
+          "before": [
+            "Annotated screenshots attached to Jira tickets",
+            "Developers re-interpret specs by eye",
+            "Documentation goes stale between design iterations",
+            "Code reviewed against static exports, not live design",
+            "Token changes communicated in Slack, applied manually"
+          ],
+          "after": [
+            "Developer queries the Figma node directly from the IDE",
+            "Claude Code generates the component from live design data",
+            "Token updates in Figma propagate to the next build automatically",
+            "First-pass output matches the design system 1:1",
+            "No back-and-forth on spacing, color, or naming"
+          ],
+          "pipeline_nodes": [
+            { "title": "Figma file", "caption": "Design system, tokens, variables" },
+            { "title": "MCP server", "caption": "Structured data layer — read-only" },
+            { "title": "Claude Code / IDE", "caption": "Live queries from dev environment" },
+            { "title": "Production code", "caption": "Components built 1:1 with design" }
+          ],
+          "mcp_operations": [
+            { "name": "get_design_context", "description": "Returns component structure, layout constraints, and variant data for a given node ID." },
+            { "name": "get_metadata", "description": "Returns layer name, type, visibility, and parent/child relationships." },
+            { "name": "get_variable_defs", "description": "Returns all token values resolved for the active theme — primitives, semantic, and component tiers." }
+          ],
+          "figma_file_key": "1yEn24FNbHfdrvdJdNT6fz",
+          "example_prompt": "Using the Figma MCP server, read the design context for node [node-id] from file key 1yEn24FNbHfdrvdJdNT6fz. Generate the component in React using our existing token system. Match the Figma source 1:1."
+        },
+        "07_themes": {
+          "label": "07 — Themes",
+          "heading": "Two themes, one component",
+          "body": "Component tokens do not change between light and dark mode. Only the semantic layer resolves differently. button.primary.background always points to interactive.primary. In light mode, interactive.primary resolves to one primitive. In dark mode, it resolves to another. The component has no knowledge of which theme is active.",
+          "themes_count": 2
+        },
+        "08_governance": {
+          "label": "08 — Governance",
+          "heading": "Governance",
+          "intro": "The system is used in production. Changes have consequences. Four rules keep it stable.",
+          "rules": [
+            {
+              "name": "Naming",
+              "rule": "Every token follows the tier/category/variant convention. Variables added to Figma outside the convention are flagged before they're published. The same rules apply in code."
+            },
+            {
+              "name": "Promotion",
+              "rule": "A pattern enters the system only after it has been used in at least two separate product screens. Local-first, then promoted. No hypothetical components."
+            },
+            {
+              "name": "Propagation",
+              "rule": "Token updates move through the tier chain automatically. Changing a primitive updates all semantic tokens that reference it, which updates all component tokens in turn. The update surfaces in code on the next build."
+            },
+            {
+              "name": "Changelog",
+              "rule": "Every system change ships with a changelog entry: token renamed, component prop added, variant deprecated. The changelog lives in the same repository as the production code."
+            }
+          ]
+        },
+        "09_outcomes": {
+          "label": "09 — Outcomes",
+          "heading": "Outcomes",
+          "stats": [
+            { "label": "Components in system", "value": "[TBD]", "desc": "Total components shipped and in active use" },
+            { "label": "Tokens across three tiers", "value": "[TBD]", "desc": "Primitive, semantic, and component tokens combined" },
+            { "label": "Themes supported", "value": "2", "desc": "Light and dark — one component definition each" },
+            { "label": "First-pass dev accuracy", "value": "[TBD]", "desc": "Components matching design system on first implementation" },
+            { "label": "Handoff time saved", "value": "[TBD]", "desc": "Per component, compared to previous screenshot-based process" }
+          ]
+        },
+        "10_reflection": {
+          "label": "10 — Reflection",
+          "heading": "What is next",
+          "columns": [
+            {
+              "title": "Where the system is heading",
+              "body": "The pipeline works. The next step is documentation good enough that a new engineer can use it without asking the designer. The MCP server connection, the Figma file key, the prompt structure — all of it needs a README that stands on its own. The goal is zero onboarding conversations needed."
+            },
+            {
+              "title": "What I learned",
+              "body": "The token tier structure is right, but the semantic layer is still under-specified in places. Some component tokens skip semantic entirely and reference primitives directly — a shortcut that made sense early and now needs cleaning up. Building a system in parallel with a product teaches you which decisions age well and which ones don't. Naming ages well. Shortcuts don't."
+            }
+          ]
+        }
+      },
+      "next_case": { "label": "Next case →", "title": "Data Marketplace — Halliburton", "href": "../../cases/halliburton/" }
+    },
+
+    "halliburton": {
+      "title": "Data Marketplace",
+      "client": "Halliburton",
+      "hook": "Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.",
+      "meta": {
+        "role": "Lead UX, sole designer",
+        "core_team": "3 engineers, PO, AI lead, Technology Director",
+        "research": "10 participants across 4 roles",
+        "timeline": "2025–2026",
+        "status": "Shipped, in active use"
+      },
+      "nda_notice": "This project is under NDA. Sensitive details are blurred. General process and approach are shown.",
+      "stakes": "The first tool at Halliburton where engineers can find, trust, and access any data asset in minutes.",
+      "cover_image": "assets/images/halliburton/cover.webp",
+      "toc": [
+        "01 Problem",
+        "02 Process",
+        "03 UX Strategy",
+        "04 Research",
+        "05 Prototype",
+        "06 Validation",
+        "07 Hand-off",
+        "08 Post-launch",
+        "09 Outcome",
+        "10 Reflection"
+      ],
+      "sections": {
+        "01_problem_context": {
+          "label": "01 — Problem & Context",
+          "heading": "From days of searching to minutes of finding",
+          "cards": [
+            {
+              "label": "Problem",
+              "title": "Scattered and unfindable",
+              "body": "Data assets live across disconnected systems with inconsistent metadata and unclear ownership."
+            },
+            {
+              "label": "Goal",
+              "title": "One entry point",
+              "body": "A unified marketplace for curated data, reports, models, and AI agents — part of Halliburton's Data Ribbon."
+            },
+            {
+              "label": "Success",
+              "title": "Minutes, not days",
+              "body": "Engineers find, validate, and request access to any data asset in under a few minutes."
+            }
+          ]
+        },
+        "02_process": {
+          "label": "02 — Process",
+          "heading": "From vision to shipped product",
+          "timeline": [
+            {
+              "number": "1.0",
+              "title": "Discovery",
+              "desc": "Aligned with the Technology Director and AI lead on vision, then defined two product phases — MVP and Trust/AI — so the design system could scale without rework.",
+              "tag": "2 strategies · 1 foundation"
+            },
+            {
+              "number": "2.0",
+              "title": "Research",
+              "desc": "Mapped 4 persona groups, 5 user flows, user journey maps, and the information architecture that later powered the MCP hand-off.",
+              "tag": "4 personas · 5 flows · IA"
+            },
+            {
+              "number": "3.0",
+              "title": "Prototype & Design System",
+              "desc": "Started with AI-generated prototypes to validate structure fast, then built a scalable design system with reusable tokens and components.",
+              "tag": "AI prototype · Figma system"
+            },
+            {
+              "number": "4.0",
+              "title": "Validation",
+              "desc": "Two rounds of testing with real users — Data POD Leads and Product Owners. Caught blind spots before a single line of code was written.",
+              "tag": "2 rounds · 10 users"
+            },
+            {
+              "number": "5.0",
+              "title": "Hand-off to Dev",
+              "desc": "Connected dev team to Figma through an MCP server. Developers pulled specs, tokens, and components directly into their IDE — no screenshots, no outdated docs.",
+              "tag": "Figma MCP · live specs"
+            },
+            {
+              "number": "6.0",
+              "title": "Post-launch Research",
+              "desc": "Tracked adoption, task success, and friction points after launch. The platform keeps evolving based on real usage data.",
+              "tag": "Analytics · iteration"
+            }
+          ]
+        },
+        "03_ux_strategy": {
+          "label": "03 — UX Strategy",
+          "heading": "Two phases of product evolution",
+          "intro": "UX strategy is a long-term plan that connects user insights, product vision, and business objectives into a coherent direction for designing and improving the user experience.",
+          "phase1": {
+            "title": "Phase 1 — MVP",
+            "intro": "Phase 1 established the foundation — a single marketplace where engineers can find, trust, and access any data asset. The focus was on structure, clarity, and core workflows before layering in AI and social.",
+            "vision": "Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.",
+            "problem": "Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.",
+            "success": "Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes — not days or weeks.",
+            "persona_groups": [
+              { "id": "G1", "title": "Data Scientist / Engineer", "desc": "Browse data products, fast and relevant search, preview data, request & obtain access quickly." },
+              { "id": "G2", "title": "Business User", "desc": "Find existing reports across BI tools that answer questions from trusted data." },
+              { "id": "G3", "title": "Data Product Owner", "desc": "Manage data product info, approve/reject accesses, define level of access." },
+              { "id": "G4", "title": "Data POD Lead", "desc": "Oversee data products across teams, monitor quality and access patterns." }
+            ],
+            "ux_goals": [
+              "Help users find the right data product quickly",
+              "Make data product cards and details easy to understand",
+              "Simplify the access request flow",
+              "Make access statuses and permissions clear",
+              "Differentiate View and Edit access levels clearly",
+              "Enable product owners to add and manage products with minimal friction"
+            ],
+            "core_user_scenarios": [
+              "Search and discover relevant data products",
+              "Filter and narrow down data products",
+              "Open dataset detail page and understand if it's usable",
+              "Request and get 1-click access directly from dataset page",
+              "Track access request status",
+              "Compare data sets",
+              "Add and manage data products",
+              "Manage access levels"
+            ],
+            "ux_principles": [
+              "Reduce cognitive load — engineers already drown in data; the UI shouldn't add noise.",
+              "Trust over decoration — every element earns its place; metadata, status, and lineage come first.",
+              "Speed as a feature — every flow optimised for 'minutes, not days.'",
+              "Desktop-first — users live in multi-window data environments."
+            ],
+            "nda_rows": [
+              "Success metrics",
+              "Roadmap — 7 phases, 18 months"
+            ],
+            "key_deliverables": [
+              "UX strategy for 2 product phases",
+              "Personas (4 groups)",
+              "User journey maps",
+              "Jobs-to-be-done",
+              "User flows (5 flows)",
+              "Information architecture",
+              "Wireframes and mockups",
+              "Interactive prototype",
+              "Scalable design system",
+              "2 rounds of usability testing reports",
+              "Post-launch research report"
+            ]
+          },
+          "phase2": {
+            "title": "Phase 2 — Trust, Social & AI",
+            "intro": "Phase 2 transforms the marketplace from a browsing tool into a trust-driven, AI-powered discovery platform. Users describe what they need in plain language, see ranked results they can trust, and make access decisions with confidence.",
+            "vision": "Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.",
+            "problem": "Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.",
+            "success": "Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.",
+            "structural_change": "The existing browse experience moves to a secondary role. A new AI-powered entry point takes its place — built around intent rather than navigation.",
+            "ux_goals": [
+              "Reduce time to find the right data product from weeks to minutes",
+              "Give users confidence to trust data before requesting access",
+              "Make approval decisions faster for owners",
+              "Surface peer knowledge that currently lives only in people's heads",
+              "Support both technical and business user journeys"
+            ],
+            "nda_rows": [
+              "AI capabilities",
+              "Feature clusters",
+              "Success metrics"
+            ]
+          }
+        },
+        "04_research": {
+          "label": "04 — Research",
+          "heading": "Understanding users and their journeys",
+          "intro": "Deep research phase to map out who uses the platform, how they interact with it, and where the friction points are. 4 persona groups, detailed user flows, and end-to-end journey maps shaped every design decision.",
+          "personas": [
+            {
+              "id": "G1",
+              "group": "Users",
+              "name": "Data Scientist / Engineer",
+              "who": "Technical specialist working with Python, ML models, and data integrations.",
+              "pain": "Hard to find datasets across sources; long approval cycles; unclear ownership."
+            },
+            {
+              "id": "G2",
+              "group": "Users",
+              "name": "Business User",
+              "who": "Analysts, PMs, and business stakeholders using BI tools.",
+              "pain": "Too much raw data, too few curated business-ready reports; hard to trust freshness."
+            },
+            {
+              "id": "G3",
+              "group": "Creators & Approvers",
+              "name": "Data Product Owner",
+              "who": "Product manager responsible for governance and lifecycle of data products.",
+              "pain": "Fragmented ownership; too many manual approval steps; slow onboarding."
+            },
+            {
+              "id": "G4",
+              "group": "Creators & Approvers",
+              "name": "Data POD Lead",
+              "who": "Team/Tech Lead for a data engineering POD or domain.",
+              "pain": "Heavy manual documentation work; poor visibility into who uses their products."
+            }
+          ],
+          "nda_rows": [
+            "User Flows — 5 flows",
+            "User Journey Map"
+          ]
+        },
+        "05_prototype_design_system": {
+          "label": "05 — Prototype & Design System",
+          "heading": "From AI brainstorm to production-ready screens",
+          "body": [
+            "Instead of jumping straight into pixel-perfect mockups, I started with an AI-based prototype to quickly test concepts, layouts, and interaction patterns. This let me brainstorm and validate what works and what doesn't — before investing time in high-fidelity design.",
+            "Once the structure was proven, I built a scalable design system with reusable components, tokens, and patterns — then created the final mockups for the dev team."
+          ],
+          "ai_prototype": {
+            "intro": "Used AI tools to rapidly generate and iterate on layout concepts, testing different approaches to search, filtering, data cards, and access flows. This phase was about speed and exploration — finding the right direction before committing to a design system.",
+            "prompts": [
+              {
+                "tab": "General layout",
+                "prompt": "Generate a data marketplace homepage layout with: a prominent search bar at the top for natural language queries, a left sidebar with category filters (data type, domain, certification status), and a main grid of data product cards showing name, owner, quality score, and access status. Use a clean editorial style with generous whitespace. Focus on information density without clutter — engineers should scan 20+ items without fatigue."
+              },
+              {
+                "tab": "Data product page",
+                "prompt": "Design a detail page for a single data product in a data marketplace. Include: a top header with product name, domain badge, quality score indicator, certification status, and access level chip; a tabbed body with Overview, Schema, Sample Data, and Lineage sections; a persistent right sidebar with metadata (owner, last updated, row count, format, sensitivity level) and a primary CTA button. The Overview tab should show description, use cases, and update frequency. The Schema tab should display a table of column names, data types, nullable flag, and descriptions. Use a clean, information-dense layout — this is a technical page for engineers who need to evaluate a dataset quickly."
+              },
+              {
+                "tab": "Add data product",
+                "prompt": "Design a multi-step publishing form for adding a new data product to a data marketplace. Step 1 — Basic info: product name, short description, domain selector, data format, thumbnail upload. Step 2 — Schema: auto-import schema from Databricks with a column list showing name, type, and nullable; allow editors to add descriptions and toggle sensitivity flags per column. Step 3 — Ownership and access: assign a Data Product Owner from an AD-synced user list, set default access level (Open / Restricted / Private), add editors by team or individual. Include a sticky preview panel on the right showing how the product card will appear in the marketplace. Keep the flow approachable for non-technical DPOs who don't work directly in Databricks."
+              },
+              {
+                "tab": "Request access",
+                "prompt": "Design an access request modal for a data marketplace. The form should include: requester name and role (pre-filled from profile), team and POD, domain, requested access level (Viewer or Editor), target environment (Development or Production), and a mandatory justification field with a 50-character minimum. Show a read-only summary of the requested data product on the right side of the modal. On submission, display a confirmation screen with a unique request ID, the assigned reviewer's name, and an estimated review timeline. Ensure the form validates all required fields inline before allowing submission."
+              }
+            ],
+            "caption": "Multiple iterations across layout, search, filtering, and access flow concepts — tested structurally before any high-fidelity work began.",
+            "prototype_note": "Interactive prototype protected under NDA. Available on request."
+          },
+          "token_architecture": {
+            "intro": "One system, two themes, zero duplication. Every color in the product traces through three layers — primitives at the base, semantic tokens that swap between light and dark modes, and component tokens that apply them consistently.",
+            "token_count": "~158 primitive · ~45 semantic · ~459 component tokens across 2 themes",
+            "primitives": [
+              { "name": "red-50", "value": "#CC0000" },
+              { "name": "white", "value": "#FFFFFF" },
+              { "name": "black", "value": "#000000" },
+              { "name": "grey-5", "value": "#ECEFF0" },
+              { "name": "grey-20", "value": "#D4DADD" },
+              { "name": "grey-50", "value": "#7F878D" },
+              { "name": "grey-60", "value": "#6D757A" },
+              { "name": "grey-95", "value": "#1E2224" },
+              { "name": "green-10", "value": "#CFF0DD" },
+              { "name": "green-70", "value": "#0C7135" },
+              { "name": "orange-70", "value": "#A94722" },
+              { "name": "blue-10", "value": "#E3ECF7" }
+            ],
+            "semantic": [
+              { "name": "primary-background", "light": "#CC0000", "dark": "#CC0000" },
+              { "name": "primary-foreground", "light": "#FFFFFF", "dark": "#FFFFFF" },
+              { "name": "secondary-foreground", "light": "#000000", "dark": "#FFFFFF" },
+              { "name": "secondary-background", "light": "#ECEFF0", "dark": "#1E2224" },
+              { "name": "surface-background", "light": "#FFFFFF", "dark": "#2A2F30" },
+              { "name": "surface-bg-muted", "light": "#ECEFF0", "dark": "#000000" },
+              { "name": "surface-foreground", "light": "#000000", "dark": "#FFFFFF" },
+              { "name": "surface-fg-muted", "light": "#6D757A", "dark": "#A8AFB5" },
+              { "name": "border-default", "light": "#D4DADD", "dark": "#43494E" },
+              { "name": "border-strong", "light": "#7F878D", "dark": "#7F878D" },
+              { "name": "border-focus", "light": "#1E2224", "dark": "#ECEFF0" },
+              { "name": "success-background", "light": "#CFF0DD", "dark": "#074622" },
+              { "name": "success-foreground", "light": "#0C7135", "dark": "#A7E4C5" },
+              { "name": "warning-foreground", "light": "#A94722", "dark": "#F3C7AF" },
+              { "name": "data-bg", "light": "#E3ECF7", "dark": "#0B1522" }
+            ],
+            "component": [
+              "button/primary/bg",
+              "button/primary/text",
+              "button/secondary/text",
+              "button/secondary/bg",
+              "body/background",
+              "page/page-bg",
+              "content/text",
+              "input/text-title",
+              "input/border-default",
+              "input/border-hover",
+              "input/border-focused",
+              "statuses/success-bg",
+              "statuses/success-text",
+              "statuses/warning-text",
+              "data product/bg"
+            ]
+          },
+          "nda_rows": [
+            "Final mockups — Protected under NDA, available on request"
+          ]
+        },
+        "06_validation": {
+          "label": "06 — Validation",
+          "heading": "Testing with the people who'd actually use it",
+          "intro": "Before moving to development, I ran two structured feedback sessions with the primary user groups — validating designs, aligning on roles and workflows, and catching blind spots early.",
+          "sessions": [
+            {
+              "title": "Session 1 — Data POD Leads",
+              "nda": true,
+              "description": "Design review & feedback session with Data POD Leads — the technical owners who create and maintain data products on the internal data platform. Focused on validating roles, publishing workflows, and access management.",
+              "key_takeaways": [
+                "Overall Marketplace concept is supported",
+                "Clear separation between POD Lead and Data Product Owner responsibilities",
+                "Automation-first approach validated",
+                "Access management should be user-centric",
+                "Sensitivity column removed from UI",
+                "Dev access management remains an open exploration topic"
+              ]
+            },
+            {
+              "title": "Session 2 — Data Product Owners",
+              "nda": true,
+              "description": "Design review & feedback session with Data Product Owners — the business owners of data products, responsible for final approval and publication decisions. Focused on publication flow, access governance, and role alignment.",
+              "key_takeaways": [
+                "Overall Marketplace concept is supported",
+                "Clear separation between technical and business ownership",
+                "Access management should be user-centric with clear access reasons",
+                "Publication and access decisions should stay lightweight",
+                "Marketplace enables confident decisions without exposing technical complexity"
+              ]
+            }
+          ]
+        },
+        "07_handoff": {
+          "label": "07 — Hand-off to Dev",
+          "heading": "AI-powered design-to-code pipeline",
+          "intro": "Traditional hand-off means screenshots, redlines, and a PDF that's out of date the moment you save it. On this project, I tried something else: connect developers directly to the Figma design system through MCP — Model Context Protocol — so they could pull component specs, tokens, and interaction states from their IDE in real time. No more guessing from static docs.",
+          "traditional_vs_mcp": {
+            "traditional": [
+              "Static specs in Figma",
+              "Screenshots in tickets",
+              "Dev asks designer for clarification",
+              "Components drift from source over time"
+            ],
+            "mcp": [
+              "Live component specs pulled from Figma",
+              "Tokens synced automatically to code",
+              "Dev queries the design system from the IDE",
+              "One source of truth, always current"
+            ]
+          },
+          "pipeline_nodes": [
+            { "title": "Figma file", "caption": "Design system, tokens, variables" },
+            { "title": "MCP server", "caption": "Structured data layer" },
+            { "title": "Claude Code / IDE", "caption": "Live queries from dev environment" },
+            { "title": "Production code", "caption": "Components built 1:1 with design" }
+          ],
+          "code_example": "// Component generated via MCP pull from Figma\n<Button\n  variant=\"primary\"\n  size=\"md\"\n  background=\"var(--color-primary-background)\"  // → Figma: primary-background\n  color=\"var(--color-primary-foreground)\"        // → Figma: primary-foreground\n  radius=\"var(--radius-md)\"                      // → Figma: radius-md\n>\n  Request access\n</Button>",
+          "code_caption": "Generic example — structure shown, real component names under NDA.",
+          "how_mcp_worked": [
+            { "aspect": "Connection", "detail": "MCP server connected to Figma file, exposing the design system as structured data that dev tools could consume in real time." },
+            { "aspect": "Components", "detail": "Developers accessed component specs, props, variants, and usage guidelines directly from their IDE — no context switching to Figma." },
+            { "aspect": "Tokens", "detail": "Design tokens (colors, typography, spacing, elevation) synced automatically — any update in Figma propagated to code." },
+            { "aspect": "Result", "detail": "Significantly reduced back-and-forth between design and dev. Components were built accurately on the first pass, matching the design system 1:1." }
+          ],
+          "what_made_it_successful": [
+            { "aspect": "Structured Figma file", "detail": "MCP reads layer names, frame structure, and component hierarchy. A well-organized Figma file with clear section naming made the design system legible to the AI — messy files produce messy output." },
+            { "aspect": "Token discipline", "detail": "Three-tier token architecture (primitives → semantic → component) gave MCP a stable interface. Any token change in Figma propagated cleanly to code." },
+            { "aspect": "Shared vocabulary", "detail": "Dev and design aligned on component names, prop names, and variant terminology up front. Naming consistency turned out to be the biggest unlock." },
+            { "aspect": "Iteration speed", "detail": "Fewer back-and-forth cycles meant design could iterate on edge cases while dev built the core in parallel." }
+          ],
+          "result_note": "Result: components delivered significantly faster than traditional handoff cycles — fewer iterations, higher first-pass accuracy."
+        },
+        "08_post_launch_research": {
+          "label": "08 — Post-launch Research",
+          "heading": "Launch isn't the finish line — measuring what's next",
+          "intro": "The platform is currently in active development and heading toward launch. Rather than waiting until go-live to figure out how to measure success, I designed the post-launch research program upfront — combining traditional analytics, modern AI-powered tools, and continuous user feedback.",
+          "what_we_measure": [
+            { "aspect": "Adoption", "detail": "Active users, onboarding completion rates, and frequency of return visits across all persona groups." },
+            { "aspect": "Task success", "detail": "Time-to-find for datasets, search-to-access conversion, and first-attempt success rate for access requests." },
+            { "aspect": "Satisfaction", "detail": "In-product micro-surveys and follow-up interviews triggered by key user actions." },
+            { "aspect": "Pain points", "detail": "Friction identified through AI-summarized session replays, support tickets, and heatmap analysis." }
+          ],
+          "research_stack": [
+            { "tool": "Analytics copilot", "detail": "Natural language queries across usage data to spot trends and cohorts faster than manual dashboards." },
+            { "tool": "AI session replay", "detail": "LLM-generated insights from user sessions instead of watching hundreds of recordings manually." },
+            { "tool": "Continuous interviews", "detail": "Weekly short conversations with real users, built into the process rather than run as one-off studies." },
+            { "tool": "Feedback synthesis", "detail": "Combining survey responses, support tickets, and interviews into themed insights automatically via LLM synthesis." }
+          ],
+          "iteration_loop": [
+            { "step": "Listen", "detail": "Collect feedback through multiple channels — surveys, session replays, interviews, and support tickets." },
+            { "step": "Synthesize", "detail": "Theme the findings and prioritize by impact on user tasks and business goals." },
+            { "step": "Ship", "detail": "Iterate on the most critical friction points in fast, focused cycles." },
+            { "step": "Validate", "detail": "Re-measure to confirm the change actually moved the metric." }
+          ]
+        },
+        "09_outcome": {
+          "label": "09 — Outcome",
+          "heading": "Built, validated, ready to ship",
+          "body": [
+            "The platform is built, validated with real users, and handed off for final development. Launch is weeks away.",
+            "What's already in place: a three-tier design system with dev-integrated MCP pipeline, a two-phase UX strategy, two rounds of stakeholder validation, and a tested Figma-to-code workflow that's already producing components 1:1 with the design system."
+          ]
+        },
+        "10_reflection": {
+          "label": "10 — Reflection",
+          "heading": "What I learned along the way",
+          "columns": [
+            {
+              "title": "What I'd do differently",
+              "body": "Involve data governance stakeholders earlier in the process. Their requirements only became clear mid-project, which meant reworking parts of the access request flow that were already in motion."
+            },
+            {
+              "title": "What this project taught me",
+              "body": "Leading a project end-to-end as the only designer taught me that seniority isn't about headcount — it's about owning decisions across the whole stack. And AI in the design process isn't magic, it's leverage — it speeds up the parts you already understand well, and it's useless for the parts you don't. The best outcomes came when I knew exactly what I wanted before asking for it."
+            },
+            {
+              "title": "What I'm taking forward",
+              "body": "The Figma + MCP pipeline is going into every project from here. Once you've shipped components 1:1 with the design system on the first pass, traditional hand-off feels broken."
+            }
+          ]
+        }
+      },
+      "next_case": { "label": "Next case →", "title": "Dogly — Mobile App", "href": "../dogly/" }
+    },
+
+    "dogly": {
+      "title": "Dogly",
+      "status": "placeholder",
+      "body": "Case study coming soon",
+      "meta": {
+        "year": "2025",
+        "duration": "14 weeks",
+        "role": "Solo Lead UX + AI — discovery, design system, launch",
+        "result": "One designer, full product shipped in 14 weeks"
+      }
+    },
+
+    "dobrodoc": {
+      "title": "DobroDoc+",
+      "hook": "Redesign cut time-to-booking by 40% in usability tests",
+      "meta": {
+        "year": "2020",
+        "type": "Mobile app",
+        "role": "Lead UX — user interviews, IA, mobile prototyping",
+        "result": "Redesign cut time-to-booking by 40% in usability tests"
+      },
+      "cover_image": "assets/images/dobrodoc/DobroDoc cover.png",
+      "toc": [
+        "01 Problem & Context",
+        "02 Process",
+        "03 Strategy & Research",
+        "04 Mockups",
+        "05 Usability",
+        "06 Before / After",
+        "07 Outcome",
+        "08 Reflection"
+      ],
+      "sections": {
+        "01_problem_context": {
+          "label": "01 — Problem & Context",
+          "heading": "Booking was harder than the illness",
+          "body": [
+            "DobroDoc+ already existed — but the original app was outdated and frustrating to use. Booking a doctor's appointment required more effort than the illness itself.",
+            "The core pain: when you're sick, the last thing you want is to navigate a broken interface or travel to a clinic just to get in the queue. Busy adults needed a way to see a doctor without leaving home.",
+            "The goal was a full redesign — faster booking, clearer navigation, and an experience that works when you feel your worst."
+          ]
+        },
+        "02_process": {
+          "label": "02 — Process",
+          "heading": "From audit to handoff",
+          "steps": [
+            { "number": "1.0", "title": "UX Audit", "desc": "Analysed existing app — broken flows, inconsistent patterns, key drop-off points.", "tag": "Audit report" },
+            { "number": "2.0", "title": "User Research", "desc": "Interviewed busy adults about medical apps and clinic visits.", "tag": "Interview notes" },
+            { "number": "3.0", "title": "UX Strategy", "desc": "Defined redesign priorities. Goal: booking under 3 taps, eliminate redundant screens.", "tag": "Strategy doc" },
+            { "number": "4.0", "title": "Wireframes", "desc": "Redesigned core flows — booking, doctor search, medical history.", "tag": "Lo-fi wireframes" },
+            { "number": "5.0", "title": "Usability Study", "desc": "Two rounds — lo-fi and hi-fi — with busy adults.", "tag": "Usability report" },
+            { "number": "6.0", "title": "Mockups & Hi-fi", "desc": "Full visual redesign with new component library.", "tag": "Hi-fi prototype" },
+            { "number": "7.0", "title": "Hand-off", "desc": "Specs, annotations, component documentation.", "tag": "Figma handoff" }
+          ]
+        },
+        "03_strategy_research": {
+          "label": "03 — Artifacts: UX Strategy",
+          "heading": "Strategic foundation",
+          "vision": "Accessible telemedicine platform for everyone, regardless of location or schedule",
+          "project_stage": "Full product development and launch",
+          "business_goals": [
+            "Reduce clinic overcrowding by 30%",
+            "50,000 users within first 6 months",
+            "90%+ patient satisfaction",
+            "Subscription + per-consultation revenue"
+          ],
+          "user_goals": [
+            "Book without calling during business hours",
+            "Consult online for minor concerns",
+            "Access medical history in one place",
+            "Manage family appointments"
+          ],
+          "design_principles": ["Trust & Security", "Simplicity", "Empathy", "Reliability", "Accessibility"],
+          "success_metrics": [
+            "Booking completion > 85%",
+            "Video success rate > 95%",
+            "NPS > 70",
+            "Avg booking time"
+          ],
+          "research": {
+            "stakeholder_interviews": { "count": 7, "participants": "Medical Director, COO, Head of Product, Compliance Officer", "tag": "business alignment" },
+            "surveys": { "count": 285, "breakdown": "250 patients and 35 healthcare providers", "findings": ["84% wanted online consultations", "73% found traditional booking inconvenient"], "tag": "quantitative" },
+            "user_interviews": { "count": 23, "breakdown": "15 patients + 8 doctors, 60-min sessions", "tag": "qualitative" }
+          },
+          "user_flow_summary": "Overview flow covering 5 user scenarios: symptom search, appointment booking, video consultation, consultation history, and medical certificates."
+        },
+        "04_mockups": {
+          "label": "04 — Mockups",
+          "heading": "Key screens in the redesign",
+          "intro": "Final hi-fi mockups covering the core booking flow — from onboarding to appointment confirmation.",
+          "screens": [
+            "Onboarding — create a medical card for yourself and your family",
+            "Home — clinic dashboard with doctor categories and quick actions",
+            "Doctor selection — choose med card, consultation type (online, in clinic, at home)",
+            "Confirmation — summary with med card, specialty, consultation type, date & time"
+          ]
+        },
+        "05_usability": {
+          "label": "05 — Usability Findings",
+          "heading": "Two rounds of testing",
+          "rounds": [
+            {
+              "title": "Round 1 — Lo-fi prototype",
+              "findings": [
+                "Users wanted doctor availability before clicking profiles",
+                "Symptom checker felt untrustworthy — no disclaimers",
+                "Family profile switching was confusing"
+              ],
+              "changes": [
+                "Availability indicators added on doctor cards",
+                "Symptom checker redesigned with disclaimer + emergency warnings",
+                "Persistent family switcher added at top of screens"
+              ]
+            },
+            {
+              "title": "Round 2 — Hi-fi prototype",
+              "findings": [
+                "Users wanted connection status before video call",
+                "100% of users loved digital prescription feature",
+                "Users wanted appointment reminders before consultations"
+              ],
+              "changes": [
+                "Connection quality indicator + test call added",
+                "Push notifications with reminders + checklist",
+                "Post-consultation summary auto-sent to email"
+              ]
+            }
+          ]
+        },
+        "06_before_after": {
+          "label": "06 — Mockups: Before / After",
+          "heading": "What changed after testing",
+          "comparisons": [
+            {
+              "title": "01 — Doctor card",
+              "before": "Name and specialisation only",
+              "after": "Availability indicator — green dot + next free slot on card"
+            },
+            {
+              "title": "02 — Symptom checker",
+              "before": "Plain input form, no context",
+              "after": "Medical disclaimer + emergency warning, AI match with doctor recommendation"
+            },
+            {
+              "title": "03 — Family switcher",
+              "before": "Buried in profile settings",
+              "after": "Persistent switcher at top of every screen"
+            },
+            {
+              "title": "04 — Pre-call screen",
+              "before": "Direct join button only",
+              "after": "Connection quality check + test call option"
+            },
+            {
+              "title": "05 — Post-consultation",
+              "before": "Session ends, nothing sent",
+              "after": "Summary card in-app + auto email with diagnosis and prescription PDF"
+            }
+          ]
+        },
+        "07_outcome": {
+          "label": "07 — Outcome",
+          "heading": "40% faster booking",
+          "body": "Redesign launched in late 2020. The updated app reduced time-to-booking by 40% in usability tests. Digital prescriptions and post-consultation summaries became the most praised features in early feedback.",
+          "status": "The app is live on both platforms today.",
+          "links": [
+            { "label": "App Store →" },
+            { "label": "Google Play →" }
+          ]
+        },
+        "08_reflection": {
+          "label": "08 — Reflection",
+          "heading": "Looking back",
+          "columns": [
+            {
+              "title": "What I'd do differently",
+              "body": "Start with a design system from day one. Component inconsistencies between screens slowed the hi-fi phase and required cleanup before handoff."
+            },
+            {
+              "title": "What I learned",
+              "body": "Two rounds of usability testing caught fundamentally different issues — lo-fi revealed structural problems, hi-fi surfaced emotional and trust concerns. Both are non-negotiable for a healthcare product."
+            }
+          ]
+        }
+      },
+      "next_case": { "label": "← Previous case", "title": "dopas.dp.ua — Bus Ticket Booking", "href": "../dopas/" }
+    },
+
+    "dopas": {
+      "title": "dopas.dp.ua",
+      "hook": "Designed from zero — platform launched and generating revenue",
+      "meta": {
+        "year": "2020",
+        "type": "Web platform",
+        "role": "Lead UX — research, flows, prototyping",
+        "result": "Designed from zero — platform launched and generating revenue"
+      },
+      "cover_image": "assets/images/dopas/Dopas cover.png",
+      "toc": [
+        "01 Problem & Context",
+        "02 Process",
+        "03 Market Analysis",
+        "04 User Flow",
+        "05 Usability Findings",
+        "06 Wireframes",
+        "07 Before / After",
+        "08 Outcome",
+        "09 Reflection"
+      ],
+      "sections": {
+        "01_problem_context": {
+          "label": "01 — Problem & Context",
+          "heading": "No online option existed",
+          "body": [
+            "Before dopas.dp.ua, bus tickets in Dnipro were sold exclusively offline — at ticket offices and directly from drivers. For a city with diverse ridership spanning all age groups, this meant queues, cash dependency, and no record of purchase.",
+            "The challenge: build an online ticketing platform from zero that works for everyone — from teenagers booking on a phone to elderly passengers unfamiliar with digital services."
+          ]
+        },
+        "02_process": {
+          "label": "02 — Process",
+          "heading": "From research to handoff",
+          "steps": [
+            { "number": "1.0", "title": "Market Analysis", "desc": "Audited existing ticketing platforms in Ukraine and nearby markets.", "tag": "Competitive matrix" },
+            { "number": "2.0", "title": "Wireframes & Lo-fi", "desc": "Mapped core user flows — search, seat selection, checkout, ticket storage.", "tag": "User flow · Lo-fi wireframes" },
+            { "number": "3.0", "title": "Usability Study", "desc": "Tested lo-fi prototype with users across age groups.", "tag": "Usability report" },
+            { "number": "4.0", "title": "Mockups & Hi-fi", "desc": "Translated validated flows into high-fidelity screens.", "tag": "Hi-fi prototype" },
+            { "number": "5.0", "title": "Testing & Iterating", "desc": "Refined edge cases — returns, errors, empty states.", "tag": "Iteration log" },
+            { "number": "6.0", "title": "Hand-off", "desc": "Full specs, annotations, developer handoff.", "tag": "Figma handoff" }
+          ]
+        },
+        "03_market_analysis": {
+          "label": "03 — Artifacts: Market Analysis",
+          "heading": "What the competition looked like",
+          "cards": [
+            {
+              "number": "01",
+              "title": "Direct competitive audit",
+              "desc": "Reviewed 6 Ukrainian and regional bus ticketing platforms — Busfor, Infobus, Ukrzaliznytsia and others.",
+              "tags": ["6 platforms", "UX audit", "heuristic review"]
+            },
+            {
+              "number": "02",
+              "title": "Comparative analysis",
+              "desc": "Compared booking flows across competitors — search, seat selection, payment, post-purchase experience.",
+              "tags": ["flow comparison", "friction mapping", "benchmarking"]
+            },
+            {
+              "number": "03",
+              "title": "Key insight",
+              "desc": "Most platforms forced 7+ steps before purchase. None offered ticket storage or self-service returns. This defined dopas's differentiators from day one.",
+              "tags": ["7+ steps avg.", "no returns flow", "opportunity gap"]
+            }
+          ]
+        },
+        "04_user_flow": {
+          "label": "04 — Artifacts: User Flow",
+          "heading": "End-to-end booking flow",
+          "flow": "Start → Open website → Search route → View results → Select trip? → [Yes] → Select seat → [No] → Return to search → Passenger info → Payment → Confirmation → Download ticket → End",
+          "caption": "Direction: End-to-end booking flow — from opening the website to downloading a ticket. Dashed line shows the return path when user decides not to purchase."
+        },
+        "05_usability_findings": {
+          "label": "05 — Artifacts: Usability Findings",
+          "heading": "What testing revealed",
+          "findings": [
+            {
+              "number": "01",
+              "issue": "Seat selection too late in the flow",
+              "detail": "Users tried to go back mid-form to choose seats, causing confusion and drop-off.",
+              "fix": "Moved seat selection before passenger info"
+            },
+            {
+              "number": "02",
+              "issue": "No luggage option at booking",
+              "detail": "Multiple users abandoned the flow thinking the platform didn't support extra luggage.",
+              "fix": "Luggage toggle added on passenger info screen"
+            },
+            {
+              "number": "03",
+              "issue": "Price not visible until checkout",
+              "detail": "Total cost including fees wasn't shown on results page — felt like hidden costs, reducing trust.",
+              "fix": "Full price shown on search results card"
+            },
+            {
+              "number": "04",
+              "issue": "Return ticket not discoverable",
+              "detail": "3 of 5 users assumed one-way was the only option.",
+              "fix": "Round-trip toggle added to homepage search"
+            }
+          ]
+        },
+        "06_wireframes": {
+          "label": "06 — Wireframes",
+          "heading": "Defining the structure",
+          "intro": "Lo-fi wireframes defined the core structure before any visual design decisions were made.",
+          "screens": [
+            { "name": "Homepage", "desc": "Entry point. Search widget front and centre — destination, date, passenger count." },
+            { "name": "Search results", "desc": "Filterable list. Price, duration, and departure time visible without opening the ticket." },
+            { "name": "Seat selection", "desc": "Interactive bus map. Colour-coded by availability. One tap to select." },
+            { "name": "Passenger info", "desc": "Minimal form — only required fields. Luggage toggle added after usability study." },
+            { "name": "Checkout", "desc": "Full price breakdown and cancellation policy visible before payment." }
+          ]
+        },
+        "07_before_after": {
+          "label": "07 — Mockups: Before / After",
+          "heading": "What changed after testing",
+          "comparisons": [
+            {
+              "title": "01 — Homepage",
+              "before": "Search buried below fold, no round-trip option",
+              "after": "Search front and centre, round-trip toggle added"
+            },
+            {
+              "title": "02 — Search results",
+              "before": "Price shown without fees, no filters",
+              "after": "Full price on card, filters by time and price"
+            },
+            {
+              "title": "03 — Seat selection",
+              "before": "Appeared after passenger info form",
+              "after": "Moved before passenger info — matches mental model"
+            },
+            {
+              "title": "04 — Passenger info",
+              "before": "8 fields, optional and required mixed",
+              "after": "5 required fields, luggage toggle inline"
+            },
+            {
+              "title": "05 — Checkout",
+              "before": "First time user sees total with fees",
+              "after": "Full breakdown + cancellation policy upfront"
+            }
+          ]
+        },
+        "08_outcome": {
+          "label": "08 — Outcome",
+          "heading": "Live and generating revenue",
+          "body": [
+            "Launched in late autumn 2020. Users responded positively — the platform filled a real gap in the local market where no online alternative existed before.",
+            "dopas.dp.ua has been live and generating revenue since launch."
+          ],
+          "link": { "label": "See it live →" }
+        },
+        "09_reflection": {
+          "label": "09 — Reflection",
+          "heading": "Looking back",
+          "columns": [
+            {
+              "title": "What I'd do differently",
+              "body": "Start with a design system from day one. Building components ad hoc slowed the hi-fi phase and created inconsistencies fixed during handoff."
+            },
+            {
+              "title": "What I learned",
+              "body": "Usability testing is non-negotiable — even two sessions caught four critical flow issues that would have shipped as bugs. No amount of design intuition replaces watching a real user get stuck."
+            }
+          ]
+        }
+      },
+      "next_case": { "label": "Next case →", "title": "DobroDoc+ — Online Medical App", "href": "../dobrodoc/" }
+    }
+  },
+
+  "halliburton_artifacts": {
+    "title": "Research & Strategy Artifacts",
+    "subtitle": "Data Marketplace · Halliburton · 2026",
+    "intro": "A detailed look at the UX research, strategy documents, and design artifacts produced throughout the project.",
+    "nda_notice": "This project is under NDA. Sensitive details are blurred. General process and approach are shown.",
+    "sections": {
+      "01_personas": {
+        "heading": "User groups & needs",
+        "intro": "Four persona groups were identified through stakeholder interviews and contextual research. Each represents a distinct relationship with data products in the organization.",
+        "personas": [
+          {
+            "id": "G1",
+            "name": "Data Scientist / Engineer",
+            "needs": ["Browse data products, fast and relevant search", "Preview data before requesting", "Request & obtain access quickly", "Track requested accesses"],
+            "values": ["Speed", "Relevance", "Self-service"]
+          },
+          {
+            "id": "G2",
+            "name": "Business User",
+            "needs": ["Find existing reports (PBI, Tableau, Spotfire, Databricks)", "Get answers to questions from trusted data", "Won't use what isn't officially validated"],
+            "values": ["Trust", "Simplicity", "Curated content"]
+          },
+          {
+            "id": "G3",
+            "name": "Data Product Owner",
+            "needs": ["Manage data product info", "Approve/reject access requests", "Define level of access", "Monitor usage and quality"],
+            "values": ["Control", "Visibility", "Efficiency"]
+          },
+          {
+            "id": "G4",
+            "name": "Data POD Lead",
+            "needs": ["Oversee data products across teams", "Monitor quality and access patterns", "Maintain schema stability, lineage, documentation", "Needs incident response tools and schema change alerts"],
+            "values": ["Oversight", "Quality", "Governance"]
+          }
+        ]
+      },
+      "02_jtbd": {
+        "heading": "What users are trying to accomplish",
+        "jobs_to_be_done": [
+          "When I need specific data, I want to find it quickly so I can use it in my pipeline",
+          "When I find a dataset, I want to understand if it's trustworthy so I can decide whether to request access",
+          "When I request access, I want a fast approval so I don't lose time waiting",
+          "When I manage data products, I want clear tools so I can maintain quality and control access"
+        ],
+        "core_user_scenarios": [
+          "Search and discover relevant data products",
+          "Filter and narrow down data products",
+          "Open dataset detail page and understand if it's usable",
+          "Request and get 1-click access directly from dataset page",
+          "Track access request status",
+          "Compare data sets",
+          "Add and manage data products",
+          "Manage access levels"
+        ]
+      },
+      "03_ux_goals_principles": {
+        "heading": "Design direction and guardrails",
+        "ux_goals": [
+          "Validate whether users can find the right Data Product quickly",
+          "Check if users understand Data Product cards and details",
+          "Evaluate how easily users can request access",
+          "Validate clarity of access statuses and permissions",
+          "Test understanding of View vs Edit access levels",
+          "Validate that product owners can easily add existing products"
+        ],
+        "ux_principles": [
+          "Reduce user's cognitive load",
+          "Clarity and Simplicity",
+          "Visual Hierarchy",
+          "Consistency",
+          "Feedback and Interactivity",
+          "Efficiency and Speed",
+          "Accessibility and Readability",
+          "Desktop first"
+        ]
+      },
+      "04_roadmap": {
+        "heading": "Project phases",
+        "intro": "A seven-phase roadmap structured the project from initial discovery through post-launch iteration.",
+        "phases": [
+          { "number": 1, "title": "Discovery", "deliverable": "UX strategy, Data architecture map", "tag": "UX strategy" },
+          { "number": 2, "title": "User Research", "deliverable": "Personas, UJM, User flows, JTBD", "tag": "Research" },
+          { "number": 3, "title": "Market Analysis", "deliverable": "Indirect competitor analysis", "tag": "Analysis" },
+          { "number": 4, "title": "Prototyping", "deliverable": "Wireframes, Mockups, Design system setup", "tag": "Design" },
+          { "number": 5, "title": "Validation", "deliverable": "Usability testing (2 rounds), iteration", "tag": "Testing" },
+          { "number": 6, "title": "Hand-off", "deliverable": "Design hand-off & dev collaboration", "tag": "Dev collab" },
+          { "number": 7, "title": "Post-launch", "deliverable": "Research and continuous improvements", "tag": "Iteration" }
+        ],
+        "nda": true
+      },
+      "05_kpis": {
+        "heading": "Measuring success",
+        "intro": "KPIs were defined across efficiency, adoption, quality, and business impact to track the marketplace's performance.",
+        "efficiency": "Search time: weeks → minutes. Access request: months → days.",
+        "adoption": "% engineers using marketplace ↑, % data products onboarded ↑",
+        "quality_satisfaction": "CSAT ↑, % users finding right product on first search ↑",
+        "business_goals": [
+          "Reduce search time",
+          "Reduce access approval time",
+          "Increase trust and adoption",
+          "Support all user journeys"
+        ],
+        "nda": true
+      },
+      "06_key_deliverables": {
+        "heading": "What was produced",
+        "intro": "A comprehensive set of UX research and design artifacts delivered across all project phases.",
+        "deliverables": [
+          { "title": "UX Strategy & Roadmap", "desc": "Long-term plan connecting user insights, product vision, and business objectives." },
+          { "title": "Personas & JTBD", "desc": "Four persona groups with detailed needs, goals, and jobs to be done." },
+          { "title": "User Journey Maps & Userflows", "desc": "End-to-end journey maps and interaction flows for all scenarios." },
+          { "title": "Wireframes & Mockups", "desc": "Lo-fi wireframes and hi-fi mockups for all core screens." },
+          { "title": "Interactive Prototype", "desc": "Clickable prototype used for stakeholder reviews and usability testing." },
+          { "title": "Usability Testing Reports", "desc": "Two rounds of formative and summative testing with synthesized findings." },
+          { "title": "Scalable Design System", "desc": "Component library built on corporate design system with custom marketplace elements." },
+          { "title": "Post Launch Research Report", "desc": "Usage analytics and research insights driving continuous improvement." }
+        ],
+        "nda": true
+      },
+      "07_phase2_evolution": {
+        "heading": "From browsing to AI-powered discovery",
+        "intro": "Phase 2 evolved the marketplace vision to incorporate trust signals, social knowledge, and AI-powered search.",
+        "vision": "Transform the Data Marketplace from a browsing tool into an AI-powered discovery platform.",
+        "problem": "Users can find data but cannot judge if it's reliable, relevant, or safe to use.",
+        "success": "Engineers describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.",
+        "features": [
+          { "name": "AI Home", "desc": "Natural language input — user describes what they need. AI response + ranked dataset cards." },
+          { "name": "Recommendations", "desc": "6 personalized boxes: Continue exploring, Most trusted, New since last visit, Pending action, Colleagues using, For you." },
+          { "name": "Trust", "desc": "Quality score, Certified badges, Lineage visualization, Approval workflow" },
+          { "name": "Social", "desc": "Reviews & Usage tab, Peer recommendations, Owner reputation" },
+          { "name": "Governance", "desc": "Sensitivity classification, auto-tagging, Adoption analytics" },
+          { "name": "AI Discovery", "desc": "NL search, Hybrid AI response, Personalized recommendations" },
+          { "name": "Billing", "desc": "Subscription model, Plan comparison, Transparent pricing" }
+        ],
+        "kpis": {
+          "efficiency": ["Search-to-access conversion ↑", "time to find dataset ↓", "approval time ↓"],
+          "adoption": ["% engineers using marketplace ↑", "certified vs uncertified ↑"],
+          "trust": ["Quality badge CTR ↑", "preview-to-request conversion ↑"],
+          "social": ["Reviews per dataset ↑", "peer recommendation CTR ↑"]
+        },
+        "nda": true
+      }
+    }
+  }
+}
