@@ -81,190 +81,6 @@
 
   "case_studies": {
 
-    "enterprise_design_system": {
-      "title": "Enterprise Design System",
-      "hook": "Three-tier tokens, two themes, one pipeline from Figma to production code.",
-      "meta": {
-        "role": "Sole designer",
-        "focus": "Architecture, tokens, dev pipeline",
-        "timeline": "2025 – 2026",
-        "status": "In production, used by the dev team"
-      },
-      "stakes": "Components shipped 1:1 with the design system on the first pass.",
-      "toc": [
-        "01 Context",
-        "02 Problem",
-        "03 Approach",
-        "04 Tokens",
-        "05 Naming",
-        "06 Pipeline",
-        "07 Themes",
-        "08 Governance",
-        "09 Outcomes",
-        "10 Reflection"
-      ],
-      "sections": {
-        "01_context": {
-          "label": "01 — Context",
-          "heading": "Context",
-          "body": [
-            "The product this system was built for is an internal enterprise data platform — a place where engineers find, evaluate, and access data assets. The specifics are kept vague here by design. What mattered for the system: it needed two themes, a small but focused component set, and a direct path from design file to production code.",
-            "Off-the-shelf systems like Material or Fluent were not the right fit. They solve for breadth. This product needed depth in a specific interaction model, with a visual language that matched the platform's tone. A custom system also meant every token and component had a clear owner and a clear reason to exist.",
-            "I was the only designer. The system grew in parallel with the product — not before it. There was no separate design system phase. Every new screen was an opportunity to extract a pattern. Every extracted pattern reduced the cost of the next screen."
-          ]
-        },
-        "02_problem": {
-          "label": "02 — The problem",
-          "heading": "The problem",
-          "intro": "Four things made early handoffs slow and error-prone.",
-          "cards": [
-            {
-              "label": "Handoff gap",
-              "title": "Screenshots in Jira",
-              "body": "Figma files were shared as static exports. Developers re-interpreted specs by eye. Documentation drifted as soon as the next design iteration started."
-            },
-            {
-              "label": "Duplication",
-              "title": "Two files per component",
-              "body": "Light and dark mode were handled at the component level — copy the component, override the colors. Any fix required touching two places."
-            },
-            {
-              "label": "No shared language",
-              "title": "Designers used layer names, devs used hex values",
-              "body": "There was no token layer connecting the two. Color changes in Figma did not propagate to code. Every update was a manual conversation."
-            },
-            {
-              "label": "Reinvention",
-              "title": "Each screen rebuilt existing patterns",
-              "body": "The filter row, the card, the empty state — each re-solved on new screens without a shared reference. Inconsistencies accumulated faster than they could be caught."
-            }
-          ]
-        },
-        "03_approach": {
-          "label": "03 — Approach",
-          "heading": "How the system grew",
-          "body": [
-            "The system was never a separate project. There was no design system phase before the product phase. The two ran together from the start.",
-            "Every screen that was designed went through a two-step check: does this use a pattern that already exists in the system? If yes, use it. If no, does this pattern belong in the system? If yes, extract it. A pattern was promoted to the library only after it appeared in at least two separate product screens. No speculative components. No patterns that hadn't been used."
-          ]
-        },
-        "04_token_architecture": {
-          "label": "04 — Token architecture",
-          "heading": "Three tiers — Primitives, Semantic, Component",
-          "intro": "Three tiers solve a problem that two tiers do not: you want components to be theme-aware without coupling component logic to raw color values. Two tiers almost works. Three tiers actually works, because the semantic layer acts as a stable interface between what changes (the theme) and what doesn't (the component).",
-          "tiers": [
-            {
-              "name": "Primitives",
-              "description": "Raw values with no semantic meaning. Every color, spacing step, and type size in the system lives here. red-50, space-4, font-size-14. Primitives never appear in components directly."
-            },
-            {
-              "name": "Semantic",
-              "description": "Intent-based tokens that map to a primitive based on the active theme. surface.primary, text.muted, border.default. In light mode, surface.primary resolves to one primitive. In dark mode, it resolves to another. Components never know which."
-            },
-            {
-              "name": "Component",
-              "description": "Scoped to specific components. button.primary.background, card.border, input.text. These reference semantic tokens, never primitives. The component tier is what the MCP pipeline reads when it generates code."
-            }
-          ]
-        },
-        "05_naming": {
-          "label": "05 — Naming",
-          "heading": "Naming was the unlock",
-          "body": [
-            "The Figma MCP server reads the Figma file structure — layer names, variable names, component names — and exposes them as structured data the dev's IDE can query. If a token in Figma is called surface.primary and the same token in code is called color-bg-main, the pipeline produces a mismatch on every component.",
-            "The naming conventions were agreed on before the first component was built: tier prefix, semantic category, variant. That one decision turned a manual process into an automated one. It also meant token renames became breaking changes — which made the team careful about when and why names changed."
-          ]
-        },
-        "06_pipeline": {
-          "label": "06 — Pipeline",
-          "heading": "From Figma to production code",
-          "intro": "The pipeline connects Figma to the developer's IDE through a Figma MCP server. A developer queries a component by node ID and gets back the structure, tokens, and variants. Claude Code generates the component from that output. The design file is the source of truth — not a screenshot of it.",
-          "before": [
-            "Annotated screenshots attached to Jira tickets",
-            "Developers re-interpret specs by eye",
-            "Documentation goes stale between design iterations",
-            "Code reviewed against static exports, not live design",
-            "Token changes communicated in Slack, applied manually"
-          ],
-          "after": [
-            "Developer queries the Figma node directly from the IDE",
-            "Claude Code generates the component from live design data",
-            "Token updates in Figma propagate to the next build automatically",
-            "First-pass output matches the design system 1:1",
-            "No back-and-forth on spacing, color, or naming"
-          ],
-          "pipeline_nodes": [
-            { "title": "Figma file", "caption": "Design system, tokens, variables" },
-            { "title": "MCP server", "caption": "Structured data layer — read-only" },
-            { "title": "Claude Code / IDE", "caption": "Live queries from dev environment" },
-            { "title": "Production code", "caption": "Components built 1:1 with design" }
-          ],
-          "mcp_operations": [
-            { "name": "get_design_context", "description": "Returns component structure, layout constraints, and variant data for a given node ID." },
-            { "name": "get_metadata", "description": "Returns layer name, type, visibility, and parent/child relationships." },
-            { "name": "get_variable_defs", "description": "Returns all token values resolved for the active theme — primitives, semantic, and component tiers." }
-          ],
-          "figma_file_key": "1yEn24FNbHfdrvdJdNT6fz",
-          "example_prompt": "Using the Figma MCP server, read the design context for node [node-id] from file key 1yEn24FNbHfdrvdJdNT6fz. Generate the component in React using our existing token system. Match the Figma source 1:1."
-        },
-        "07_themes": {
-          "label": "07 — Themes",
-          "heading": "Two themes, one component",
-          "body": "Component tokens do not change between light and dark mode. Only the semantic layer resolves differently. button.primary.background always points to interactive.primary. In light mode, interactive.primary resolves to one primitive. In dark mode, it resolves to another. The component has no knowledge of which theme is active.",
-          "themes_count": 2
-        },
-        "08_governance": {
-          "label": "08 — Governance",
-          "heading": "Governance",
-          "intro": "The system is used in production. Changes have consequences. Four rules keep it stable.",
-          "rules": [
-            {
-              "name": "Naming",
-              "rule": "Every token follows the tier/category/variant convention. Variables added to Figma outside the convention are flagged before they're published. The same rules apply in code."
-            },
-            {
-              "name": "Promotion",
-              "rule": "A pattern enters the system only after it has been used in at least two separate product screens. Local-first, then promoted. No hypothetical components."
-            },
-            {
-              "name": "Propagation",
-              "rule": "Token updates move through the tier chain automatically. Changing a primitive updates all semantic tokens that reference it, which updates all component tokens in turn. The update surfaces in code on the next build."
-            },
-            {
-              "name": "Changelog",
-              "rule": "Every system change ships with a changelog entry: token renamed, component prop added, variant deprecated. The changelog lives in the same repository as the production code."
-            }
-          ]
-        },
-        "09_outcomes": {
-          "label": "09 — Outcomes",
-          "heading": "Outcomes",
-          "stats": [
-            { "label": "Components in system", "value": "[TBD]", "desc": "Total components shipped and in active use" },
-            { "label": "Tokens across three tiers", "value": "[TBD]", "desc": "Primitive, semantic, and component tokens combined" },
-            { "label": "Themes supported", "value": "2", "desc": "Light and dark — one component definition each" },
-            { "label": "First-pass dev accuracy", "value": "[TBD]", "desc": "Components matching design system on first implementation" },
-            { "label": "Handoff time saved", "value": "[TBD]", "desc": "Per component, compared to previous screenshot-based process" }
-          ]
-        },
-        "10_reflection": {
-          "label": "10 — Reflection",
-          "heading": "What is next",
-          "columns": [
-            {
-              "title": "Where the system is heading",
-              "body": "The pipeline works. The next step is documentation good enough that a new engineer can use it without asking the designer. The MCP server connection, the Figma file key, the prompt structure — all of it needs a README that stands on its own. The goal is zero onboarding conversations needed."
-            },
-            {
-              "title": "What I learned",
-              "body": "The token tier structure is right, but the semantic layer is still under-specified in places. Some component tokens skip semantic entirely and reference primitives directly — a shortcut that made sense early and now needs cleaning up. Building a system in parallel with a product teaches you which decisions age well and which ones don't. Naming ages well. Shortcuts don't."
-            }
-          ]
-        }
-      },
-      "next_case": { "label": "Next case →", "title": "Data Marketplace — Halliburton", "href": "../../cases/halliburton/" }
-    },
-
     "halliburton": {
       "title": "Data Marketplace",
       "client": "Halliburton",
@@ -680,19 +496,8 @@
             }
           ]
         }
-      }
-    },
-
-    "dogly": {
-      "title": "Dogly",
-      "status": "placeholder",
-      "body": "Case study coming soon",
-      "meta": {
-        "year": "2025",
-        "duration": "14 weeks",
-        "role": "Solo Lead UX + AI — discovery, design system, launch",
-        "result": "One designer, full product shipped in 14 weeks"
-      }
+      },
+      "next_case": { "label": "Next case →", "title": "DobroDoc+ — Online Medical App", "href": "../dobrodoc/" }
     },
 
     "dobrodoc": {
@@ -868,7 +673,7 @@
           ]
         }
       },
-      "next_case": { "label": "← Previous case", "title": "dopas.dp.ua — Bus Ticket Booking", "href": "../dopas/" }
+      "next_case": { "label": "Next case →", "title": "dopas.dp.ua — Bus Ticket Booking", "href": "../dopas/" }
     },
 
     "dopas": {
@@ -1040,7 +845,7 @@
           ]
         }
       },
-      "next_case": { "label": "Next case →", "title": "DobroDoc+ — Online Medical App", "href": "../dobrodoc/" }
+      "next_case": { "label": "Next case →", "title": "Data Marketplace · Halliburton", "href": "../halliburton/" }
     }
   },
 
