@@ -37,17 +37,6 @@
 
   "case_cards": [
     {
-      "id": "enterprise-design-system",
-      "href": "projects/enterprise-design-system/",
-      "year": "2025 — 2026",
-      "title": "Enterprise Design System",
-      "tag": "Design system",
-      "role": "Sole designer · Architecture, tokens, dev pipeline",
-      "result": "Three-tier tokens, light/dark themes, Figma MCP → Claude Code pipeline. Built in parallel with the product, used by the dev team in production.",
-      "preview_label": "Design System",
-      "preview_keywords": "Tokens · MCP · Figma-to-code"
-    },
-    {
       "id": "halliburton",
       "href": "cases/halliburton/",
       "year": "2026",
@@ -58,15 +47,6 @@
       "result": "Sensitive details blurred to comply with NDA",
       "preview_label": "Enterprise Product",
       "preview_keywords": "Sole lead · AI-native · Halliburton"
-    },
-    {
-      "id": "dogly",
-      "href": "cases/dogly/",
-      "year": "2025 · 14 weeks",
-      "title": "Dogly",
-      "tag": "Mobile app",
-      "role": "Solo Lead UX + AI — discovery, design system, launch",
-      "result": "One designer, full product shipped in 14 weeks"
     },
     {
       "id": "dobrodoc",
@@ -700,8 +680,7 @@
             }
           ]
         }
-      },
-      "next_case": { "label": "Next case →", "title": "Dogly — Mobile App", "href": "../dogly/" }
+      }
     },
 
     "dogly": {
