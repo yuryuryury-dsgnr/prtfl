@@ -49,6 +49,15 @@
       "preview_keywords": "Sole lead · AI-native · Halliburton"
     },
     {
+      "id": "rebalancer",
+      "href": "cases/rebalancer/",
+      "year": "2026 · iOS",
+      "title": "Rebalancer",
+      "tag": "Crypto Rebalancing · Mobile app",
+      "role": "Solo Lead UX + AI — design and build with Claude Code",
+      "result": "Designed and built solo, from concept to App Store"
+    },
+    {
       "id": "dobrodoc",
       "href": "cases/dobrodoc/",
       "year": "2020",
@@ -497,6 +506,16 @@
           ]
         }
       },
+      "next_case": { "label": "Next case →", "title": "Rebalancer", "href": "../rebalancer/" }
+    },
+
+    "rebalancer": {
+      "title": "Rebalancer",
+      "meta": "Crypto Rebalancing · Mobile app · 2026",
+      "role": "Solo Lead UX + AI — design and build with Claude Code",
+      "result": "Designed and built solo, from concept to App Store",
+      "description": "A tool for tracking portfolio rebalancing, made for people who already do crypto rebalancing — not beginners.",
+      "note": "Full case study in progress.",
       "next_case": { "label": "Next case →", "title": "DobroDoc+ — Online Medical App", "href": "../dobrodoc/" }
     },
 
