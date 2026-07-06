@@ -2209,28 +2209,6 @@
       <h2 class="section-heading">AI-powered design-to-code pipeline</h2>
       <p class="section-text">Traditional hand-off means screenshots, redlines, and a PDF that's outdated the moment you save it. Instead, I connected developers directly to the Figma design system through MCP (Model Context Protocol) &mdash; they pulled specs, tokens, and interaction states straight into their IDE in real time.</p>
 
-      <p class="ds-eyebrow">Traditional vs MCP Pipeline</p>
-      <div class="handoff-compare">
-        <div class="handoff-col">
-          <p class="handoff-col-header">Traditional hand-off</p>
-          <ul class="accordion-list" style="margin:0;">
-            <li>Static specs in Figma</li>
-            <li>Screenshots in tickets</li>
-            <li>Dev asks designer for clarification</li>
-            <li>Components drift from source over time</li>
-          </ul>
-        </div>
-        <div class="handoff-col">
-          <p class="handoff-col-header">MCP pipeline</p>
-          <ul class="accordion-list" style="margin:0;">
-            <li>Live component specs pulled from Figma</li>
-            <li>Tokens synced automatically to code</li>
-            <li>Dev queries the design system from the IDE</li>
-            <li>One source of truth, always current</li>
-          </ul>
-        </div>
-      </div>
-
       <p class="ds-eyebrow">How it flows</p>
       <div class="pipeline-flow">
         <div class="pipeline-node">
@@ -2253,20 +2231,6 @@
           <span class="pipeline-node-caption">Components built 1:1 with design</span>
         </div>
       </div>
-
-      <p class="ds-eyebrow">What this looks like in code</p>
-      <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px; line-height:1.6;">Every token traced back to a Figma variable &mdash; update it in Figma, and the next sync updates the code.</p>
-      <div class="ds-prompt-block">// Component generated via MCP pull from Figma
-&lt;Button
-  variant="primary"
-  size="md"
-  background="var(--color-primary-background)"  // &rarr; Figma: primary-background
-  color="var(--color-primary-foreground)"        // &rarr; Figma: primary-foreground
-  radius="var(--radius-md)"                      // &rarr; Figma: radius-md
-&gt;
-  Request access
-&lt;/Button&gt;</div>
-      <p class="ds-caption">Generic example &mdash; structure shown, real component names under NDA.</p>
     </section>
 
     <!-- 08 — POST-LAUNCH RESEARCH -->
