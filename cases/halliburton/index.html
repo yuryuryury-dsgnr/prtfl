@@ -2255,7 +2255,7 @@
       </div>
 
       <p class="ds-eyebrow">What this looks like in code</p>
-      <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px; line-height:1.6;">Every prop, every style, every token &mdash; traced back to a Figma variable. Update the variable in Figma, and the next sync updates the code.</p>
+      <p style="font-size:14px; color:#6B6B6B; margin-bottom:16px; line-height:1.6;">Every token traced back to a Figma variable &mdash; update it in Figma, and the next sync updates the code.</p>
       <div class="ds-prompt-block">// Component generated via MCP pull from Figma
 &lt;Button
   variant="primary"
@@ -2267,32 +2267,6 @@
   Request access
 &lt;/Button&gt;</div>
       <p class="ds-caption">Generic example &mdash; structure shown, real component names under NDA.</p>
-
-      <div class="accordion" style="margin-top:32px;">
-        <details open>
-          <summary><span>How MCP + Figma worked</span></summary>
-          <div class="accordion-body">
-            <table class="strategy-table">
-              <tr><td>Connection</td><td>MCP server connected to Figma file, exposing the design system as structured data that dev tools could consume in real time.</td></tr>
-              <tr><td>Components</td><td>Developers accessed component specs, props, variants, and usage guidelines directly from their IDE &mdash; no context switching to Figma.</td></tr>
-              <tr><td>Tokens</td><td>Design tokens (colors, typography, spacing, elevation) synced automatically &mdash; any update in Figma propagated to code.</td></tr>
-              <tr><td>Result</td><td>Significantly reduced back-and-forth between design and dev. Components were built accurately on the first pass, matching the design system 1:1.</td></tr>
-            </table>
-          </div>
-        </details>
-
-        <details open>
-          <summary><span>What made this successful</span></summary>
-          <div class="accordion-body">
-            <table class="strategy-table">
-              <tr><td>Structured Figma file</td><td>MCP reads layer names, frame structure, and component hierarchy. A well-organized Figma file with clear section naming made the design system legible to the AI &mdash; messy files produce messy output.</td></tr>
-              <tr><td>Token discipline</td><td>Three-tier token architecture (primitives &rarr; semantic &rarr; component) gave MCP a stable interface. Any token change in Figma propagated cleanly to code.</td></tr>
-              <tr><td>Shared vocabulary</td><td>Dev and design aligned on component names, prop names, and variant terminology up front. Naming consistency turned out to be the biggest unlock.</td></tr>
-              <tr><td>Iteration speed</td><td>Fewer back-and-forth cycles meant design could iterate on edge cases while dev built the core in parallel.</td></tr>
-            </table>
-          </div>
-        </details>
-      </div>
     </section>
 
     <!-- 08 — POST-LAUNCH RESEARCH -->
