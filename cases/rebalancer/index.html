@@ -81,6 +81,15 @@
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
     .section-note { font-size: 14px; color: #9A9A9A; font-style: italic; margin-top: 8px; }
 
+    /* ——— CTA PILL ——— */
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+    .cta-pill {
+      display: inline-block; font-size: 14px; font-weight: 500;
+      padding: 10px 24px; border: 1.5px solid #1A1A1A;
+      border-radius: 100px; transition: all 200ms ease;
+    }
+    .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
+
     /* ——— NEXT CASE ——— */
     .next-case {
       margin-top: 80px; padding: 32px 0;
@@ -146,6 +155,9 @@
       <p class="section-label">01 — Overview</p>
       <h2 class="section-heading">A focused tool for crypto rebalancing</h2>
       <p class="section-text">A tool for tracking portfolio rebalancing, made for people who already do crypto rebalancing — not beginners.</p>
+      <div class="cta-row">
+        <a href="https://apps.apple.com/ua/app/rebalancer-tool/id6767200669" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)">View on the App Store ↗</a>
+      </div>
       <p class="section-note">Full case study in progress.</p>
     </section>
 

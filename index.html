@@ -457,6 +457,28 @@
       width: 100%;
     }
 
+    /* ——— Rebalancer card: two independent links (isolated, not shared) ——— */
+    .case-card-stretch {
+      position: absolute;
+      inset: 0;
+      z-index: 1;               /* above the position:relative .case-thumb so the whole tile is clickable */
+    }
+    .case-links-row {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .case-links-row .case-link { margin-top: 0; }
+    .case-store-link {
+      position: relative;
+      z-index: 2;               /* above the stretch so it stays independently clickable */
+      font-size: 14px;
+      font-weight: 500;
+      color: #6B6B6B;
+    }
+    .case-store-link:hover { color: #1A1A1A; }
+
     .case-nda-note {
       font-size: 13px;
       color: #9A9A9A;
@@ -601,7 +623,8 @@
         </a>
 
         <!-- Card 2: Rebalancer -->
-        <a href="cases/rebalancer/" class="case-card">
+        <div class="case-card">
+          <a href="cases/rebalancer/" class="case-card-stretch" aria-label="View Rebalancer case"></a>
           <div class="case-thumb">
             <img src="assets/images/rebalancer/rebalancer-hero.webp" alt="Rebalancer" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
@@ -612,9 +635,12 @@
             <span class="case-tag">Crypto Rebalancing · Mobile app</span>
             <p class="case-role">Solo Lead UX + AI — design and build with Claude Code</p>
             <p class="case-result">Designed and built solo, from concept to App Store</p>
-            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
+            <div class="case-links-row">
+              <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
+              <a href="https://apps.apple.com/ua/app/rebalancer-tool/id6767200669" class="case-store-link" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)">App Store ↗</a>
+            </div>
           </div>
-        </a>
+        </div>
 
         <!-- Card 3: DobroDoc+ -->
         <a href="cases/dobrodoc/" class="case-card">
