@@ -134,6 +134,84 @@
     }
     .footer-right a:hover::after { width: 100%; }
 
+    /* ═══ PHASE 3 ADDITIONS ═══ */
+
+    /* Stage/pipeline flow — §03 process diagram + §06 AI→Gemini graphic.
+       Nodes + arrows, horizontal on desktop; on mobile it stacks with the
+       arrow rotated into a downward connector. Adapts Halliburton's
+       .pipeline-flow to this page's Inter + card styling. */
+    .flow { display: flex; align-items: stretch; gap: 8px; margin-top: 24px; }
+    .flow-node {
+      flex: 1; min-width: 0;
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 20px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .flow-node-title { font-size: 16px; font-weight: 500; color: #1A1A1A; }
+    .flow-node-line { font-size: 13px; color: #6B6B6B; line-height: 1.5; }
+    .flow-arrow {
+      color: #C0BDB8; font-size: 18px; line-height: 1;
+      display: flex; align-items: center; flex-shrink: 0;
+    }
+    .flow--compact { max-width: 440px; }
+    .flow--compact .flow-node { padding: 14px 16px; }
+    .flow--compact .flow-node-title { font-size: 14px; }
+
+    /* Localization (§06) — focal stat + native-script language pills */
+    .loc-stat { display: flex; align-items: baseline; gap: 12px; margin-top: 24px; }
+    .loc-stat-number { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
+    .loc-stat-label { font-size: 16px; color: #6B6B6B; }
+    .loc-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; max-width: 640px; }
+    .loc-pill {
+      font-size: 13px; color: #1A1A1A; white-space: nowrap;
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 100px; padding: 5px 12px; line-height: 1.4;
+    }
+
+    /* iPhone frames (§05) — CSS device mock + placeholder fill. Real
+       screenshots drop into .phone-shot (absolute, object-fit:cover). */
+    .phone-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 24px; margin-top: 32px; justify-items: center; max-width: 560px; }
+    .phone-figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .phone-frame {
+      position: relative; width: 100%; max-width: 208px; aspect-ratio: 9 / 19.5;
+      background: #1A1A1A; border-radius: 30px; padding: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    .phone-screen {
+      position: relative; width: 100%; height: 100%;
+      background: #EEEDEA; border-radius: 24px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phone-island {
+      position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
+      width: 34%; height: 20px; background: #1A1A1A; border-radius: 100px; z-index: 2;
+    }
+    .phone-placeholder { font-size: 12px; color: #9A9A9A; text-align: center; padding: 0 12px; }
+    .phone-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    .phone-caption { font-size: 13px; color: #6B6B6B; text-align: center; line-height: 1.5; max-width: 208px; }
+
+    /* Phase 3 — mobile: flow stacks with a downward connector */
+    @media (max-width: 640px) {
+      .flow { flex-direction: column; gap: 6px; }
+      .flow-arrow { transform: rotate(90deg); align-self: center; padding: 2px 0; }
+      .flow--compact { max-width: 100%; }
+    }
+    /* Phase 3 — mobile: phone row → contained horizontal scroll with peek
+       (same mechanism as Halliburton's card rows; scrolls internally, never
+       widens the page). Container is tabindex=0 role=group for keyboard use. */
+    @media (max-width: 600px) {
+      .phone-grid {
+        display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start;
+        max-width: 100%; min-width: 0; gap: 16px;
+        overflow-x: auto; overflow-y: hidden;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+      }
+      .phone-grid::-webkit-scrollbar { display: none; }
+      .phone-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .phone-grid > .phone-figure { flex: 0 0 62%; scroll-snap-align: start; }
+    }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
       .case-hero-image { width: 100%; margin-left: 0; }
@@ -201,7 +279,23 @@
       <h2 class="section-heading">Design-to-code, without the handoff</h2>
       <p class="section-text">No Figma, no mockups, no handoff. I built Rebalancer directly in code with Claude Code &mdash; design decisions and implementation happening in the same place, at the same time.</p>
       <p class="section-text">The method was disciplined, not improvised. Every change followed the same loop: Diagnose &rarr; Plan &rarr; Implement. First understand the current state, then agree on a precise plan, then implement it surgically &mdash; one small, reviewable change at a time. It kept a solo, AI-built product from turning into chaos.</p>
-      <p class="section-text">The hardest part wasn't the interface &mdash; it was everything behind it. Notification servers, and APIs that had to work across different countries and regions, were the real challenge. As a designer, this meant working through unfamiliar backend territory &mdash; and the diagnose-plan-implement loop is what made it manageable.</p>
+      <div class="flow" role="group" aria-label="Process loop: Diagnose, then Plan, then Implement">
+        <div class="flow-node">
+          <p class="flow-node-title">Diagnose</p>
+          <p class="flow-node-line">Understand the current state first</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node">
+          <p class="flow-node-title">Plan</p>
+          <p class="flow-node-line">Agree on a precise plan</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node">
+          <p class="flow-node-title">Implement</p>
+          <p class="flow-node-line">One small, reviewable change at a time</p>
+        </div>
+      </div>
+      <p class="section-text" style="margin-top:32px;">The hardest part wasn't the interface &mdash; it was everything behind it. Notification servers, and APIs that had to work across different countries and regions, were the real challenge. As a designer, this meant working through unfamiliar backend territory &mdash; and the diagnose-plan-implement loop is what made it manageable.</p>
       <p class="section-text">From idea to App Store: three months.</p>
     </section>
 
@@ -211,17 +305,14 @@
       <h2 class="section-heading">What it actually does</h2>
       <div class="card-grid-3">
         <div class="card">
-          <p class="card-number">01</p>
           <p class="card-title">Custom pairs</p>
           <p class="card-desc">Create and track altcoin pairs no exchange or wallet shows &mdash; ALT/ALT directly, not routed through USDT.</p>
         </div>
         <div class="card">
-          <p class="card-number">02</p>
           <p class="card-title">Rebalancing notifications</p>
           <p class="card-desc">Get alerted when a pair hits the moment to rebalance &mdash; no more constant manual checking.</p>
         </div>
         <div class="card">
-          <p class="card-number">03</p>
           <p class="card-title">Coin recalculation</p>
           <p class="card-desc">Track how your holdings recalculate as prices move, so you always know where your portfolio actually stands.</p>
         </div>
@@ -233,7 +324,44 @@
       <p class="section-label">05 &mdash; Screens</p>
       <h2 class="section-heading">Inside the app</h2>
       <p class="section-text">A look at the core flows &mdash; custom pairs, the rebalance simulator, notifications, and live coin tracking.</p>
-      <p class="section-note">iPhone screenshots &mdash; Phase 3</p>
+      <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
+        <div class="phone-figure">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-island"></div>
+              <span class="phone-placeholder">Screenshot coming soon</span>
+            </div>
+          </div>
+          <p class="phone-caption">Custom pairs &mdash; create and track ALT/ALT pairs</p>
+        </div>
+        <div class="phone-figure">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-island"></div>
+              <span class="phone-placeholder">Screenshot coming soon</span>
+            </div>
+          </div>
+          <p class="phone-caption">Rebalance simulator &mdash; model a rebalance before you act</p>
+        </div>
+        <div class="phone-figure">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-island"></div>
+              <span class="phone-placeholder">Screenshot coming soon</span>
+            </div>
+          </div>
+          <p class="phone-caption">Notifications &mdash; alerts when the moment arrives</p>
+        </div>
+        <div class="phone-figure">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="phone-island"></div>
+              <span class="phone-placeholder">Screenshot coming soon</span>
+            </div>
+          </div>
+          <p class="phone-caption">Coin tracking &mdash; watch holdings recalculate live</p>
+        </div>
+      </div>
     </section>
 
     <!-- 06 — LOCALIZATION -->
@@ -243,7 +371,55 @@
       <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
       <p class="section-text">The real complexity wasn't the languages themselves &mdash; it was the snowball behind them: every new country added its own regional requirements, and the backend had to keep up. Currently awaiting App Store approval for the full 31-language rollout.</p>
-      <p class="section-note">Localization visual (31 + language pills + AI&rarr;Gemini diagram) &mdash; Phase 3</p>
+
+      <div class="loc-stat">
+        <span class="loc-stat-number">31</span>
+        <span class="loc-stat-label">languages</span>
+      </div>
+      <div class="loc-pills">
+        <span class="loc-pill">English</span>
+        <span class="loc-pill">Espa&ntilde;ol</span>
+        <span class="loc-pill">Fran&ccedil;ais</span>
+        <span class="loc-pill">Deutsch</span>
+        <span class="loc-pill">Italiano</span>
+        <span class="loc-pill">Nederlands</span>
+        <span class="loc-pill">Portugu&ecirc;s (BR)</span>
+        <span class="loc-pill">Portugu&ecirc;s (PT)</span>
+        <span class="loc-pill">Русский</span>
+        <span class="loc-pill">Українська</span>
+        <span class="loc-pill">Polski</span>
+        <span class="loc-pill">Čeština</span>
+        <span class="loc-pill">Slovenčina</span>
+        <span class="loc-pill">Hrvatski</span>
+        <span class="loc-pill">Magyar</span>
+        <span class="loc-pill">Rom&acirc;n&#259;</span>
+        <span class="loc-pill">Български</span>
+        <span class="loc-pill">Ελληνικά</span>
+        <span class="loc-pill">T&uuml;rk&ccedil;e</span>
+        <span class="loc-pill">Suomi</span>
+        <span class="loc-pill">Svenska</span>
+        <span class="loc-pill">Norsk</span>
+        <span class="loc-pill">Dansk</span>
+        <span class="loc-pill">简体中文</span>
+        <span class="loc-pill">繁體中文</span>
+        <span class="loc-pill">日本語</span>
+        <span class="loc-pill">한국어</span>
+        <span class="loc-pill">हिन्दी</span>
+        <span class="loc-pill">ไทย</span>
+        <span class="loc-pill">Bahasa Indonesia</span>
+        <span class="loc-pill">Tiếng Việt</span>
+      </div>
+      <div class="flow flow--compact" style="margin-top:28px;" role="group" aria-label="Translation pipeline: AI translation, then Gemini quality pass">
+        <div class="flow-node">
+          <p class="flow-node-title">AI translation</p>
+          <p class="flow-node-line">Generate all 31 languages</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node">
+          <p class="flow-node-title">Gemini pass</p>
+          <p class="flow-node-line">Second-pass quality review</p>
+        </div>
+      </div>
     </section>
 
     <!-- 07 — OUTCOME -->
