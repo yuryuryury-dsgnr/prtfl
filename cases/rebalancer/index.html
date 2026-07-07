@@ -212,6 +212,44 @@
       .phone-grid > .phone-figure { flex: 0 0 62%; scroll-snap-align: start; }
     }
 
+    /* ═══ RB TEXT-BREAKUP ACCENTS (unique rb- prefix — no existing class reused) ═══ */
+
+    /* §01 — before/after route contrast: ALT→USDT→ALT vs ALT→ALT */
+    .rb-contrast { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; max-width: 520px; }
+    .rb-route {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 16px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .rb-route--direct { border-color: rgba(59,130,246,0.35); }
+    .rb-route-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-route--direct .rb-route-label { color: #3B82F6; }
+    .rb-route-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .rb-token { font-size: 13px; font-weight: 500; color: #1A1A1A; background: #F0EFEC; border-radius: 8px; padding: 6px 12px; line-height: 1; }
+    .rb-token--muted { color: #9A9A9A; }
+    .rb-arrow { color: #C0BDB8; font-size: 15px; line-height: 1; flex-shrink: 0; }
+    .rb-route-note { font-size: 12px; color: #6B6B6B; }
+
+    /* §02 — "1 person = whole stack": big numeral + tag-style layer chips
+       (chips use the flat #F0EFEC tag texture, distinct from §06's bordered pills) */
+    .rb-stack { margin-top: 28px; }
+    .rb-stack-head { display: flex; align-items: baseline; gap: 12px; }
+    .rb-stack-num { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
+    .rb-stack-caption { font-size: 16px; color: #6B6B6B; }
+    .rb-stack-layers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; max-width: 560px; }
+    .rb-layer { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 4px 10px; line-height: 1.5; white-space: nowrap; }
+
+    /* §03 — focal "3 months" stat (matches the §06 "31" family) */
+    .rb-stat { display: flex; align-items: baseline; gap: 12px; margin-top: 28px; }
+    .rb-stat-num { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
+    .rb-stat-label { font-size: 16px; color: #6B6B6B; }
+
+    /* §07 — compact outcome stat trio (borderless, same stat family, smaller) */
+    .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
+    .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
+    .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
+    .rb-stat-item-label { font-size: 13px; color: #6B6B6B; }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
       .case-hero-image { width: 100%; margin-left: 0; }
@@ -262,6 +300,28 @@
       <p class="section-text">Exchanges and wallets only show altcoins priced against USDT. But rebalancing between two altcoins directly &mdash; an ALT/ALT pair &mdash; isn't something any of them track.</p>
       <p class="section-text">Before Rebalancer, following a custom pair meant a clumsy workaround: converting through USDT on an exchange, doing the math by hand, and constantly checking back to catch the right moment. No exchange or wallet offered this natively.</p>
       <p class="section-text">For advanced users who rebalance regularly, that meant two real problems: no way to track their own custom pairs, and no way to know when a rebalancing moment had actually arrived.</p>
+      <div class="rb-contrast" role="group" aria-label="Old routed path versus Rebalancer's direct path">
+        <div class="rb-route">
+          <span class="rb-route-label">Before</span>
+          <div class="rb-route-flow">
+            <span class="rb-token">ALT</span>
+            <span class="rb-arrow" aria-hidden="true">&rarr;</span>
+            <span class="rb-token rb-token--muted">USDT</span>
+            <span class="rb-arrow" aria-hidden="true">&rarr;</span>
+            <span class="rb-token">ALT</span>
+          </div>
+          <span class="rb-route-note">Routed through USDT &middot; math by hand &middot; keep checking back</span>
+        </div>
+        <div class="rb-route rb-route--direct">
+          <span class="rb-route-label">Rebalancer</span>
+          <div class="rb-route-flow">
+            <span class="rb-token">ALT</span>
+            <span class="rb-arrow" aria-hidden="true">&rarr;</span>
+            <span class="rb-token">ALT</span>
+          </div>
+          <span class="rb-route-note">Direct custom pair, tracked natively</span>
+        </div>
+      </div>
     </section>
 
     <!-- 02 — MY ROLE -->
@@ -270,6 +330,21 @@
       <h2 class="section-heading">One person, whole product</h2>
       <p class="section-text">Solo &mdash; from idea to App Store.</p>
       <p class="section-text">I owned every layer of Rebalancer myself: the product concept, the UX and interface design, and the full build &mdash; iOS app, backend, servers, APIs, and notifications &mdash; all developed with Claude Code. No team, no handoff, no separate engineering.</p>
+      <div class="rb-stack">
+        <div class="rb-stack-head">
+          <span class="rb-stack-num">1</span>
+          <span class="rb-stack-caption">person &middot; whole stack</span>
+        </div>
+        <div class="rb-stack-layers">
+          <span class="rb-layer">Concept</span>
+          <span class="rb-layer">UX &amp; design</span>
+          <span class="rb-layer">iOS app</span>
+          <span class="rb-layer">Backend</span>
+          <span class="rb-layer">Servers</span>
+          <span class="rb-layer">APIs</span>
+          <span class="rb-layer">Notifications</span>
+        </div>
+      </div>
       <p class="section-text">This is what a designer can ship end-to-end when AI collapses the gap between design and code.</p>
     </section>
 
@@ -296,7 +371,10 @@
         </div>
       </div>
       <p class="section-text" style="margin-top:32px;">The hardest part wasn't the interface &mdash; it was everything behind it. Notification servers, and APIs that had to work across different countries and regions, were the real challenge. As a designer, this meant working through unfamiliar backend territory &mdash; and the diagnose-plan-implement loop is what made it manageable.</p>
-      <p class="section-text">From idea to App Store: three months.</p>
+      <div class="rb-stat">
+        <span class="rb-stat-num">3</span>
+        <span class="rb-stat-label">months &mdash; idea to App Store</span>
+      </div>
     </section>
 
     <!-- 04 — KEY FEATURES -->
@@ -428,6 +506,20 @@
       <h2 class="section-heading">Live, and shipped solo</h2>
       <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
       <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
+      <div class="rb-stats-row">
+        <div class="rb-stat-item">
+          <span class="rb-stat-item-value">Live</span>
+          <span class="rb-stat-item-label">on the App Store</span>
+        </div>
+        <div class="rb-stat-item">
+          <span class="rb-stat-item-value">31</span>
+          <span class="rb-stat-item-label">languages awaiting rollout</span>
+        </div>
+        <div class="rb-stat-item">
+          <span class="rb-stat-item-value">Solo</span>
+          <span class="rb-stat-item-label">concept &rarr; App Store</span>
+        </div>
+      </div>
     </section>
 
     <!-- 08 — REFLECTION -->
