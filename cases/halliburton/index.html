@@ -272,6 +272,16 @@
       border-radius: 12px;
       padding: 24px;
     }
+    /* §04 personas: cards are wrapped in .persona-scroller for the mobile row.
+       On tablet/desktop the wrapper dissolves (display:contents) and order re-interleaves
+       the two labels between the card pairs so the layout stays identical to before. */
+    .persona-scroller { display: contents; }
+    .persona-section-grid > .persona-section-label:nth-of-type(1) { order: 1; }
+    .persona-scroller > .persona-detail-card:nth-child(1) { order: 2; }
+    .persona-scroller > .persona-detail-card:nth-child(2) { order: 3; }
+    .persona-section-grid > .persona-section-label:nth-of-type(2) { order: 4; }
+    .persona-scroller > .persona-detail-card:nth-child(3) { order: 5; }
+    .persona-scroller > .persona-detail-card:nth-child(4) { order: 6; }
     .persona-detail-header {
       display: flex;
       align-items: center;
@@ -1026,6 +1036,55 @@
       .phase-toggle::-webkit-scrollbar { display: none; }
     }
 
+    /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ——— */
+    @media (max-width: 600px) {
+      .problem-grid,
+      .persona-grid,
+      .reflection-grid,
+      .persona-scroller,
+      .tg-cards {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+      }
+      /* token rows sit inside the .tg-graph grid — let the grid items shrink so the
+         rows stay viewport-bounded and scroll internally instead of widening the page */
+      .tg-graph > .tg-col { min-width: 0; }
+      .problem-grid::-webkit-scrollbar,
+      .persona-grid::-webkit-scrollbar,
+      .reflection-grid::-webkit-scrollbar,
+      .persona-scroller::-webkit-scrollbar,
+      .tg-cards::-webkit-scrollbar { display: none; }
+      .problem-grid:focus-visible,
+      .persona-grid:focus-visible,
+      .reflection-grid:focus-visible,
+      .persona-scroller:focus-visible,
+      .tg-cards:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .problem-grid > .problem-card,
+      .persona-grid > .persona-card,
+      .reflection-grid > .reflection-col,
+      .persona-scroller > .persona-detail-card,
+      .tg-cards > .tg-card { scroll-snap-align: start; }
+      /* item widths sized as a fraction of the strip so a next-card peek is guaranteed */
+      .problem-grid > .problem-card { flex: 0 0 80%; }
+      .persona-grid > .persona-card { flex: 0 0 64%; }
+      .reflection-grid > .reflection-col { flex: 0 0 80%; }
+      .persona-scroller > .persona-detail-card { flex: 0 0 82%; }
+      .tg-cards > .tg-card { flex: 0 0 42%; }
+      /* §04: grid → block so both labels stack above the single scroller row */
+      .persona-section-grid { display: block; }
+      .persona-scroller { gap: 16px; }
+    }
+
     /* ——— MOBILE FLOATING TOC PILL ——— */
     .toc-pill {
       display: none;
@@ -1439,7 +1498,7 @@
       <p class="section-label">01 &mdash; Problem &amp; Context</p>
       <h2 class="section-heading">From days of searching to minutes of finding</h2>
 
-      <div class="problem-grid" style="margin-top:48px;">
+      <div class="problem-grid" style="margin-top:48px;" tabindex="0" role="group" aria-label="Problem, goal, and success — scrollable">
         <div class="problem-card">
           <p class="problem-card-label">Problem</p>
           <h3>Scattered and unfindable</h3>
@@ -1530,7 +1589,7 @@
           <details>
             <summary>Persona groups</summary>
             <div class="accordion-body">
-              <div class="persona-grid">
+              <div class="persona-grid" tabindex="0" role="group" aria-label="Persona snapshots — scrollable">
                 <div class="persona-card">
                   <div class="persona-avatar">G1</div>
                   <div>
@@ -1703,6 +1762,8 @@
 
       <div class="persona-section-grid" style="margin-top:24px;">
         <p class="persona-section-label">Users</p>
+        <p class="persona-section-label" style="margin-top:8px;">Creators &amp; Approvers</p>
+        <div class="persona-scroller" tabindex="0" role="group" aria-label="Personas, scrollable">
         <div class="persona-detail-card">
           <div class="persona-detail-header">
             <div class="persona-detail-avatar users">G1</div>
@@ -1723,7 +1784,6 @@
             <tr><td>Pain</td><td>Too much raw data, too few curated business-ready reports; hard to trust freshness.</td></tr>
           </table>
         </div>
-        <p class="persona-section-label" style="margin-top:8px;">Creators &amp; Approvers</p>
         <div class="persona-detail-card">
           <div class="persona-detail-header">
             <div class="persona-detail-avatar creators">G3</div>
@@ -1744,6 +1804,7 @@
             <tr><td>Pain</td><td>Heavy manual documentation work; poor visibility into who uses their products.</td></tr>
           </table>
         </div>
+        </div><!-- end .persona-scroller -->
       </div>
     </section>
 
@@ -1843,7 +1904,7 @@
               <!-- PRIMITIVES -->
               <div class="tg-col">
                 <div class="tg-col-header">Primitives</div>
-                <div class="tg-cards">
+                <div class="tg-cards" tabindex="0" role="group" aria-label="Primitive tokens — scrollable">
 
                   <div class="tg-card" data-id="prim-red50" data-tier="primitive">
                     <div class="tg-card-inner">
@@ -1959,7 +2020,7 @@
               <!-- SEMANTIC -->
               <div class="tg-col">
                 <div class="tg-col-header">Semantic</div>
-                <div class="tg-cards">
+                <div class="tg-cards" tabindex="0" role="group" aria-label="Semantic tokens — scrollable">
 
                   <div class="tg-card" data-id="sem-prim-bg" data-tier="semantic">
                     <div class="tg-card-body">
@@ -2057,7 +2118,7 @@
               <!-- COMPONENT -->
               <div class="tg-col">
                 <div class="tg-col-header">Component</div>
-                <div class="tg-cards">
+                <div class="tg-cards" tabindex="0" role="group" aria-label="Component tokens — scrollable">
 
                   <div class="tg-card" data-id="comp-btn-prim-bg" data-tier="component">
                     <div class="tg-card-body">
@@ -2264,7 +2325,7 @@
     <section id="section-10" class="case-section reveal">
       <p class="section-label">10 &mdash; Reflection</p>
       <h2 class="section-heading">What I learned along the way</h2>
-      <div class="reflection-grid">
+      <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
         <div class="reflection-col">
           <p class="reflection-title">What I'd do differently</p>
           <p class="reflection-text">Involve data governance stakeholders earlier in the process. Their requirements only became clear mid-project, which meant reworking parts of the access request flow that were already in motion.</p>
