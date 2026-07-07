@@ -1041,6 +1041,7 @@
       .problem-grid,
       .persona-grid,
       .reflection-grid,
+      .validation-grid,
       .persona-scroller,
       .tg-cards {
         display: flex;
@@ -1062,22 +1063,26 @@
       .problem-grid::-webkit-scrollbar,
       .persona-grid::-webkit-scrollbar,
       .reflection-grid::-webkit-scrollbar,
+      .validation-grid::-webkit-scrollbar,
       .persona-scroller::-webkit-scrollbar,
       .tg-cards::-webkit-scrollbar { display: none; }
       .problem-grid:focus-visible,
       .persona-grid:focus-visible,
       .reflection-grid:focus-visible,
+      .validation-grid:focus-visible,
       .persona-scroller:focus-visible,
       .tg-cards:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
       .problem-grid > .problem-card,
       .persona-grid > .persona-card,
       .reflection-grid > .reflection-col,
+      .validation-grid > .validation-card,
       .persona-scroller > .persona-detail-card,
       .tg-cards > .tg-card { scroll-snap-align: start; }
       /* item widths sized as a fraction of the strip so a next-card peek is guaranteed */
       .problem-grid > .problem-card { flex: 0 0 80%; }
       .persona-grid > .persona-card { flex: 0 0 64%; }
       .reflection-grid > .reflection-col { flex: 0 0 80%; }
+      .validation-grid > .validation-card { flex: 0 0 82%; }
       .persona-scroller > .persona-detail-card { flex: 0 0 82%; }
       .tg-cards > .tg-card { flex: 0 0 42%; }
       /* §04: grid → block so both labels stack above the single scroller row */
@@ -2208,7 +2213,7 @@
       <h2 class="section-heading">Testing with the people who'd actually use it</h2>
       <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
 
-      <div class="validation-grid">
+      <div class="validation-grid" tabindex="0" role="group" aria-label="Validation sessions — scrollable">
         <div class="validation-card">
           <h3 class="validation-card-title">Session 1 &mdash; Data POD Leads</h3>
           <p class="validation-card-desc">Design review with Data POD Leads &mdash; the technical owners who create and maintain data products. Validated roles, publishing workflows, and access management.</p>
