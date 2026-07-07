@@ -90,6 +90,27 @@
     }
     .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
 
+    /* ——— CARDS ——— */
+    .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .card-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+    .card {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 24px;
+    }
+    .card-number { font-size: 14px; font-weight: 500; color: #3B82F6; margin-bottom: 8px; }
+    .card-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .card-desc { font-size: 14px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .card-tag {
+      font-size: 11px; color: #6B6B6B; background: #F0EFEC;
+      padding: 3px 8px; border-radius: 4px;
+    }
+
+    /* ——— REFLECTION ——— */
+    .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
+    .reflection-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .reflection-text { font-size: 14px; color: #6B6B6B; line-height: 1.6; }
+
     /* ——— NEXT CASE ——— */
     .next-case {
       margin-top: 80px; padding: 32px 0;
@@ -123,6 +144,9 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
       .case-section { padding: 56px 0 0; }
+      .card-grid-3 { grid-template-columns: 1fr; }
+      .card-grid-2 { grid-template-columns: 1fr; }
+      .reflection-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -156,57 +180,94 @@
     <!-- 01 — PROBLEM & CONTEXT -->
     <section class="case-section">
       <p class="section-label">01 &mdash; Problem &amp; Context</p>
-      <h2 class="section-heading">A focused tool for crypto rebalancing</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <h2 class="section-heading">Tracking pairs that no exchange shows</h2>
+      <p class="section-text">Exchanges and wallets only show altcoins priced against USDT. But rebalancing between two altcoins directly &mdash; an ALT/ALT pair &mdash; isn't something any of them track.</p>
+      <p class="section-text">Before Rebalancer, following a custom pair meant a clumsy workaround: converting through USDT on an exchange, doing the math by hand, and constantly checking back to catch the right moment. No exchange or wallet offered this natively.</p>
+      <p class="section-text">For advanced users who rebalance regularly, that meant two real problems: no way to track their own custom pairs, and no way to know when a rebalancing moment had actually arrived.</p>
     </section>
 
     <!-- 02 — MY ROLE -->
     <section class="case-section">
       <p class="section-label">02 &mdash; My Role</p>
-      <h2 class="section-heading">Solo, from idea to App Store</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <h2 class="section-heading">One person, whole product</h2>
+      <p class="section-text">Solo &mdash; from idea to App Store.</p>
+      <p class="section-text">I owned every layer of Rebalancer myself: the product concept, the UX and interface design, and the full build &mdash; iOS app, backend, servers, APIs, and notifications &mdash; all developed with Claude Code. No team, no handoff, no separate engineering.</p>
+      <p class="section-text">This is what a designer can ship end-to-end when AI collapses the gap between design and code.</p>
     </section>
 
     <!-- 03 — THE PROCESS -->
     <section class="case-section">
       <p class="section-label">03 &mdash; The Process</p>
-      <h2 class="section-heading">Diagnose, plan, implement &mdash; designed in code</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <h2 class="section-heading">Design-to-code, without the handoff</h2>
+      <p class="section-text">No Figma, no mockups, no handoff. I built Rebalancer directly in code with Claude Code &mdash; design decisions and implementation happening in the same place, at the same time.</p>
+      <p class="section-text">The method was disciplined, not improvised. Every change followed the same loop: Diagnose &rarr; Plan &rarr; Implement. First understand the current state, then agree on a precise plan, then implement it surgically &mdash; one small, reviewable change at a time. It kept a solo, AI-built product from turning into chaos.</p>
+      <p class="section-text">The hardest part wasn't the interface &mdash; it was everything behind it. Notification servers, and APIs that had to work across different countries and regions, were the real challenge. As a designer, this meant working through unfamiliar backend territory &mdash; and the diagnose-plan-implement loop is what made it manageable.</p>
+      <p class="section-text">From idea to App Store: three months.</p>
     </section>
 
     <!-- 04 — KEY FEATURES -->
     <section class="case-section">
       <p class="section-label">04 &mdash; Key Features</p>
-      <h2 class="section-heading">The features that do the work</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <h2 class="section-heading">What it actually does</h2>
+      <div class="card-grid-3">
+        <div class="card">
+          <p class="card-number">01</p>
+          <p class="card-title">Custom pairs</p>
+          <p class="card-desc">Create and track altcoin pairs no exchange or wallet shows &mdash; ALT/ALT directly, not routed through USDT.</p>
+        </div>
+        <div class="card">
+          <p class="card-number">02</p>
+          <p class="card-title">Rebalancing notifications</p>
+          <p class="card-desc">Get alerted when a pair hits the moment to rebalance &mdash; no more constant manual checking.</p>
+        </div>
+        <div class="card">
+          <p class="card-number">03</p>
+          <p class="card-title">Coin recalculation</p>
+          <p class="card-desc">Track how your holdings recalculate as prices move, so you always know where your portfolio actually stands.</p>
+        </div>
+      </div>
     </section>
 
     <!-- 05 — SCREENS -->
     <section class="case-section">
       <p class="section-label">05 &mdash; Screens</p>
       <h2 class="section-heading">Inside the app</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <p class="section-text">A look at the core flows &mdash; custom pairs, the rebalance simulator, notifications, and live coin tracking.</p>
+      <p class="section-note">iPhone screenshots &mdash; Phase 3</p>
     </section>
 
     <!-- 06 — LOCALIZATION -->
     <section class="case-section">
       <p class="section-label">06 &mdash; Localization</p>
-      <h2 class="section-heading">31 languages</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <h2 class="section-heading">One person, 31 languages</h2>
+      <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
+      <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
+      <p class="section-text">The real complexity wasn't the languages themselves &mdash; it was the snowball behind them: every new country added its own regional requirements, and the backend had to keep up. Currently awaiting App Store approval for the full 31-language rollout.</p>
+      <p class="section-note">Localization visual (31 + language pills + AI&rarr;Gemini diagram) &mdash; Phase 3</p>
     </section>
 
     <!-- 07 — OUTCOME -->
     <section class="case-section">
       <p class="section-label">07 &mdash; Outcome</p>
-      <h2 class="section-heading">Live on the App Store</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <h2 class="section-heading">Live, and shipped solo</h2>
+      <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
+      <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
     </section>
 
     <!-- 08 — REFLECTION -->
     <section class="case-section">
       <p class="section-label">08 &mdash; Reflection</p>
-      <h2 class="section-heading">What I learned</h2>
-      <p class="section-text">[content coming in next phase]</p>
+      <h2 class="section-heading">What the build taught me</h2>
+      <div class="reflection-grid">
+        <div>
+          <p class="reflection-title">What I'd do differently</p>
+          <p class="reflection-text">Underestimating the backend was the main misstep. The interface came together fast; the servers, notification infrastructure, and region-specific APIs were where the real time went. Next time I'd scope the invisible parts first.</p>
+        </div>
+        <div>
+          <p class="reflection-title">What I learned</p>
+          <p class="reflection-text">The line between designer and developer is thinner than it used to be. With AI, I shipped something end-to-end that would normally take a team &mdash; but only because I worked with discipline, not shortcuts. AI accelerates the parts you understand and is useless for the parts you don't; the diagnose-plan-implement loop is what kept a solo build from becoming chaos. The best results came when I knew exactly what I wanted before asking.</p>
+        </div>
+      </div>
     </section>
 
     <!-- NEXT CASE -->
