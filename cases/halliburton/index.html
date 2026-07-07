@@ -490,6 +490,7 @@
     .mockup-gallery .phase-toggle::-webkit-scrollbar { display: none; }
     @media (max-width: 1024px) {
       .mockup-gallery { width: 100%; margin-left: 0; }
+      .case-hero-image { width: 100%; margin-left: 0; }
     }
     @media (max-width: 640px) {
       .mg-toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
@@ -1005,6 +1006,13 @@
       .page-layout { grid-template-columns: 1fr; gap: 0; }
       .toc { display: none; }
       .problem-grid { grid-template-columns: 1fr; }
+      /* Round 1 mobile fixes */
+      .persona-section-grid { grid-template-columns: 1fr; }
+      .case-section { padding: 52px 0 0; }
+      .section-heading { line-height: 1.2; }
+      .phase-toggle-btn { padding-top: 14px; padding-bottom: 14px; }
+      .case-header-back { position: relative; }
+      .case-header-back::before { content: ''; position: absolute; inset: -11px -10px; }
     }
 
     /* ——— MOBILE FLOATING TOC PILL ——— */
