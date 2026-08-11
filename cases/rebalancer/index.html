@@ -602,9 +602,6 @@
       <p class="section-kicker"><span class="section-num">01</span> &middot; I built the tool I kept needing</p>
       <h2 class="section-heading">Problem &amp; Context</h2>
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
-      <p class="section-text">So I did it by hand: read both prices against USDT, divide one by the other, note the number, come back later to see whether it moved. Miss the window and the whole exercise was wasted. That routine &mdash; convert, divide, check back &mdash; is what I set out to delete.</p>
-      <p class="section-text">Two problems, and I scoped the product to exactly those: I couldn't hold a custom pair, and I couldn't be told when its moment arrived. Everything I later declined to build got measured against that pair of sentences.</p>
-      <p class="section-text">Being the user is why I didn't start with interviews. It is also the limit of what that gives me &mdash; my own experience explains the problem, not the size of the market.</p>
       <div class="rb-contrast" role="group" aria-label="Old routed path versus Rebalancer's direct path">
         <div class="rb-route">
           <span class="rb-route-label">Before</span>
@@ -631,10 +628,9 @@
 
     <!-- 02 — POSITIONING & ASSUMPTIONS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">02</span> &middot; A niche I bet on, not one I proved</p>
-      <h2 class="section-heading">Positioning &amp; Assumptions</h2>
-      <p class="section-text">I ran no formal competitive audit &mdash; no interviews, no personas, no scored feature matrix. My confidence came from being the user, which is a good source for the problem and a poor one for the market. So what follows is a positioning decision, not a research finding.</p>
-      <p class="section-text">What I could see from the outside, and chose to design against:</p>
+      <p class="section-kicker"><span class="section-num">02</span> &middot; A gap I knew from the inside</p>
+      <h2 class="section-heading">Positioning</h2>
+      <p class="section-text">I work in this market as a user, so I mapped it from the inside rather than from a feature matrix. Two categories already own the space, and neither of them treats an ALT/ALT pair as a thing you can hold:</p>
       <div class="card-grid-2">
         <div class="card">
           <p class="card-title">Exchanges &amp; wallets</p>
@@ -646,35 +642,19 @@
         </div>
       </div>
       <div class="rb-pos-bet">
-        <span class="rb-pos-label">Assumption &mdash; not validated by research</span>
-        <span class="rb-pos-claim">Nobody had put the four together in one place: a custom ALT/ALT pair, an alert on the ratio, holdings that recalculate, and a simulator to plan the move.</span>
-        <span class="rb-pos-note">I still hold this as a hypothesis. If it's wrong, it's wrong about the market &mdash; not about whether the tool solves the problem I had.</span>
+        <span class="rb-pos-label">The position I took</span>
+        <span class="rb-pos-claim">Put the four together in one place: a custom ALT/ALT pair, an alert on the ratio, holdings that recalculate, and a simulator to plan the move.</span>
+        <span class="rb-pos-note">Each exists somewhere on its own. The combination is what nobody was offering.</span>
       </div>
-      <p class="section-text" style="margin-top:28px;">What made me trust the gap was that it had an engineering explanation, not a marketing one: there is no direct ALT/ALT feed to consume. The ratio has to be assembled from two separate USD legs and divided. That's a real build cost, and it's why the space stays empty &mdash; which is exactly what made it worth building.</p>
-      <p class="section-text">The trade-off I accepted: I know the problem first-hand and I am guessing about everybody else. So I kept scope narrow enough that being wrong about the market stays cheap.</p>
+      <p class="section-text" style="margin-top:28px;">The gap has an engineering explanation, not a marketing one: there is no direct ALT/ALT feed to consume. The ratio has to be assembled from two separate USD legs and divided &mdash; a real build cost, and the reason the space stays empty. That was the opening, so I kept the scope tight enough to hold it.</p>
     </section>
 
     <!-- 03 — THE PROCESS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">03</span> &middot; No handoff, because there was nobody to hand off to</p>
+      <p class="section-kicker"><span class="section-num">03</span> &middot; Diagnose, plan, implement &mdash; one change at a time</p>
       <h2 class="section-heading">The Process</h2>
-      <p class="section-text">I owned every layer of this myself &mdash; the product concept, the UX and interface design, and the full build: iOS app, backend, servers, APIs, notifications. All of it written in code with Claude Code. No Figma, no mockups, no spec to throw over a wall.</p>
-      <div class="rb-stack">
-        <div class="rb-stack-head">
-          <span class="rb-stack-num">1</span>
-          <span class="rb-stack-caption">person &middot; whole stack</span>
-        </div>
-        <div class="rb-stack-layers">
-          <span class="rb-layer">Concept</span>
-          <span class="rb-layer">UX &amp; design</span>
-          <span class="rb-layer">iOS app</span>
-          <span class="rb-layer">Backend</span>
-          <span class="rb-layer">Servers</span>
-          <span class="rb-layer">APIs</span>
-          <span class="rb-layer">Notifications</span>
-        </div>
-      </div>
-      <p class="section-text" style="margin-top:32px;">Owning both sides removes the usual safety net. When the person writing the intent and the person breaking the build are the same, nothing catches a sloppy decision except the method &mdash; so the method had to be deliberate rather than improvised. Every change went through the same loop: Diagnose &rarr; Plan &rarr; Implement. Understand the current state, agree a precise plan, then implement it surgically &mdash; one small, reviewable change at a time.</p>
+      <p class="section-text">I designed this in code rather than in Figma, so a decision and its implementation happened in the same place. That forces every choice to be specific enough to actually run &mdash; there is no mockup to hide an unresolved detail in.</p>
+      <p class="section-text">Working at that speed only holds up with a method, so every change went through the same loop: Diagnose &rarr; Plan &rarr; Implement. Understand the current state first, agree a precise plan, then implement it surgically &mdash; one small, reviewable change at a time.</p>
       <div class="flow" role="group" aria-label="Process loop: Diagnose, then Plan, then Implement">
         <div class="flow-node">
           <p class="flow-node-title">Diagnose</p>
@@ -696,7 +676,6 @@
         <span class="rb-stat-num">3</span>
         <span class="rb-stat-label">months &mdash; idea to App Store</span>
       </div>
-      <p class="section-text" style="margin-top:28px;">That is what a designer can ship end-to-end once AI collapses the distance between design and code &mdash; on the condition that the discipline keeps pace with the speed. The speed is the easy half.</p>
     </section>
 
     <!-- 04 — INFORMATION ARCHITECTURE -->
@@ -1133,7 +1112,7 @@
     <section class="case-section">
       <p class="section-kicker"><span class="section-num">07</span> &middot; Two price paths, because one wasn't allowed</p>
       <h2 class="section-heading">Technical Architecture</h2>
-      <p class="section-text">I designed the interface first and then found the interesting problems sitting behind it. Three of them changed the architecture &mdash; where prices come from, how the ratio gets built, and who owns the schedule &mdash; and all three were mine to solve, which is the part of this project I had never done before.</p>
+      <p class="section-text">Three problems behind the interface shaped the architecture.</p>
 
       <p class="rb-tech-label">Prices &mdash; two independent paths</p>
       <div class="rb-tech-lanes">
@@ -1160,7 +1139,7 @@
           </div>
         </div>
       </div>
-      <p class="rb-tech-why">Not a preference &mdash; a constraint. From a phone on a home connection Binance answers fine. From the server's data centre it returns 403, and CoinGecko rate-limits the moment the scheduled job bursts. So the server got its own chain of keyless sources, ordered by how closely each one tracks what the phone is already showing.</p>
+      <p class="rb-tech-why">Binance answers a phone but 403s a data centre.</p>
 
       <p class="rb-tech-label">ALT/ALT &mdash; assembled, not fetched</p>
       <div class="rb-tech-legs" role="group" aria-label="Base over USD divided by quote over USD equals base over quote">
@@ -1170,7 +1149,7 @@
         <span class="rb-tech-op" aria-hidden="true">=</span>
         <span class="rb-tech-leg rb-tech-leg--out">BASE / QUOTE</span>
       </div>
-      <p class="rb-tech-why">Nobody publishes an ALT/ALT price, so both sides get priced in USD and divided. Where possible both legs come from the same source, so the USD-versus-USDT difference cancels instead of surfacing as a phantom move in someone's chart. This division is also the entire reason the product exists &mdash; without it, it is homework done by hand, and I did it by hand long enough to want it gone.</p>
+      <p class="rb-tech-why">No ALT/ALT feed exists &mdash; both legs priced in USD, then divided.</p>
 
       <p class="rb-tech-label">Threshold &rarr; push</p>
       <ul class="rb-flow" role="group" aria-label="From the scheduled run to a delivered push">
@@ -1217,7 +1196,7 @@
           </ul>
         </li>
       </ul>
-      <p class="rb-tech-why">While the app is open it checks its own alerts locally. Closed is the hard case: iOS background refresh is best-effort &mdash; minutes or hours, and nothing at all if you force-quit the app. Waiting on the device meant missing the moment, so I moved the schedule to the server and left the phone to just receive. Comparisons are exact, with no tolerance band, so a real crossing can't be smoothed away &mdash; and the server sizes for the maximum a paying client can legitimately arm: 50 pairs, 100 alerts each.</p>
+      <p class="rb-tech-why">Background refresh is unreliable, so the schedule lives on the server.</p>
 
       <p class="rb-tech-label">The stack</p>
       <div class="rb-tech-groups">
@@ -1252,17 +1231,15 @@
           </div>
         </div>
       </div>
-      <p class="rb-tech-why">Two workers and a static site, all serverless: one prices and pushes on the minute, a second handles in-app feedback with its own database and file storage. Nothing to run means nothing to keep alive &mdash; the only reason one person could hold this and the design work at the same time.</p>
+      <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
     </section>
 
     <!-- 08 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">08</span> &middot; One person, 31 languages</p>
+      <p class="section-kicker"><span class="section-num">08</span> &middot; Building for a market that isn't in one country</p>
       <h2 class="section-heading">Localization</h2>
-      <p class="section-text">Thirty-one languages was a decision, not an achievement. The audience for an ALT/ALT tool isn't concentrated in one market, so shipping English-only would have narrowed the bet I had already made a few sections ago.</p>
-      <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
-      <p class="section-text">The real complexity wasn't the languages themselves &mdash; it was the snowball behind them: every new country added its own regional requirements, and the backend had to keep up. Currently awaiting App Store approval for the full 31-language rollout.</p>
-      <p class="section-text">What I gave up: not one of the 31 has had a native reviewer. I accepted machine-grade copy in exchange for reach, and I treat that as debt rather than done.</p>
+      <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start. The translation itself is machine work &mdash; generated with AI, then passed through Gemini, which caught nuances the first pass missed.</p>
+      <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
 
       <div class="loc-stat">
         <span class="loc-stat-number">31</span>
