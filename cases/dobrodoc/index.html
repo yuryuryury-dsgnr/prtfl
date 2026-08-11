@@ -277,6 +277,12 @@
     .footer-right a:hover::after { width: 100%; }
 
     /* ——— RESPONSIVE ——— */
+    /* Collapse the hero bleed before the viewport gets narrower than the
+       gutters it borrows: below this the -80px pull runs past the screen
+       edge and drags the page sideways. */
+    @media (max-width: 1024px) {
+      .case-hero-image { width: 100%; margin-left: 0; }
+    }
     @media (max-width: 768px) {
       .case-hero h1 { font-size: 36px; }
       .card-grid-3 { grid-template-columns: 1fr; }
