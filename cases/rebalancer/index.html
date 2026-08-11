@@ -593,10 +593,11 @@
     <!-- 01 — PROBLEM & CONTEXT -->
     <section class="case-section">
       <p class="section-label">01 &mdash; Problem &amp; Context</p>
-      <h2 class="section-heading">Tracking pairs that no exchange shows</h2>
-      <p class="section-text">Exchanges and wallets only show altcoins priced against USDT. But rebalancing between two altcoins directly &mdash; an ALT/ALT pair &mdash; isn't something any of them track.</p>
-      <p class="section-text">Before Rebalancer, following a custom pair meant a clumsy workaround: converting through USDT on an exchange, doing the math by hand, and constantly checking back to catch the right moment. No exchange or wallet offered this natively.</p>
-      <p class="section-text">For advanced users who rebalance regularly, that meant two real problems: no way to track their own custom pairs, and no way to know when a rebalancing moment had actually arrived.</p>
+      <h2 class="section-heading">I built the tool I kept needing</h2>
+      <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
+      <p class="section-text">So I did it by hand: read both prices against USDT, divide one by the other, note the number, come back later to see whether it moved. Miss the window and the whole exercise was wasted. That routine &mdash; convert, divide, check back &mdash; is what I set out to delete.</p>
+      <p class="section-text">Two problems, and I scoped the product to exactly those: I couldn't hold a custom pair, and I couldn't be told when its moment arrived. Everything I later declined to build got measured against that pair of sentences.</p>
+      <p class="section-text">Being the user is why I didn't start with interviews. It is also the limit of what that gives me &mdash; my own experience explains the problem, not the size of the market.</p>
       <div class="rb-contrast" role="group" aria-label="Old routed path versus Rebalancer's direct path">
         <div class="rb-route">
           <span class="rb-route-label">Before</span>
@@ -625,7 +626,7 @@
     <section class="case-section">
       <p class="section-label">02 &mdash; Positioning &amp; Assumptions</p>
       <h2 class="section-heading">A niche I bet on, not one I proved</h2>
-      <p class="section-text">I ran no formal competitive audit &mdash; no interviews, no personas, no scored feature matrix. I held the landscape in my head while building, and I'm writing it down here after the fact. So this is a positioning decision, not a research finding.</p>
+      <p class="section-text">I ran no formal competitive audit &mdash; no interviews, no personas, no scored feature matrix. My confidence came from being the user, which is a good source for the problem and a poor one for the market. So what follows is a positioning decision, not a research finding.</p>
       <p class="section-text">What I could see from the outside, and chose to design against:</p>
       <div class="card-grid-2">
         <div class="card">
@@ -640,10 +641,10 @@
       <div class="rb-pos-bet">
         <span class="rb-pos-label">Assumption &mdash; not validated by research</span>
         <span class="rb-pos-claim">Nobody had put the four together in one place: a custom ALT/ALT pair, an alert on the ratio, holdings that recalculate, and a simulator to plan the move.</span>
-        <span class="rb-pos-note">I still hold this as a hypothesis. If it's wrong, it's wrong about the market &mdash; not about whether the tool works.</span>
+        <span class="rb-pos-note">I still hold this as a hypothesis. If it's wrong, it's wrong about the market &mdash; not about whether the tool solves the problem I had.</span>
       </div>
       <p class="section-text" style="margin-top:28px;">What made me trust the gap was that it had an engineering explanation, not a marketing one: there is no direct ALT/ALT feed to consume. The ratio has to be assembled from two separate USD legs and divided. That's a real build cost, and it's why the space stays empty &mdash; which is exactly what made it worth building.</p>
-      <p class="section-text">The trade-off I accepted: shipping on an unproven read of the market, and keeping scope narrow enough that being wrong stayed cheap.</p>
+      <p class="section-text">The trade-off I accepted: I know the problem first-hand and I am guessing about everybody else. So I kept scope narrow enough that being wrong about the market stays cheap.</p>
     </section>
 
     <!-- 03 — THE PROCESS -->
@@ -816,8 +817,8 @@
               </div>
             </div>
           </div>
-          <p class="rb-note">Coins started as a page pushed from the watchlist header. I promoted it to a tab once it was clear holdings are something you return to, not somewhere you visit.</p>
-          <p class="rb-note">Alerts went the other way. It was briefly a fourth tab; I moved it back behind a bell. Three tabs is the product &mdash; alerts are a place you check, not a place you live.</p>
+          <p class="rb-note">Coins started as a page pushed from the watchlist header. I promoted it to a tab once I noticed I kept coming back to my holdings rather than visiting them.</p>
+          <p class="rb-note">Alerts went the other way. It was briefly a fourth tab; I moved it back behind a bell. Three tabs is the product &mdash; alerts are somewhere I check, not somewhere I live.</p>
           <p class="rb-note">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, and the tabs you left get properly set aside instead of lingering underneath &mdash; a structural choice that also spared me a class of bug on hidden screens.</p>
         </div>
       </div>
@@ -954,7 +955,7 @@
               </ul>
             </li>
           </ul>
-          <p class="rb-note">The prefill is the whole design. An empty field asks &ldquo;what number?&rdquo; &mdash; prefilled with where the ratio sits right now, it asks &ldquo;how far from here?&rdquo;, which is the question people actually arrive with.</p>
+          <p class="rb-note">The prefill is the whole design. An empty field asks &ldquo;what number?&rdquo; &mdash; prefilled with where the ratio sits right now, it asks &ldquo;how far from here?&rdquo; &mdash; which is the question I always arrived with myself.</p>
           <p class="rb-note">The permission branch saves the alert either way. Making the notification prompt a precondition would have meant losing the thing the person came to do.</p>
         </div>
 
@@ -1079,8 +1080,8 @@
     <!-- 06 — SCREENS -->
     <section class="case-section">
       <p class="section-label">06 &mdash; Screens</p>
-      <h2 class="section-heading">Inside the app</h2>
-      <p class="section-text">A look at the core flows &mdash; custom pairs, the rebalance simulator, notifications, and live coin tracking.</p>
+      <h2 class="section-heading">Four screens, four decisions</h2>
+      <p class="section-text">Four screens where a decision is visible in the layout. Screenshots go in as the build settles.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1089,7 +1090,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Custom pairs &mdash; create and track ALT/ALT pairs</p>
+          <p class="phone-caption">Custom pairs &mdash; the pair is the only object I ask you to create</p>
         </div>
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1098,7 +1099,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Rebalance simulator &mdash; model a rebalance before you act</p>
+          <p class="phone-caption">Simulator &mdash; kept on the detail screen so the list stays scannable</p>
         </div>
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1107,7 +1108,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Notifications &mdash; alerts when the moment arrives</p>
+          <p class="phone-caption">Alerts &mdash; prefilled at today's ratio, because nobody arrives knowing the number</p>
         </div>
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1116,7 +1117,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Coin tracking &mdash; watch holdings recalculate live</p>
+          <p class="phone-caption">Coins &mdash; a ledger, not a converter; that separation was deliberate</p>
         </div>
       </div>
     </section>
@@ -1125,7 +1126,7 @@
     <section class="case-section">
       <p class="section-label">07 &mdash; Technical Architecture</p>
       <h2 class="section-heading">Two price paths, because one wasn't allowed</h2>
-      <p class="section-text">I designed the interface first and then found the interesting problems sitting behind it. Three of them changed the architecture, and all three were mine to solve &mdash; which is the part of this project I'd never done before.</p>
+      <p class="section-text">I designed the interface first and then found the interesting problems sitting behind it. Three of them changed the architecture &mdash; where prices come from, how the ratio gets built, and who owns the schedule &mdash; and all three were mine to solve, which is the part of this project I had never done before.</p>
 
       <p class="rb-tech-label">Prices &mdash; two independent paths</p>
       <div class="rb-tech-lanes">
@@ -1162,7 +1163,7 @@
         <span class="rb-tech-op" aria-hidden="true">=</span>
         <span class="rb-tech-leg rb-tech-leg--out">BASE / QUOTE</span>
       </div>
-      <p class="rb-tech-why">Nobody publishes an ALT/ALT price, so both sides get priced in USD and divided. Where possible both legs come from the same source, so the USD-versus-USDT difference cancels instead of surfacing as a phantom move in someone's chart. This division is also the entire reason the product exists &mdash; without it, it's homework the user does by hand.</p>
+      <p class="rb-tech-why">Nobody publishes an ALT/ALT price, so both sides get priced in USD and divided. Where possible both legs come from the same source, so the USD-versus-USDT difference cancels instead of surfacing as a phantom move in someone's chart. This division is also the entire reason the product exists &mdash; without it, it is homework done by hand, and I did it by hand long enough to want it gone.</p>
 
       <p class="rb-tech-label">Threshold &rarr; push</p>
       <ul class="rb-flow" role="group" aria-label="From the scheduled run to a delivered push">
@@ -1251,9 +1252,10 @@
     <section class="case-section">
       <p class="section-label">08 &mdash; Localization</p>
       <h2 class="section-heading">One person, 31 languages</h2>
-      <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
+      <p class="section-text">Thirty-one languages was a decision, not an achievement. The audience for an ALT/ALT tool isn't concentrated in one market, so shipping English-only would have narrowed the bet I had already made a few sections ago.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
       <p class="section-text">The real complexity wasn't the languages themselves &mdash; it was the snowball behind them: every new country added its own regional requirements, and the backend had to keep up. Currently awaiting App Store approval for the full 31-language rollout.</p>
+      <p class="section-text">What I gave up: not one of the 31 has had a native reviewer. I accepted machine-grade copy in exchange for reach, and I treat that as debt rather than done.</p>
 
       <div class="loc-stat">
         <span class="loc-stat-number">31</span>
@@ -1309,8 +1311,8 @@
     <section class="case-section">
       <p class="section-label">09 &mdash; Outcome</p>
       <h2 class="section-heading">Live, and shipped solo</h2>
-      <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
-      <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
+      <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; it does not yet prove anyone wants it.</p>
+      <p class="section-text">Too early for usage evidence, and I would rather say that than dress a launch up as traction. The 31-language rollout is still waiting on review. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
       <div class="rb-stats-row">
         <div class="rb-stat-item">
           <span class="rb-stat-item-value">Live</span>
