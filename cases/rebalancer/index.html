@@ -127,7 +127,7 @@
 
     /* ═══ PHASE 3 ADDITIONS ═══ */
 
-    /* Stage/pipeline flow — §06 AI→Gemini graphic.
+    /* Stage/pipeline flow — §02 working loop + §07 AI→Gemini graphic.
        Nodes + arrows, horizontal on desktop; on mobile it stacks with the
        arrow rotated into a downward connector. Adapts Halliburton's
        .pipeline-flow to this page's Inter + card styling. */
@@ -148,7 +148,7 @@
     .flow--compact .flow-node { padding: 14px 16px; }
     .flow--compact .flow-node-title { font-size: 14px; }
 
-    /* Localization (§06) — focal stat + native-script language pills */
+    /* Localization (§07) — focal stat + native-script language pills */
     .loc-stat { display: flex; align-items: baseline; gap: 12px; margin-top: 24px; }
     .loc-stat-number { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
     .loc-stat-label { font-size: 16px; color: #6B6B6B; }
@@ -159,7 +159,7 @@
       border-radius: 100px; padding: 5px 12px; line-height: 1.4;
     }
 
-    /* iPhone frames (§04) — CSS device mock + placeholder fill. Real
+    /* iPhone frames (§05) — CSS device mock + placeholder fill. Real
        screenshots drop into .phone-shot (absolute, object-fit:cover). */
     .phone-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 24px; margin-top: 32px; justify-items: center; max-width: 560px; }
     .phone-figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
@@ -222,7 +222,7 @@
     .rb-route-note { font-size: 12px; color: #6B6B6B; }
 
     /* §02 — "1 person = whole stack": big numeral + tag-style layer chips
-       (chips use the flat #F0EFEC tag texture, distinct from §06's bordered pills) */
+       (chips use the flat #F0EFEC tag texture, distinct from §07's bordered pills) */
     .rb-stack { margin-top: 28px; }
     .rb-stack-head { display: flex; align-items: baseline; gap: 12px; }
     .rb-stack-num { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
@@ -230,7 +230,75 @@
     .rb-stack-layers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; max-width: 560px; }
     .rb-layer { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 4px 10px; line-height: 1.5; white-space: nowrap; }
 
-    /* §07 — compact outcome stat trio (borderless, same stat family, smaller) */
+    /* §02 — ROADMAP TIMELINE. The .timeline component is the same one the
+       dopas and dobrodoc cases use (horizontal rail + dots on desktop,
+       vertical rail on mobile), copied here because case pages carry their
+       own CSS. Two additions for this page: pastel dots keyed to the layer
+       a phase lived in, and a scroll wrapper.
+
+       Why the wrapper: six phases need ~152px each to stay legible, which is
+       more than the 760px column holds. .rb-road-scroll bleeds 80px each
+       side on wide screens (the hero's trick) so all six fit at once, and
+       falls back to contained horizontal scroll when they don't. The rail
+       lives on .timeline (the track), not on the scroller, so it spans the
+       full width instead of stopping at the visible edge. */
+    .rb-road-scroll {
+      margin-top: 32px; max-width: 100%; min-width: 0;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    .rb-road-scroll::-webkit-scrollbar { display: none; }
+    .rb-road-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    .rb-road-scroll--more {
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent 100%);
+              mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent 100%);
+    }
+    /* Wide screens: let the rail run 80px past the text column on each side
+       (the hero-image trick). 920px holds all six steps at 152px, so the
+       roadmap is seen whole instead of scrolled. max-width has to be released
+       or the base `max-width: 100%` clamps the bleed straight back to 712. */
+    @media (min-width: 1080px) {
+      .rb-road-scroll { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
+    }
+    .timeline { display: flex; gap: 0; margin-top: 0; position: relative; min-width: 100%; }
+    .timeline::before {
+      content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
+    }
+    /* flex-basis 152px with no shrink: steps stretch to fill a wide rail and
+       overflow into a scroll instead of squeezing into unreadable columns */
+    .timeline-step { flex: 1 0 152px; position: relative; padding-top: 48px; padding-right: 16px; }
+    .timeline-step::before {
+      content: ''; position: absolute; top: 18px; left: 0;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #1A1A1A; border: 3px solid #F8F7F4;
+    }
+    .timeline-number { font-size: 12px; font-weight: 500; color: #9A9A9A; margin-bottom: 4px; }
+    .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
+    .timeline-tag {
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    /* Dot colour = the layer the phase mostly lived in. The darker half of
+       each pastel pair, so a 14px dot still reads on #F8F7F4; the inset ring
+       keeps it from dissolving into the rail. Position on the rail already
+       carries the sequence — colour is a second, redundant channel. */
+    .timeline-step--iface::before  { background: var(--rb-screen-bd);   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
+    .timeline-step--server::before { background: var(--rb-system-bd);   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
+    .timeline-step--store::before  { background: var(--rb-decision-bd); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
+
+    /* §02 — turning points: the three places a decision got reversed. Tinted
+       with the same layer vocabulary as the dots. */
+    .rb-turns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+    .rb-turn { border-radius: 12px; padding: 18px 20px; border: 1px solid; }
+    .rb-turn--server { background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
+    .rb-turn--iface  { background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
+    .rb-turn-date { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 8px; }
+    .rb-turn-title { font-size: 14px; font-weight: 500; line-height: 1.4; margin-bottom: 6px; }
+    .rb-turn-text { font-size: 13px; color: #6B6B6B; line-height: 1.55; }
+
+    /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
     .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
     .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
     .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
@@ -256,7 +324,7 @@
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
-    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §02 and §03.
+    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §02, §03 and §04.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
        every flow). Muted on purpose: these sit on a warm #F8F7F4 page.
@@ -270,7 +338,7 @@
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
-    /* Shared commentary line under a diagram (both §02 and §03) */
+    /* Shared commentary line under a diagram (§02, §03, §04) */
     .rb-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
     .rb-note + .rb-note { margin-top: 12px; }
 
@@ -282,8 +350,14 @@
     .rb-key-mark--tab { background: #1A1A1A; }
     .rb-key-mark--push { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
     .rb-key-mark--sheet { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
+    /* §02 roadmap legend — round, to echo the timeline dots rather than the
+       rectangular node marks. Must sit after the .rb-key-mark base rule:
+       same specificity, so source order is what decides the size. */
+    .rb-key-mark--iface  { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-screen-bd); }
+    .rb-key-mark--server { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-system-bd); }
+    .rb-key-mark--store  { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-decision-bd); }
 
-    /* §02 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
+    /* §03 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
        borders on each <li>: ::before is the vertical segment (shortened on
        :last-child so the branch terminates in an elbow), ::after is the
        horizontal stub. Nodes hold real text, so nothing shrinks on mobile. */
@@ -333,7 +407,7 @@
       border-radius: 8px; padding: 6px 11px;
     }
 
-    /* §02 — navigation planes, drawn as a cross-section: each band is offset
+    /* §03 — navigation planes, drawn as a cross-section: each band is offset
        horizontally so the three planes read as depth without any shadow. */
     /* Three planes drawn as a card stack seen slightly from above: each upper
        plane is inset, carries a downward shadow, and OVERLAPS the plane below
@@ -371,7 +445,7 @@
     .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
     .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
 
-    /* §03 — user flows, drawn left→right the way flow diagrams are actually
+    /* §04 — user flows, drawn left→right the way flow diagrams are actually
        read. .rb-track is a flex row; a fork opens into branch rows stacked
        above and below the axis, joined by a spine + elbows. On a phone the
        track scrolls inside .rb-flow (the same contained-scroll mechanism the
@@ -460,7 +534,7 @@
     .rb-key-mark--end { background: #1A1A1A; border-radius: 100px; }
     .rb-key-mark--outside { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
-    /* §05 — technical architecture. Four small blocks: two price lanes, the
+    /* §06 — technical architecture. Four small blocks: two price lanes, the
        two-leg division, the threshold→push chain, and the stack. All chip /
        flex based so everything wraps instead of ever widening the page. */
     .rb-tech-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 32px 0 10px; }
@@ -514,6 +588,16 @@
       .footer-right { flex-wrap: wrap; justify-content: center; }
       .case-section { padding: 56px 0 0; }
       .reflection-grid { grid-template-columns: 1fr; }
+      /* roadmap → vertical rail, same as dopas/dobrodoc. No scroller needed
+         once the steps stack, so the wrapper stops clipping and drops its
+         fade (the class can still be on it from a wider layout). */
+      .rb-road-scroll { overflow: visible; }
+      .rb-road-scroll--more { -webkit-mask-image: none; mask-image: none; }
+      .timeline { flex-direction: column; gap: 24px; padding-left: 24px; min-width: 0; }
+      .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
+      .timeline-step { flex: 0 0 auto; padding-top: 0; padding-left: 16px; padding-right: 0; }
+      .timeline-step::before { top: 4px; left: -24px; }
+      .rb-turns { grid-template-columns: 1fr; }
       /* tab strip → bounded internal scroll; a clipped next tab is the peek */
       .rb-tabs {
         width: 100%; max-width: 100%; min-width: 0;
@@ -607,9 +691,121 @@
       </div>
     </section>
 
-    <!-- 02 — INFORMATION ARCHITECTURE -->
+    <!-- 02 — PROCESS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">02</span> &middot; Three tabs, and everything else on top</p>
+      <p class="section-kicker"><span class="section-num">02</span> &middot; Eleven weeks, one pair of hands</p>
+      <h2 class="section-heading">Process</h2>
+      <p class="section-text">I designed this in code rather than in Figma, so a decision and its implementation happened in the same place. That forces every choice to be specific enough to actually run &mdash; there is no mockup to hide an unresolved detail in.</p>
+      <p class="section-text">The dates below are read off the repository rather than remembered: 355 commits between 20 April and 7 July. What the shape shows is that the interface was the short part.</p>
+
+      <div class="rb-stack">
+        <div class="rb-stack-head">
+          <span class="rb-stack-num">1</span>
+          <span class="rb-stack-caption">person owned every layer of it</span>
+        </div>
+        <div class="rb-stack-layers">
+          <span class="rb-layer">Concept</span>
+          <span class="rb-layer">Product design</span>
+          <span class="rb-layer">iOS app</span>
+          <span class="rb-layer">Backend</span>
+          <span class="rb-layer">Servers</span>
+          <span class="rb-layer">APIs</span>
+          <span class="rb-layer">Push notifications</span>
+          <span class="rb-layer">App Store</span>
+        </div>
+        <p class="rb-note">No team and no hand-off: built with Claude Code, which means every decision was mine to make and mine to debug at 1am. The method below is what kept that from turning into guesswork.</p>
+      </div>
+
+      <div class="rb-key" aria-hidden="true">
+        <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--iface"></span>Interface</span>
+        <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--server"></span>Server</span>
+        <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--store"></span>Store</span>
+      </div>
+
+      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Project roadmap: six phases from April to July">
+        <div class="timeline">
+          <div class="timeline-step timeline-step--iface">
+            <p class="timeline-number">20&ndash;28 Apr</p>
+            <p class="timeline-title">Pick one direction</p>
+            <p class="timeline-desc">Several interaction concepts ran in parallel. An accidental revert forced the choice: keep one, cut the rest, version everything.</p>
+            <span class="timeline-tag">5 concept sets cut</span>
+          </div>
+          <div class="timeline-step timeline-step--iface">
+            <p class="timeline-number">28 Apr &ndash; 13 May</p>
+            <p class="timeline-title">Touch before features</p>
+            <p class="timeline-desc">Audited every gesture before adding anything. A tracker whose cards ignore a tap isn't a tracker yet.</p>
+            <span class="timeline-tag">Gesture audit &middot; 1.0</span>
+          </div>
+          <div class="timeline-step timeline-step--server">
+            <p class="timeline-number">15&ndash;21 May</p>
+            <p class="timeline-title">Move the clock to a server</p>
+            <p class="timeline-desc">Background refresh can't be trusted to wake up, so the alert clock moved onto a server.</p>
+            <span class="timeline-tag">Cron &middot; KV &middot; APNs</span>
+          </div>
+          <div class="timeline-step timeline-step--iface">
+            <p class="timeline-number">26&ndash;29 May</p>
+            <p class="timeline-title">Localize before growing</p>
+            <p class="timeline-desc">31 locales deliberately early, so every later feature paid its translation cost on the spot.</p>
+            <span class="timeline-tag">31 locales</span>
+          </div>
+          <div class="timeline-step timeline-step--store">
+            <p class="timeline-number">1&ndash;5 Jun</p>
+            <p class="timeline-title">Charge, and cut the promises</p>
+            <p class="timeline-desc">Free and Pro limits went in &mdash; and anything the build couldn't honour came out with them.</p>
+            <span class="timeline-tag">StoreKit 2 &middot; 4 features removed</span>
+          </div>
+          <div class="timeline-step timeline-step--server">
+            <p class="timeline-number">8&ndash;26 Jun</p>
+            <p class="timeline-title">Make it work for people who aren't me</p>
+            <p class="timeline-desc">Fixed what only breaks for other people: geo-blocked prices, and one phone holding two records.</p>
+            <span class="timeline-tag">Fallback chain &middot; identity v2</span>
+          </div>
+        </div>
+      </div>
+      <p class="rb-note">Notifications were the long thread: five weeks from the first proof of concept to a device-identity model I trusted. Nothing in the interface took anywhere near that.</p>
+
+      <p class="section-text" style="margin-top:36px;">Three decisions I made and then reversed. Each one is in the history, and each reversal is the useful part:</p>
+      <div class="rb-turns">
+        <div class="rb-turn rb-turn--server">
+          <span class="rb-turn-date">18 May</span>
+          <p class="rb-turn-title">The push server changed hosts mid-build</p>
+          <p class="rb-turn-text">The first host hit its free-tier memory limit and suspended the app. I ported the worker in one pass; the new write budget then capped the heartbeat at every third minute, which the app's five-minute freshness window already tolerated. No client change.</p>
+        </div>
+        <div class="rb-turn rb-turn--iface">
+          <span class="rb-turn-date">3 Jun</span>
+          <p class="rb-turn-title">Alerts lost the tab it had for a week</p>
+          <p class="rb-turn-text">Alerts shipped as a fourth bottom tab, then moved to a bell in the watchlist header. Three tabs is the app's real shape &mdash; the fourth existed because the list existed, not because anyone was navigating to it.</p>
+        </div>
+        <div class="rb-turn rb-turn--server">
+          <span class="rb-turn-date">19 Jun</span>
+          <p class="rb-turn-title">Device identity re-keyed to the push token</p>
+          <p class="rb-turn-text">An ID minted on the client let a double-register race leave two firing records for one phone. Keying the record by the token makes one phone, one record structurally true instead of something the code has to remember.</p>
+        </div>
+      </div>
+
+      <p class="section-text" style="margin-top:36px;">Working at that pace only holds up with a method, so every change went through the same loop &mdash; understand the current state, agree a precise plan, then implement it one small reviewable step at a time.</p>
+      <div class="flow" role="group" aria-label="Working loop: diagnose, then plan, then implement">
+        <div class="flow-node">
+          <p class="flow-node-title">Diagnose</p>
+          <p class="flow-node-line">Measure the current state before touching it</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node">
+          <p class="flow-node-title">Plan</p>
+          <p class="flow-node-line">Agree the change, and its blast radius, in writing</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node">
+          <p class="flow-node-title">Implement</p>
+          <p class="flow-node-line">One small, reviewable change at a time</p>
+        </div>
+      </div>
+      <p class="rb-note">It left a trace: 70 of those 355 commits carry a numbered plan step, and only five are reverts. The hardest part was never the interface &mdash; it was notification servers and APIs that had to behave in countries I couldn't test from. The loop is what made that survivable instead of a run of lucky guesses.</p>
+    </section>
+
+    <!-- 03 — INFORMATION ARCHITECTURE -->
+    <section class="case-section">
+      <p class="section-kicker"><span class="section-num">03</span> &middot; Three tabs, and everything else on top</p>
       <h2 class="section-heading">Information Architecture</h2>
       <p class="section-text">There was never an IA diagram. The structure got decided in code, screen by screen &mdash; and I reversed myself twice before it settled. This is that structure written down after the fact.</p>
 
@@ -739,9 +935,9 @@
       </div>
     </section>
 
-    <!-- 03 — USER FLOWS -->
+    <!-- 04 — USER FLOWS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">03</span> &middot; Five paths, and the edge I drew</p>
+      <p class="section-kicker"><span class="section-num">04</span> &middot; Five paths, and the edge I drew</p>
       <h2 class="section-heading">User Flows</h2>
       <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
 
@@ -970,9 +1166,9 @@
       </div>
     </section>
 
-    <!-- 04 — SCREENS -->
+    <!-- 05 — SCREENS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">04</span> &middot; Four screens, four decisions</p>
+      <p class="section-kicker"><span class="section-num">05</span> &middot; Four screens, four decisions</p>
       <h2 class="section-heading">Screens</h2>
       <p class="section-text">Four screens where a decision is visible in the layout. Screenshots go in as the build settles.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -1015,9 +1211,9 @@
       </div>
     </section>
 
-    <!-- 05 — TECHNICAL ARCHITECTURE -->
+    <!-- 06 — TECHNICAL ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">05</span> &middot; Two price paths, because one wasn't allowed</p>
+      <p class="section-kicker"><span class="section-num">06</span> &middot; Two price paths, because one wasn't allowed</p>
       <h2 class="section-heading">Technical Architecture</h2>
       <p class="section-text">Three problems behind the interface shaped the architecture.</p>
 
@@ -1136,9 +1332,9 @@
       <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
     </section>
 
-    <!-- 06 — LOCALIZATION -->
+    <!-- 07 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">06</span> &middot; Building for a market that isn't in one country</p>
+      <p class="section-kicker"><span class="section-num">07</span> &middot; Building for a market that isn't in one country</p>
       <h2 class="section-heading">Localization</h2>
       <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start. The translation itself is machine work &mdash; generated with AI, then passed through Gemini, which caught nuances the first pass missed.</p>
       <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
@@ -1193,9 +1389,9 @@
       </div>
     </section>
 
-    <!-- 07 — OUTCOME -->
+    <!-- 08 — OUTCOME -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">07</span> &middot; Live, and shipped solo</p>
+      <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; it does not yet prove anyone wants it.</p>
       <p class="section-text">Too early for usage evidence, and I would rather say that than dress a launch up as traction. The 31-language rollout is still waiting on review. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
@@ -1215,9 +1411,9 @@
       </div>
     </section>
 
-    <!-- 08 — REFLECTION -->
+    <!-- 09 — REFLECTION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">08</span> &middot; What the build taught me</p>
+      <p class="section-kicker"><span class="section-num">09</span> &middot; What the build taught me</p>
       <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
         <div>
@@ -1277,7 +1473,8 @@
     (function () {
       var scrollers = [].concat(
         [].map.call(document.querySelectorAll('.rb-tabs'), function (el) { return { el: el, cls: 'rb-tabs--more' }; }),
-        [].map.call(document.querySelectorAll('.rb-flow'), function (el) { return { el: el, cls: 'rb-flow--more' }; })
+        [].map.call(document.querySelectorAll('.rb-flow'), function (el) { return { el: el, cls: 'rb-flow--more' }; }),
+        [].map.call(document.querySelectorAll('.rb-road-scroll'), function (el) { return { el: el, cls: 'rb-road-scroll--more' }; })
       );
       if (!scrollers.length) return;
       function sync() {
