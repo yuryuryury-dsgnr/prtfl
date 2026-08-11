@@ -282,35 +282,73 @@
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
-    /* §05 — IA: three tiers (tab roots / pushed routes / overlays) */
-    .rb-ia-tier { margin-top: 22px; }
-    .rb-ia-tier-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 10px; }
-    .rb-ia-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .rb-ia-item {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 10px; padding: 14px 16px;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .rb-ia-name { font-size: 14px; font-weight: 500; color: #1A1A1A; }
-    .rb-ia-note { font-size: 12px; color: #6B6B6B; line-height: 1.5; }
-    .rb-ia-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .rb-ia-chip { font-size: 11px; color: #6B6B6B; background: #F0EFEC; border-radius: 4px; padding: 3px 8px; line-height: 1.4; white-space: nowrap; }
-    .rb-ia-decision { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 24px; max-width: 640px; }
+    /* Shared commentary line under a diagram (both §05 and §06) */
+    .rb-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
+    .rb-note + .rb-note { margin-top: 12px; }
 
-    /* §05 — navigation model: pushed layer sitting above a 3-slot tab bar */
-    .rb-nav { margin-top: 22px; max-width: 560px; display: flex; flex-direction: column; gap: 12px; }
-    .rb-nav-group {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 16px 18px;
+    /* Diagram legend — the thing that makes a schematic read as an artefact.
+       Node types are told apart by fill / stroke style only, never colour. */
+    .rb-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; }
+    .rb-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .rb-key-mark--tab { background: #1A1A1A; }
+    .rb-key-mark--push { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); }
+    .rb-key-mark--sheet { background: transparent; border: 1px dashed rgba(0,0,0,0.28); }
+
+    /* §05 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
+       borders on each <li>: ::before is the vertical segment (shortened on
+       :last-child so the branch terminates in an elbow), ::after is the
+       horizontal stub. Nodes hold real text, so nothing shrinks on mobile. */
+    .rb-tree, .rb-tree ul { list-style: none; }
+    .rb-tree { margin-top: 20px; }
+    .rb-tree-root { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 26px 0 4px; }
+    .rb-tree-kids > li { position: relative; padding-left: 26px; }
+    .rb-tree-kids > li::before {
+      content: ''; position: absolute; left: 0; top: 0; height: 100%;
+      border-left: 1px solid rgba(0,0,0,0.16);
+    }
+    .rb-tree-kids > li:last-child::before { height: 21px; }
+    .rb-tree-kids > li::after {
+      content: ''; position: absolute; left: 0; top: 21px; width: 16px;
+      border-top: 1px solid rgba(0,0,0,0.16);
+    }
+    /* an overlay branch hangs off a dashed stub — it is invoked, not contained */
+    .rb-tree-kids > li.rb-tree-li--sheet::before,
+    .rb-tree-kids > li.rb-tree-li--sheet::after { border-color: rgba(0,0,0,0.22); border-style: dashed; }
+    .rb-tree-node {
+      display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px;
+      border-radius: 8px; padding: 9px 14px; margin: 8px 0;
+    }
+    .rb-tree-name { font-size: 14px; font-weight: 500; line-height: 1.35; }
+    .rb-tree-note { font-size: 12px; line-height: 1.45; color: #6B6B6B; }
+    .rb-tree-node--tab { background: #1A1A1A; color: #FFFFFF; }
+    .rb-tree-node--tab .rb-tree-note { color: rgba(255,255,255,0.62); }
+    .rb-tree-node--push { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); }
+    .rb-tree-sheets { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .rb-tree-sheet {
+      font-size: 12px; color: #6B6B6B; line-height: 1.4;
+      background: transparent; border: 1px dashed rgba(0,0,0,0.28);
+      border-radius: 8px; padding: 6px 11px;
+    }
+
+    /* §05 — navigation planes, drawn as a cross-section: each band is offset
+       horizontally so the three planes read as depth without any shadow. */
+    .rb-plane { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; max-width: 560px; }
+    .rb-plane-band {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 12px; padding: 13px 16px;
       display: flex; flex-direction: column; gap: 10px;
     }
-    .rb-nav-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; }
-    .rb-nav-cards { display: flex; flex-wrap: wrap; gap: 8px; }
-    .rb-nav-card { font-size: 13px; color: #1A1A1A; background: #F0EFEC; border-radius: 8px; padding: 7px 12px; line-height: 1; }
-    .rb-nav-tabs { display: flex; gap: 6px; }
-    .rb-nav-tab { flex: 1; text-align: center; font-size: 13px; color: #6B6B6B; background: #F0EFEC; border-radius: 8px; padding: 9px 8px; line-height: 1; }
-    .rb-nav-tab.is-current { background: #1A1A1A; color: #FFFFFF; }
-    .rb-nav-between { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9A9A9A; padding-left: 2px; }
+    .rb-plane-band--overlay { background: transparent; border-style: dashed; border-color: rgba(0,0,0,0.24); margin-left: 30px; }
+    .rb-plane-band--push { margin-left: 15px; }
+    .rb-plane-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-plane-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .rb-plane-item { font-size: 12px; color: #1A1A1A; background: #F0EFEC; border-radius: 7px; padding: 6px 11px; line-height: 1.3; }
+    .rb-plane-band--overlay .rb-plane-item { background: transparent; border: 1px dashed rgba(0,0,0,0.22); color: #6B6B6B; }
+    .rb-plane-rel { font-size: 11px; color: #9A9A9A; display: flex; align-items: center; gap: 7px; padding-left: 15px; }
+    .rb-plane-slots { display: flex; gap: 6px; }
+    .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
+    .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
 
     /* §06 — user flows: compact step chain. Steps share the row (flex 1 1 0)
        so nothing scrolls on desktop; on mobile the chain stacks. The dashed
@@ -394,7 +432,13 @@
         -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
                 mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
       }
-      .rb-ia-row { grid-template-columns: 1fr; }
+      /* tighter rails + shallower plane offsets so text keeps full width */
+      .rb-tree-kids > li { padding-left: 18px; }
+      .rb-tree-kids > li::after { width: 11px; }
+      .rb-tree-node { padding: 8px 12px; }
+      .rb-plane-band--overlay { margin-left: 16px; }
+      .rb-plane-band--push { margin-left: 8px; }
+      .rb-plane-rel { padding-left: 8px; }
       /* flow chain stacks; the app-boundary divider turns horizontal */
       .rb-fl-flow { flex-direction: column; gap: 6px; }
       .rb-fl-arrow { transform: rotate(90deg); align-self: center; padding: 2px 0; }
@@ -551,85 +595,115 @@
         </div>
 
         <div class="rb-tabpanel is-active" data-rb-panel="map" role="tabpanel">
-          <div class="rb-ia-tier">
-            <p class="rb-ia-tier-label">Tab roots &middot; 3</p>
-            <div class="rb-ia-row">
-              <div class="rb-ia-item">
-                <span class="rb-ia-name">Pairs</span>
-                <span class="rb-ia-note">The watchlist. Compact cards, inline expand, drag to reorder, swipe to delete.</span>
-              </div>
-              <div class="rb-ia-item">
-                <span class="rb-ia-name">Coins</span>
-                <span class="rb-ia-note">Holdings you own, edited in place, with a total in the denomination you pick.</span>
-              </div>
-              <div class="rb-ia-item">
-                <span class="rb-ia-name">Settings</span>
-                <span class="rb-ia-note">Preferences, language, theme, and the Pro upgrade.</span>
-              </div>
-            </div>
+          <div class="rb-key" aria-hidden="true">
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--tab"></span>Tab root</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--push"></span>Pushed screen</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--sheet"></span>Sheet</span>
           </div>
-          <div class="rb-ia-tier">
-            <p class="rb-ia-tier-label">Pushed above the tabs &middot; 3</p>
-            <div class="rb-ia-row">
-              <div class="rb-ia-item">
-                <span class="rb-ia-name">Pair detail</span>
-                <span class="rb-ia-note">The full view of one pair &mdash; where the heavier tools live.</span>
-                <div class="rb-ia-chips">
-                  <span class="rb-ia-chip">full chart</span>
-                  <span class="rb-ia-chip">1h &rarr; all</span>
-                  <span class="rb-ia-chip">holdings</span>
-                  <span class="rb-ia-chip">simulator</span>
-                </div>
+          <p class="rb-tree-root">Rebalancer</p>
+          <ul class="rb-tree rb-tree-kids">
+            <li>
+              <div class="rb-tree-node rb-tree-node--tab">
+                <span class="rb-tree-name">Pairs</span>
+                <span class="rb-tree-note">the watchlist</span>
               </div>
-              <div class="rb-ia-item">
-                <span class="rb-ia-name">Pair alerts</span>
-                <span class="rb-ia-note">Every threshold set on this one pair.</span>
+              <ul class="rb-tree-kids">
+                <li>
+                  <div class="rb-tree-node rb-tree-node--push">
+                    <span class="rb-tree-name">Pair detail</span>
+                    <span class="rb-tree-note">chart, 1h&ndash;all, holdings, simulator</span>
+                  </div>
+                  <ul class="rb-tree-kids">
+                    <li>
+                      <div class="rb-tree-node rb-tree-node--push">
+                        <span class="rb-tree-name">Pair alerts</span>
+                        <span class="rb-tree-note">thresholds on this pair</span>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <div class="rb-tree-node rb-tree-node--push">
+                    <span class="rb-tree-name">All alerts</span>
+                    <span class="rb-tree-note">via the header bell</span>
+                  </div>
+                </li>
+                <li class="rb-tree-li--sheet">
+                  <div class="rb-tree-sheets">
+                    <span class="rb-tree-sheet">Token selector</span>
+                    <span class="rb-tree-sheet">New alert</span>
+                    <span class="rb-tree-sheet">Holdings entry</span>
+                    <span class="rb-tree-sheet">Pair colour</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div class="rb-tree-node rb-tree-node--tab">
+                <span class="rb-tree-name">Coins</span>
+                <span class="rb-tree-note">holdings, edited in place</span>
               </div>
-              <div class="rb-ia-item">
-                <span class="rb-ia-name">All alerts</span>
-                <span class="rb-ia-note">Everything armed across every pair, reached from a bell in the header.</span>
+              <ul class="rb-tree-kids">
+                <li class="rb-tree-li--sheet">
+                  <div class="rb-tree-sheets">
+                    <span class="rb-tree-sheet">Token selector</span>
+                    <span class="rb-tree-sheet">Holdings entry</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div class="rb-tree-node rb-tree-node--tab">
+                <span class="rb-tree-name">Settings</span>
+                <span class="rb-tree-note">preferences and Pro</span>
               </div>
-            </div>
-          </div>
-          <div class="rb-ia-tier">
-            <p class="rb-ia-tier-label">Overlays &mdash; sheets</p>
-            <div class="rb-ia-chips">
-              <span class="rb-ia-chip">Token selector</span>
-              <span class="rb-ia-chip">New alert</span>
-              <span class="rb-ia-chip">Holdings entry</span>
-              <span class="rb-ia-chip">Paywall</span>
-              <span class="rb-ia-chip">Pair colour</span>
-              <span class="rb-ia-chip">Language</span>
-              <span class="rb-ia-chip">Theme</span>
-              <span class="rb-ia-chip">Feedback</span>
-            </div>
-          </div>
-          <p class="rb-ia-decision">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
+              <ul class="rb-tree-kids">
+                <li class="rb-tree-li--sheet">
+                  <div class="rb-tree-sheets">
+                    <span class="rb-tree-sheet">Paywall</span>
+                    <span class="rb-tree-sheet">Language</span>
+                    <span class="rb-tree-sheet">Theme</span>
+                    <span class="rb-tree-sheet">Feedback</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p class="rb-note">Token selector and Holdings entry appear under two parents because they genuinely are shared &mdash; one sheet invoked from wherever it's needed, rather than a copy per screen.</p>
+          <p class="rb-note">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="nav" role="tabpanel">
-          <div class="rb-nav">
-            <div class="rb-nav-group">
-              <span class="rb-nav-label">Pushed above the bar</span>
-              <div class="rb-nav-cards">
-                <span class="rb-nav-card">Pair detail</span>
-                <span class="rb-nav-card">Pair alerts</span>
-                <span class="rb-nav-card">All alerts</span>
+          <div class="rb-plane" role="group" aria-label="Three navigation planes, from the overlay layer down to the tab bar">
+            <div class="rb-plane-band rb-plane-band--overlay">
+              <span class="rb-plane-label">Overlay plane &mdash; floats above everything</span>
+              <div class="rb-plane-items">
+                <span class="rb-plane-item">Sheets</span>
+                <span class="rb-plane-item">Paywall</span>
               </div>
             </div>
-            <div class="rb-nav-between"><span aria-hidden="true">&darr;</span><span>pushing one hides the bar</span></div>
-            <div class="rb-nav-group">
-              <span class="rb-nav-label">Bottom tab bar</span>
-              <div class="rb-nav-tabs">
-                <span class="rb-nav-tab is-current">Pairs</span>
-                <span class="rb-nav-tab">Coins</span>
-                <span class="rb-nav-tab">Settings</span>
+            <div class="rb-plane-rel"><span aria-hidden="true">&darr;</span><span>dismiss returns you exactly where you were</span></div>
+            <div class="rb-plane-band rb-plane-band--push">
+              <span class="rb-plane-label">Push plane &mdash; covers the bar</span>
+              <div class="rb-plane-items">
+                <span class="rb-plane-item">Pair detail</span>
+                <span class="rb-plane-item">Pair alerts</span>
+                <span class="rb-plane-item">All alerts</span>
+              </div>
+            </div>
+            <div class="rb-plane-rel"><span aria-hidden="true">&darr;</span><span>pushing one hides the bar; popping brings it back</span></div>
+            <div class="rb-plane-band rb-plane-band--tab">
+              <span class="rb-plane-label">Tab plane &mdash; always underneath</span>
+              <div class="rb-plane-slots">
+                <span class="rb-plane-slot is-current">Pairs</span>
+                <span class="rb-plane-slot">Coins</span>
+                <span class="rb-plane-slot">Settings</span>
               </div>
             </div>
           </div>
-          <p class="rb-ia-decision">Coins started as a page pushed from the watchlist header. I promoted it to a tab once it was clear holdings are something you return to, not somewhere you visit.</p>
-          <p class="rb-ia-decision" style="margin-top:12px;">Alerts went the other way. It was briefly a fourth tab; I moved it back behind a bell. Three tabs is the product &mdash; alerts are a place you check, not a place you live.</p>
-          <p class="rb-ia-decision" style="margin-top:12px;">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, and the tabs you left get properly set aside instead of lingering underneath &mdash; a structural choice that also spared me a class of bug on hidden screens.</p>
+          <p class="rb-note">Coins started as a page pushed from the watchlist header. I promoted it to a tab once it was clear holdings are something you return to, not somewhere you visit.</p>
+          <p class="rb-note">Alerts went the other way. It was briefly a fourth tab; I moved it back behind a bell. Three tabs is the product &mdash; alerts are a place you check, not a place you live.</p>
+          <p class="rb-note">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, and the tabs you left get properly set aside instead of lingering underneath &mdash; a structural choice that also spared me a class of bug on hidden screens.</p>
         </div>
       </div>
     </section>
