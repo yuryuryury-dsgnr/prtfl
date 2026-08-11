@@ -72,11 +72,23 @@
 
     /* ——— SECTIONS ——— */
     .case-section { padding: 80px 0 0; }
-    .section-label {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 8px;
-    }
+    /* Section head: the NAME is the heading so the case can be skimmed by
+       structure; the ordinal rides on the same baseline, small and muted, so
+       the eye lands on the word and still knows where it is; the creative
+       line drops below as a deck — larger than body copy so it reads as
+       voice, not as a caption. */
     .section-heading {
-      font-size: 24px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 24px;
+      display: flex; align-items: baseline; gap: 12px;
+      font-size: 28px; font-weight: 500; letter-spacing: -0.02em;
+      line-height: 1.25; margin-bottom: 8px;
+    }
+    .section-num {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+      color: #9A9A9A; flex-shrink: 0;
+    }
+    .section-kicker {
+      font-size: 18px; color: #6B6B6B; line-height: 1.5;
+      margin-bottom: 26px; max-width: 640px;
     }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
     .section-note { font-size: 14px; color: #9A9A9A; font-style: italic; margin-top: 8px; }
@@ -592,8 +604,8 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section class="case-section">
-      <p class="section-label">01 &mdash; Problem &amp; Context</p>
-      <h2 class="section-heading">I built the tool I kept needing</h2>
+      <h2 class="section-heading"><span class="section-num">01</span>Problem &amp; Context</h2>
+      <p class="section-kicker">I built the tool I kept needing</p>
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
       <p class="section-text">So I did it by hand: read both prices against USDT, divide one by the other, note the number, come back later to see whether it moved. Miss the window and the whole exercise was wasted. That routine &mdash; convert, divide, check back &mdash; is what I set out to delete.</p>
       <p class="section-text">Two problems, and I scoped the product to exactly those: I couldn't hold a custom pair, and I couldn't be told when its moment arrived. Everything I later declined to build got measured against that pair of sentences.</p>
@@ -624,8 +636,8 @@
 
     <!-- 02 — POSITIONING & ASSUMPTIONS -->
     <section class="case-section">
-      <p class="section-label">02 &mdash; Positioning &amp; Assumptions</p>
-      <h2 class="section-heading">A niche I bet on, not one I proved</h2>
+      <h2 class="section-heading"><span class="section-num">02</span>Positioning &amp; Assumptions</h2>
+      <p class="section-kicker">A niche I bet on, not one I proved</p>
       <p class="section-text">I ran no formal competitive audit &mdash; no interviews, no personas, no scored feature matrix. My confidence came from being the user, which is a good source for the problem and a poor one for the market. So what follows is a positioning decision, not a research finding.</p>
       <p class="section-text">What I could see from the outside, and chose to design against:</p>
       <div class="card-grid-2">
@@ -649,8 +661,8 @@
 
     <!-- 03 — THE PROCESS -->
     <section class="case-section">
-      <p class="section-label">03 &mdash; The Process</p>
-      <h2 class="section-heading">No handoff, because there was nobody to hand off to</h2>
+      <h2 class="section-heading"><span class="section-num">03</span>The Process</h2>
+      <p class="section-kicker">No handoff, because there was nobody to hand off to</p>
       <p class="section-text">I owned every layer of this myself &mdash; the product concept, the UX and interface design, and the full build: iOS app, backend, servers, APIs, notifications. All of it written in code with Claude Code. No Figma, no mockups, no spec to throw over a wall.</p>
       <div class="rb-stack">
         <div class="rb-stack-head">
@@ -694,8 +706,8 @@
 
     <!-- 04 — INFORMATION ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-label">04 &mdash; Information Architecture</p>
-      <h2 class="section-heading">Three tabs, and everything else on top</h2>
+      <h2 class="section-heading"><span class="section-num">04</span>Information Architecture</h2>
+      <p class="section-kicker">Three tabs, and everything else on top</p>
       <p class="section-text">There was never an IA diagram. The structure got decided in code, screen by screen &mdash; and I reversed myself twice before it settled. This is that structure written down after the fact.</p>
 
       <div class="rb-tabgroup">
@@ -826,8 +838,8 @@
 
     <!-- 05 — USER FLOWS -->
     <section class="case-section">
-      <p class="section-label">05 &mdash; User Flows</p>
-      <h2 class="section-heading">Five paths, and the edge I drew</h2>
+      <h2 class="section-heading"><span class="section-num">05</span>User Flows</h2>
+      <p class="section-kicker">Five paths, and the edge I drew</p>
       <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
 
       <div class="rb-tabgroup">
@@ -1079,8 +1091,8 @@
 
     <!-- 06 — SCREENS -->
     <section class="case-section">
-      <p class="section-label">06 &mdash; Screens</p>
-      <h2 class="section-heading">Four screens, four decisions</h2>
+      <h2 class="section-heading"><span class="section-num">06</span>Screens</h2>
+      <p class="section-kicker">Four screens, four decisions</p>
       <p class="section-text">Four screens where a decision is visible in the layout. Screenshots go in as the build settles.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
         <div class="phone-figure">
@@ -1124,8 +1136,8 @@
 
     <!-- 07 — TECHNICAL ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-label">07 &mdash; Technical Architecture</p>
-      <h2 class="section-heading">Two price paths, because one wasn't allowed</h2>
+      <h2 class="section-heading"><span class="section-num">07</span>Technical Architecture</h2>
+      <p class="section-kicker">Two price paths, because one wasn't allowed</p>
       <p class="section-text">I designed the interface first and then found the interesting problems sitting behind it. Three of them changed the architecture &mdash; where prices come from, how the ratio gets built, and who owns the schedule &mdash; and all three were mine to solve, which is the part of this project I had never done before.</p>
 
       <p class="rb-tech-label">Prices &mdash; two independent paths</p>
@@ -1250,8 +1262,8 @@
 
     <!-- 08 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-label">08 &mdash; Localization</p>
-      <h2 class="section-heading">One person, 31 languages</h2>
+      <h2 class="section-heading"><span class="section-num">08</span>Localization</h2>
+      <p class="section-kicker">One person, 31 languages</p>
       <p class="section-text">Thirty-one languages was a decision, not an achievement. The audience for an ALT/ALT tool isn't concentrated in one market, so shipping English-only would have narrowed the bet I had already made a few sections ago.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
       <p class="section-text">The real complexity wasn't the languages themselves &mdash; it was the snowball behind them: every new country added its own regional requirements, and the backend had to keep up. Currently awaiting App Store approval for the full 31-language rollout.</p>
@@ -1309,8 +1321,8 @@
 
     <!-- 09 — OUTCOME -->
     <section class="case-section">
-      <p class="section-label">09 &mdash; Outcome</p>
-      <h2 class="section-heading">Live, and shipped solo</h2>
+      <h2 class="section-heading"><span class="section-num">09</span>Outcome</h2>
+      <p class="section-kicker">Live, and shipped solo</p>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; it does not yet prove anyone wants it.</p>
       <p class="section-text">Too early for usage evidence, and I would rather say that than dress a launch up as traction. The 31-language rollout is still waiting on review. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
       <div class="rb-stats-row">
@@ -1331,8 +1343,8 @@
 
     <!-- 10 — REFLECTION -->
     <section class="case-section">
-      <p class="section-label">10 &mdash; Reflection</p>
-      <h2 class="section-heading">What the build taught me</h2>
+      <h2 class="section-heading"><span class="section-num">10</span>Reflection</h2>
+      <p class="section-kicker">What the build taught me</p>
       <div class="reflection-grid">
         <div>
           <p class="reflection-title">What I'd do differently</p>
