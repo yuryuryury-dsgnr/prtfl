@@ -72,22 +72,18 @@
 
     /* ——— SECTIONS ——— */
     .case-section { padding: 80px 0 0; }
-    /* Section head: the creative line sits ON TOP as a small deck, then the
-       NAME carries the section at full size so the case stays skimmable. The
-       ordinal matches the name in size and weight and is separated by colour
-       alone. Tight gap under the deck groups it with the name below; the
-       breathing room lives under the heading instead. */
+    /* Section head: a small grey meta line carries the ordinal and the creative
+       phrase together, then the NAME lands at full size so the case stays
+       skimmable. Middle dot as the separator — the same joiner the hero meta
+       and the stack caption already use. */
     .section-kicker {
-      font-size: 18px; color: #6B6B6B; line-height: 1.5;
+      font-size: 16px; color: #6B6B6B; line-height: 1.5;
       margin-bottom: 6px; max-width: 640px;
     }
+    .section-num { color: #9A9A9A; }
     .section-heading {
-      display: flex; align-items: baseline; gap: 12px;
       font-size: 28px; font-weight: 500; letter-spacing: -0.02em;
       line-height: 1.25; margin-bottom: 24px;
-    }
-    .section-num {
-      font-size: inherit; color: #9A9A9A; flex-shrink: 0;
     }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
 
@@ -247,16 +243,16 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section class="case-section">
-      <p class="section-kicker">No online option existed</p>
-      <h2 class="section-heading"><span class="section-num">01</span>Problem & Context</h2>
+      <p class="section-kicker"><span class="section-num">01</span> &middot; No online option existed</p>
+      <h2 class="section-heading">Problem & Context</h2>
       <p class="section-text">Before dopas.dp.ua, bus tickets in Dnipro were sold exclusively offline — at ticket offices and directly from drivers. For a city with diverse ridership spanning all age groups, this meant queues, cash dependency, and no record of purchase.</p>
       <p class="section-text">The challenge: build an online ticketing platform from zero that works for everyone — from teenagers booking on a phone to elderly passengers unfamiliar with digital services.</p>
     </section>
 
     <!-- 02 — PROCESS -->
     <section class="case-section">
-      <p class="section-kicker">From research to handoff</p>
-      <h2 class="section-heading"><span class="section-num">02</span>Process</h2>
+      <p class="section-kicker"><span class="section-num">02</span> &middot; From research to handoff</p>
+      <h2 class="section-heading">Process</h2>
       <div class="timeline">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
@@ -299,8 +295,8 @@
 
     <!-- 03 — MARKET ANALYSIS -->
     <section class="case-section">
-      <p class="section-kicker">What the competition looked like</p>
-      <h2 class="section-heading"><span class="section-num">03</span>Artifacts: Market Analysis</h2>
+      <p class="section-kicker"><span class="section-num">03</span> &middot; What the competition looked like</p>
+      <h2 class="section-heading">Artifacts: Market Analysis</h2>
       <div class="card-grid-3">
         <div class="card">
           <p class="card-number">01</p>
@@ -337,8 +333,8 @@
 
     <!-- 04 — USER FLOW -->
     <section class="case-section">
-      <p class="section-kicker">End-to-end booking flow</p>
-      <h2 class="section-heading"><span class="section-num">04</span>Artifacts: User Flow</h2>
+      <p class="section-kicker"><span class="section-num">04</span> &middot; End-to-end booking flow</p>
+      <h2 class="section-heading">Artifacts: User Flow</h2>
       <div class="flow-container">
         <svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;">
           <!-- Row 1: main flow -->
@@ -423,8 +419,8 @@
 
     <!-- 05 — USABILITY FINDINGS -->
     <section class="case-section">
-      <p class="section-kicker">What testing revealed</p>
-      <h2 class="section-heading"><span class="section-num">05</span>Artifacts: Usability Findings</h2>
+      <p class="section-kicker"><span class="section-num">05</span> &middot; What testing revealed</p>
+      <h2 class="section-heading">Artifacts: Usability Findings</h2>
       <div class="card-grid-2">
         <div class="card">
           <p class="card-number">01</p>
@@ -455,8 +451,8 @@
 
     <!-- 06 — WIREFRAMES -->
     <section class="case-section">
-      <p class="section-kicker">Defining the structure</p>
-      <h2 class="section-heading"><span class="section-num">06</span>Wireframes</h2>
+      <p class="section-kicker"><span class="section-num">06</span> &middot; Defining the structure</p>
+      <h2 class="section-heading">Wireframes</h2>
       <p class="section-text">Lo-fi wireframes defined the core structure before any visual design decisions were made.</p>
       <div class="wireframe-grid">
         <div class="wireframe-item">
@@ -484,8 +480,8 @@
 
     <!-- 07 — MOCKUPS: BEFORE / AFTER -->
     <section class="case-section">
-      <p class="section-kicker">What changed after testing</p>
-      <h2 class="section-heading"><span class="section-num">07</span>Mockups: Before / After</h2>
+      <p class="section-kicker"><span class="section-num">07</span> &middot; What changed after testing</p>
+      <h2 class="section-heading">Mockups: Before / After</h2>
       <p class="section-text">High-fidelity screens reflecting changes made after two rounds of usability testing.</p>
 
       <div style="margin-top: 32px;">
@@ -573,8 +569,8 @@
 
     <!-- 08 — OUTCOME -->
     <section class="case-section">
-      <p class="section-kicker">Live and generating revenue</p>
-      <h2 class="section-heading"><span class="section-num">08</span>Outcome</h2>
+      <p class="section-kicker"><span class="section-num">08</span> &middot; Live and generating revenue</p>
+      <h2 class="section-heading">Outcome</h2>
       <p class="outcome-text">Launched in late autumn 2020. Users responded positively — the platform filled a real gap in the local market where no online alternative existed before.</p>
       <p class="outcome-text">dopas.dp.ua has been live and generating revenue since launch.</p>
       <div class="cta-row">
@@ -584,8 +580,8 @@
 
     <!-- 09 — REFLECTION -->
     <section class="case-section">
-      <p class="section-kicker">Looking back</p>
-      <h2 class="section-heading"><span class="section-num">09</span>Reflection</h2>
+      <p class="section-kicker"><span class="section-num">09</span> &middot; Looking back</p>
+      <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
         <div>
           <p class="reflection-title">What I'd do differently</p>
