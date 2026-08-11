@@ -596,21 +596,22 @@
 
     /* ——— SECTIONS ——— */
     .case-section { padding: 80px 0 0; }
-    /* Section head: the NAME is the heading so the case can be skimmed by
-       structure; the ordinal rides on the same baseline, small and muted; the
-       creative line drops below as a deck, larger than body copy. */
+    /* Section head: the creative line sits ON TOP as a small deck, then the
+       NAME carries the section at full size so the case stays skimmable. The
+       ordinal matches the name in size and weight and is separated by colour
+       alone. Tight gap under the deck groups it with the name below; the
+       breathing room lives under the heading instead. */
+    .section-kicker {
+      font-size: 18px; color: #6B6B6B; line-height: 1.5;
+      margin-bottom: 6px; max-width: 640px;
+    }
     .section-heading {
       display: flex; align-items: baseline; gap: 12px;
       font-size: 28px; font-weight: 600; letter-spacing: -0.02em;
-      line-height: 1.25; margin-bottom: 8px;
+      line-height: 1.25; margin-bottom: 24px;
     }
     .section-num {
-      font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
-      color: #9A9A9A; flex-shrink: 0;
-    }
-    .section-kicker {
-      font-size: 18px; color: #6B6B6B; line-height: 1.5;
-      margin-bottom: 26px; max-width: 640px;
+      font-size: inherit; color: #9A9A9A; flex-shrink: 0;
     }
     .subsection-heading {
       font-size: 18px; font-weight: 600; letter-spacing: -0.01em;
@@ -1510,8 +1511,8 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section id="section-01" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">01</span>Problem &amp; Context</h2>
       <p class="section-kicker">From days of searching to minutes of finding</p>
+      <h2 class="section-heading"><span class="section-num">01</span>Problem &amp; Context</h2>
 
       <div class="problem-grid" style="margin-top:48px;" tabindex="0" role="group" aria-label="Problem, goal, and success — scrollable">
         <div class="problem-card">
@@ -1535,8 +1536,8 @@
 
     <!-- 02 — PROCESS -->
     <section id="section-02" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">02</span>Process</h2>
       <p class="section-kicker">From vision to shipped product</p>
+      <h2 class="section-heading"><span class="section-num">02</span>Process</h2>
       <div class="timeline">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
@@ -1579,8 +1580,8 @@
 
     <!-- 03 — UX STRATEGY (Phase 1 + Phase 2 toggle) -->
     <section id="section-03" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">03</span>UX Strategy</h2>
       <p class="section-kicker">Two phases of product evolution</p>
+      <h2 class="section-heading"><span class="section-num">03</span>UX Strategy</h2>
 
       <div class="phase-toggle">
         <button class="phase-toggle-btn active" data-phase="phase1">Phase 1 &mdash; MVP</button>
@@ -1757,8 +1758,8 @@
 
     <!-- 04 — RESEARCH -->
     <section id="section-04" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">04</span>Research</h2>
       <p class="section-kicker">Understanding users and their journeys</p>
+      <h2 class="section-heading"><span class="section-num">04</span>Research</h2>
       <p class="section-text">4 persona groups, user flows, and end-to-end journey maps shaped every design decision.</p>
 
       <div class="phase-toggle">
@@ -1825,8 +1826,8 @@
 
     <!-- 05 — PROTOTYPE & DESIGN SYSTEM -->
     <section id="section-05" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">05</span>Prototype &amp; Design System</h2>
       <p class="section-kicker">From AI brainstorm to production-ready screens</p>
+      <h2 class="section-heading"><span class="section-num">05</span>Prototype &amp; Design System</h2>
       <p class="section-text">Instead of pixel-perfect mockups, I started with an AI prototype to test concepts and layouts before investing in high-fidelity design.</p>
       <p class="section-text">Once the structure was proven, I built a scalable design system &mdash; reusable components, tokens, and patterns &mdash; then the final mockups for the dev team.</p>
     </section>
@@ -2219,8 +2220,8 @@
 
     <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
     <section id="section-06" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">06</span>Validation</h2>
       <p class="section-kicker">Testing with the people who'd actually use it</p>
+      <h2 class="section-heading"><span class="section-num">06</span>Validation</h2>
       <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
 
       <div class="validation-grid" tabindex="0" role="group" aria-label="Validation sessions — scrollable">
@@ -2255,8 +2256,8 @@
 
     <!-- 07 — HAND-OFF TO DEV -->
     <section id="section-07" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">07</span>Hand-off to Dev</h2>
       <p class="section-kicker">AI-powered design-to-code pipeline</p>
+      <h2 class="section-heading"><span class="section-num">07</span>Hand-off to Dev</h2>
       <p class="section-text">Traditional hand-off means screenshots, redlines, and a PDF that's outdated the moment you save it. Instead, I connected developers directly to the Figma design system through MCP (Model Context Protocol) &mdash; they pulled specs, tokens, and interaction states straight into their IDE in real time.</p>
 
       <p class="ds-eyebrow">How it flows</p>
@@ -2285,8 +2286,8 @@
 
     <!-- 08 — POST-LAUNCH RESEARCH -->
     <section id="section-08" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">08</span>Post-launch Research</h2>
       <p class="section-kicker">Launch isn't the finish line &mdash; measuring what's next</p>
+      <h2 class="section-heading"><span class="section-num">08</span>Post-launch Research</h2>
       <p class="section-text">The platform is in active use while testing continues. Rather than waiting to measure success, I designed the post-launch research program upfront &mdash; combining analytics, AI-powered tools, and continuous user feedback.</p>
 
       <div class="accordion">
@@ -2330,16 +2331,16 @@
 
     <!-- 09 — OUTCOME -->
     <section id="section-09" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">09</span>Outcome</h2>
       <p class="section-kicker">Built, validated, in active use</p>
+      <h2 class="section-heading"><span class="section-num">09</span>Outcome</h2>
       <p class="section-text">The platform is built, validated with real users, and in active use while testing continues.</p>
       <p class="section-text">Already in place: a three-tier design system, dev-integrated MCP pipeline, two-phase UX strategy, two rounds of stakeholder validation, and a Figma-to-code workflow producing components 1:1 with the design system.</p>
     </section>
 
     <!-- 08 — REFLECTION -->
     <section id="section-10" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">10</span>Reflection</h2>
       <p class="section-kicker">What I learned along the way</p>
+      <h2 class="section-heading"><span class="section-num">10</span>Reflection</h2>
       <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
         <div class="reflection-col">
           <p class="reflection-title">What I'd do differently</p>

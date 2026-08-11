@@ -66,21 +66,22 @@
 
     /* ——— SECTIONS ——— */
     .case-section { padding: 80px 0 0; }
-    /* Section head: the NAME is the heading so the case can be skimmed by
-       structure; the ordinal rides on the same baseline, small and muted; the
-       creative line drops below as a deck, larger than body copy. */
+    /* Section head: the creative line sits ON TOP as a small deck, then the
+       NAME carries the section at full size so the case stays skimmable. The
+       ordinal matches the name in size and weight and is separated by colour
+       alone. Tight gap under the deck groups it with the name below; the
+       breathing room lives under the heading instead. */
+    .section-kicker {
+      font-size: 18px; color: #6B6B6B; line-height: 1.5;
+      margin-bottom: 6px; max-width: 640px;
+    }
     .section-heading {
       display: flex; align-items: baseline; gap: 12px;
       font-size: 28px; font-weight: 500; letter-spacing: -0.02em;
-      line-height: 1.25; margin-bottom: 8px;
+      line-height: 1.25; margin-bottom: 24px;
     }
     .section-num {
-      font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
-      color: #9A9A9A; flex-shrink: 0;
-    }
-    .section-kicker {
-      font-size: 18px; color: #6B6B6B; line-height: 1.5;
-      margin-bottom: 26px; max-width: 640px;
+      font-size: inherit; color: #9A9A9A; flex-shrink: 0;
     }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
 
@@ -326,8 +327,8 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">01</span>Problem & Context</h2>
       <p class="section-kicker">Booking was harder than the illness</p>
+      <h2 class="section-heading"><span class="section-num">01</span>Problem & Context</h2>
       <p class="section-text">DobroDoc+ already existed — but the original app was outdated and frustrating to use. Booking a doctor's appointment required more effort than the illness itself.</p>
       <p class="section-text">The core pain: when you're sick, the last thing you want is to navigate a broken interface or travel to a clinic just to get in the queue. Busy adults needed a way to see a doctor without leaving home.</p>
       <p class="section-text">The goal was a full redesign — faster booking, clearer navigation, and an experience that works when you feel your worst.</p>
@@ -335,8 +336,8 @@
 
     <!-- 02 — PROCESS -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">02</span>Process</h2>
       <p class="section-kicker">From audit to handoff</p>
+      <h2 class="section-heading"><span class="section-num">02</span>Process</h2>
       <div class="timeline">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
@@ -385,8 +386,8 @@
 
     <!-- 03A — UX STRATEGY TABLE -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">03</span>Artifacts: UX Strategy</h2>
       <p class="section-kicker">Strategic foundation</p>
+      <h2 class="section-heading"><span class="section-num">03</span>Artifacts: UX Strategy</h2>
       <table class="strategy-table">
         <tr>
           <td>Vision</td>
@@ -417,8 +418,8 @@
 
     <!-- 03B — RESEARCH & DISCOVERY -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">03</span>Artifacts: Research & Discovery</h2>
       <p class="section-kicker">Understanding the users</p>
+      <h2 class="section-heading"><span class="section-num">03</span>Artifacts: Research & Discovery</h2>
       <div class="card-grid-3">
         <div class="card">
           <p class="card-number">01</p>
@@ -452,8 +453,8 @@
 
     <!-- 03C — USER FLOW -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">03</span>Artifacts: User Flow</h2>
       <p class="section-kicker">Multi-scenario flow</p>
+      <h2 class="section-heading"><span class="section-num">03</span>Artifacts: User Flow</h2>
       <div class="flow-container">
         <svg viewBox="0 0 900 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;">
           <!-- Entry -->
@@ -537,8 +538,8 @@
 
     <!-- 04 — MOCKUPS -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">04</span>Mockups</h2>
       <p class="section-kicker">Key screens in the redesign</p>
+      <h2 class="section-heading"><span class="section-num">04</span>Mockups</h2>
       <p class="section-text">Final hi-fi mockups covering the core booking flow — from onboarding to appointment confirmation.</p>
 
       <!-- Pair 1: Onboarding + Home -->
@@ -592,8 +593,8 @@
 
     <!-- 05 — USABILITY FINDINGS -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">05</span>Usability Findings</h2>
       <p class="section-kicker">Two rounds of testing</p>
+      <h2 class="section-heading"><span class="section-num">05</span>Usability Findings</h2>
 
       <div class="usability-round">
         <p class="round-title">Round 1 — Lo-fi prototype</p>
@@ -642,8 +643,8 @@
 
     <!-- 06 — MOCKUPS: BEFORE / AFTER -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">06</span>Mockups: Before / After</h2>
       <p class="section-kicker">What changed after testing</p>
+      <h2 class="section-heading"><span class="section-num">06</span>Mockups: Before / After</h2>
 
       <div style="margin-top: 32px;">
         <div class="ba-pair">
@@ -730,8 +731,8 @@
 
     <!-- 07 — OUTCOME -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">07</span>Outcome</h2>
       <p class="section-kicker">40% faster booking</p>
+      <h2 class="section-heading"><span class="section-num">07</span>Outcome</h2>
       <p class="outcome-text">Redesign launched in late 2020. The updated app reduced time-to-booking by 40% in usability tests. Digital prescriptions and post-consultation summaries became the most praised features in early feedback.</p>
       <p class="outcome-text">The app is live on both platforms today.</p>
       <div class="cta-row">
@@ -742,8 +743,8 @@
 
     <!-- 08 — REFLECTION -->
     <section class="case-section">
-      <h2 class="section-heading"><span class="section-num">08</span>Reflection</h2>
       <p class="section-kicker">Looking back</p>
+      <h2 class="section-heading"><span class="section-num">08</span>Reflection</h2>
       <div class="reflection-grid">
         <div>
           <p class="reflection-title">What I'd do differently</p>
