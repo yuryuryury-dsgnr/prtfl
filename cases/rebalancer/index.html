@@ -710,7 +710,7 @@
           <div class="timeline-step timeline-step--server">
             <p class="timeline-number">15&ndash;21 May</p>
             <p class="timeline-title">Move the clock to a server</p>
-            <p class="timeline-desc">Background refresh can't be trusted to wake up, so the alert clock moved onto a server.</p>
+            <p class="timeline-desc">Firing with the app closed meant a cron, a device registry and a price layer &mdash; none of which existed yet.</p>
             <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Host swapped mid-phase</p>
             <span class="timeline-tag">Cron &middot; KV &middot; APNs</span>
           </div>
@@ -825,7 +825,7 @@
               </ul>
             </li>
           </ul>
-          <p class="rb-note">Token selector and Holdings entry appear under two parents because they genuinely are shared &mdash; one sheet invoked from wherever it's needed, rather than a copy per screen.</p>
+          <p class="rb-note">Sheets that appear under two parents are shared, not duplicated &mdash; one sheet invoked from wherever it's needed.</p>
           <p class="rb-note">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
         </div>
 
@@ -864,8 +864,7 @@
             </div>
           </div>
           <p class="rb-note">Coins started as a page pushed from the watchlist header. I promoted it to a tab once I noticed I kept coming back to my holdings rather than visiting them.</p>
-          <p class="rb-note">Alerts went the other way. It was briefly a fourth tab; I moved it back behind a bell. Three tabs is the product &mdash; alerts are somewhere I check, not somewhere I live.</p>
-          <p class="rb-note">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, and the tabs you left get properly set aside instead of lingering underneath &mdash; a structural choice that also spared me a class of bug on hidden screens.</p>
+          <p class="rb-note">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, so the tabs you left get properly set aside instead of lingering underneath.</p>
         </div>
       </div>
     </section>
@@ -1114,7 +1113,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Custom pairs &mdash; the pair is the only object I ask you to create</p>
+          <p class="phone-caption">Custom pairs &mdash; any two coins, held as one ratio</p>
         </div>
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1123,7 +1122,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Simulator &mdash; kept on the detail screen so the list stays scannable</p>
+          <p class="phone-caption">Simulator &mdash; the swap chain, step by step, on the pair's own screen</p>
         </div>
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1132,7 +1131,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Alerts &mdash; prefilled at today's ratio, because nobody arrives knowing the number</p>
+          <p class="phone-caption">Alerts &mdash; a threshold on the ratio, per pair</p>
         </div>
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1141,7 +1140,7 @@
               <span class="phone-placeholder">Screenshot coming soon</span>
             </div>
           </div>
-          <p class="phone-caption">Coins &mdash; a ledger, not a converter; that separation was deliberate</p>
+          <p class="phone-caption">Coins &mdash; holdings restated in any other coin you track</p>
         </div>
       </div>
     </section>
@@ -1271,7 +1270,7 @@
     <section class="case-section">
       <p class="section-kicker"><span class="section-num">07</span> &middot; Building for a market that isn't in one country</p>
       <h2 class="section-heading">Localization</h2>
-      <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start. The translation itself is machine work &mdash; generated with AI, then passed through Gemini, which caught nuances the first pass missed.</p>
+      <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start.</p>
       <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
 
       <div class="loc-stat">
@@ -1329,7 +1328,7 @@
       <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; it does not yet prove anyone wants it.</p>
-      <p class="section-text">Too early for usage evidence, and I would rather say that than dress a launch up as traction. The interface ships in 31 languages and none of them have met a real user yet. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
+      <p class="section-text">Too early for usage evidence. The interface ships in 31 languages and none of them have met a real user yet. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
       <div class="rb-stats-row">
         <div class="rb-stat-item">
           <span class="rb-stat-item-value">Live</span>
@@ -1353,11 +1352,11 @@
       <div class="reflection-grid">
         <div>
           <p class="reflection-title">What I'd do differently</p>
-          <p class="reflection-text">Underestimating the backend was the main misstep. The interface came together fast; the servers, notification infrastructure, and region-specific APIs were where the real time went. Next time I'd scope the invisible parts first.</p>
+          <p class="reflection-text">Underestimating the backend was the main misstep. Next time I'd scope the invisible parts first, before a line of interface exists.</p>
         </div>
         <div>
           <p class="reflection-title">What I learned</p>
-          <p class="reflection-text">The line between designer and developer is thinner than it used to be. With AI, I shipped something end-to-end that would normally take a team &mdash; but only because I worked with discipline, not shortcuts. AI accelerates the parts you understand and is useless for the parts you don't; the diagnose-plan-implement loop is what kept a solo build from becoming chaos. The best results came when I knew exactly what I wanted before asking.</p>
+          <p class="reflection-text">The line between designer and developer is thinner than it used to be. With AI I shipped something end-to-end that would normally take a team &mdash; but AI accelerates the parts you understand and is useless for the parts you don't.</p>
         </div>
       </div>
     </section>
