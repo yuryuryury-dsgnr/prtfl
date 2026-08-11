@@ -2434,13 +2434,16 @@
 
     document.querySelectorAll('.timeline').forEach(el => timelineObserver.observe(el));
 
-    // Phase toggle
-    document.querySelectorAll('.phase-toggle-btn').forEach(btn => {
+    // Phase toggle — only the §03 tabs (those with data-phase) drive the phase panels.
+    // The §04 and §05 tab groups have no data-phase and are handled elsewhere.
+    document.querySelectorAll('.phase-toggle-btn[data-phase]').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.phase-toggle-btn').forEach(b => b.classList.remove('active'));
+        const group = btn.closest('.phase-toggle') || document;
+        group.querySelectorAll('.phase-toggle-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById(btn.dataset.phase).classList.add('active');
+        const panel = document.getElementById(btn.dataset.phase);
+        if (panel) panel.classList.add('active');
       });
     });
 
