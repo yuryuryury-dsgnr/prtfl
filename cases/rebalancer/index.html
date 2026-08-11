@@ -97,15 +97,6 @@
     }
     .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
 
-    /* ——— CARDS ——— */
-    .card-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
-    .card {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 24px;
-    }
-    .card-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-    .card-desc { font-size: 14px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
-
     /* ——— REFLECTION ——— */
     .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
     .reflection-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
@@ -136,7 +127,7 @@
 
     /* ═══ PHASE 3 ADDITIONS ═══ */
 
-    /* Stage/pipeline flow — §03 process diagram + §06 AI→Gemini graphic.
+    /* Stage/pipeline flow — §06 AI→Gemini graphic.
        Nodes + arrows, horizontal on desktop; on mobile it stacks with the
        arrow rotated into a downward connector. Adapts Halliburton's
        .pipeline-flow to this page's Inter + card styling. */
@@ -168,7 +159,7 @@
       border-radius: 100px; padding: 5px 12px; line-height: 1.4;
     }
 
-    /* iPhone frames (§05) — CSS device mock + placeholder fill. Real
+    /* iPhone frames (§04) — CSS device mock + placeholder fill. Real
        screenshots drop into .phone-shot (absolute, object-fit:cover). */
     .phone-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 24px; margin-top: 32px; justify-items: center; max-width: 560px; }
     .phone-figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
@@ -239,28 +230,11 @@
     .rb-stack-layers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; max-width: 560px; }
     .rb-layer { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 4px 10px; line-height: 1.5; white-space: nowrap; }
 
-    /* §03 — focal "3 months" stat (matches the §06 "31" family) */
-    .rb-stat { display: flex; align-items: baseline; gap: 12px; margin-top: 28px; }
-    .rb-stat-num { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
-    .rb-stat-label { font-size: 16px; color: #6B6B6B; }
-
     /* §07 — compact outcome stat trio (borderless, same stat family, smaller) */
     .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
     .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
     .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
     .rb-stat-item-label { font-size: 13px; color: #6B6B6B; }
-
-    /* §02 — positioning bet: dashed = deliberately unproven (assumption, not
-       a research finding). Distinct from every solid-bordered card on the page. */
-    .rb-pos-bet {
-      margin-top: 28px; max-width: 640px;
-      background: #FFFFFF; border: 1px dashed rgba(0,0,0,0.22);
-      border-radius: 12px; padding: 20px 24px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .rb-pos-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; }
-    .rb-pos-claim { font-size: 15px; color: #1A1A1A; line-height: 1.6; }
-    .rb-pos-note { font-size: 13px; color: #6B6B6B; line-height: 1.6; }
 
     /* ═══ RB TABS — visual match for the site's .phase-toggle, but its own
        rb- namespace + its own scoped handler. Each .rb-tabgroup owns its
@@ -282,7 +256,7 @@
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
-    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §05 and §06.
+    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §02 and §03.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
        every flow). Muted on purpose: these sit on a warm #F8F7F4 page.
@@ -296,7 +270,7 @@
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
-    /* Shared commentary line under a diagram (both §05 and §06) */
+    /* Shared commentary line under a diagram (both §02 and §03) */
     .rb-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
     .rb-note + .rb-note { margin-top: 12px; }
 
@@ -309,7 +283,7 @@
     .rb-key-mark--push { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
     .rb-key-mark--sheet { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
-    /* §05 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
+    /* §02 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
        borders on each <li>: ::before is the vertical segment (shortened on
        :last-child so the branch terminates in an elbow), ::after is the
        horizontal stub. Nodes hold real text, so nothing shrinks on mobile. */
@@ -359,7 +333,7 @@
       border-radius: 8px; padding: 6px 11px;
     }
 
-    /* §05 — navigation planes, drawn as a cross-section: each band is offset
+    /* §02 — navigation planes, drawn as a cross-section: each band is offset
        horizontally so the three planes read as depth without any shadow. */
     /* Three planes drawn as a card stack seen slightly from above: each upper
        plane is inset, carries a downward shadow, and OVERLAPS the plane below
@@ -397,7 +371,7 @@
     .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
     .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
 
-    /* §06 — user flows, drawn left→right the way flow diagrams are actually
+    /* §03 — user flows, drawn left→right the way flow diagrams are actually
        read. .rb-track is a flex row; a fork opens into branch rows stacked
        above and below the axis, joined by a spine + elbows. On a phone the
        track scrolls inside .rb-flow (the same contained-scroll mechanism the
@@ -486,7 +460,7 @@
     .rb-key-mark--end { background: #1A1A1A; border-radius: 100px; }
     .rb-key-mark--outside { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
-    /* §09 — technical architecture. Four small blocks: two price lanes, the
+    /* §05 — technical architecture. Four small blocks: two price lanes, the
        two-leg division, the threshold→push chain, and the stack. All chip /
        flex based so everything wraps instead of ever widening the page. */
     .rb-tech-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 32px 0 10px; }
@@ -539,7 +513,6 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
       .case-section { padding: 56px 0 0; }
-      .card-grid-2 { grid-template-columns: 1fr; }
       .reflection-grid { grid-template-columns: 1fr; }
       /* tab strip → bounded internal scroll; a clipped next tab is the peek */
       .rb-tabs {
@@ -634,61 +607,9 @@
       </div>
     </section>
 
-    <!-- 02 — POSITIONING & ASSUMPTIONS -->
+    <!-- 02 — INFORMATION ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">02</span> &middot; A gap I knew from the inside</p>
-      <h2 class="section-heading">Positioning</h2>
-      <p class="section-text">I work in this market as a user, so I mapped it from the inside rather than from a feature matrix. Two categories already own the space, and neither of them treats an ALT/ALT pair as a thing you can hold:</p>
-      <div class="card-grid-2">
-        <div class="card">
-          <p class="card-title">Exchanges &amp; wallets</p>
-          <p class="card-desc">Price altcoins against USDT, USD, or BTC. An arbitrary ALT/ALT pair isn't an object you can name, keep, or attach an alert to.</p>
-        </div>
-        <div class="card">
-          <p class="card-title">Portfolio trackers</p>
-          <p class="card-desc">Report holdings in fiat and alert on single coins. The ratio between two of your own positions isn't treated as a thing worth watching.</p>
-        </div>
-      </div>
-      <div class="rb-pos-bet">
-        <span class="rb-pos-label">The position I took</span>
-        <span class="rb-pos-claim">Put the four together in one place: a custom ALT/ALT pair, an alert on the ratio, holdings that recalculate, and a simulator to plan the move.</span>
-        <span class="rb-pos-note">Each exists somewhere on its own. The combination is what nobody was offering.</span>
-      </div>
-      <p class="section-text" style="margin-top:28px;">The gap has an engineering explanation, not a marketing one: there is no direct ALT/ALT feed to consume. The ratio has to be assembled from two separate USD legs and divided &mdash; a real build cost, and the reason the space stays empty. That was the opening, so I kept the scope tight enough to hold it.</p>
-    </section>
-
-    <!-- 03 — THE PROCESS -->
-    <section class="case-section">
-      <p class="section-kicker"><span class="section-num">03</span> &middot; Diagnose, plan, implement &mdash; one change at a time</p>
-      <h2 class="section-heading">The Process</h2>
-      <p class="section-text">I designed this in code rather than in Figma, so a decision and its implementation happened in the same place. That forces every choice to be specific enough to actually run &mdash; there is no mockup to hide an unresolved detail in.</p>
-      <p class="section-text">Working at that speed only holds up with a method, so every change went through the same loop: Diagnose &rarr; Plan &rarr; Implement. Understand the current state first, agree a precise plan, then implement it surgically &mdash; one small, reviewable change at a time.</p>
-      <div class="flow" role="group" aria-label="Process loop: Diagnose, then Plan, then Implement">
-        <div class="flow-node">
-          <p class="flow-node-title">Diagnose</p>
-          <p class="flow-node-line">Understand the current state first</p>
-        </div>
-        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-        <div class="flow-node">
-          <p class="flow-node-title">Plan</p>
-          <p class="flow-node-line">Agree on a precise plan</p>
-        </div>
-        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-        <div class="flow-node">
-          <p class="flow-node-title">Implement</p>
-          <p class="flow-node-line">One small, reviewable change at a time</p>
-        </div>
-      </div>
-      <p class="section-text" style="margin-top:32px;">The hardest part wasn't the interface. Notification servers, and APIs that had to behave across different countries, were the real work &mdash; and that was unfamiliar territory for me. The loop is what made it survivable instead of a run of lucky guesses.</p>
-      <div class="rb-stat">
-        <span class="rb-stat-num">3</span>
-        <span class="rb-stat-label">months &mdash; idea to App Store</span>
-      </div>
-    </section>
-
-    <!-- 04 — INFORMATION ARCHITECTURE -->
-    <section class="case-section">
-      <p class="section-kicker"><span class="section-num">04</span> &middot; Three tabs, and everything else on top</p>
+      <p class="section-kicker"><span class="section-num">02</span> &middot; Three tabs, and everything else on top</p>
       <h2 class="section-heading">Information Architecture</h2>
       <p class="section-text">There was never an IA diagram. The structure got decided in code, screen by screen &mdash; and I reversed myself twice before it settled. This is that structure written down after the fact.</p>
 
@@ -739,6 +660,8 @@
                     <span class="rb-tree-sheet">Holdings entry</span>
                     <span class="rb-tree-sheet">Pair colour</span>
                   </div>
+                </li>
+              </ul>
             </li>
             <li>
               <div class="rb-tree-node rb-tree-node--tab">
@@ -767,6 +690,10 @@
                     <span class="rb-tree-sheet">Theme</span>
                     <span class="rb-tree-sheet">Feedback</span>
                   </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
           <p class="rb-note">Token selector and Holdings entry appear under two parents because they genuinely are shared &mdash; one sheet invoked from wherever it's needed, rather than a copy per screen.</p>
           <p class="rb-note">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
         </div>
@@ -812,9 +739,9 @@
       </div>
     </section>
 
-    <!-- 05 — USER FLOWS -->
+    <!-- 03 — USER FLOWS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">05</span> &middot; Five paths, and the edge I drew</p>
+      <p class="section-kicker"><span class="section-num">03</span> &middot; Five paths, and the edge I drew</p>
       <h2 class="section-heading">User Flows</h2>
       <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
 
@@ -1043,9 +970,9 @@
       </div>
     </section>
 
-    <!-- 06 — SCREENS -->
+    <!-- 04 — SCREENS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">06</span> &middot; Four screens, four decisions</p>
+      <p class="section-kicker"><span class="section-num">04</span> &middot; Four screens, four decisions</p>
       <h2 class="section-heading">Screens</h2>
       <p class="section-text">Four screens where a decision is visible in the layout. Screenshots go in as the build settles.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -1088,9 +1015,9 @@
       </div>
     </section>
 
-    <!-- 07 — TECHNICAL ARCHITECTURE -->
+    <!-- 05 — TECHNICAL ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">07</span> &middot; Two price paths, because one wasn't allowed</p>
+      <p class="section-kicker"><span class="section-num">05</span> &middot; Two price paths, because one wasn't allowed</p>
       <h2 class="section-heading">Technical Architecture</h2>
       <p class="section-text">Three problems behind the interface shaped the architecture.</p>
 
@@ -1171,8 +1098,6 @@
         </div>
         </div>
       </div>
-        </li>
-      </ul>
       <p class="rb-tech-why">Background refresh is unreliable, so the schedule lives on the server.</p>
 
       <p class="rb-tech-label">The stack</p>
@@ -1211,9 +1136,9 @@
       <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
     </section>
 
-    <!-- 08 — LOCALIZATION -->
+    <!-- 06 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">08</span> &middot; Building for a market that isn't in one country</p>
+      <p class="section-kicker"><span class="section-num">06</span> &middot; Building for a market that isn't in one country</p>
       <h2 class="section-heading">Localization</h2>
       <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start. The translation itself is machine work &mdash; generated with AI, then passed through Gemini, which caught nuances the first pass missed.</p>
       <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
@@ -1268,9 +1193,9 @@
       </div>
     </section>
 
-    <!-- 09 — OUTCOME -->
+    <!-- 07 — OUTCOME -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">09</span> &middot; Live, and shipped solo</p>
+      <p class="section-kicker"><span class="section-num">07</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; it does not yet prove anyone wants it.</p>
       <p class="section-text">Too early for usage evidence, and I would rather say that than dress a launch up as traction. The 31-language rollout is still waiting on review. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
@@ -1290,9 +1215,9 @@
       </div>
     </section>
 
-    <!-- 10 — REFLECTION -->
+    <!-- 08 — REFLECTION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">10</span> &middot; What the build taught me</p>
+      <p class="section-kicker"><span class="section-num">08</span> &middot; What the build taught me</p>
       <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
         <div>
