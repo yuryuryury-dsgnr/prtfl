@@ -350,24 +350,75 @@
     .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
     .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
 
-    /* §06 — user flows: compact step chain. Steps share the row (flex 1 1 0)
-       so nothing scrolls on desktop; on mobile the chain stacks. The dashed
-       .rb-fl-edge marks the app's boundary — everything past it is off-app. */
-    .rb-fl-flow { display: flex; align-items: stretch; gap: 8px; margin-top: 20px; }
-    .rb-fl-step {
-      flex: 1 1 0; min-width: 0;
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 10px; padding: 14px 16px;
-      display: flex; flex-direction: column; gap: 5px;
+    /* §06 — user flows. Vertical rail at every width (same L-connector
+       mechanics as the IA tree), so step text is never squeezed on a phone.
+       Node TYPE is carried by shape + stroke style only — no colour:
+         screen   solid rect + title-bar hint      action   solid pill
+         system   dotted rect                      decision hexagon
+         end      filled pill                      sheet / outside  dashed */
+    .rb-flow, .rb-flow ul { list-style: none; }
+    .rb-flow { margin-top: 18px; }
+    .rb-flow li { position: relative; padding-left: 26px; }
+    .rb-flow li::before {
+      content: ''; position: absolute; left: 0; top: 0; height: 100%;
+      border-left: 1px solid rgba(0,0,0,0.16);
     }
-    .rb-fl-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.4; }
-    .rb-fl-line { font-size: 12px; color: #6B6B6B; line-height: 1.5; }
-    .rb-fl-arrow { color: #C0BDB8; font-size: 16px; line-height: 1; display: flex; align-items: center; flex-shrink: 0; }
-    .rb-fl-edge { flex: 0 0 1px; align-self: stretch; border-left: 1px dashed rgba(0,0,0,0.28); margin: 0 6px; }
-    .rb-fl-step--outside { background: transparent; border-style: dashed; border-color: rgba(0,0,0,0.22); }
-    .rb-fl-step--outside .rb-fl-title { color: #6B6B6B; }
-    .rb-fl-outside-tag { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9A9A9A; }
-    .rb-fl-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 20px; max-width: 640px; }
+    .rb-flow li:last-child::before { height: 26px; }
+    .rb-flow li::after {
+      content: ''; position: absolute; left: 0; top: 26px; width: 16px;
+      border-top: 1px solid rgba(0,0,0,0.16);
+    }
+    .rb-fork > li::before, .rb-fork > li::after { border-color: rgba(0,0,0,0.24); }
+    .rb-fork-label { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; margin-top: 10px; }
+    /* the boundary lane — everything below it happens off-app */
+    .rb-flow li.rb-bound { padding-left: 0; margin: 18px 0 4px; }
+    .rb-flow li.rb-bound::before { display: none; }
+    .rb-flow li.rb-bound::after {
+      content: ''; position: absolute; left: 0; right: 0; top: 50%; width: auto;
+      border-top: 1px dashed rgba(0,0,0,0.32);
+    }
+    .rb-bound-label {
+      position: relative; z-index: 1; display: inline-block; margin-left: 18px;
+      background: #F8F7F4; padding: 0 10px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A;
+    }
+
+    .rb-step {
+      display: inline-flex; flex-direction: column; gap: 3px;
+      max-width: 100%; margin: 12px 0; padding: 11px 15px;
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
+      position: relative;
+    }
+    .rb-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
+    .rb-step-line { font-size: 12px; color: #6B6B6B; line-height: 1.45; }
+    /* screen: a title-bar hint across the top */
+    .rb-step--screen { padding-top: 16px; }
+    .rb-step--screen::before {
+      content: ''; position: absolute; left: 13px; right: 13px; top: 7px;
+      height: 2px; background: rgba(0,0,0,0.28); border-radius: 2px;
+    }
+    .rb-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; }
+    .rb-step--system { border-style: dotted; border-color: rgba(0,0,0,0.34); }
+    .rb-step--sheet, .rb-step--outside { border-style: dashed; border-color: rgba(0,0,0,0.28); background: transparent; }
+    .rb-step--outside .rb-step-title { color: #6B6B6B; }
+    .rb-step--end { background: #1A1A1A; border-color: #1A1A1A; border-radius: 100px; padding-left: 19px; padding-right: 19px; }
+    .rb-step--end .rb-step-title { color: #FFFFFF; }
+    .rb-step--end .rb-step-kind { color: rgba(255,255,255,0.55); }
+    .rb-step--end .rb-step-line { color: rgba(255,255,255,0.62); }
+    /* decision: hexagon built from two clipped layers — the outer one shows
+       through as a 1px outline, so the shape reads as stroked, not filled. */
+    .rb-dec { display: inline-block; max-width: 100%; margin: 12px 0; padding: 1px; background: rgba(0,0,0,0.22); }
+    .rb-dec, .rb-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
+    .rb-dec-in { background: #FFFFFF; padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; }
+
+    /* legend marks for the flow vocabulary */
+    .rb-key-mark--screen { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); }
+    .rb-key-mark--action { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); border-radius: 100px; }
+    .rb-key-mark--system { background: #FFFFFF; border: 1px dotted rgba(0,0,0,0.36); }
+    .rb-key-mark--decision { background: rgba(0,0,0,0.30); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
+    .rb-key-mark--end { background: #1A1A1A; border-radius: 100px; }
+    .rb-key-mark--outside { background: transparent; border: 1px dashed rgba(0,0,0,0.30); }
 
     /* §09 — technical architecture. Four small blocks: two price lanes, the
        two-leg division, the threshold→push chain, and the stack. All chip /
@@ -439,10 +490,13 @@
       .rb-plane-band--overlay { margin-left: 16px; }
       .rb-plane-band--push { margin-left: 8px; }
       .rb-plane-rel { padding-left: 8px; }
-      /* flow chain stacks; the app-boundary divider turns horizontal */
-      .rb-fl-flow { flex-direction: column; gap: 6px; }
-      .rb-fl-arrow { transform: rotate(90deg); align-self: center; padding: 2px 0; }
-      .rb-fl-edge { flex: 0 0 auto; height: 1px; align-self: stretch; border-left: none; border-top: 1px dashed rgba(0,0,0,0.28); margin: 6px 0; }
+      /* flow rails tighten so step text keeps as much width as possible */
+      .rb-flow li { padding-left: 18px; }
+      .rb-flow li::after { width: 11px; }
+      .rb-step { padding: 10px 13px; }
+      .rb-step--action, .rb-step--end { padding-left: 16px; padding-right: 16px; }
+      .rb-dec-in { padding: 11px 22px; }
+      .rb-bound-label { margin-left: 10px; }
     }
   </style>
 </head>
@@ -723,69 +777,236 @@
           <button class="rb-tab" data-rb-tab="moment" role="tab" aria-selected="false">Rebalance moment</button>
         </div>
 
+        <div class="rb-key" aria-hidden="true">
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--screen"></span>Screen</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--action"></span>Action</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--system"></span>System</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--decision"></span>Decision</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--end"></span>End</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--outside"></span>Sheet / off-app</span>
+        </div>
+
         <div class="rb-tabpanel is-active" data-rb-panel="pair" role="tabpanel">
-          <div class="rb-fl-flow" role="group" aria-label="Create a custom pair">
-            <div class="rb-fl-step"><p class="rb-fl-title">Tap +</p><p class="rb-fl-line">From the watchlist</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Pick base</p><p class="rb-fl-line">Search the token catalogue</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Pick quote</p><p class="rb-fl-line">Swap the two if you chose the other way round</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Pair is live</p><p class="rb-fl-line">Tracked in the list from that moment</p></div>
-          </div>
-          <p class="rb-fl-note">Two picks, no form. The pair is the only thing the app asks you to create, so I kept it to two decisions &mdash; and made base and quote swappable instead of expecting people to get the order right first time.</p>
+          <ul class="rb-flow" role="group" aria-label="Create a custom pair">
+            <li>
+              <div class="rb-step rb-step--action">
+                <span class="rb-step-kind">Action</span>
+                <span class="rb-step-title">Tap +</span>
+                <span class="rb-step-line">From the watchlist</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--sheet">
+                <span class="rb-step-kind">Sheet</span>
+                <span class="rb-step-title">Token selector</span>
+                <span class="rb-step-line">Search the catalogue</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--action">
+                <span class="rb-step-kind">Action</span>
+                <span class="rb-step-title">Pick base</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--action">
+                <span class="rb-step-kind">Action</span>
+                <span class="rb-step-title">Pick quote</span>
+              </div>
+              <ul class="rb-fork">
+                <li>
+                  <span class="rb-fork-label">If you picked them the wrong way round</span>
+                  <div class="rb-step rb-step--action">
+                    <span class="rb-step-kind">Action</span>
+                    <span class="rb-step-title">Swap sides</span>
+                    <span class="rb-step-line">Same pair, reversed &mdash; no need to start over</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div class="rb-step rb-step--end">
+                <span class="rb-step-kind">End</span>
+                <span class="rb-step-title">Pair is live</span>
+                <span class="rb-step-line">Tracked in the list from that moment</span>
+              </div>
+            </li>
+          </ul>
+          <p class="rb-note">Two picks, no form. The pair is the only thing the app asks you to create, so I kept it to two decisions &mdash; and made the sides swappable instead of expecting people to get the order right first time.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="alert" role="tabpanel">
-          <div class="rb-fl-flow" role="group" aria-label="Set an alert on a pair">
-            <div class="rb-fl-step"><p class="rb-fl-title">Open the pair</p><p class="rb-fl-line">From the watchlist</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">New alert</p><p class="rb-fl-line">Sheet opens over the pair</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Prefilled</p><p class="rb-fl-line">Starts at the current ratio, not empty</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Set &amp; save</p><p class="rb-fl-line">Threshold armed</p></div>
-          </div>
-          <p class="rb-fl-note">The prefill is the whole design. An empty field asks &ldquo;what number?&rdquo; &mdash; prefilled with where the ratio sits right now, it asks &ldquo;how far from here?&rdquo;, which is the question people actually arrive with.</p>
+          <ul class="rb-flow" role="group" aria-label="Set an alert on a pair">
+            <li>
+              <div class="rb-step rb-step--screen">
+                <span class="rb-step-kind">Screen</span>
+                <span class="rb-step-title">Pair detail</span>
+                <span class="rb-step-line">Opened from the watchlist</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--action">
+                <span class="rb-step-kind">Action</span>
+                <span class="rb-step-title">New alert</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--sheet">
+                <span class="rb-step-kind">Sheet</span>
+                <span class="rb-step-title">Prefilled at the current ratio</span>
+                <span class="rb-step-line">Opens on today's number, not on an empty field</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-dec">
+                <div class="rb-dec-in">
+                  <span class="rb-step-kind">Decision</span>
+                  <span class="rb-step-title">Notifications allowed?</span>
+                </div>
+              </div>
+              <ul class="rb-fork">
+                <li>
+                  <span class="rb-fork-label">Not yet</span>
+                  <div class="rb-step rb-step--system">
+                    <span class="rb-step-kind">System</span>
+                    <span class="rb-step-title">Permission banner</span>
+                    <span class="rb-step-line">Asks once, in place &mdash; the alert is still saved</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="rb-fork-label">Yes</span>
+                  <div class="rb-step rb-step--action">
+                    <span class="rb-step-kind">Action</span>
+                    <span class="rb-step-title">Set the threshold</span>
+                  </div>
+                  <ul class="rb-fork">
+                    <li>
+                      <div class="rb-step rb-step--end">
+                        <span class="rb-step-kind">End</span>
+                        <span class="rb-step-title">Alert armed</span>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p class="rb-note">The prefill is the whole design. An empty field asks &ldquo;what number?&rdquo; &mdash; prefilled with where the ratio sits right now, it asks &ldquo;how far from here?&rdquo;, which is the question people actually arrive with.</p>
+          <p class="rb-note">The permission branch saves the alert either way. Making the notification prompt a precondition would have meant losing the thing the person came to do.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="sim" role="tabpanel">
-          <div class="rb-fl-flow" role="group" aria-label="Simulate a rebalance">
-            <div class="rb-fl-step"><p class="rb-fl-title">Open the pair</p><p class="rb-fl-line">Simulator lives here, not in the list</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Enter amounts</p><p class="rb-fl-line">What you'd move</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">See the outcome</p><p class="rb-fl-line">Before committing to anything</p></div>
-          </div>
-          <p class="rb-fl-note">The simulator answers &ldquo;what would this do&rdquo; without doing it. Free stops at two steps in a chain; deeper chains are where Pro begins &mdash; I put the paywall where the tool starts doing planning work, not at the front door.</p>
+          <ul class="rb-flow" role="group" aria-label="Simulate a rebalance">
+            <li>
+              <div class="rb-step rb-step--screen">
+                <span class="rb-step-kind">Screen</span>
+                <span class="rb-step-title">Pair detail</span>
+                <span class="rb-step-line">Simulator lives here, not in the list</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--action">
+                <span class="rb-step-kind">Action</span>
+                <span class="rb-step-title">Enter amounts</span>
+                <span class="rb-step-line">What you'd move</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-dec">
+                <div class="rb-dec-in">
+                  <span class="rb-step-kind">Decision</span>
+                  <span class="rb-step-title">More than two steps?</span>
+                </div>
+              </div>
+              <ul class="rb-fork">
+                <li>
+                  <span class="rb-fork-label">Within Free</span>
+                  <div class="rb-step rb-step--end">
+                    <span class="rb-step-kind">End</span>
+                    <span class="rb-step-title">See the outcome</span>
+                    <span class="rb-step-line">Before committing to anything</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="rb-fork-label">Beyond Free</span>
+                  <div class="rb-step rb-step--sheet">
+                    <span class="rb-step-kind">Sheet</span>
+                    <span class="rb-step-title">Paywall</span>
+                    <span class="rb-step-line">Pro: unlimited chain steps</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p class="rb-note">The simulator answers &ldquo;what would this do&rdquo; without doing it. Free stops at two steps in a chain; deeper chains are where Pro begins &mdash; I put the paywall where the tool starts doing planning work, not at the front door.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="hold" role="tabpanel">
-          <div class="rb-fl-flow" role="group" aria-label="Track holdings">
-            <div class="rb-fl-step"><p class="rb-fl-title">Coins</p><p class="rb-fl-line">Its own tab</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Enter what you hold</p><p class="rb-fl-line">Edited in place, hideable</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Totals follow the market</p><p class="rb-fl-line">In the denomination you choose</p></div>
-          </div>
-          <p class="rb-fl-note">No conversion here, deliberately. Coins is a ledger of what you own; anything that behaves like an exchange rate belongs to the simulator. Keeping those apart is what stops the app from implying it can trade for you.</p>
+          <ul class="rb-flow" role="group" aria-label="Track holdings">
+            <li>
+              <div class="rb-step rb-step--screen">
+                <span class="rb-step-kind">Screen</span>
+                <span class="rb-step-title">Coins</span>
+                <span class="rb-step-line">Its own tab</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--action">
+                <span class="rb-step-kind">Action</span>
+                <span class="rb-step-title">Enter what you hold</span>
+                <span class="rb-step-line">Edited in place, hideable</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--system">
+                <span class="rb-step-kind">System</span>
+                <span class="rb-step-title">Prices move</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--end">
+                <span class="rb-step-kind">End</span>
+                <span class="rb-step-title">Totals recalculate</span>
+                <span class="rb-step-line">In the denomination you choose</span>
+              </div>
+            </li>
+          </ul>
+          <p class="rb-note">The only flow here with no branch, and that's the point: Coins is a ledger of what you own. Anything that behaves like an exchange rate belongs to the simulator &mdash; keeping those apart is what stops the app from implying it can trade for you.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="moment" role="tabpanel">
-          <div class="rb-fl-flow" role="group" aria-label="The rebalance moment, ending outside the app">
-            <div class="rb-fl-step"><p class="rb-fl-title">Threshold crossed</p><p class="rb-fl-line">Ratio reaches your number</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Push arrives</p><p class="rb-fl-line">Even with the app closed</p></div>
-            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
-            <div class="rb-fl-step"><p class="rb-fl-title">Open and check</p><p class="rb-fl-line">Chart, holdings, simulator</p></div>
-            <div class="rb-fl-edge" aria-hidden="true"></div>
-            <div class="rb-fl-step rb-fl-step--outside">
-              <span class="rb-fl-outside-tag">Outside the app</span>
-              <p class="rb-fl-title">Execute on the exchange</p>
-              <p class="rb-fl-line">Rebalancer never places the order</p>
-            </div>
-          </div>
-          <p class="rb-fl-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature &mdash; a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
+          <ul class="rb-flow" role="group" aria-label="The rebalance moment, ending outside the app">
+            <li>
+              <div class="rb-step rb-step--system">
+                <span class="rb-step-kind">System</span>
+                <span class="rb-step-title">Threshold crossed</span>
+                <span class="rb-step-line">Ratio reaches your number</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--system">
+                <span class="rb-step-kind">System</span>
+                <span class="rb-step-title">Push delivered</span>
+                <span class="rb-step-line">Even with the app closed</span>
+              </div>
+            </li>
+            <li>
+              <div class="rb-step rb-step--screen">
+                <span class="rb-step-kind">Screen</span>
+                <span class="rb-step-title">Open and check</span>
+                <span class="rb-step-line">Chart, holdings, simulator</span>
+              </div>
+            </li>
+            <li class="rb-bound"><span class="rb-bound-label">Outside the app</span></li>
+            <li>
+              <div class="rb-step rb-step--outside">
+                <span class="rb-step-kind">Off-app</span>
+                <span class="rb-step-title">Execute on the exchange</span>
+                <span class="rb-step-line">Rebalancer never places the order</span>
+              </div>
+            </li>
+          </ul>
+          <p class="rb-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature &mdash; a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
         </div>
       </div>
     </section>
