@@ -262,6 +262,56 @@
     .rb-pos-claim { font-size: 15px; color: #1A1A1A; line-height: 1.6; }
     .rb-pos-note { font-size: 13px; color: #6B6B6B; line-height: 1.6; }
 
+    /* ═══ RB TABS — visual match for the site's .phase-toggle, but its own
+       rb- namespace + its own scoped handler. Each .rb-tabgroup owns its
+       strip and its panels, so two groups on one page never clash. ═══ */
+    .rb-tabs {
+      display: flex; gap: 0; margin: 24px 0;
+      border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
+      overflow: hidden; width: fit-content;
+    }
+    .rb-tab {
+      padding: 10px 20px; font-size: 14px; font-weight: 500; font-family: inherit;
+      border: none; background: transparent; color: #9A9A9A; cursor: pointer;
+      border-right: 1px solid rgba(0,0,0,0.1); white-space: nowrap;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .rb-tab:last-child { border-right: none; }
+    .rb-tab:hover { background: rgba(0,0,0,0.02); }
+    .rb-tab.is-active { background: #1A1A1A; color: #FFFFFF; }
+    .rb-tabpanel { display: none; }
+    .rb-tabpanel.is-active { display: block; }
+
+    /* §05 — IA: three tiers (tab roots / pushed routes / overlays) */
+    .rb-ia-tier { margin-top: 22px; }
+    .rb-ia-tier-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 10px; }
+    .rb-ia-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .rb-ia-item {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .rb-ia-name { font-size: 14px; font-weight: 500; color: #1A1A1A; }
+    .rb-ia-note { font-size: 12px; color: #6B6B6B; line-height: 1.5; }
+    .rb-ia-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .rb-ia-chip { font-size: 11px; color: #6B6B6B; background: #F0EFEC; border-radius: 4px; padding: 3px 8px; line-height: 1.4; white-space: nowrap; }
+    .rb-ia-decision { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 24px; max-width: 640px; }
+
+    /* §05 — navigation model: pushed layer sitting above a 3-slot tab bar */
+    .rb-nav { margin-top: 22px; max-width: 560px; display: flex; flex-direction: column; gap: 12px; }
+    .rb-nav-group {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .rb-nav-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-nav-cards { display: flex; flex-wrap: wrap; gap: 8px; }
+    .rb-nav-card { font-size: 13px; color: #1A1A1A; background: #F0EFEC; border-radius: 8px; padding: 7px 12px; line-height: 1; }
+    .rb-nav-tabs { display: flex; gap: 6px; }
+    .rb-nav-tab { flex: 1; text-align: center; font-size: 13px; color: #6B6B6B; background: #F0EFEC; border-radius: 8px; padding: 9px 8px; line-height: 1; }
+    .rb-nav-tab.is-current { background: #1A1A1A; color: #FFFFFF; }
+    .rb-nav-between { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9A9A9A; padding-left: 2px; }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
       .case-hero-image { width: 100%; margin-left: 0; }
@@ -275,6 +325,16 @@
       .card-grid-3 { grid-template-columns: 1fr; }
       .card-grid-2 { grid-template-columns: 1fr; }
       .reflection-grid { grid-template-columns: 1fr; }
+      /* tab strip → bounded internal scroll; a clipped next tab is the peek */
+      .rb-tabs {
+        width: 100%; max-width: 100%; min-width: 0;
+        flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
+        scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+      }
+      .rb-tabs::-webkit-scrollbar { display: none; }
+      .rb-tabs:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .rb-ia-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -414,9 +474,105 @@
       </div>
     </section>
 
-    <!-- 05 — KEY FEATURES -->
+    <!-- 05 — INFORMATION ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-label">05 &mdash; Key Features</p>
+      <p class="section-label">05 &mdash; Information Architecture</p>
+      <h2 class="section-heading">Three tabs, and everything else on top</h2>
+      <p class="section-text">There was never an IA diagram. The structure got decided in code, screen by screen &mdash; and I reversed myself twice before it settled. This is that structure written down after the fact.</p>
+
+      <div class="rb-tabgroup">
+        <div class="rb-tabs" role="tablist" aria-label="Information architecture views">
+          <button class="rb-tab is-active" data-rb-tab="map" role="tab" aria-selected="true">Screen map</button>
+          <button class="rb-tab" data-rb-tab="nav" role="tab" aria-selected="false">Navigation</button>
+        </div>
+
+        <div class="rb-tabpanel is-active" data-rb-panel="map" role="tabpanel">
+          <div class="rb-ia-tier">
+            <p class="rb-ia-tier-label">Tab roots &middot; 3</p>
+            <div class="rb-ia-row">
+              <div class="rb-ia-item">
+                <span class="rb-ia-name">Pairs</span>
+                <span class="rb-ia-note">The watchlist. Compact cards, inline expand, drag to reorder, swipe to delete.</span>
+              </div>
+              <div class="rb-ia-item">
+                <span class="rb-ia-name">Coins</span>
+                <span class="rb-ia-note">Holdings you own, edited in place, with a total in the denomination you pick.</span>
+              </div>
+              <div class="rb-ia-item">
+                <span class="rb-ia-name">Settings</span>
+                <span class="rb-ia-note">Preferences, language, theme, and the Pro upgrade.</span>
+              </div>
+            </div>
+          </div>
+          <div class="rb-ia-tier">
+            <p class="rb-ia-tier-label">Pushed above the tabs &middot; 3</p>
+            <div class="rb-ia-row">
+              <div class="rb-ia-item">
+                <span class="rb-ia-name">Pair detail</span>
+                <span class="rb-ia-note">The full view of one pair &mdash; where the heavier tools live.</span>
+                <div class="rb-ia-chips">
+                  <span class="rb-ia-chip">full chart</span>
+                  <span class="rb-ia-chip">1h &rarr; all</span>
+                  <span class="rb-ia-chip">holdings</span>
+                  <span class="rb-ia-chip">simulator</span>
+                </div>
+              </div>
+              <div class="rb-ia-item">
+                <span class="rb-ia-name">Pair alerts</span>
+                <span class="rb-ia-note">Every threshold set on this one pair.</span>
+              </div>
+              <div class="rb-ia-item">
+                <span class="rb-ia-name">All alerts</span>
+                <span class="rb-ia-note">Everything armed across every pair, reached from a bell in the header.</span>
+              </div>
+            </div>
+          </div>
+          <div class="rb-ia-tier">
+            <p class="rb-ia-tier-label">Overlays &mdash; sheets</p>
+            <div class="rb-ia-chips">
+              <span class="rb-ia-chip">Token selector</span>
+              <span class="rb-ia-chip">New alert</span>
+              <span class="rb-ia-chip">Holdings entry</span>
+              <span class="rb-ia-chip">Paywall</span>
+              <span class="rb-ia-chip">Pair colour</span>
+              <span class="rb-ia-chip">Language</span>
+              <span class="rb-ia-chip">Theme</span>
+              <span class="rb-ia-chip">Feedback</span>
+            </div>
+          </div>
+          <p class="rb-ia-decision">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
+        </div>
+
+        <div class="rb-tabpanel" data-rb-panel="nav" role="tabpanel">
+          <div class="rb-nav">
+            <div class="rb-nav-group">
+              <span class="rb-nav-label">Pushed above the bar</span>
+              <div class="rb-nav-cards">
+                <span class="rb-nav-card">Pair detail</span>
+                <span class="rb-nav-card">Pair alerts</span>
+                <span class="rb-nav-card">All alerts</span>
+              </div>
+            </div>
+            <div class="rb-nav-between"><span aria-hidden="true">&darr;</span><span>pushing one hides the bar</span></div>
+            <div class="rb-nav-group">
+              <span class="rb-nav-label">Bottom tab bar</span>
+              <div class="rb-nav-tabs">
+                <span class="rb-nav-tab is-current">Pairs</span>
+                <span class="rb-nav-tab">Coins</span>
+                <span class="rb-nav-tab">Settings</span>
+              </div>
+            </div>
+          </div>
+          <p class="rb-ia-decision">Coins started as a page pushed from the watchlist header. I promoted it to a tab once it was clear holdings are something you return to, not somewhere you visit.</p>
+          <p class="rb-ia-decision" style="margin-top:12px;">Alerts went the other way. It was briefly a fourth tab; I moved it back behind a bell. Three tabs is the product &mdash; alerts are a place you check, not a place you live.</p>
+          <p class="rb-ia-decision" style="margin-top:12px;">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, and the tabs you left get properly set aside instead of lingering underneath &mdash; a structural choice that also spared me a class of bug on hidden screens.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — KEY FEATURES -->
+    <section class="case-section">
+      <p class="section-label">06 &mdash; Key Features</p>
       <h2 class="section-heading">What it actually does</h2>
       <div class="card-grid-3">
         <div class="card">
@@ -434,9 +590,9 @@
       </div>
     </section>
 
-    <!-- 06 — SCREENS -->
+    <!-- 07 — SCREENS -->
     <section class="case-section">
-      <p class="section-label">06 &mdash; Screens</p>
+      <p class="section-label">07 &mdash; Screens</p>
       <h2 class="section-heading">Inside the app</h2>
       <p class="section-text">A look at the core flows &mdash; custom pairs, the rebalance simulator, notifications, and live coin tracking.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -479,9 +635,9 @@
       </div>
     </section>
 
-    <!-- 07 — LOCALIZATION -->
+    <!-- 08 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-label">07 &mdash; Localization</p>
+      <p class="section-label">08 &mdash; Localization</p>
       <h2 class="section-heading">One person, 31 languages</h2>
       <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
@@ -537,9 +693,9 @@
       </div>
     </section>
 
-    <!-- 08 — OUTCOME -->
+    <!-- 09 — OUTCOME -->
     <section class="case-section">
-      <p class="section-label">08 &mdash; Outcome</p>
+      <p class="section-label">09 &mdash; Outcome</p>
       <h2 class="section-heading">Live, and shipped solo</h2>
       <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
       <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
@@ -559,9 +715,9 @@
       </div>
     </section>
 
-    <!-- 09 — REFLECTION -->
+    <!-- 10 — REFLECTION -->
     <section class="case-section">
-      <p class="section-label">09 &mdash; Reflection</p>
+      <p class="section-label">10 &mdash; Reflection</p>
       <h2 class="section-heading">What the build taught me</h2>
       <div class="reflection-grid">
         <div>
@@ -593,6 +749,29 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    // RB TABS — every .rb-tabgroup is self-contained: a click retargets only
+    // the buttons and panels INSIDE its own group, so multiple tab groups on
+    // this page can never clear each other's active state.
+    document.querySelectorAll('.rb-tabgroup').forEach(function (group) {
+      var tabs = group.querySelectorAll('.rb-tabs .rb-tab');
+      var panels = group.querySelectorAll('.rb-tabpanel');
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var name = btn.getAttribute('data-rb-tab');
+          tabs.forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle('is-active', on);
+            b.setAttribute('aria-selected', on ? 'true' : 'false');
+          });
+          panels.forEach(function (p) {
+            p.classList.toggle('is-active', p.getAttribute('data-rb-panel') === name);
+          });
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
