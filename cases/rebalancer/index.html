@@ -282,6 +282,20 @@
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
+    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §05 and §06.
+       Colour encodes the node TYPE and nothing else, so the same meaning is
+       the same hue in both diagrams (a screen is blue in the IA tree and in
+       every flow). Muted on purpose: these sit on a warm #F8F7F4 page.
+       Shape + stroke style still carry the type on their own — colour is a
+       second, redundant channel, so nothing depends on seeing it. ═══ */
+    :root {
+      --rb-screen-bg:   #E8EDF3;  --rb-screen-bd:   #BDCBDC;   /* screen  — blue  */
+      --rb-action-bg:   #E7EEE8;  --rb-action-bd:   #BECFC1;   /* action  — sage  */
+      --rb-system-bg:   #EBE8F1;  --rb-system-bd:   #C5BED5;   /* system  — lilac */
+      --rb-decision-bg: #F2EBDF;  --rb-decision-bd: #D6C7AF;   /* decision— sand  */
+      --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
+    }
+
     /* Shared commentary line under a diagram (both §05 and §06) */
     .rb-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
     .rb-note + .rb-note { margin-top: 12px; }
@@ -292,8 +306,8 @@
     .rb-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
     .rb-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
     .rb-key-mark--tab { background: #1A1A1A; }
-    .rb-key-mark--push { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); }
-    .rb-key-mark--sheet { background: transparent; border: 1px dashed rgba(0,0,0,0.28); }
+    .rb-key-mark--push { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
+    .rb-key-mark--sheet { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
     /* §05 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
        borders on each <li>: ::before is the vertical segment (shortened on
@@ -302,19 +316,32 @@
     .rb-tree, .rb-tree ul { list-style: none; }
     .rb-tree { margin-top: 20px; }
     .rb-tree-root { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 26px 0 4px; }
-    .rb-tree-kids > li { position: relative; padding-left: 26px; }
+    /* Rails: the vertical trunk lives on the <li>; the horizontal elbow is
+       drawn by the NODE itself at top:50%, so it is always centred on the node
+       whatever its height, and spans the exact gap back to the trunk. For a
+       last child, the node masks the trunk below its own centre — that is what
+       turns the corner into a proper "└" at any content height. */
+    /* overflow:hidden bounds the last-child trunk mask to its own <li> — without
+       it the mask would run on down the page and paint over the notes below.
+       The elbows live inside the li's padding box, so nothing gets clipped. */
+    .rb-tree-kids > li { position: relative; padding-left: 26px; overflow: hidden; }
     .rb-tree-kids > li::before {
       content: ''; position: absolute; left: 0; top: 0; height: 100%;
       border-left: 1px solid rgba(0,0,0,0.16);
     }
-    .rb-tree-kids > li:last-child::before { height: 21px; }
-    .rb-tree-kids > li::after {
-      content: ''; position: absolute; left: 0; top: 21px; width: 16px;
+    .rb-tree-node, .rb-tree-sheets { position: relative; }
+    .rb-tree-node::before, .rb-tree-sheets::before {
+      content: ''; position: absolute; left: -26px; top: 50%; width: 26px;
       border-top: 1px solid rgba(0,0,0,0.16);
     }
-    /* an overlay branch hangs off a dashed stub — it is invoked, not contained */
-    .rb-tree-kids > li.rb-tree-li--sheet::before,
-    .rb-tree-kids > li.rb-tree-li--sheet::after { border-color: rgba(0,0,0,0.22); border-style: dashed; }
+    .rb-tree-kids > li:last-child > .rb-tree-node::after,
+    .rb-tree-kids > li:last-child > .rb-tree-sheets::after {
+      content: ''; position: absolute; left: -26px; top: 50%; height: 2000px;
+      width: 4px; background: #F8F7F4;
+    }
+    /* an overlay branch hangs off a dashed elbow — invoked, not contained */
+    .rb-tree-kids > li.rb-tree-li--sheet::before { border-left-style: dashed; border-color: rgba(0,0,0,0.22); }
+    .rb-tree-sheets::before { border-top-style: dashed; border-color: rgba(0,0,0,0.22); }
     .rb-tree-node {
       display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px;
       border-radius: 8px; padding: 9px 14px; margin: 8px 0;
@@ -323,11 +350,12 @@
     .rb-tree-note { font-size: 12px; line-height: 1.45; color: #6B6B6B; }
     .rb-tree-node--tab { background: #1A1A1A; color: #FFFFFF; }
     .rb-tree-node--tab .rb-tree-note { color: rgba(255,255,255,0.62); }
-    .rb-tree-node--push { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); }
+    /* a pushed screen is a SCREEN — same blue it gets in every flow */
+    .rb-tree-node--push { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
     .rb-tree-sheets { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
     .rb-tree-sheet {
       font-size: 12px; color: #6B6B6B; line-height: 1.4;
-      background: transparent; border: 1px dashed rgba(0,0,0,0.28);
+      background: transparent; border: 1px dashed var(--rb-neutral-bd);
       border-radius: 8px; padding: 6px 11px;
     }
 
@@ -339,13 +367,26 @@
       border-radius: 12px; padding: 13px 16px;
       display: flex; flex-direction: column; gap: 10px;
     }
-    .rb-plane-band--overlay { background: transparent; border-style: dashed; border-color: rgba(0,0,0,0.24); margin-left: 30px; }
-    .rb-plane-band--push { margin-left: 15px; }
+    .rb-plane-band--overlay { background: transparent; border-style: dashed; border-color: var(--rb-neutral-bd); margin-left: 34px; }
+    .rb-plane-band--push { margin-left: 17px; }
     .rb-plane-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
     .rb-plane-items { display: flex; flex-wrap: wrap; gap: 6px; }
-    .rb-plane-item { font-size: 12px; color: #1A1A1A; background: #F0EFEC; border-radius: 7px; padding: 6px 11px; line-height: 1.3; }
-    .rb-plane-band--overlay .rb-plane-item { background: transparent; border: 1px dashed rgba(0,0,0,0.22); color: #6B6B6B; }
-    .rb-plane-rel { font-size: 11px; color: #9A9A9A; display: flex; align-items: center; gap: 7px; padding-left: 15px; }
+    /* plane contents wear the SAME node vocabulary as the tree and the flows */
+    .rb-plane-item {
+      font-size: 12px; color: #1A1A1A; line-height: 1.3;
+      border-radius: 7px; padding: 6px 11px;
+      display: inline-flex; flex-direction: column; gap: 2px;
+    }
+    .rb-plane-band--push .rb-plane-item { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
+    .rb-plane-band--overlay .rb-plane-item { background: transparent; border: 1px dashed var(--rb-neutral-bd); color: #6B6B6B; }
+    .rb-plane-from { font-size: 10px; color: #9A9A9A; }
+    .rb-plane-count { font-size: 10px; color: #9A9A9A; align-self: center; }
+    /* a real connector between planes, not just a line of text */
+    .rb-plane-rel { position: relative; padding: 12px 0 12px 34px; font-size: 11px; color: #9A9A9A; }
+    .rb-plane-rel::before {
+      content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+      border-left: 1px dashed rgba(0,0,0,0.26);
+    }
     .rb-plane-slots { display: flex; gap: 6px; }
     .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
     .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
@@ -358,17 +399,28 @@
          end      filled pill                      sheet / outside  dashed */
     .rb-flow, .rb-flow ul { list-style: none; }
     .rb-flow { margin-top: 18px; }
-    .rb-flow li { position: relative; padding-left: 26px; }
+    .rb-flow li { position: relative; padding-left: 26px; overflow: hidden; }
     .rb-flow li::before {
       content: ''; position: absolute; left: 0; top: 0; height: 100%;
       border-left: 1px solid rgba(0,0,0,0.16);
     }
-    .rb-flow li:last-child::before { height: 26px; }
-    .rb-flow li::after {
-      content: ''; position: absolute; left: 0; top: 26px; width: 16px;
+    /* One pseudo does both jobs: its border-top IS the elbow (at top:50%, so
+       always centred on the node however tall it grows), and on a last child
+       its background continues downward to terminate the trunk in a clean "└".
+       Drawn by the node, never by the <li>, so it can't drift out of step. */
+    .rb-step::after, .rb-decwrap::after {
+      content: ''; position: absolute; left: -26px; top: 50%; width: 26px;
       border-top: 1px solid rgba(0,0,0,0.16);
     }
-    .rb-fork > li::before, .rb-fork > li::after { border-color: rgba(0,0,0,0.24); }
+    .rb-flow li:last-child > .rb-step::after,
+    .rb-flow li:last-child > .rb-decwrap::after {
+      height: 2000px; background: #F8F7F4;
+    }
+    .rb-fork > li::before { border-color: rgba(0,0,0,0.24); }
+    .rb-fork > li > .rb-step::after, .rb-fork > li > .rb-decwrap::after { border-top-color: rgba(0,0,0,0.24); }
+    /* the hexagon is clip-path'd, so its elbow has to come from an unclipped
+       wrapper — a pseudo of a clipped element would be clipped away too */
+    .rb-decwrap { position: relative; display: inline-block; max-width: 100%; }
     .rb-fork-label { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; margin-top: 10px; }
     /* the boundary lane — everything below it happens off-app */
     .rb-flow li.rb-bound { padding-left: 0; margin: 18px 0 4px; }
@@ -393,14 +445,14 @@
     .rb-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
     .rb-step-line { font-size: 12px; color: #6B6B6B; line-height: 1.45; }
     /* screen: a title-bar hint across the top */
-    .rb-step--screen { padding-top: 16px; }
+    .rb-step--screen { padding-top: 16px; background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
     .rb-step--screen::before {
       content: ''; position: absolute; left: 13px; right: 13px; top: 7px;
-      height: 2px; background: rgba(0,0,0,0.28); border-radius: 2px;
+      height: 2px; background: rgba(0,0,0,0.30); border-radius: 2px;
     }
-    .rb-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; }
-    .rb-step--system { border-style: dotted; border-color: rgba(0,0,0,0.34); }
-    .rb-step--sheet, .rb-step--outside { border-style: dashed; border-color: rgba(0,0,0,0.28); background: transparent; }
+    .rb-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--rb-action-bg); border-color: var(--rb-action-bd); }
+    .rb-step--system { border-style: dotted; background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
+    .rb-step--sheet, .rb-step--outside { border-style: dashed; border-color: var(--rb-neutral-bd); background: transparent; }
     .rb-step--outside .rb-step-title { color: #6B6B6B; }
     .rb-step--end { background: #1A1A1A; border-color: #1A1A1A; border-radius: 100px; padding-left: 19px; padding-right: 19px; }
     .rb-step--end .rb-step-title { color: #FFFFFF; }
@@ -408,17 +460,17 @@
     .rb-step--end .rb-step-line { color: rgba(255,255,255,0.62); }
     /* decision: hexagon built from two clipped layers — the outer one shows
        through as a 1px outline, so the shape reads as stroked, not filled. */
-    .rb-dec { display: inline-block; max-width: 100%; margin: 12px 0; padding: 1px; background: rgba(0,0,0,0.22); }
+    .rb-dec { display: inline-block; max-width: 100%; margin: 12px 0; padding: 1px; background: var(--rb-decision-bd); }
     .rb-dec, .rb-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
-    .rb-dec-in { background: #FFFFFF; padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; }
+    .rb-dec-in { background: var(--rb-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; }
 
     /* legend marks for the flow vocabulary */
-    .rb-key-mark--screen { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); }
-    .rb-key-mark--action { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); border-radius: 100px; }
-    .rb-key-mark--system { background: #FFFFFF; border: 1px dotted rgba(0,0,0,0.36); }
-    .rb-key-mark--decision { background: rgba(0,0,0,0.30); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
+    .rb-key-mark--screen { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
+    .rb-key-mark--action { background: var(--rb-action-bg); border: 1px solid var(--rb-action-bd); border-radius: 100px; }
+    .rb-key-mark--system { background: var(--rb-system-bg); border: 1px dotted var(--rb-system-bd); }
+    .rb-key-mark--decision { background: var(--rb-decision-bd); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
     .rb-key-mark--end { background: #1A1A1A; border-radius: 100px; }
-    .rb-key-mark--outside { background: transparent; border: 1px dashed rgba(0,0,0,0.30); }
+    .rb-key-mark--outside { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
     /* §09 — technical architecture. Four small blocks: two price lanes, the
        two-leg division, the threshold→push chain, and the stack. All chip /
@@ -485,14 +537,16 @@
       }
       /* tighter rails + shallower plane offsets so text keeps full width */
       .rb-tree-kids > li { padding-left: 18px; }
-      .rb-tree-kids > li::after { width: 11px; }
+      .rb-tree-node::before, .rb-tree-sheets::before { left: -18px; width: 18px; }
+      .rb-tree-kids > li:last-child > .rb-tree-node::after,
+      .rb-tree-kids > li:last-child > .rb-tree-sheets::after { left: -18px; width: 4px; }
       .rb-tree-node { padding: 8px 12px; }
       .rb-plane-band--overlay { margin-left: 16px; }
       .rb-plane-band--push { margin-left: 8px; }
       .rb-plane-rel { padding-left: 8px; }
       /* flow rails tighten so step text keeps as much width as possible */
       .rb-flow li { padding-left: 18px; }
-      .rb-flow li::after { width: 11px; }
+      .rb-step::after, .rb-decwrap::after { left: -18px; width: 18px; }
       .rb-step { padding: 10px 13px; }
       .rb-step--action, .rb-step--end { padding-left: 16px; padding-right: 16px; }
       .rb-dec-in { padding: 11px 22px; }
@@ -728,24 +782,32 @@
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="nav" role="tabpanel">
+          <div class="rb-key" aria-hidden="true">
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--sheet"></span>Overlay sheet</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--push"></span>Pushed screen</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--tab"></span>Tab root</span>
+          </div>
           <div class="rb-plane" role="group" aria-label="Three navigation planes, from the overlay layer down to the tab bar">
             <div class="rb-plane-band rb-plane-band--overlay">
               <span class="rb-plane-label">Overlay plane &mdash; floats above everything</span>
               <div class="rb-plane-items">
-                <span class="rb-plane-item">Sheets</span>
+                <span class="rb-plane-item">Token selector</span>
+                <span class="rb-plane-item">New alert</span>
+                <span class="rb-plane-item">Holdings entry</span>
                 <span class="rb-plane-item">Paywall</span>
+                <span class="rb-plane-count">+4 more</span>
               </div>
             </div>
-            <div class="rb-plane-rel"><span aria-hidden="true">&darr;</span><span>dismiss returns you exactly where you were</span></div>
+            <div class="rb-plane-rel">Dismiss returns you exactly where you were &mdash; the plane below never moves</div>
             <div class="rb-plane-band rb-plane-band--push">
               <span class="rb-plane-label">Push plane &mdash; covers the bar</span>
               <div class="rb-plane-items">
-                <span class="rb-plane-item">Pair detail</span>
-                <span class="rb-plane-item">Pair alerts</span>
-                <span class="rb-plane-item">All alerts</span>
+                <span class="rb-plane-item">Pair detail<span class="rb-plane-from">from Pairs</span></span>
+                <span class="rb-plane-item">Pair alerts<span class="rb-plane-from">from Pair detail</span></span>
+                <span class="rb-plane-item">All alerts<span class="rb-plane-from">from the Pairs header bell</span></span>
               </div>
             </div>
-            <div class="rb-plane-rel"><span aria-hidden="true">&darr;</span><span>pushing one hides the bar; popping brings it back</span></div>
+            <div class="rb-plane-rel">Pushing one hides the bar; popping brings it back and the tab you left is still where you left it</div>
             <div class="rb-plane-band rb-plane-band--tab">
               <span class="rb-plane-label">Tab plane &mdash; always underneath</span>
               <div class="rb-plane-slots">
@@ -858,10 +920,12 @@
               </div>
             </li>
             <li>
-              <div class="rb-dec">
-                <div class="rb-dec-in">
-                  <span class="rb-step-kind">Decision</span>
-                  <span class="rb-step-title">Notifications allowed?</span>
+              <div class="rb-decwrap">
+                <div class="rb-dec">
+                  <div class="rb-dec-in">
+                    <span class="rb-step-kind">Decision</span>
+                    <span class="rb-step-title">Notifications allowed?</span>
+                  </div>
                 </div>
               </div>
               <ul class="rb-fork">
@@ -912,10 +976,12 @@
               </div>
             </li>
             <li>
-              <div class="rb-dec">
-                <div class="rb-dec-in">
-                  <span class="rb-step-kind">Decision</span>
-                  <span class="rb-step-title">More than two steps?</span>
+              <div class="rb-decwrap">
+                <div class="rb-dec">
+                  <div class="rb-dec-in">
+                    <span class="rb-step-kind">Decision</span>
+                    <span class="rb-step-title">More than two steps?</span>
+                  </div>
                 </div>
               </div>
               <ul class="rb-fork">
