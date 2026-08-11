@@ -250,6 +250,18 @@
     .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
     .rb-stat-item-label { font-size: 13px; color: #6B6B6B; }
 
+    /* §02 — positioning bet: dashed = deliberately unproven (assumption, not
+       a research finding). Distinct from every solid-bordered card on the page. */
+    .rb-pos-bet {
+      margin-top: 28px; max-width: 640px;
+      background: #FFFFFF; border: 1px dashed rgba(0,0,0,0.22);
+      border-radius: 12px; padding: 20px 24px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .rb-pos-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-pos-claim { font-size: 15px; color: #1A1A1A; line-height: 1.6; }
+    .rb-pos-note { font-size: 13px; color: #6B6B6B; line-height: 1.6; }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
       .case-hero-image { width: 100%; margin-left: 0; }
@@ -324,9 +336,34 @@
       </div>
     </section>
 
-    <!-- 02 — MY ROLE -->
+    <!-- 02 — POSITIONING & ASSUMPTIONS -->
     <section class="case-section">
-      <p class="section-label">02 &mdash; My Role</p>
+      <p class="section-label">02 &mdash; Positioning &amp; Assumptions</p>
+      <h2 class="section-heading">A niche I bet on, not one I proved</h2>
+      <p class="section-text">I ran no formal competitive audit &mdash; no interviews, no personas, no scored feature matrix. I held the landscape in my head while building, and I'm writing it down here after the fact. So this is a positioning decision, not a research finding.</p>
+      <p class="section-text">What I could see from the outside, and chose to design against:</p>
+      <div class="card-grid-2">
+        <div class="card">
+          <p class="card-title">Exchanges &amp; wallets</p>
+          <p class="card-desc">Price altcoins against USDT, USD, or BTC. An arbitrary ALT/ALT pair isn't an object you can name, keep, or attach an alert to.</p>
+        </div>
+        <div class="card">
+          <p class="card-title">Portfolio trackers</p>
+          <p class="card-desc">Report holdings in fiat and alert on single coins. The ratio between two of your own positions isn't treated as a thing worth watching.</p>
+        </div>
+      </div>
+      <div class="rb-pos-bet">
+        <span class="rb-pos-label">Assumption &mdash; not validated by research</span>
+        <span class="rb-pos-claim">Nobody had put the four together in one place: a custom ALT/ALT pair, an alert on the ratio, holdings that recalculate, and a simulator to plan the move.</span>
+        <span class="rb-pos-note">I still hold this as a hypothesis. If it's wrong, it's wrong about the market &mdash; not about whether the tool works.</span>
+      </div>
+      <p class="section-text" style="margin-top:28px;">What made me trust the gap was that it had an engineering explanation, not a marketing one: there is no direct ALT/ALT feed to consume. The ratio has to be assembled from two separate USD legs and divided. That's a real build cost, and it's why the space stays empty &mdash; which is exactly what made it worth building.</p>
+      <p class="section-text">The trade-off I accepted: shipping on an unproven read of the market, and keeping scope narrow enough that being wrong stayed cheap.</p>
+    </section>
+
+    <!-- 03 — MY ROLE -->
+    <section class="case-section">
+      <p class="section-label">03 &mdash; My Role</p>
       <h2 class="section-heading">One person, whole product</h2>
       <p class="section-text">Solo &mdash; from idea to App Store.</p>
       <p class="section-text">I owned every layer of Rebalancer myself: the product concept, the UX and interface design, and the full build &mdash; iOS app, backend, servers, APIs, and notifications &mdash; all developed with Claude Code. No team, no handoff, no separate engineering.</p>
@@ -348,9 +385,9 @@
       <p class="section-text">This is what a designer can ship end-to-end when AI collapses the gap between design and code.</p>
     </section>
 
-    <!-- 03 — THE PROCESS -->
+    <!-- 04 — THE PROCESS -->
     <section class="case-section">
-      <p class="section-label">03 &mdash; The Process</p>
+      <p class="section-label">04 &mdash; The Process</p>
       <h2 class="section-heading">Design-to-code, without the handoff</h2>
       <p class="section-text">No Figma, no mockups, no handoff. I built Rebalancer directly in code with Claude Code &mdash; design decisions and implementation happening in the same place, at the same time.</p>
       <p class="section-text">The method was disciplined, not improvised. Every change followed the same loop: Diagnose &rarr; Plan &rarr; Implement. First understand the current state, then agree on a precise plan, then implement it surgically &mdash; one small, reviewable change at a time. It kept a solo, AI-built product from turning into chaos.</p>
@@ -377,9 +414,9 @@
       </div>
     </section>
 
-    <!-- 04 — KEY FEATURES -->
+    <!-- 05 — KEY FEATURES -->
     <section class="case-section">
-      <p class="section-label">04 &mdash; Key Features</p>
+      <p class="section-label">05 &mdash; Key Features</p>
       <h2 class="section-heading">What it actually does</h2>
       <div class="card-grid-3">
         <div class="card">
@@ -397,9 +434,9 @@
       </div>
     </section>
 
-    <!-- 05 — SCREENS -->
+    <!-- 06 — SCREENS -->
     <section class="case-section">
-      <p class="section-label">05 &mdash; Screens</p>
+      <p class="section-label">06 &mdash; Screens</p>
       <h2 class="section-heading">Inside the app</h2>
       <p class="section-text">A look at the core flows &mdash; custom pairs, the rebalance simulator, notifications, and live coin tracking.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -442,9 +479,9 @@
       </div>
     </section>
 
-    <!-- 06 — LOCALIZATION -->
+    <!-- 07 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-label">06 &mdash; Localization</p>
+      <p class="section-label">07 &mdash; Localization</p>
       <h2 class="section-heading">One person, 31 languages</h2>
       <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
@@ -500,9 +537,9 @@
       </div>
     </section>
 
-    <!-- 07 — OUTCOME -->
+    <!-- 08 — OUTCOME -->
     <section class="case-section">
-      <p class="section-label">07 &mdash; Outcome</p>
+      <p class="section-label">08 &mdash; Outcome</p>
       <h2 class="section-heading">Live, and shipped solo</h2>
       <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
       <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
@@ -522,9 +559,9 @@
       </div>
     </section>
 
-    <!-- 08 — REFLECTION -->
+    <!-- 09 — REFLECTION -->
     <section class="case-section">
-      <p class="section-label">08 &mdash; Reflection</p>
+      <p class="section-label">09 &mdash; Reflection</p>
       <h2 class="section-heading">What the build taught me</h2>
       <div class="reflection-grid">
         <div>
