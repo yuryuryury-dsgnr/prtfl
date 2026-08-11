@@ -312,6 +312,25 @@
     .rb-nav-tab.is-current { background: #1A1A1A; color: #FFFFFF; }
     .rb-nav-between { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9A9A9A; padding-left: 2px; }
 
+    /* §06 — user flows: compact step chain. Steps share the row (flex 1 1 0)
+       so nothing scrolls on desktop; on mobile the chain stacks. The dashed
+       .rb-fl-edge marks the app's boundary — everything past it is off-app. */
+    .rb-fl-flow { display: flex; align-items: stretch; gap: 8px; margin-top: 20px; }
+    .rb-fl-step {
+      flex: 1 1 0; min-width: 0;
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .rb-fl-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.4; }
+    .rb-fl-line { font-size: 12px; color: #6B6B6B; line-height: 1.5; }
+    .rb-fl-arrow { color: #C0BDB8; font-size: 16px; line-height: 1; display: flex; align-items: center; flex-shrink: 0; }
+    .rb-fl-edge { flex: 0 0 1px; align-self: stretch; border-left: 1px dashed rgba(0,0,0,0.28); margin: 0 6px; }
+    .rb-fl-step--outside { background: transparent; border-style: dashed; border-color: rgba(0,0,0,0.22); }
+    .rb-fl-step--outside .rb-fl-title { color: #6B6B6B; }
+    .rb-fl-outside-tag { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-fl-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 20px; max-width: 640px; }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
       .case-hero-image { width: 100%; margin-left: 0; }
@@ -334,7 +353,20 @@
       }
       .rb-tabs::-webkit-scrollbar { display: none; }
       .rb-tabs:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      /* Scroll affordance. A clipped next tab is the primary cue, but tab
+         boundaries can land exactly on the strip edge at some widths (360px
+         does), which makes a scrollable strip look complete. This fade is
+         toggled by JS only while there is more to the right, so the edge
+         always reads as "continues". */
+      .rb-tabs--more {
+        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+                mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+      }
       .rb-ia-row { grid-template-columns: 1fr; }
+      /* flow chain stacks; the app-boundary divider turns horizontal */
+      .rb-fl-flow { flex-direction: column; gap: 6px; }
+      .rb-fl-arrow { transform: rotate(90deg); align-self: center; padding: 2px 0; }
+      .rb-fl-edge { flex: 0 0 auto; height: 1px; align-self: stretch; border-left: none; border-top: 1px dashed rgba(0,0,0,0.28); margin: 6px 0; }
     }
   </style>
 </head>
@@ -570,9 +602,91 @@
       </div>
     </section>
 
-    <!-- 06 — KEY FEATURES -->
+    <!-- 06 — USER FLOWS -->
     <section class="case-section">
-      <p class="section-label">06 &mdash; Key Features</p>
+      <p class="section-label">06 &mdash; User Flows</p>
+      <h2 class="section-heading">Five paths, and the edge I drew</h2>
+      <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
+
+      <div class="rb-tabgroup">
+        <div class="rb-tabs" role="tablist" aria-label="User flows" tabindex="0">
+          <button class="rb-tab is-active" data-rb-tab="pair" role="tab" aria-selected="true">Create pair</button>
+          <button class="rb-tab" data-rb-tab="alert" role="tab" aria-selected="false">Set alert</button>
+          <button class="rb-tab" data-rb-tab="sim" role="tab" aria-selected="false">Simulate</button>
+          <button class="rb-tab" data-rb-tab="hold" role="tab" aria-selected="false">Holdings</button>
+          <button class="rb-tab" data-rb-tab="moment" role="tab" aria-selected="false">Rebalance moment</button>
+        </div>
+
+        <div class="rb-tabpanel is-active" data-rb-panel="pair" role="tabpanel">
+          <div class="rb-fl-flow" role="group" aria-label="Create a custom pair">
+            <div class="rb-fl-step"><p class="rb-fl-title">Tap +</p><p class="rb-fl-line">From the watchlist</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Pick base</p><p class="rb-fl-line">Search the token catalogue</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Pick quote</p><p class="rb-fl-line">Swap the two if you chose the other way round</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Pair is live</p><p class="rb-fl-line">Tracked in the list from that moment</p></div>
+          </div>
+          <p class="rb-fl-note">Two picks, no form. The pair is the only thing the app asks you to create, so I kept it to two decisions &mdash; and made base and quote swappable instead of expecting people to get the order right first time.</p>
+        </div>
+
+        <div class="rb-tabpanel" data-rb-panel="alert" role="tabpanel">
+          <div class="rb-fl-flow" role="group" aria-label="Set an alert on a pair">
+            <div class="rb-fl-step"><p class="rb-fl-title">Open the pair</p><p class="rb-fl-line">From the watchlist</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">New alert</p><p class="rb-fl-line">Sheet opens over the pair</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Prefilled</p><p class="rb-fl-line">Starts at the current ratio, not empty</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Set &amp; save</p><p class="rb-fl-line">Threshold armed</p></div>
+          </div>
+          <p class="rb-fl-note">The prefill is the whole design. An empty field asks &ldquo;what number?&rdquo; &mdash; prefilled with where the ratio sits right now, it asks &ldquo;how far from here?&rdquo;, which is the question people actually arrive with.</p>
+        </div>
+
+        <div class="rb-tabpanel" data-rb-panel="sim" role="tabpanel">
+          <div class="rb-fl-flow" role="group" aria-label="Simulate a rebalance">
+            <div class="rb-fl-step"><p class="rb-fl-title">Open the pair</p><p class="rb-fl-line">Simulator lives here, not in the list</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Enter amounts</p><p class="rb-fl-line">What you'd move</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">See the outcome</p><p class="rb-fl-line">Before committing to anything</p></div>
+          </div>
+          <p class="rb-fl-note">The simulator answers &ldquo;what would this do&rdquo; without doing it. Free stops at two steps in a chain; deeper chains are where Pro begins &mdash; I put the paywall where the tool starts doing planning work, not at the front door.</p>
+        </div>
+
+        <div class="rb-tabpanel" data-rb-panel="hold" role="tabpanel">
+          <div class="rb-fl-flow" role="group" aria-label="Track holdings">
+            <div class="rb-fl-step"><p class="rb-fl-title">Coins</p><p class="rb-fl-line">Its own tab</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Enter what you hold</p><p class="rb-fl-line">Edited in place, hideable</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Totals follow the market</p><p class="rb-fl-line">In the denomination you choose</p></div>
+          </div>
+          <p class="rb-fl-note">No conversion here, deliberately. Coins is a ledger of what you own; anything that behaves like an exchange rate belongs to the simulator. Keeping those apart is what stops the app from implying it can trade for you.</p>
+        </div>
+
+        <div class="rb-tabpanel" data-rb-panel="moment" role="tabpanel">
+          <div class="rb-fl-flow" role="group" aria-label="The rebalance moment, ending outside the app">
+            <div class="rb-fl-step"><p class="rb-fl-title">Threshold crossed</p><p class="rb-fl-line">Ratio reaches your number</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Push arrives</p><p class="rb-fl-line">Even with the app closed</p></div>
+            <div class="rb-fl-arrow" aria-hidden="true">&rarr;</div>
+            <div class="rb-fl-step"><p class="rb-fl-title">Open and check</p><p class="rb-fl-line">Chart, holdings, simulator</p></div>
+            <div class="rb-fl-edge" aria-hidden="true"></div>
+            <div class="rb-fl-step rb-fl-step--outside">
+              <span class="rb-fl-outside-tag">Outside the app</span>
+              <p class="rb-fl-title">Execute on the exchange</p>
+              <p class="rb-fl-line">Rebalancer never places the order</p>
+            </div>
+          </div>
+          <p class="rb-fl-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature &mdash; a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 — KEY FEATURES -->
+    <section class="case-section">
+      <p class="section-label">07 &mdash; Key Features</p>
       <h2 class="section-heading">What it actually does</h2>
       <div class="card-grid-3">
         <div class="card">
@@ -590,9 +704,9 @@
       </div>
     </section>
 
-    <!-- 07 — SCREENS -->
+    <!-- 08 — SCREENS -->
     <section class="case-section">
-      <p class="section-label">07 &mdash; Screens</p>
+      <p class="section-label">08 &mdash; Screens</p>
       <h2 class="section-heading">Inside the app</h2>
       <p class="section-text">A look at the core flows &mdash; custom pairs, the rebalance simulator, notifications, and live coin tracking.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -635,9 +749,9 @@
       </div>
     </section>
 
-    <!-- 08 — LOCALIZATION -->
+    <!-- 09 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-label">08 &mdash; Localization</p>
+      <p class="section-label">09 &mdash; Localization</p>
       <h2 class="section-heading">One person, 31 languages</h2>
       <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
@@ -693,9 +807,9 @@
       </div>
     </section>
 
-    <!-- 09 — OUTCOME -->
+    <!-- 10 — OUTCOME -->
     <section class="case-section">
-      <p class="section-label">09 &mdash; Outcome</p>
+      <p class="section-label">10 &mdash; Outcome</p>
       <h2 class="section-heading">Live, and shipped solo</h2>
       <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
       <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
@@ -715,9 +829,9 @@
       </div>
     </section>
 
-    <!-- 10 — REFLECTION -->
+    <!-- 11 — REFLECTION -->
     <section class="case-section">
-      <p class="section-label">10 &mdash; Reflection</p>
+      <p class="section-label">11 &mdash; Reflection</p>
       <h2 class="section-heading">What the build taught me</h2>
       <div class="reflection-grid">
         <div>
@@ -771,6 +885,22 @@
         });
       });
     });
+
+    // Tab strips: flag "there is more to the right" so the CSS fade can show.
+    // Cheap, passive, and self-correcting on resize / scroll / tab switch.
+    (function () {
+      var strips = document.querySelectorAll('.rb-tabs');
+      if (!strips.length) return;
+      function sync() {
+        strips.forEach(function (s) {
+          var more = s.scrollWidth - s.scrollLeft - s.clientWidth > 4;
+          s.classList.toggle('rb-tabs--more', more);
+        });
+      }
+      strips.forEach(function (s) { s.addEventListener('scroll', sync, { passive: true }); });
+      window.addEventListener('resize', sync);
+      sync();
+    })();
   </script>
 
 </body>
