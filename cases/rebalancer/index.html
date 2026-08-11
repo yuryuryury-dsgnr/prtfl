@@ -127,7 +127,7 @@
 
     /* ═══ PHASE 3 ADDITIONS ═══ */
 
-    /* Stage/pipeline flow — §02 working loop + §07 AI→Gemini graphic.
+    /* Stage/pipeline flow — §07 AI→Gemini graphic.
        Nodes + arrows, horizontal on desktop; on mobile it stacks with the
        arrow rotated into a downward connector. Adapts Halliburton's
        .pipeline-flow to this page's Inter + card styling. */
@@ -221,15 +221,6 @@
     .rb-arrow { color: #C0BDB8; font-size: 15px; line-height: 1; flex-shrink: 0; }
     .rb-route-note { font-size: 12px; color: #6B6B6B; }
 
-    /* §02 — "1 person = whole stack": big numeral + tag-style layer chips
-       (chips use the flat #F0EFEC tag texture, distinct from §07's bordered pills) */
-    .rb-stack { margin-top: 28px; }
-    .rb-stack-head { display: flex; align-items: baseline; gap: 12px; }
-    .rb-stack-num { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
-    .rb-stack-caption { font-size: 16px; color: #6B6B6B; }
-    .rb-stack-layers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; max-width: 560px; }
-    .rb-layer { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 4px 10px; line-height: 1.5; white-space: nowrap; }
-
     /* §02 — ROADMAP TIMELINE. The .timeline component is the same one the
        dopas and dobrodoc cases use (horizontal rail + dots on desktop,
        vertical rail on mobile), copied here because case pages carry their
@@ -288,15 +279,14 @@
     .timeline-step--server::before { background: var(--rb-system-bd);   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
     .timeline-step--store::before  { background: var(--rb-decision-bd); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
 
-    /* §02 — turning points: the three places a decision got reversed. Tinted
-       with the same layer vocabulary as the dots. */
-    .rb-turns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
-    .rb-turn { border-radius: 12px; padding: 18px 20px; border: 1px solid; }
-    .rb-turn--server { background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
-    .rb-turn--iface  { background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
-    .rb-turn-date { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin-bottom: 8px; }
-    .rb-turn-title { font-size: 14px; font-weight: 500; line-height: 1.4; margin-bottom: 6px; }
-    .rb-turn-text { font-size: 13px; color: #6B6B6B; line-height: 1.55; }
+    /* §02 — a phase that reversed a decision says so on one line, above its
+       tag. Kept to a few words: three of the six steps carry one, and the
+       flex row is as tall as its tallest step. */
+    .timeline-turn { font-size: 11px; color: #6B6B6B; line-height: 1.45; margin-bottom: 8px; }
+    .timeline-turn-label {
+      display: block; font-size: 9px; font-weight: 500; letter-spacing: 0.09em;
+      text-transform: uppercase; color: #9A9A9A;
+    }
 
     /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
     .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
@@ -597,7 +587,6 @@
       .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
       .timeline-step { flex: 0 0 auto; padding-top: 0; padding-left: 16px; padding-right: 0; }
       .timeline-step::before { top: 4px; left: -24px; }
-      .rb-turns { grid-template-columns: 1fr; }
       /* tab strip → bounded internal scroll; a clipped next tab is the peek */
       .rb-tabs {
         width: 100%; max-width: 100%; min-width: 0;
@@ -695,26 +684,8 @@
     <section class="case-section">
       <p class="section-kicker"><span class="section-num">02</span> &middot; Eleven weeks, one pair of hands</p>
       <h2 class="section-heading">Process</h2>
-      <p class="section-text">I designed this in code rather than in Figma, so a decision and its implementation happened in the same place. That forces every choice to be specific enough to actually run &mdash; there is no mockup to hide an unresolved detail in.</p>
-      <p class="section-text">The dates below are read off the repository rather than remembered: 355 commits between 20 April and 7 July. What the shape shows is that the interface was the short part.</p>
-
-      <div class="rb-stack">
-        <div class="rb-stack-head">
-          <span class="rb-stack-num">1</span>
-          <span class="rb-stack-caption">person owned every layer of it</span>
-        </div>
-        <div class="rb-stack-layers">
-          <span class="rb-layer">Concept</span>
-          <span class="rb-layer">Product design</span>
-          <span class="rb-layer">iOS app</span>
-          <span class="rb-layer">Backend</span>
-          <span class="rb-layer">Servers</span>
-          <span class="rb-layer">APIs</span>
-          <span class="rb-layer">Push notifications</span>
-          <span class="rb-layer">App Store</span>
-        </div>
-        <p class="rb-note">No team and no hand-off: built with Claude Code, which means every decision was mine to make and mine to debug at 1am. The method below is what kept that from turning into guesswork.</p>
-      </div>
+      <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; with no team and no hand-off, built with Claude Code. Speed like that turns into chaos without a method, so every change went through the same loop: diagnose the current state, agree the plan, then implement it one reviewable step at a time. The history still shows it &mdash; 70 of 355 commits carry a numbered plan step, and only five are reverts.</p>
+      <p class="section-text">Eleven weeks, and the interface was the short part. Notifications were the long thread: five weeks from the first proof of concept to a device-identity model I trusted, with a change of hosting in the middle. The dates below are read off the repository rather than remembered.</p>
 
       <div class="rb-key" aria-hidden="true">
         <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--iface"></span>Interface</span>
@@ -740,6 +711,7 @@
             <p class="timeline-number">15&ndash;21 May</p>
             <p class="timeline-title">Move the clock to a server</p>
             <p class="timeline-desc">Background refresh can't be trusted to wake up, so the alert clock moved onto a server.</p>
+            <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Host swapped mid-phase</p>
             <span class="timeline-tag">Cron &middot; KV &middot; APNs</span>
           </div>
           <div class="timeline-step timeline-step--iface">
@@ -752,55 +724,18 @@
             <p class="timeline-number">1&ndash;5 Jun</p>
             <p class="timeline-title">Charge, and cut the promises</p>
             <p class="timeline-desc">Free and Pro limits went in &mdash; and anything the build couldn't honour came out with them.</p>
+            <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Alerts lost its tab, 4 &rarr; 3</p>
             <span class="timeline-tag">StoreKit 2 &middot; 4 features removed</span>
           </div>
           <div class="timeline-step timeline-step--server">
             <p class="timeline-number">8&ndash;26 Jun</p>
             <p class="timeline-title">Make it work for people who aren't me</p>
             <p class="timeline-desc">Fixed what only breaks for other people: geo-blocked prices, and one phone holding two records.</p>
+            <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Identity re-keyed to the push token</p>
             <span class="timeline-tag">Fallback chain &middot; identity v2</span>
           </div>
         </div>
       </div>
-      <p class="rb-note">Notifications were the long thread: five weeks from the first proof of concept to a device-identity model I trusted. Nothing in the interface took anywhere near that.</p>
-
-      <p class="section-text" style="margin-top:36px;">Three decisions I made and then reversed. Each one is in the history, and each reversal is the useful part:</p>
-      <div class="rb-turns">
-        <div class="rb-turn rb-turn--server">
-          <span class="rb-turn-date">18 May</span>
-          <p class="rb-turn-title">The push server changed hosts mid-build</p>
-          <p class="rb-turn-text">The first host hit its free-tier memory limit and suspended the app. I ported the worker in one pass; the new write budget then capped the heartbeat at every third minute, which the app's five-minute freshness window already tolerated. No client change.</p>
-        </div>
-        <div class="rb-turn rb-turn--iface">
-          <span class="rb-turn-date">3 Jun</span>
-          <p class="rb-turn-title">Alerts lost the tab it had for a week</p>
-          <p class="rb-turn-text">Alerts shipped as a fourth bottom tab, then moved to a bell in the watchlist header. Three tabs is the app's real shape &mdash; the fourth existed because the list existed, not because anyone was navigating to it.</p>
-        </div>
-        <div class="rb-turn rb-turn--server">
-          <span class="rb-turn-date">19 Jun</span>
-          <p class="rb-turn-title">Device identity re-keyed to the push token</p>
-          <p class="rb-turn-text">An ID minted on the client let a double-register race leave two firing records for one phone. Keying the record by the token makes one phone, one record structurally true instead of something the code has to remember.</p>
-        </div>
-      </div>
-
-      <p class="section-text" style="margin-top:36px;">Working at that pace only holds up with a method, so every change went through the same loop &mdash; understand the current state, agree a precise plan, then implement it one small reviewable step at a time.</p>
-      <div class="flow" role="group" aria-label="Working loop: diagnose, then plan, then implement">
-        <div class="flow-node">
-          <p class="flow-node-title">Diagnose</p>
-          <p class="flow-node-line">Measure the current state before touching it</p>
-        </div>
-        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-        <div class="flow-node">
-          <p class="flow-node-title">Plan</p>
-          <p class="flow-node-line">Agree the change, and its blast radius, in writing</p>
-        </div>
-        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-        <div class="flow-node">
-          <p class="flow-node-title">Implement</p>
-          <p class="flow-node-line">One small, reviewable change at a time</p>
-        </div>
-      </div>
-      <p class="rb-note">It left a trace: 70 of those 355 commits carry a numbered plan step, and only five are reverts. The hardest part was never the interface &mdash; it was notification servers and APIs that had to behave in countries I couldn't test from. The loop is what made that survivable instead of a run of lucky guesses.</p>
     </section>
 
     <!-- 03 — INFORMATION ARCHITECTURE -->
