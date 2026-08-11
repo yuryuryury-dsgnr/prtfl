@@ -91,20 +91,13 @@
     .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
 
     /* ——— CARDS ——— */
-    .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
     .card-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
     .card {
       background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px; padding: 24px;
     }
-    .card-number { font-size: 14px; font-weight: 500; color: #3B82F6; margin-bottom: 8px; }
     .card-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
     .card-desc { font-size: 14px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
-    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .card-tag {
-      font-size: 11px; color: #6B6B6B; background: #F0EFEC;
-      padding: 3px 8px; border-radius: 4px;
-    }
 
     /* ——— REFLECTION ——— */
     .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
@@ -514,7 +507,6 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
       .case-section { padding: 56px 0 0; }
-      .card-grid-3 { grid-template-columns: 1fr; }
       .card-grid-2 { grid-template-columns: 1fr; }
       .reflection-grid { grid-template-columns: 1fr; }
       /* tab strip → bounded internal scroll; a clipped next tab is the peek */
@@ -1069,29 +1061,9 @@
       </div>
     </section>
 
-    <!-- 06 — KEY FEATURES -->
+    <!-- 06 — SCREENS -->
     <section class="case-section">
-      <p class="section-label">06 &mdash; Key Features</p>
-      <h2 class="section-heading">What it actually does</h2>
-      <div class="card-grid-3">
-        <div class="card">
-          <p class="card-title">Custom pairs</p>
-          <p class="card-desc">Create and track altcoin pairs no exchange or wallet shows &mdash; ALT/ALT directly, not routed through USDT.</p>
-        </div>
-        <div class="card">
-          <p class="card-title">Rebalancing notifications</p>
-          <p class="card-desc">Get alerted when a pair hits the moment to rebalance &mdash; no more constant manual checking.</p>
-        </div>
-        <div class="card">
-          <p class="card-title">Coin recalculation</p>
-          <p class="card-desc">Track how your holdings recalculate as prices move, so you always know where your portfolio actually stands.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 07 — SCREENS -->
-    <section class="case-section">
-      <p class="section-label">07 &mdash; Screens</p>
+      <p class="section-label">06 &mdash; Screens</p>
       <h2 class="section-heading">Inside the app</h2>
       <p class="section-text">A look at the core flows &mdash; custom pairs, the rebalance simulator, notifications, and live coin tracking.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -1134,9 +1106,9 @@
       </div>
     </section>
 
-    <!-- 08 — TECHNICAL ARCHITECTURE -->
+    <!-- 07 — TECHNICAL ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-label">08 &mdash; Technical Architecture</p>
+      <p class="section-label">07 &mdash; Technical Architecture</p>
       <h2 class="section-heading">Two price paths, because one wasn't allowed</h2>
       <p class="section-text">I designed the interface first and then found the interesting problems sitting behind it. Three of them changed the architecture, and all three were mine to solve &mdash; which is the part of this project I'd never done before.</p>
 
@@ -1209,9 +1181,9 @@
       <p class="rb-tech-why">Two workers and a static site, all serverless: one prices and pushes on the minute, a second handles in-app feedback with its own database and file storage. Nothing to run means nothing to keep alive &mdash; the only reason one person could hold this and the design work at the same time.</p>
     </section>
 
-    <!-- 09 — LOCALIZATION -->
+    <!-- 08 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-label">09 &mdash; Localization</p>
+      <p class="section-label">08 &mdash; Localization</p>
       <h2 class="section-heading">One person, 31 languages</h2>
       <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
@@ -1267,9 +1239,9 @@
       </div>
     </section>
 
-    <!-- 10 — OUTCOME -->
+    <!-- 09 — OUTCOME -->
     <section class="case-section">
-      <p class="section-label">10 &mdash; Outcome</p>
+      <p class="section-label">09 &mdash; Outcome</p>
       <h2 class="section-heading">Live, and shipped solo</h2>
       <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
       <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
@@ -1289,9 +1261,9 @@
       </div>
     </section>
 
-    <!-- 11 — REFLECTION -->
+    <!-- 10 — REFLECTION -->
     <section class="case-section">
-      <p class="section-label">11 &mdash; Reflection</p>
+      <p class="section-label">10 &mdash; Reflection</p>
       <h2 class="section-heading">What the build taught me</h2>
       <div class="reflection-grid">
         <div>
