@@ -331,6 +331,38 @@
     .rb-fl-outside-tag { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9A9A9A; }
     .rb-fl-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 20px; max-width: 640px; }
 
+    /* §09 — technical architecture. Four small blocks: two price lanes, the
+       two-leg division, the threshold→push chain, and the stack. All chip /
+       flex based so everything wraps instead of ever widening the page. */
+    .rb-tech-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 32px 0 10px; }
+    .rb-tech-lanes { display: flex; flex-direction: column; gap: 10px; max-width: 620px; }
+    .rb-tech-lane {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 14px 18px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .rb-tech-lane-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-tech-hops { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .rb-tech-hop { font-size: 13px; font-weight: 500; color: #1A1A1A; background: #F0EFEC; border-radius: 8px; padding: 6px 12px; line-height: 1; }
+    .rb-tech-sep { color: #C0BDB8; font-size: 14px; line-height: 1; flex-shrink: 0; }
+    .rb-tech-why { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 14px; max-width: 640px; }
+
+    /* the two-leg division, set as a small equation */
+    .rb-tech-legs {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 18px; max-width: 620px;
+    }
+    .rb-tech-leg { font-family: 'Menlo','Monaco','Courier New',monospace; font-size: 12px; color: #1A1A1A; background: #F0EFEC; border-radius: 6px; padding: 7px 10px; line-height: 1; }
+    .rb-tech-leg--out { background: rgba(59,130,246,0.08); color: #1A1A1A; }
+    .rb-tech-op { font-size: 14px; color: #9A9A9A; line-height: 1; flex-shrink: 0; }
+
+    /* threshold → push: a wrapping path of small steps */
+    .rb-tech-chain { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; max-width: 640px; }
+    .rb-tech-step { font-size: 12px; color: #1A1A1A; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 7px 11px; line-height: 1.3; }
+    .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; max-width: 640px; }
+    .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
       .case-hero-image { width: 100%; margin-left: 0; }
@@ -749,9 +781,84 @@
       </div>
     </section>
 
-    <!-- 09 — LOCALIZATION -->
+    <!-- 09 — TECHNICAL ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-label">09 &mdash; Localization</p>
+      <p class="section-label">09 &mdash; Technical Architecture</p>
+      <h2 class="section-heading">Two price paths, because one wasn't allowed</h2>
+      <p class="section-text">I designed the interface first and then found the interesting problems sitting behind it. Three of them changed the architecture, and all three were mine to solve &mdash; which is the part of this project I'd never done before.</p>
+
+      <p class="rb-tech-label">Prices &mdash; two independent paths</p>
+      <div class="rb-tech-lanes">
+        <div class="rb-tech-lane">
+          <span class="rb-tech-lane-label">From the phone</span>
+          <div class="rb-tech-hops">
+            <span class="rb-tech-hop">Binance</span>
+            <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+            <span class="rb-tech-hop">CoinGecko</span>
+          </div>
+        </div>
+        <div class="rb-tech-lane">
+          <span class="rb-tech-lane-label">From the worker</span>
+          <div class="rb-tech-hops">
+            <span class="rb-tech-hop">OKX</span>
+            <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+            <span class="rb-tech-hop">Coinbase</span>
+            <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+            <span class="rb-tech-hop">Coinpaprika</span>
+          </div>
+        </div>
+      </div>
+      <p class="rb-tech-why">Not a preference &mdash; a constraint. From a phone on a home connection Binance answers fine. From the server's data centre it returns 403, and CoinGecko rate-limits the moment the scheduled job bursts. So the server got its own chain of keyless sources, ordered by how closely each one tracks what the phone is already showing.</p>
+
+      <p class="rb-tech-label">ALT/ALT &mdash; assembled, not fetched</p>
+      <div class="rb-tech-legs" role="group" aria-label="Base over USD divided by quote over USD equals base over quote">
+        <span class="rb-tech-leg">BASE / USD</span>
+        <span class="rb-tech-op" aria-hidden="true">&divide;</span>
+        <span class="rb-tech-leg">QUOTE / USD</span>
+        <span class="rb-tech-op" aria-hidden="true">=</span>
+        <span class="rb-tech-leg rb-tech-leg--out">BASE / QUOTE</span>
+      </div>
+      <p class="rb-tech-why">Nobody publishes an ALT/ALT price, so both sides get priced in USD and divided. Where possible both legs come from the same source, so the USD-versus-USDT difference cancels instead of surfacing as a phantom move in someone's chart. This division is also the entire reason the product exists &mdash; without it, it's homework the user does by hand.</p>
+
+      <p class="rb-tech-label">Threshold &rarr; push</p>
+      <div class="rb-tech-chain" role="group" aria-label="From threshold crossing to push delivery">
+        <span class="rb-tech-step">Cron, every minute</span>
+        <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+        <span class="rb-tech-step">Prices via the chain</span>
+        <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+        <span class="rb-tech-step">Ratio</span>
+        <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+        <span class="rb-tech-step">Compare stored thresholds</span>
+        <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+        <span class="rb-tech-step">Crossed, not yet sent</span>
+        <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+        <span class="rb-tech-step">Push service</span>
+        <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+        <span class="rb-tech-step">Phone</span>
+        <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
+        <span class="rb-tech-step">Alert history</span>
+      </div>
+      <p class="rb-tech-why">While the app is open it checks its own alerts locally. Closed is the hard case: iOS background refresh is best-effort &mdash; minutes or hours, and nothing at all if you force-quit the app. Waiting on the device meant missing the moment, so I moved the schedule to the server and left the phone to just receive. Comparisons are exact, with no tolerance band, so a real crossing can't be smoothed away &mdash; and the server sizes for the maximum a paying client can legitimately arm: 50 pairs, 100 alerts each.</p>
+
+      <p class="rb-tech-label">The stack</p>
+      <div class="rb-tech-chips">
+        <span class="rb-tech-chip">Cloudflare Workers</span>
+        <span class="rb-tech-chip">KV</span>
+        <span class="rb-tech-chip">D1</span>
+        <span class="rb-tech-chip">R2</span>
+        <span class="rb-tech-chip">Pages</span>
+        <span class="rb-tech-chip">Pages Functions</span>
+        <span class="rb-tech-chip">Cron Triggers</span>
+        <span class="rb-tech-chip">Expo Push</span>
+        <span class="rb-tech-chip">APNs</span>
+        <span class="rb-tech-chip">StoreKit 2</span>
+      </div>
+      <p class="rb-tech-why">Two workers and a static site, all serverless: one prices and pushes on the minute, a second handles in-app feedback with its own database and file storage. Nothing to run means nothing to keep alive &mdash; the only reason one person could hold this and the design work at the same time.</p>
+    </section>
+
+    <!-- 10 — LOCALIZATION -->
+    <section class="case-section">
+      <p class="section-label">10 &mdash; Localization</p>
       <h2 class="section-heading">One person, 31 languages</h2>
       <p class="section-text">Crypto is global, so Rebalancer had to be. I localized the app into 31 languages &mdash; the kind of scope that usually needs a dedicated team.</p>
       <p class="section-text">The workflow was AI-driven but not naive: I generated translations with AI, then ran them through Gemini as a second pass, since its translation quality caught nuances the first pass missed.</p>
@@ -807,9 +914,9 @@
       </div>
     </section>
 
-    <!-- 10 — OUTCOME -->
+    <!-- 11 — OUTCOME -->
     <section class="case-section">
-      <p class="section-label">10 &mdash; Outcome</p>
+      <p class="section-label">11 &mdash; Outcome</p>
       <h2 class="section-heading">Live, and shipped solo</h2>
       <p class="section-text">Rebalancer is live on the App Store &mdash; a complete product designed, built, and shipped by one person.</p>
       <p class="section-text">The 31-language localization is currently awaiting approval for full rollout. A fresh launch, with the hardest parts &mdash; the build, the backend, the global infrastructure &mdash; already done.</p>
@@ -829,9 +936,9 @@
       </div>
     </section>
 
-    <!-- 11 — REFLECTION -->
+    <!-- 12 — REFLECTION -->
     <section class="case-section">
-      <p class="section-label">11 &mdash; Reflection</p>
+      <p class="section-label">12 &mdash; Reflection</p>
       <h2 class="section-heading">What the build taught me</h2>
       <div class="reflection-grid">
         <div>
