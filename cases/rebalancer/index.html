@@ -397,53 +397,61 @@
     .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
     .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
 
-    /* §06 — user flows. Vertical rail at every width (same L-connector
-       mechanics as the IA tree), so step text is never squeezed on a phone.
-       Node TYPE is carried by shape + stroke style only — no colour:
-         screen   solid rect + title-bar hint      action   solid pill
-         system   dotted rect                      decision hexagon
-         end      filled pill                      sheet / outside  dashed */
-    .rb-flow, .rb-flow ul { list-style: none; }
-    .rb-flow { margin-top: 18px; }
-    .rb-flow li { position: relative; padding-left: 26px; overflow: hidden; }
-    .rb-flow li::before {
-      content: ''; position: absolute; left: 0; top: 0; height: 100%;
-      border-left: 1px solid rgba(0,0,0,0.16);
+    /* §06 — user flows, drawn left→right the way flow diagrams are actually
+       read. .rb-track is a flex row; a fork opens into branch rows stacked
+       above and below the axis, joined by a spine + elbows. On a phone the
+       track scrolls inside .rb-flow (the same contained-scroll mechanism the
+       card rows use), so the page itself never moves sideways. */
+    .rb-flow {
+      margin-top: 18px; max-width: 100%; min-width: 0;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
     }
-    /* One pseudo does both jobs: its border-top IS the elbow (at top:50%, so
-       always centred on the node however tall it grows), and on a last child
-       its background continues downward to terminate the trunk in a clean "└".
-       Drawn by the node, never by the <li>, so it can't drift out of step. */
-    .rb-step::after, .rb-decwrap::after {
-      content: ''; position: absolute; left: -26px; top: 50%; width: 26px;
-      border-top: 1px solid rgba(0,0,0,0.16);
+    .rb-flow::-webkit-scrollbar { display: none; }
+    .rb-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    /* A 760px column can't hold a five-node track, so a flow scrolls on desktop
+       too. Same fade the tab strips use, toggled by JS while there is more to
+       the right, so the edge always reads as "continues". */
+    .rb-flow--more {
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent 100%);
+              mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent 100%);
     }
-    .rb-flow li:last-child > .rb-step::after,
-    .rb-flow li:last-child > .rb-decwrap::after {
-      height: 2000px; background: #F8F7F4;
+    .rb-track { display: flex; align-items: center; width: max-content; padding: 24px 2px 10px; }
+
+    /* connector with an arrowhead */
+    .rb-link { flex: 0 0 30px; position: relative; height: 1px; background: rgba(0,0,0,0.22); }
+    .rb-link::after {
+      content: ''; position: absolute; right: 0; top: 50%;
+      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
     }
-    .rb-fork > li::before { border-color: rgba(0,0,0,0.24); }
-    .rb-fork > li > .rb-step::after, .rb-fork > li > .rb-decwrap::after { border-top-color: rgba(0,0,0,0.24); }
-    /* the hexagon is clip-path'd, so its elbow has to come from an unclipped
-       wrapper — a pseudo of a clipped element would be clipped away too */
-    .rb-decwrap { position: relative; display: inline-block; max-width: 100%; }
-    .rb-fork-label { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; margin-top: 10px; }
-    /* the boundary lane — everything below it happens off-app */
-    .rb-flow li.rb-bound { padding-left: 0; margin: 18px 0 4px; }
-    .rb-flow li.rb-bound::before { display: none; }
-    .rb-flow li.rb-bound::after {
-      content: ''; position: absolute; left: 0; right: 0; top: 50%; width: auto;
-      border-top: 1px dashed rgba(0,0,0,0.32);
+
+    /* fork: rows stacked around the axis, spine trimmed to the outer centres */
+    .rb-branches { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 48px; flex: 0 0 auto; }
+    .rb-branches::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.24); }
+    .rb-branches::after { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    .rb-branch { position: relative; display: flex; align-items: center; }
+    .rb-branch::before { content: ''; position: absolute; left: -24px; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    .rb-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: #F8F7F4; }
+    .rb-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: #F8F7F4; }
+    .rb-branch-label {
+      flex: 0 0 auto; max-width: 118px; margin-right: 12px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
+      color: #9A9A9A; line-height: 1.35;
     }
+
+    /* the app boundary — a lane crossing the track; everything right of it is off-app */
+    .rb-bound { position: relative; flex: 0 0 1px; align-self: stretch; margin: 0 32px; border-left: 1px dashed rgba(0,0,0,0.34); }
     .rb-bound-label {
-      position: relative; z-index: 1; display: inline-block; margin-left: 18px;
-      background: #F8F7F4; padding: 0 10px;
+      position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%);
+      white-space: nowrap; background: #F8F7F4; padding: 0 8px;
       font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A;
     }
 
     .rb-step {
       display: inline-flex; flex-direction: column; gap: 3px;
-      max-width: 100%; margin: 12px 0; padding: 11px 15px;
+      flex: 0 0 196px; width: 196px; padding: 11px 15px;
       background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
       position: relative;
     }
@@ -466,7 +474,7 @@
     .rb-step--end .rb-step-line { color: rgba(255,255,255,0.62); }
     /* decision: hexagon built from two clipped layers — the outer one shows
        through as a 1px outline, so the shape reads as stroked, not filled. */
-    .rb-dec { display: inline-block; max-width: 100%; margin: 12px 0; padding: 1px; background: var(--rb-decision-bd); }
+    .rb-dec { display: inline-block; padding: 1px; background: var(--rb-decision-bd); }
     .rb-dec, .rb-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
     .rb-dec-in { background: var(--rb-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; }
 
@@ -731,8 +739,6 @@
                     <span class="rb-tree-sheet">Holdings entry</span>
                     <span class="rb-tree-sheet">Pair colour</span>
                   </div>
-                </li>
-              </ul>
             </li>
             <li>
               <div class="rb-tree-node rb-tree-node--tab">
@@ -761,10 +767,6 @@
                     <span class="rb-tree-sheet">Theme</span>
                     <span class="rb-tree-sheet">Feedback</span>
                   </div>
-                </li>
-              </ul>
-            </li>
-          </ul>
           <p class="rb-note">Token selector and Holdings entry appear under two parents because they genuinely are shared &mdash; one sheet invoked from wherever it's needed, rather than a copy per screen.</p>
           <p class="rb-note">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
         </div>
@@ -835,229 +837,207 @@
         </div>
 
         <div class="rb-tabpanel is-active" data-rb-panel="pair" role="tabpanel">
-          <ul class="rb-flow" role="group" aria-label="Create a custom pair">
-            <li>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Tap +</span>
-                <span class="rb-step-line">From the watchlist</span>
+          <div class="rb-flow" tabindex="0" role="group" aria-label="Create a custom pair, read left to right">
+            <div class="rb-track">
+            <div class="rb-step rb-step--action">
+              <span class="rb-step-kind">Action</span>
+              <span class="rb-step-title">Tap +</span>
+              <span class="rb-step-line">From the watchlist</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--sheet">
+              <span class="rb-step-kind">Sheet</span>
+              <span class="rb-step-title">Token selector</span>
+              <span class="rb-step-line">Search the catalogue</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--action">
+              <span class="rb-step-kind">Action</span>
+              <span class="rb-step-title">Pick base</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--action">
+              <span class="rb-step-kind">Action</span>
+              <span class="rb-step-title">Pick quote</span>
+            </div>
+            <div class="rb-branches">
+              <div class="rb-branch">
+                <span class="rb-branch-label">If picked the wrong way round</span>
+                <div class="rb-step rb-step--action">
+                  <span class="rb-step-kind">Action</span>
+                  <span class="rb-step-title">Swap sides</span>
+                  <span class="rb-step-line">Same pair, reversed</span>
+                </div>
               </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--sheet">
-                <span class="rb-step-kind">Sheet</span>
-                <span class="rb-step-title">Token selector</span>
-                <span class="rb-step-line">Search the catalogue</span>
+              <div class="rb-branch">
+                <div class="rb-step rb-step--end">
+                  <span class="rb-step-kind">End</span>
+                  <span class="rb-step-title">Pair is live</span>
+                  <span class="rb-step-line">Tracked from that moment</span>
+                </div>
               </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Pick base</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Pick quote</span>
-              </div>
-              <ul class="rb-fork">
-                <li>
-                  <span class="rb-fork-label">If you picked them the wrong way round</span>
-                  <div class="rb-step rb-step--action">
-                    <span class="rb-step-kind">Action</span>
-                    <span class="rb-step-title">Swap sides</span>
-                    <span class="rb-step-line">Same pair, reversed &mdash; no need to start over</span>
-                  </div>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <div class="rb-step rb-step--end">
-                <span class="rb-step-kind">End</span>
-                <span class="rb-step-title">Pair is live</span>
-                <span class="rb-step-line">Tracked in the list from that moment</span>
-              </div>
-            </li>
-          </ul>
+            </div>
+            </div>
+          </div>
           <p class="rb-note">Two picks, no form. The pair is the only thing the app asks you to create, so I kept it to two decisions &mdash; and made the sides swappable instead of expecting people to get the order right first time.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="alert" role="tabpanel">
-          <ul class="rb-flow" role="group" aria-label="Set an alert on a pair">
-            <li>
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Pair detail</span>
-                <span class="rb-step-line">Opened from the watchlist</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">New alert</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--sheet">
-                <span class="rb-step-kind">Sheet</span>
-                <span class="rb-step-title">Prefilled at the current ratio</span>
-                <span class="rb-step-line">Opens on today's number, not on an empty field</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-decwrap">
-                <div class="rb-dec">
-                  <div class="rb-dec-in">
-                    <span class="rb-step-kind">Decision</span>
-                    <span class="rb-step-title">Notifications allowed?</span>
-                  </div>
+          <div class="rb-flow" tabindex="0" role="group" aria-label="Set an alert on a pair, read left to right">
+            <div class="rb-track">
+            <div class="rb-step rb-step--screen">
+              <span class="rb-step-kind">Screen</span>
+              <span class="rb-step-title">Pair detail</span>
+              <span class="rb-step-line">Opened from the watchlist</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--action">
+              <span class="rb-step-kind">Action</span>
+              <span class="rb-step-title">New alert</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--sheet">
+              <span class="rb-step-kind">Sheet</span>
+              <span class="rb-step-title">Prefilled at the current ratio</span>
+              <span class="rb-step-line">Opens on today's number</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-decwrap">
+              <div class="rb-dec"><div class="rb-dec-in">
+                <span class="rb-step-kind">Decision</span>
+                <span class="rb-step-title">Notifications allowed?</span>
+              </div></div>
+            </div>
+            <div class="rb-branches">
+              <div class="rb-branch">
+                <span class="rb-branch-label">Not yet</span>
+                <div class="rb-step rb-step--system">
+                  <span class="rb-step-kind">System</span>
+                  <span class="rb-step-title">Permission banner</span>
+                  <span class="rb-step-line">Asks once; the alert is still saved</span>
                 </div>
               </div>
-              <ul class="rb-fork">
-                <li>
-                  <span class="rb-fork-label">Not yet</span>
-                  <div class="rb-step rb-step--system">
-                    <span class="rb-step-kind">System</span>
-                    <span class="rb-step-title">Permission banner</span>
-                    <span class="rb-step-line">Asks once, in place &mdash; the alert is still saved</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="rb-fork-label">Yes</span>
-                  <div class="rb-step rb-step--action">
-                    <span class="rb-step-kind">Action</span>
-                    <span class="rb-step-title">Set the threshold</span>
-                  </div>
-                  <ul class="rb-fork">
-                    <li>
-                      <div class="rb-step rb-step--end">
-                        <span class="rb-step-kind">End</span>
-                        <span class="rb-step-title">Alert armed</span>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
+              <div class="rb-branch">
+                <span class="rb-branch-label">Yes</span>
+                <div class="rb-step rb-step--action">
+                  <span class="rb-step-kind">Action</span>
+                  <span class="rb-step-title">Set the threshold</span>
+                </div>
+                <span class="rb-link" aria-hidden="true"></span>
+                <div class="rb-step rb-step--end">
+                  <span class="rb-step-kind">End</span>
+                  <span class="rb-step-title">Alert armed</span>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
           <p class="rb-note">The prefill is the whole design. An empty field asks &ldquo;what number?&rdquo; &mdash; prefilled with where the ratio sits right now, it asks &ldquo;how far from here?&rdquo; &mdash; which is the question I always arrived with myself.</p>
           <p class="rb-note">The permission branch saves the alert either way. Making the notification prompt a precondition would have meant losing the thing the person came to do.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="sim" role="tabpanel">
-          <ul class="rb-flow" role="group" aria-label="Simulate a rebalance">
-            <li>
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Pair detail</span>
-                <span class="rb-step-line">Simulator lives here, not in the list</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Enter amounts</span>
-                <span class="rb-step-line">What you'd move</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-decwrap">
-                <div class="rb-dec">
-                  <div class="rb-dec-in">
-                    <span class="rb-step-kind">Decision</span>
-                    <span class="rb-step-title">More than two steps?</span>
-                  </div>
+          <div class="rb-flow" tabindex="0" role="group" aria-label="Simulate a rebalance, read left to right">
+            <div class="rb-track">
+            <div class="rb-step rb-step--screen">
+              <span class="rb-step-kind">Screen</span>
+              <span class="rb-step-title">Pair detail</span>
+              <span class="rb-step-line">Simulator lives here, not in the list</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--action">
+              <span class="rb-step-kind">Action</span>
+              <span class="rb-step-title">Enter amounts</span>
+              <span class="rb-step-line">What you'd move</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-decwrap">
+              <div class="rb-dec"><div class="rb-dec-in">
+                <span class="rb-step-kind">Decision</span>
+                <span class="rb-step-title">More than two steps?</span>
+              </div></div>
+            </div>
+            <div class="rb-branches">
+              <div class="rb-branch">
+                <span class="rb-branch-label">Within Free</span>
+                <div class="rb-step rb-step--end">
+                  <span class="rb-step-kind">End</span>
+                  <span class="rb-step-title">See the outcome</span>
+                  <span class="rb-step-line">Before committing to anything</span>
                 </div>
               </div>
-              <ul class="rb-fork">
-                <li>
-                  <span class="rb-fork-label">Within Free</span>
-                  <div class="rb-step rb-step--end">
-                    <span class="rb-step-kind">End</span>
-                    <span class="rb-step-title">See the outcome</span>
-                    <span class="rb-step-line">Before committing to anything</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="rb-fork-label">Beyond Free</span>
-                  <div class="rb-step rb-step--sheet">
-                    <span class="rb-step-kind">Sheet</span>
-                    <span class="rb-step-title">Paywall</span>
-                    <span class="rb-step-line">Pro: unlimited chain steps</span>
-                  </div>
-                </li>
-              </ul>
-            </li>
-          </ul>
+              <div class="rb-branch">
+                <span class="rb-branch-label">Beyond Free</span>
+                <div class="rb-step rb-step--sheet">
+                  <span class="rb-step-kind">Sheet</span>
+                  <span class="rb-step-title">Paywall</span>
+                  <span class="rb-step-line">Pro: unlimited chain steps</span>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
           <p class="rb-note">The simulator answers &ldquo;what would this do&rdquo; without doing it. Free stops at two steps in a chain; deeper chains are where Pro begins &mdash; I put the paywall where the tool starts doing planning work, not at the front door.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="hold" role="tabpanel">
-          <ul class="rb-flow" role="group" aria-label="Track holdings">
-            <li>
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Coins</span>
-                <span class="rb-step-line">Its own tab</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Enter what you hold</span>
-                <span class="rb-step-line">Edited in place, hideable</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Prices move</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--end">
-                <span class="rb-step-kind">End</span>
-                <span class="rb-step-title">Totals recalculate</span>
-                <span class="rb-step-line">In the denomination you choose</span>
-              </div>
-            </li>
-          </ul>
+          <div class="rb-flow" tabindex="0" role="group" aria-label="Track holdings, read left to right">
+            <div class="rb-track">
+            <div class="rb-step rb-step--screen">
+              <span class="rb-step-kind">Screen</span>
+              <span class="rb-step-title">Coins</span>
+              <span class="rb-step-line">Its own tab</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--action">
+              <span class="rb-step-kind">Action</span>
+              <span class="rb-step-title">Enter what you hold</span>
+              <span class="rb-step-line">Edited in place, hideable</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--system">
+              <span class="rb-step-kind">System</span>
+              <span class="rb-step-title">Prices move</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--end">
+              <span class="rb-step-kind">End</span>
+              <span class="rb-step-title">Totals recalculate</span>
+              <span class="rb-step-line">In the denomination you choose</span>
+            </div>
+            </div>
+          </div>
           <p class="rb-note">The only flow here with no branch, and that's the point: Coins is a ledger of what you own. Anything that behaves like an exchange rate belongs to the simulator &mdash; keeping those apart is what stops the app from implying it can trade for you.</p>
         </div>
 
         <div class="rb-tabpanel" data-rb-panel="moment" role="tabpanel">
-          <ul class="rb-flow" role="group" aria-label="The rebalance moment, ending outside the app">
-            <li>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Threshold crossed</span>
-                <span class="rb-step-line">Ratio reaches your number</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Push delivered</span>
-                <span class="rb-step-line">Even with the app closed</span>
-              </div>
-            </li>
-            <li>
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Open and check</span>
-                <span class="rb-step-line">Chart, holdings, simulator</span>
-              </div>
-            </li>
-            <li class="rb-bound"><span class="rb-bound-label">Outside the app</span></li>
-            <li>
-              <div class="rb-step rb-step--outside">
-                <span class="rb-step-kind">Off-app</span>
-                <span class="rb-step-title">Execute on the exchange</span>
-                <span class="rb-step-line">Rebalancer never places the order</span>
-              </div>
-            </li>
-          </ul>
+          <div class="rb-flow" tabindex="0" role="group" aria-label="The rebalance moment, ending outside the app">
+            <div class="rb-track">
+            <div class="rb-step rb-step--system">
+              <span class="rb-step-kind">System</span>
+              <span class="rb-step-title">Threshold crossed</span>
+              <span class="rb-step-line">Ratio reaches your number</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--system">
+              <span class="rb-step-kind">System</span>
+              <span class="rb-step-title">Push delivered</span>
+              <span class="rb-step-line">Even with the app closed</span>
+            </div>
+            <span class="rb-link" aria-hidden="true"></span>
+            <div class="rb-step rb-step--screen">
+              <span class="rb-step-kind">Screen</span>
+              <span class="rb-step-title">Open and check</span>
+              <span class="rb-step-line">Chart, holdings, simulator</span>
+            </div>
+            <div class="rb-bound"><span class="rb-bound-label">Outside the app</span></div>
+            <div class="rb-step rb-step--outside">
+              <span class="rb-step-kind">Off-app</span>
+              <span class="rb-step-title">Execute on the exchange</span>
+              <span class="rb-step-line">Rebalancer never places the order</span>
+            </div>
+            </div>
+          </div>
           <p class="rb-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature &mdash; a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
         </div>
       </div>
@@ -1152,48 +1132,45 @@
       <p class="rb-tech-why">No ALT/ALT feed exists &mdash; both legs priced in USD, then divided.</p>
 
       <p class="rb-tech-label">Threshold &rarr; push</p>
-      <ul class="rb-flow" role="group" aria-label="From the scheduled run to a delivered push">
-        <li>
-          <div class="rb-step rb-step--system">
-            <span class="rb-step-kind">System</span>
-            <span class="rb-step-title">Scheduled run, every minute</span>
-            <span class="rb-step-line">Cron trigger on the worker</span>
-          </div>
-        </li>
-        <li>
-          <div class="rb-step rb-step--system">
-            <span class="rb-step-kind">System</span>
-            <span class="rb-step-title">Price both legs, derive the ratio</span>
-            <span class="rb-step-line">Lane B chain, same source for both legs where possible</span>
-          </div>
-        </li>
-        <li>
-          <div class="rb-decwrap">
-            <div class="rb-dec">
-              <div class="rb-dec-in">
-                <span class="rb-step-kind">Decision</span>
-                <span class="rb-step-title">Crossed, and not already sent?</span>
-              </div>
+      <div class="rb-flow" tabindex="0" role="group" aria-label="From the scheduled run to a delivered push">
+        <div class="rb-track">
+        <div class="rb-step rb-step--system">
+          <span class="rb-step-kind">System</span>
+          <span class="rb-step-title">Scheduled run</span>
+          <span class="rb-step-line">Every minute, on the worker</span>
+        </div>
+        <span class="rb-link" aria-hidden="true"></span>
+        <div class="rb-step rb-step--system">
+          <span class="rb-step-kind">System</span>
+          <span class="rb-step-title">Price both legs</span>
+          <span class="rb-step-line">Derive the ratio</span>
+        </div>
+        <div class="rb-decwrap">
+          <div class="rb-dec"><div class="rb-dec-in">
+            <span class="rb-step-kind">Decision</span>
+            <span class="rb-step-title">Crossed, not already sent?</span>
+          </div></div>
+        </div>
+        <div class="rb-branches">
+          <div class="rb-branch">
+            <span class="rb-branch-label">No</span>
+            <div class="rb-step rb-step--system">
+              <span class="rb-step-kind">System</span>
+              <span class="rb-step-title">Stay silent</span>
+              <span class="rb-step-line">An alert disarms itself once fired</span>
             </div>
           </div>
-          <ul class="rb-fork">
-            <li>
-              <span class="rb-fork-label">No &mdash; already fired, or still short of the line</span>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Stay silent, wait a minute</span>
-                <span class="rb-step-line">An alert disarms itself once fired, so nobody gets the same news twice</span>
-              </div>
-            </li>
-            <li>
-              <span class="rb-fork-label">Yes</span>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Push &rarr; phone &rarr; alert history</span>
-                <span class="rb-step-line">Delivered whether or not the app is running</span>
-              </div>
-            </li>
-          </ul>
+          <div class="rb-branch">
+            <span class="rb-branch-label">Yes</span>
+            <div class="rb-step rb-step--system">
+              <span class="rb-step-kind">System</span>
+              <span class="rb-step-title">Push &rarr; phone</span>
+              <span class="rb-step-line">Delivered with the app closed</span>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
         </li>
       </ul>
       <p class="rb-tech-why">Background refresh is unreliable, so the schedule lives on the server.</p>
@@ -1373,16 +1350,21 @@
     // Tab strips: flag "there is more to the right" so the CSS fade can show.
     // Cheap, passive, and self-correcting on resize / scroll / tab switch.
     (function () {
-      var strips = document.querySelectorAll('.rb-tabs');
-      if (!strips.length) return;
+      var scrollers = [].concat(
+        [].map.call(document.querySelectorAll('.rb-tabs'), function (el) { return { el: el, cls: 'rb-tabs--more' }; }),
+        [].map.call(document.querySelectorAll('.rb-flow'), function (el) { return { el: el, cls: 'rb-flow--more' }; })
+      );
+      if (!scrollers.length) return;
       function sync() {
-        strips.forEach(function (s) {
-          var more = s.scrollWidth - s.scrollLeft - s.clientWidth > 4;
-          s.classList.toggle('rb-tabs--more', more);
+        scrollers.forEach(function (s) {
+          var more = s.el.scrollWidth - s.el.scrollLeft - s.el.clientWidth > 4;
+          s.el.classList.toggle(s.cls, more);
         });
       }
-      strips.forEach(function (s) { s.addEventListener('scroll', sync, { passive: true }); });
+      scrollers.forEach(function (s) { s.el.addEventListener('scroll', sync, { passive: true }); });
       window.addEventListener('resize', sync);
+      // a flow only gets measured once its tab panel is visible
+      document.querySelectorAll('.rb-tab').forEach(function (b) { b.addEventListener('click', sync); });
       sync();
     })();
   </script>
