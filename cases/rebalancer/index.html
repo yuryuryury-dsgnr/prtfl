@@ -85,6 +85,14 @@
       font-size: 28px; font-weight: 500; letter-spacing: -0.02em;
       line-height: 1.25; margin-bottom: 24px;
     }
+    /* one level under .section-heading, above body text — same component the
+       Halliburton case uses, at this page's lighter weight. The big top margin
+       is what keeps a long section from reading as one pile. */
+    .subsection-heading {
+      font-size: 18px; font-weight: 500; letter-spacing: -0.01em; color: #1A1A1A;
+      line-height: 1.3; margin: 64px 0 14px;
+    }
+    .subsection-heading:first-of-type { margin-top: 36px; }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
     /* a section that ends on prose (§01) would otherwise add its paragraph's
        16px to the next section's 80px top padding and sit 96px apart */
@@ -130,7 +138,7 @@
 
     /* ═══ PHASE 3 ADDITIONS ═══ */
 
-    /* Stage/pipeline flow — §08 AI→Gemini graphic.
+    /* Stage/pipeline flow — §07 AI→Gemini graphic.
        Nodes + arrows, horizontal on desktop; on mobile it stacks with the
        arrow rotated into a downward connector. Adapts Halliburton's
        .pipeline-flow to this page's Inter + card styling. */
@@ -151,7 +159,7 @@
     .flow--compact .flow-node { padding: 14px 16px; }
     .flow--compact .flow-node-title { font-size: 14px; }
 
-    /* Localization (§08) — focal stat + native-script language pills */
+    /* Localization (§07) — focal stat + native-script language pills */
     .loc-stat { display: flex; align-items: baseline; gap: 12px; margin-top: 24px; }
     .loc-stat-number { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
     .loc-stat-label { font-size: 16px; color: #6B6B6B; }
@@ -162,7 +170,7 @@
       border-radius: 100px; padding: 5px 12px; line-height: 1.4;
     }
 
-    /* iPhone mockups (§06). The screenshots already carry the device frame —
+    /* iPhone mockups (§05). The screenshots already carry the device frame —
        bezel, side buttons and Dynamic Island are part of the image — so the
        page draws no chrome of its own. .phone-frame is only an aspect-ratio
        box (450/920, the mockup's own ratio) that reserves the slot while the
@@ -236,6 +244,32 @@
     @media (min-width: 1080px) {
       .rb-road-scroll { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
     }
+    /* §03 — market analysis: a comparison grid rather than prose, because the
+       point is the shape of the gap. Rows carry their own labels, hidden while
+       the header row is visible, so the whole thing becomes labelled blocks on
+       mobile instead of a table that has to scroll. */
+    .rb-market {
+      margin-top: 22px; background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden;
+    }
+    .rb-market-row { display: grid; grid-template-columns: 1.15fr 1fr 1.15fr; }
+    .rb-market-row + .rb-market-row { border-top: 1px solid rgba(0,0,0,0.07); }
+    .rb-market-row--head { background: #F5F4F1; }
+    .rb-market-c { padding: 12px 16px; font-size: 13px; color: #6B6B6B; line-height: 1.5; }
+    .rb-market-row--head .rb-market-c {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.07em;
+      text-transform: uppercase; color: #9A9A9A;
+    }
+    .rb-market-c--name { color: #1A1A1A; font-weight: 500; }
+    .rb-market-k { display: none; }
+    .rb-market-out {
+      display: flex; flex-direction: column; gap: 6px; margin-top: 18px;
+      background: var(--rb-action-bg); border: 1px solid var(--rb-action-bd);
+      border-radius: 12px; padding: 16px 20px;
+    }
+    .rb-market-out-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #5F7A67; }
+    .rb-market-out-text { font-size: 14px; color: #3F5246; line-height: 1.55; }
+
     /* §03 — audience groups. Same shape as the Halliburton case's persona
        cards (badge, name, Who / Pain) but in this page's vocabulary: the
        pastel node fills instead of white cards, one hue per group, so a
@@ -287,7 +321,7 @@
       display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC;
       padding: 3px 8px; border-radius: 4px;
     }
-    /* §09 — compact outcome stat trio (borderless, same stat family, smaller) */
+    /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
     .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
     .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
     .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
@@ -313,7 +347,7 @@
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
-    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §03, §04 and §05.
+    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §03 and §04.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
        every flow). Muted on purpose: these sit on a warm #F8F7F4 page.
@@ -327,7 +361,7 @@
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
-    /* Shared commentary line under a diagram (§04, §05) */
+    /* Shared commentary line under a diagram (§03, §04) */
     .rb-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
     .rb-note + .rb-note { margin-top: 12px; }
 
@@ -428,7 +462,7 @@
     .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
     .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
 
-    /* §05 — user flows, drawn left→right the way flow diagrams are actually
+    /* §03 — user flows, drawn left→right the way flow diagrams are actually
        read. .rb-track is a flex row; a fork opens into branch rows stacked
        above and below the axis, joined by a spine + elbows. On a phone the
        track scrolls inside .rb-flow (the same contained-scroll mechanism the
@@ -517,7 +551,7 @@
     .rb-key-mark--end { background: #1A1A1A; border-radius: 100px; }
     .rb-key-mark--outside { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
-    /* §07 — technical architecture. Four small blocks: two price lanes, the
+    /* §06 — technical architecture. Four small blocks: two price lanes, the
        two-leg division, the threshold→push chain, and the stack. All chip /
        flex based so everything wraps instead of ever widening the page. */
     .rb-tech-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 32px 0 10px; }
@@ -578,6 +612,16 @@
          plain note above the rail. */
       .rb-road-scroll { overflow: visible; }
       .rb-groups { grid-template-columns: 1fr; }
+      /* table -> stacked blocks: the header row goes, each cell shows its own label */
+      .rb-market-row { grid-template-columns: 1fr; }
+      .rb-market-row--head { display: none; }
+      .rb-market-c { padding: 12px 16px 0; }
+      .rb-market-c:last-child { padding-bottom: 14px; }
+      .rb-market-c--name { padding-top: 14px; }
+      .rb-market-k {
+        display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+        text-transform: uppercase; color: #9A9A9A;
+      }
       .rb-road-scroll--more { -webkit-mask-image: none; mask-image: none; }
       .timeline { grid-template-columns: 1fr; gap: 24px; padding-left: 24px; min-width: 0; }
       .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
@@ -703,11 +747,48 @@
       </div>
     </section>
 
-    <!-- 03 — USER PERSONAS -->
+    <!-- 03 — RESEARCH -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">03</span> &middot; Three ways people hit the same wall</p>
-      <h2 class="section-heading">User personas</h2>
-      <p class="section-text">Three groups came out of the research above. I belong to the first one myself, which is where the product started; the interviews and the discussions put the other two beside it.</p>
+      <p class="section-kicker"><span class="section-num">03</span> &middot; What I checked before building</p>
+      <h2 class="section-heading">Research</h2>
+      <p class="section-text">Three questions came first: whether anything already did this, who keeps running into it, and how few decisions each path could take.</p>
+
+      <h3 class="subsection-heading">Market analysis</h3>
+      <p class="section-text">I went looking for the app I wanted to buy. What exists are four workarounds, each stopping in a different place.</p>
+      <div class="rb-market">
+        <div class="rb-market-row rb-market-row--head">
+          <span class="rb-market-c">Where people look now</span>
+          <span class="rb-market-c">What it gives</span>
+          <span class="rb-market-c">Where it stops</span>
+        </div>
+        <div class="rb-market-row">
+          <span class="rb-market-c rb-market-c--name">TradingView spread charts</span>
+          <span class="rb-market-c"><span class="rb-market-k">Gives</span>A chart of any ratio you can write as a symbol.</span>
+          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>TradingView itself advises against alerts on spread charts and says there is no technical fix.</span>
+        </div>
+        <div class="rb-market-row">
+          <span class="rb-market-c rb-market-c--name">Community Pine scripts</span>
+          <span class="rb-market-c"><span class="rb-market-k">Gives</span>A ratio with an alert, written by the people who needed one.</span>
+          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>Never becomes a product: an account, a chart and setup per script. That they exist at all is the clearest sign of the gap.</span>
+        </div>
+        <div class="rb-market-row">
+          <span class="rb-market-c rb-market-c--name">Converters &mdash; Coinbase, MetaMask and the rest</span>
+          <span class="rb-market-c"><span class="rb-market-k">Gives</span>Today's ratio between any two coins, instantly.</span>
+          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>One look and it's gone &mdash; no saved pair, no history to come back to, no alert.</span>
+        </div>
+        <div class="rb-market-row">
+          <span class="rb-market-c rb-market-c--name">Portfolio trackers</span>
+          <span class="rb-market-c"><span class="rb-market-k">Gives</span>Your holdings restated in another base currency.</span>
+          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>A fixed list of bases &mdash; BTC, ETH, XRP, LTC. An arbitrary ALT/ALT pair is not on it.</span>
+        </div>
+      </div>
+      <div class="rb-market-out">
+        <span class="rb-market-out-label">What that means</span>
+        <span class="rb-market-out-text">Nothing tracks an arbitrary ALT/ALT pair as an object you keep, with an alert on its ratio. The gap is technical rather than commercial: no exchange publishes an ALT/ALT feed, so the ratio has to be assembled from two USD legs and divided &mdash; which is exactly where every workaround above stops.</span>
+      </div>
+
+      <h3 class="subsection-heading">User personas</h3>
+      <p class="section-text">Three groups came out of the conversations and the reading. I belong to the first one myself, which is where the product started; the interviews put the other two beside it.</p>
       <div class="rb-groups">
         <div class="rb-group rb-group--holder">
           <div class="rb-group-head">
@@ -734,144 +815,9 @@
           <p class="rb-group-line"><span class="rb-group-key">Pain</span>The workaround never becomes a product: TradingView advises against alerts on spread charts, and a script needs an account and setup.</p>
         </div>
       </div>
-    </section>
+    
 
-    <!-- 04 — INFORMATION ARCHITECTURE -->
-    <section class="case-section">
-      <p class="section-kicker"><span class="section-num">04</span> &middot; Three tabs, and everything else on top</p>
-      <h2 class="section-heading">Information Architecture</h2>
-      <p class="section-text">There was never an IA diagram. The structure got decided in code, screen by screen &mdash; and I reversed myself twice before it settled. This is that structure written down after the fact.</p>
-
-      <div class="rb-tabgroup">
-        <div class="rb-tabs" role="tablist" aria-label="Information architecture views">
-          <button class="rb-tab is-active" data-rb-tab="map" role="tab" aria-selected="true">Screen map</button>
-          <button class="rb-tab" data-rb-tab="nav" role="tab" aria-selected="false">Navigation</button>
-        </div>
-
-        <div class="rb-tabpanel is-active" data-rb-panel="map" role="tabpanel">
-          <div class="rb-key" aria-hidden="true">
-            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--tab"></span>Tab root</span>
-            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--push"></span>Pushed screen</span>
-            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--sheet"></span>Sheet</span>
-          </div>
-          <p class="rb-tree-root">Rebalancer</p>
-          <ul class="rb-tree rb-tree-kids">
-            <li>
-              <div class="rb-tree-node rb-tree-node--tab">
-                <span class="rb-tree-name">Pairs</span>
-                <span class="rb-tree-note">the watchlist</span>
-              </div>
-              <ul class="rb-tree-kids">
-                <li>
-                  <div class="rb-tree-node rb-tree-node--push">
-                    <span class="rb-tree-name">Pair detail</span>
-                    <span class="rb-tree-note">chart, 1h&ndash;all, holdings, simulator</span>
-                  </div>
-                  <ul class="rb-tree-kids">
-                    <li>
-                      <div class="rb-tree-node rb-tree-node--push">
-                        <span class="rb-tree-name">Pair alerts</span>
-                        <span class="rb-tree-note">thresholds on this pair</span>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <div class="rb-tree-node rb-tree-node--push">
-                    <span class="rb-tree-name">All alerts</span>
-                    <span class="rb-tree-note">via the header bell</span>
-                  </div>
-                </li>
-                <li class="rb-tree-li--sheet">
-                  <div class="rb-tree-sheets">
-                    <span class="rb-tree-sheet">Token selector</span>
-                    <span class="rb-tree-sheet">New alert</span>
-                    <span class="rb-tree-sheet">Holdings entry</span>
-                    <span class="rb-tree-sheet">Pair colour</span>
-                  </div>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <div class="rb-tree-node rb-tree-node--tab">
-                <span class="rb-tree-name">Coins</span>
-                <span class="rb-tree-note">holdings, edited in place</span>
-              </div>
-              <ul class="rb-tree-kids">
-                <li class="rb-tree-li--sheet">
-                  <div class="rb-tree-sheets">
-                    <span class="rb-tree-sheet">Token selector</span>
-                    <span class="rb-tree-sheet">Holdings entry</span>
-                  </div>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <div class="rb-tree-node rb-tree-node--tab">
-                <span class="rb-tree-name">Settings</span>
-                <span class="rb-tree-note">preferences and Pro</span>
-              </div>
-              <ul class="rb-tree-kids">
-                <li class="rb-tree-li--sheet">
-                  <div class="rb-tree-sheets">
-                    <span class="rb-tree-sheet">Paywall</span>
-                    <span class="rb-tree-sheet">Language</span>
-                    <span class="rb-tree-sheet">Theme</span>
-                    <span class="rb-tree-sheet">Feedback</span>
-                  </div>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <p class="rb-note">Sheets that appear under two parents are shared, not duplicated &mdash; one sheet invoked from wherever it's needed.</p>
-          <p class="rb-note">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
-        </div>
-
-        <div class="rb-tabpanel" data-rb-panel="nav" role="tabpanel">
-          <div class="rb-key" aria-hidden="true">
-            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--sheet"></span>Overlay sheet</span>
-            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--push"></span>Pushed screen</span>
-            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--tab"></span>Tab root</span>
-          </div>
-          <div class="rb-plane" role="group" aria-label="Three navigation planes, from the overlay layer down to the tab bar">
-            <div class="rb-plane-band rb-plane-band--overlay">
-              <span class="rb-plane-label">Overlay plane &mdash; floats above; dismissing it moves nothing below</span>
-              <div class="rb-plane-items">
-                <span class="rb-plane-item">Token selector</span>
-                <span class="rb-plane-item">New alert</span>
-                <span class="rb-plane-item">Holdings entry</span>
-                <span class="rb-plane-item">Paywall</span>
-                <span class="rb-plane-count">+4 more</span>
-              </div>
-            </div>
-            <div class="rb-plane-band rb-plane-band--push">
-              <span class="rb-plane-label">Push plane &mdash; covers the bar; popping brings it back</span>
-              <div class="rb-plane-items">
-                <span class="rb-plane-item">Pair detail<span class="rb-plane-from">from Pairs</span></span>
-                <span class="rb-plane-item">Pair alerts<span class="rb-plane-from">from Pair detail</span></span>
-                <span class="rb-plane-item">All alerts<span class="rb-plane-from">from the Pairs header bell</span></span>
-              </div>
-            </div>
-            <div class="rb-plane-band rb-plane-band--tab">
-              <span class="rb-plane-label">Tab plane &mdash; always underneath, never rebuilt</span>
-              <div class="rb-plane-slots">
-                <span class="rb-plane-slot is-current">Pairs</span>
-                <span class="rb-plane-slot">Coins</span>
-                <span class="rb-plane-slot">Settings</span>
-              </div>
-            </div>
-          </div>
-          <p class="rb-note">Coins started as a page pushed from the watchlist header. I promoted it to a tab once I noticed I kept coming back to my holdings rather than visiting them.</p>
-          <p class="rb-note">Alerts went the other way: it shipped as a fourth tab, then moved to a bell in the watchlist header a week later. Three tabs is the app's real shape &mdash; alerts are somewhere I check, not somewhere I live.</p>
-          <p class="rb-note">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, so the tabs you left get properly set aside instead of lingering underneath.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 05 — USER FLOWS -->
-    <section class="case-section">
-      <p class="section-kicker"><span class="section-num">05</span> &middot; Five paths, and the edge I drew</p>
-      <h2 class="section-heading">User Flows</h2>
+      <h3 class="subsection-heading">User flows</h3>
       <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
 
       <div class="rb-tabgroup">
@@ -1097,11 +1043,144 @@
           <p class="rb-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature &mdash; a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
         </div>
       </div>
+    
     </section>
 
-    <!-- 06 — SCREENS -->
+    <!-- 04 — INFORMATION ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">06</span> &middot; What it actually looks like</p>
+      <p class="section-kicker"><span class="section-num">04</span> &middot; Three tabs, and everything else on top</p>
+      <h2 class="section-heading">Information Architecture</h2>
+      <p class="section-text">There was never an IA diagram. The structure got decided in code, screen by screen &mdash; and I reversed myself twice before it settled. This is that structure written down after the fact.</p>
+
+      <div class="rb-tabgroup">
+        <div class="rb-tabs" role="tablist" aria-label="Information architecture views">
+          <button class="rb-tab is-active" data-rb-tab="map" role="tab" aria-selected="true">Screen map</button>
+          <button class="rb-tab" data-rb-tab="nav" role="tab" aria-selected="false">Navigation</button>
+        </div>
+
+        <div class="rb-tabpanel is-active" data-rb-panel="map" role="tabpanel">
+          <div class="rb-key" aria-hidden="true">
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--tab"></span>Tab root</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--push"></span>Pushed screen</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--sheet"></span>Sheet</span>
+          </div>
+          <p class="rb-tree-root">Rebalancer</p>
+          <ul class="rb-tree rb-tree-kids">
+            <li>
+              <div class="rb-tree-node rb-tree-node--tab">
+                <span class="rb-tree-name">Pairs</span>
+                <span class="rb-tree-note">the watchlist</span>
+              </div>
+              <ul class="rb-tree-kids">
+                <li>
+                  <div class="rb-tree-node rb-tree-node--push">
+                    <span class="rb-tree-name">Pair detail</span>
+                    <span class="rb-tree-note">chart, 1h&ndash;all, holdings, simulator</span>
+                  </div>
+                  <ul class="rb-tree-kids">
+                    <li>
+                      <div class="rb-tree-node rb-tree-node--push">
+                        <span class="rb-tree-name">Pair alerts</span>
+                        <span class="rb-tree-note">thresholds on this pair</span>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <div class="rb-tree-node rb-tree-node--push">
+                    <span class="rb-tree-name">All alerts</span>
+                    <span class="rb-tree-note">via the header bell</span>
+                  </div>
+                </li>
+                <li class="rb-tree-li--sheet">
+                  <div class="rb-tree-sheets">
+                    <span class="rb-tree-sheet">Token selector</span>
+                    <span class="rb-tree-sheet">New alert</span>
+                    <span class="rb-tree-sheet">Holdings entry</span>
+                    <span class="rb-tree-sheet">Pair colour</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div class="rb-tree-node rb-tree-node--tab">
+                <span class="rb-tree-name">Coins</span>
+                <span class="rb-tree-note">holdings, edited in place</span>
+              </div>
+              <ul class="rb-tree-kids">
+                <li class="rb-tree-li--sheet">
+                  <div class="rb-tree-sheets">
+                    <span class="rb-tree-sheet">Token selector</span>
+                    <span class="rb-tree-sheet">Holdings entry</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div class="rb-tree-node rb-tree-node--tab">
+                <span class="rb-tree-name">Settings</span>
+                <span class="rb-tree-note">preferences and Pro</span>
+              </div>
+              <ul class="rb-tree-kids">
+                <li class="rb-tree-li--sheet">
+                  <div class="rb-tree-sheets">
+                    <span class="rb-tree-sheet">Paywall</span>
+                    <span class="rb-tree-sheet">Language</span>
+                    <span class="rb-tree-sheet">Theme</span>
+                    <span class="rb-tree-sheet">Feedback</span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p class="rb-note">Sheets that appear under two parents are shared, not duplicated &mdash; one sheet invoked from wherever it's needed.</p>
+          <p class="rb-note">The line I drew and kept: a card expands inline to a chart, timeframes and holdings &mdash; but the simulator and alerts exist only on the dedicated pair screen. Scanning and committing are different modes, and I didn't want the list carrying both.</p>
+        </div>
+
+        <div class="rb-tabpanel" data-rb-panel="nav" role="tabpanel">
+          <div class="rb-key" aria-hidden="true">
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--sheet"></span>Overlay sheet</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--push"></span>Pushed screen</span>
+            <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--tab"></span>Tab root</span>
+          </div>
+          <div class="rb-plane" role="group" aria-label="Three navigation planes, from the overlay layer down to the tab bar">
+            <div class="rb-plane-band rb-plane-band--overlay">
+              <span class="rb-plane-label">Overlay plane &mdash; floats above; dismissing it moves nothing below</span>
+              <div class="rb-plane-items">
+                <span class="rb-plane-item">Token selector</span>
+                <span class="rb-plane-item">New alert</span>
+                <span class="rb-plane-item">Holdings entry</span>
+                <span class="rb-plane-item">Paywall</span>
+                <span class="rb-plane-count">+4 more</span>
+              </div>
+            </div>
+            <div class="rb-plane-band rb-plane-band--push">
+              <span class="rb-plane-label">Push plane &mdash; covers the bar; popping brings it back</span>
+              <div class="rb-plane-items">
+                <span class="rb-plane-item">Pair detail<span class="rb-plane-from">from Pairs</span></span>
+                <span class="rb-plane-item">Pair alerts<span class="rb-plane-from">from Pair detail</span></span>
+                <span class="rb-plane-item">All alerts<span class="rb-plane-from">from the Pairs header bell</span></span>
+              </div>
+            </div>
+            <div class="rb-plane-band rb-plane-band--tab">
+              <span class="rb-plane-label">Tab plane &mdash; always underneath, never rebuilt</span>
+              <div class="rb-plane-slots">
+                <span class="rb-plane-slot is-current">Pairs</span>
+                <span class="rb-plane-slot">Coins</span>
+                <span class="rb-plane-slot">Settings</span>
+              </div>
+            </div>
+          </div>
+          <p class="rb-note">Coins started as a page pushed from the watchlist header. I promoted it to a tab once I noticed I kept coming back to my holdings rather than visiting them.</p>
+          <p class="rb-note">Alerts went the other way: it shipped as a fourth tab, then moved to a bell in the watchlist header a week later. Three tabs is the app's real shape &mdash; alerts are somewhere I check, not somewhere I live.</p>
+          <p class="rb-note">Detail screens sit above the bar rather than inside it. Pushing one hides the bar, so the tabs you left get properly set aside instead of lingering underneath.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — SCREENS -->
+    <section class="case-section">
+      <p class="section-kicker"><span class="section-num">05</span> &middot; What it actually looks like</p>
       <h2 class="section-heading">Screens</h2>
       <p class="section-text">Four screens from the shipped app. The structure and the flows behind them are the two sections above; this is what came out.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -1136,9 +1215,9 @@
       </div>
     </section>
 
-    <!-- 07 — TECHNICAL ARCHITECTURE -->
+    <!-- 06 — TECHNICAL ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">07</span> &middot; Two price paths, because one wasn't allowed</p>
+      <p class="section-kicker"><span class="section-num">06</span> &middot; Two price paths, because one wasn't allowed</p>
       <h2 class="section-heading">Technical Architecture</h2>
       <p class="section-text">Three problems behind the interface shaped the architecture.</p>
 
@@ -1257,9 +1336,9 @@
       <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
     </section>
 
-    <!-- 08 — LOCALIZATION -->
+    <!-- 07 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">08</span> &middot; Building for a market that isn't in one country</p>
+      <p class="section-kicker"><span class="section-num">07</span> &middot; Building for a market that isn't in one country</p>
       <h2 class="section-heading">Localization</h2>
       <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start.</p>
       <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
@@ -1314,9 +1393,9 @@
       </div>
     </section>
 
-    <!-- 09 — OUTCOME -->
+    <!-- 08 — OUTCOME -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">09</span> &middot; Live, and shipped solo</p>
+      <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way; what comes next is whether it earns a place in someone's routine.</p>
       <p class="section-text">Too early for usage evidence. The interface ships in 31 languages and none of them have met a real user yet. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
@@ -1336,9 +1415,9 @@
       </div>
     </section>
 
-    <!-- 10 — REFLECTION -->
+    <!-- 09 — REFLECTION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">10</span> &middot; What the build taught me</p>
+      <p class="section-kicker"><span class="section-num">09</span> &middot; What the build taught me</p>
       <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
         <div>
