@@ -268,21 +268,13 @@
        than a marker above them. The track is a 6-column grid: phases sit on
        row 2 under the rail, the research bar on row 3 spanning columns 1-4,
        which is what makes "parallel, not a stage before the start" legible. */
-    .rb-road-band {
-      grid-row: 3; grid-column: 1 / span 4; margin-top: 4px; min-width: 0;
-      background: var(--rb-action-bg); border: 1px solid var(--rb-action-bd);
-      border-radius: 8px; padding: 10px 14px;
-    }
-    .rb-road-band-label { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #5F7A67; }
-    .rb-road-band-note { display: block; font-size: 11.5px; color: #4C5F52; line-height: 1.45; margin-top: 3px; }
-
     .timeline { display: grid; grid-template-columns: repeat(6, minmax(152px, 1fr)); margin-top: 0; position: relative; min-width: 100%; }
     .timeline::before {
       content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
     }
     /* min 152px per column so phases stretch to fill a wide rail and overflow
        into a scroll instead of squeezing into unreadable columns */
-    .timeline-step { grid-row: 2; position: relative; padding-top: 48px; padding-right: 16px; }
+    .timeline-step { position: relative; padding-top: 48px; padding-right: 16px; }
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
@@ -295,23 +287,6 @@
       display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC;
       padding: 3px 8px; border-radius: 4px;
     }
-    /* Dot colour = the layer the phase mostly lived in. The darker half of
-       each pastel pair, so a 14px dot still reads on #F8F7F4; the inset ring
-       keeps it from dissolving into the rail. Position on the rail already
-       carries the sequence — colour is a second, redundant channel. */
-    .timeline-step--iface::before  { background: var(--rb-screen-bd);   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
-    .timeline-step--server::before { background: var(--rb-system-bd);   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
-    .timeline-step--store::before  { background: var(--rb-decision-bd); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
-
-    /* §02 — a phase that reversed a decision says so on one line, above its
-       tag. Kept to a few words: three of the six steps carry one, and the
-       flex row is as tall as its tallest step. */
-    .timeline-turn { font-size: 11px; color: #6B6B6B; line-height: 1.45; margin-bottom: 8px; }
-    .timeline-turn-label {
-      display: block; font-size: 9px; font-weight: 500; letter-spacing: 0.09em;
-      text-transform: uppercase; color: #9A9A9A;
-    }
-
     /* §09 — compact outcome stat trio (borderless, same stat family, smaller) */
     .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
     .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
@@ -364,12 +339,6 @@
     .rb-key-mark--tab { background: #1A1A1A; }
     .rb-key-mark--push { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
     .rb-key-mark--sheet { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
-    /* §02 roadmap legend — round, to echo the timeline dots rather than the
-       rectangular node marks. Must sit after the .rb-key-mark base rule:
-       same specificity, so source order is what decides the size. */
-    .rb-key-mark--iface  { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-screen-bd); }
-    .rb-key-mark--server { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-system-bd); }
-    .rb-key-mark--store  { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-decision-bd); }
 
     /* §04 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
        borders on each <li>: ::before is the vertical segment (shortened on
@@ -612,11 +581,8 @@
       .rb-road-scroll--more { -webkit-mask-image: none; mask-image: none; }
       .timeline { grid-template-columns: 1fr; gap: 24px; padding-left: 24px; min-width: 0; }
       .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
-      .timeline-step { grid-row: auto; padding-top: 0; padding-left: 16px; padding-right: 0; }
+      .timeline-step { padding-top: 0; padding-left: 16px; padding-right: 0; }
       .timeline-step::before { top: 4px; left: -24px; }
-      /* the band has nothing to span once phases stack: it becomes the first
-         full-width entry of the rail, still reading as part of the timeline */
-      .rb-road-band { grid-row: auto; grid-column: auto; margin: 0 0 4px 16px; }
       /* tab strip → bounded internal scroll; a clipped next tab is the peek */
       .rb-tabs {
         width: 100%; max-width: 100%; min-width: 0;
@@ -694,56 +660,44 @@
       <h2 class="section-heading">Roadmap</h2>
       <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; with no team and no hand-off, built with Claude Code. Speed like that turns into chaos without a method, so every change went through the same loop &mdash; diagnose, plan, implement one reviewable step at a time &mdash; and the history still shows it: 70 of 355 commits carry a numbered plan step, and only five are reverts.</p>
 
-      <div class="rb-key" aria-hidden="true">
-        <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--iface"></span>Interface</span>
-        <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--server"></span>Server</span>
-        <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--store"></span>Store</span>
-      </div>
 
-      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Project roadmap: six phases from April to July, with research running across the first four">
+      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Design process in six stages, from research to post-launch">
         <div class="timeline">
-          <div class="rb-road-band">
-            <span class="rb-road-band-label">Research &middot; all spring, alongside the build</span>
-            <span class="rb-road-band-note">Competitor analysis, App Store and YouTube reviews, Telegram channels, and interviews with people in the crypto community.</span>
+          <div class="timeline-step">
+            <p class="timeline-number">01</p>
+            <p class="timeline-title">Research</p>
+            <p class="timeline-desc">Competitor analysis, reviews on the App Store and YouTube, Telegram channels, interviews with the crypto community. Nobody treated an ALT/ALT pair as something you could keep and watch.</p>
+            <span class="timeline-tag">No direct competitor</span>
           </div>
-          <div class="timeline-step timeline-step--iface">
-            <p class="timeline-number">20&ndash;28 Apr</p>
-            <p class="timeline-title">Pick one direction</p>
-            <p class="timeline-desc">Several interaction concepts ran in parallel. An accidental revert forced the choice: keep one, cut the rest, version everything.</p>
-            <span class="timeline-tag">5 concept sets cut</span>
+          <div class="timeline-step">
+            <p class="timeline-number">02</p>
+            <p class="timeline-title">Prototype</p>
+            <p class="timeline-desc">Several concepts ran side by side. I committed to one &mdash; the pair as the only object the app asks you to create &mdash; and cut the rest instead of keeping options open.</p>
+            <span class="timeline-tag">One direction chosen</span>
           </div>
-          <div class="timeline-step timeline-step--iface">
-            <p class="timeline-number">28 Apr &ndash; 13 May</p>
-            <p class="timeline-title">Touch before features</p>
-            <p class="timeline-desc">Audited every gesture before adding anything. A tracker whose cards ignore a tap isn't a tracker yet.</p>
-            <span class="timeline-tag">Gesture audit &middot; 1.0</span>
+          <div class="timeline-step">
+            <p class="timeline-number">03</p>
+            <p class="timeline-title">Two rounds of testing</p>
+            <p class="timeline-desc">Builds went out through TestFlight twice, to real people on their own phones: what is being judged is a ratio you come back to over days, not a screen you look at once.</p>
+            <span class="timeline-tag">TestFlight &middot; two rounds</span>
           </div>
-          <div class="timeline-step timeline-step--server">
-            <p class="timeline-number">15&ndash;21 May</p>
-            <p class="timeline-title">Move the clock to a server</p>
-            <p class="timeline-desc">Firing with the app closed meant a cron, a device registry and a price layer &mdash; none of which existed yet.</p>
-            <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Host swapped mid-phase</p>
-            <span class="timeline-tag">Cron &middot; KV &middot; APNs</span>
+          <div class="timeline-step">
+            <p class="timeline-number">04</p>
+            <p class="timeline-title">Iteration on feedback</p>
+            <p class="timeline-desc">I reworked what testers actually stumbled on rather than what I felt like polishing, and left alone the things only I disliked.</p>
+            <span class="timeline-tag">Changes from findings</span>
           </div>
-          <div class="timeline-step timeline-step--iface">
-            <p class="timeline-number">26&ndash;29 May</p>
-            <p class="timeline-title">Localize before growing</p>
-            <p class="timeline-desc">31 locales deliberately early, so every later feature paid its translation cost on the spot.</p>
-            <span class="timeline-tag">31 locales</span>
+          <div class="timeline-step">
+            <p class="timeline-number">05</p>
+            <p class="timeline-title">Publish on the App Store</p>
+            <p class="timeline-desc">Shipping was a design decision too: what to leave out so the first version could stand on its own, and what the listing should promise.</p>
+            <span class="timeline-tag">Live</span>
           </div>
-          <div class="timeline-step timeline-step--store">
-            <p class="timeline-number">1&ndash;5 Jun</p>
-            <p class="timeline-title">Charge, and cut the promises</p>
-            <p class="timeline-desc">Free and Pro limits went in &mdash; and anything the build couldn't honour came out with them.</p>
-            <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Alerts lost its tab, 4 &rarr; 3</p>
-            <span class="timeline-tag">StoreKit 2 &middot; 4 features removed</span>
-          </div>
-          <div class="timeline-step timeline-step--server">
-            <p class="timeline-number">8&ndash;26 Jun</p>
-            <p class="timeline-title">Make it work for people who aren't me</p>
-            <p class="timeline-desc">Fixed what only breaks for other people: geo-blocked prices, and one phone holding two records.</p>
-            <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Identity re-keyed to the push token</p>
-            <span class="timeline-tag">Fallback chain &middot; identity v2</span>
+          <div class="timeline-step">
+            <p class="timeline-number">06</p>
+            <p class="timeline-title">Analytics and post-launch research</p>
+            <p class="timeline-desc">Analytics went in to replace opinion with behaviour, and the reading of reviews and channels carried on after release rather than stopping at launch.</p>
+            <span class="timeline-tag">Instrumented</span>
           </div>
         </div>
       </div>
