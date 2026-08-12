@@ -498,7 +498,12 @@
       scrollbar-width: none;
     }
     .mockup-gallery .phase-toggle::-webkit-scrollbar { display: none; }
-    @media (max-width: 1024px) {
+    /* Bleed collapse thresholds are set by the geometry, not by a round
+       number: .page-layout caps its content at 1052px, so a ±80px bleed is
+       1212px wide and only fits once the viewport reaches 1212. Below that it
+       pushed the page sideways — 56px at 1100. The ±160px bleed on
+       .wireframe-grid--wide, which the markup never uses, would need 1372. */
+    @media (max-width: 1211px) {
       .mockup-gallery { width: 100%; margin-left: 0; }
       .case-hero-image { width: 100%; margin-left: 0; }
     }
@@ -1008,7 +1013,6 @@
       .persona-grid { grid-template-columns: 1fr; }
       .strategy-table td:first-child { width: 100px; }
       .wireframe-grid { grid-template-columns: 1fr; }
-      .wireframe-grid--wide { width: 100%; margin-left: 0; }
       .reflection-grid { grid-template-columns: 1fr; }
       .timeline { flex-direction: column; gap: 0; }
       .timeline::before {
