@@ -86,6 +86,9 @@
       line-height: 1.25; margin-bottom: 24px;
     }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
+    /* a section that ends on prose (§01) would otherwise add its paragraph's
+       16px to the next section's 80px top padding and sit 96px apart */
+    .case-section > .section-text:last-child { margin-bottom: 0; }
     .section-note { font-size: 14px; color: #9A9A9A; font-style: italic; margin-top: 8px; }
 
     /* ——— CTA PILL ——— */
@@ -201,22 +204,6 @@
     }
 
     /* ═══ RB TEXT-BREAKUP ACCENTS (unique rb- prefix — no existing class reused) ═══ */
-
-    /* §01 — before/after route contrast: ALT→USDT→ALT vs ALT→ALT */
-    .rb-contrast { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; max-width: 520px; }
-    .rb-route {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 16px 20px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .rb-route--direct { border-color: rgba(59,130,246,0.35); }
-    .rb-route-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; }
-    .rb-route--direct .rb-route-label { color: #3B82F6; }
-    .rb-route-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .rb-token { font-size: 13px; font-weight: 500; color: #1A1A1A; background: #F0EFEC; border-radius: 8px; padding: 6px 12px; line-height: 1; }
-    .rb-token--muted { color: #9A9A9A; }
-    .rb-arrow { color: #C0BDB8; font-size: 15px; line-height: 1; flex-shrink: 0; }
-    .rb-route-note { font-size: 12px; color: #6B6B6B; }
 
     /* §02 — ROADMAP TIMELINE. The .timeline component is the same one the
        dopas and dobrodoc cases use (horizontal rail + dots on desktop,
@@ -653,36 +640,13 @@
       <p class="section-kicker"><span class="section-num">01</span> &middot; I built the tool I kept needing</p>
       <h2 class="section-heading">Problem &amp; Context</h2>
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
-      <div class="rb-contrast" role="group" aria-label="Old routed path versus Rebalancer's direct path">
-        <div class="rb-route">
-          <span class="rb-route-label">Before</span>
-          <div class="rb-route-flow">
-            <span class="rb-token">ALT</span>
-            <span class="rb-arrow" aria-hidden="true">&rarr;</span>
-            <span class="rb-token rb-token--muted">USDT</span>
-            <span class="rb-arrow" aria-hidden="true">&rarr;</span>
-            <span class="rb-token">ALT</span>
-          </div>
-          <span class="rb-route-note">Routed through USDT &middot; math by hand &middot; keep checking back</span>
-        </div>
-        <div class="rb-route rb-route--direct">
-          <span class="rb-route-label">Rebalancer</span>
-          <div class="rb-route-flow">
-            <span class="rb-token">ALT</span>
-            <span class="rb-arrow" aria-hidden="true">&rarr;</span>
-            <span class="rb-token">ALT</span>
-          </div>
-          <span class="rb-route-note">Direct custom pair, tracked natively</span>
-        </div>
-      </div>
     </section>
 
     <!-- 02 — PROCESS -->
     <section class="case-section">
       <p class="section-kicker"><span class="section-num">02</span> &middot; Eleven weeks, one pair of hands</p>
       <h2 class="section-heading">Process</h2>
-      <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; with no team and no hand-off, built with Claude Code. Speed like that turns into chaos without a method, so every change went through the same loop: diagnose the current state, agree the plan, then implement it one reviewable step at a time. The history still shows it &mdash; 70 of 355 commits carry a numbered plan step, and only five are reverts.</p>
-      <p class="section-text">Eleven weeks, and the interface was the short part. Notifications were the long thread: five weeks from the first proof of concept to a device-identity model I trusted, with a change of hosting in the middle. The dates below are read off the repository rather than remembered.</p>
+      <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; with no team and no hand-off, built with Claude Code. Speed like that turns into chaos without a method, so every change went through the same loop &mdash; diagnose, plan, implement one reviewable step at a time &mdash; and the history still shows it: 70 of 355 commits carry a numbered plan step, and only five are reverts.</p>
 
       <div class="rb-key" aria-hidden="true">
         <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--iface"></span>Interface</span>
