@@ -236,6 +236,27 @@
     @media (min-width: 1080px) {
       .rb-road-scroll { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
     }
+    /* Research ran alongside the build all spring rather than as a phase of
+       its own, so it is drawn as a span bracket over the phases it covers
+       instead of a seventh step. The bar mirrors the steps' flex maths —
+       four steps are `4 0 608px` against their `1 0 152px` — so it stays
+       aligned to the phase boundary at any width, with no percentages. */
+    .rb-road-lane { display: flex; min-width: 100%; margin-bottom: 14px; }
+    .rb-road-lane-bar {
+      flex: 4 0 608px; position: relative; min-width: 0;
+      padding-bottom: 8px; border-bottom: 1px dashed var(--rb-neutral-bd);
+    }
+    .rb-road-lane-bar::before,
+    .rb-road-lane-bar::after {
+      content: ''; position: absolute; bottom: 0; width: 1px; height: 5px;
+      background: var(--rb-neutral-bd);
+    }
+    .rb-road-lane-bar::before { left: 0; }
+    .rb-road-lane-bar::after { right: 0; }
+    .rb-road-lane-rest { flex: 2 0 304px; min-width: 0; }
+    .rb-road-lane-label { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-road-lane-note { display: block; font-size: 11px; color: #6B6B6B; line-height: 1.45; margin-top: 3px; max-width: 560px; }
+
     .timeline { display: flex; gap: 0; margin-top: 0; position: relative; min-width: 100%; }
     .timeline::before {
       content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
@@ -564,8 +585,14 @@
       .reflection-grid { grid-template-columns: 1fr; }
       /* roadmap → vertical rail, same as dopas/dobrodoc. No scroller needed
          once the steps stack, so the wrapper stops clipping and drops its
-         fade (the class can still be on it from a wider layout). */
+         fade (the class can still be on it from a wider layout). The span
+         bracket has nothing to span once phases stack, so it flattens into a
+         plain note above the rail. */
       .rb-road-scroll { overflow: visible; }
+      .rb-road-lane { display: block; margin-bottom: 20px; }
+      .rb-road-lane-bar { border-bottom: none; padding-bottom: 0; }
+      .rb-road-lane-bar::before, .rb-road-lane-bar::after { display: none; }
+      .rb-road-lane-rest { display: none; }
       .rb-road-scroll--more { -webkit-mask-image: none; mask-image: none; }
       .timeline { flex-direction: column; gap: 24px; padding-left: 24px; min-width: 0; }
       .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
@@ -654,7 +681,14 @@
         <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--store"></span>Store</span>
       </div>
 
-      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Project roadmap: six phases from April to July">
+      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Project roadmap: six phases from April to July, with research running alongside the first four">
+        <div class="rb-road-lane">
+          <div class="rb-road-lane-bar">
+            <span class="rb-road-lane-label">Research &mdash; informal, alongside the build</span>
+            <span class="rb-road-lane-note">Competitors, App Store and YouTube reviews, Telegram channels &mdash; and asking people directly. No structured interviews, no sample.</span>
+          </div>
+          <div class="rb-road-lane-rest" aria-hidden="true"></div>
+        </div>
         <div class="timeline">
           <div class="timeline-step timeline-step--iface">
             <p class="timeline-number">20&ndash;28 Apr</p>
@@ -1280,7 +1314,7 @@
     <section class="case-section">
       <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
-      <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; it does not yet prove anyone wants it.</p>
+      <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; but people telling me it would be useful is not the same as people using it.</p>
       <p class="section-text">Too early for usage evidence. The interface ships in 31 languages and none of them have met a real user yet. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
       <div class="rb-stats-row">
         <div class="rb-stat-item">
