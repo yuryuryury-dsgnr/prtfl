@@ -270,6 +270,38 @@
     .rb-market-out-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #5F7A67; }
     .rb-market-out-text { font-size: 14px; color: #3F5246; line-height: 1.55; }
 
+    /* §05 — testing: one card per flow, each carrying what the round found
+       and what changed because of it. Colour does the labelling — sand for the
+       finding, sage for the fix — the same two tones the diagrams use, so a
+       problem and a change never look alike. */
+    .rb-tests { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+    .rb-test {
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 18px 20px;
+    }
+    .rb-test-flow { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+    .rb-test-num { color: #9A9A9A; font-weight: 500; margin-right: 7px; }
+    .rb-test-line { font-size: 13px; color: #6B6B6B; line-height: 1.55; padding-left: 12px; border-left: 2px solid; }
+    .rb-test-line + .rb-test-line { margin-top: 10px; }
+    .rb-test-line--found { border-left-color: var(--rb-decision-bd); }
+    .rb-test-line--fixed { border-left-color: var(--rb-action-bd); }
+    .rb-test-key {
+      display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #9A9A9A;
+    }
+
+    /* §07 — the slot post-launch numbers land in. Dashed on purpose: it reads
+       as reserved rather than empty, and filling it means replacing this one
+       block, not rebuilding the section. */
+    .rb-pending {
+      margin-top: 22px; border: 1px dashed var(--rb-neutral-bd); border-radius: 12px;
+      padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; max-width: 640px;
+    }
+    .rb-pending-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; }
+    .rb-pending-list { display: flex; flex-direction: column; gap: 5px; }
+    .rb-pending-item { font-size: 13px; color: #6B6B6B; line-height: 1.5; padding-left: 14px; position: relative; }
+    .rb-pending-item::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #C0BDB8; }
+
     /* §03 — audience groups. Same shape as the Halliburton case's persona
        cards (badge, name, Who / Pain) but in this page's vocabulary: the
        pastel node fills instead of white cards, one hue per group, so a
@@ -302,7 +334,7 @@
        than a marker above them. The track is a 6-column grid: phases sit on
        row 2 under the rail, the research bar on row 3 spanning columns 1-4,
        which is what makes "parallel, not a stage before the start" legible. */
-    .timeline { display: grid; grid-template-columns: repeat(6, minmax(152px, 1fr)); margin-top: 0; position: relative; min-width: 100%; }
+    .timeline { display: grid; grid-template-columns: repeat(5, minmax(152px, 1fr)); margin-top: 0; position: relative; min-width: 100%; }
     .timeline::before {
       content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
     }
@@ -524,6 +556,7 @@
          plain note above the rail. */
       .rb-road-scroll { overflow: visible; }
       .rb-groups { grid-template-columns: 1fr; }
+      .rb-tests { grid-template-columns: 1fr; }
       /* table -> stacked blocks: the header row goes, each cell shows its own label */
       .rb-market-row { grid-template-columns: 1fr; }
       .rb-market-row--head { display: none; }
@@ -608,7 +641,7 @@
       <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; with no team and no hand-off, built with Claude Code. Speed like that turns into chaos without a method, so every change went through the same loop &mdash; diagnose, plan, implement one reviewable step at a time &mdash; and the history still shows it: 70 of 355 commits carry a numbered plan step, and only five are reverts.</p>
 
 
-      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Design process in six stages, from research to post-launch">
+      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Design process in five stages, from research to post-launch">
         <div class="timeline">
           <div class="timeline-step">
             <p class="timeline-number">01</p>
@@ -624,24 +657,18 @@
           </div>
           <div class="timeline-step">
             <p class="timeline-number">03</p>
-            <p class="timeline-title">Two rounds of testing</p>
-            <p class="timeline-desc">Builds went out through TestFlight twice, to real people on their own phones: what is being judged is a ratio you come back to over days, not a screen you look at once.</p>
-            <span class="timeline-tag">TestFlight &middot; two rounds</span>
+            <p class="timeline-title">Testing and iteration</p>
+            <p class="timeline-desc">Two rounds through TestFlight, then reworking what testers actually stumbled on rather than what I felt like polishing.</p>
+            <span class="timeline-tag">Four flows &middot; four changes</span>
           </div>
           <div class="timeline-step">
             <p class="timeline-number">04</p>
-            <p class="timeline-title">Iteration on feedback</p>
-            <p class="timeline-desc">I reworked what testers actually stumbled on rather than what I felt like polishing, and left alone the things only I disliked.</p>
-            <span class="timeline-tag">Changes from findings</span>
-          </div>
-          <div class="timeline-step">
-            <p class="timeline-number">05</p>
             <p class="timeline-title">Publish on the App Store</p>
             <p class="timeline-desc">Shipping was a design decision too: what to leave out so the first version could stand on its own, and what the listing should promise.</p>
             <span class="timeline-tag">Live</span>
           </div>
           <div class="timeline-step">
-            <p class="timeline-number">06</p>
+            <p class="timeline-number">05</p>
             <p class="timeline-title">Analytics and post-launch research</p>
             <p class="timeline-desc">Analytics went in to replace opinion with behaviour, and the reading of reviews and channels carried on after release rather than stopping at launch.</p>
             <span class="timeline-tag">Instrumented</span>
@@ -949,10 +976,13 @@
     
     </section>
 
-    <!-- 04 — SCREENS -->
+    <!-- 04 — PROTOTYPE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">04</span> &middot; What it actually looks like</p>
-      <h2 class="section-heading">Screens</h2>
+      <p class="section-kicker"><span class="section-num">04</span> &middot; Designed in code, so the prototype was the app</p>
+      <h2 class="section-heading">Prototype</h2>
+      <p class="section-text">There was no Figma stage. The prototype ran on a phone from the start, which is why the screens and the system behind them were decided together.</p>
+
+      <h3 class="subsection-heading">Screens</h3>
       <p class="section-text">Four screens from the shipped app. The flows behind them are in the section above; this is what came out.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
         <div class="phone-figure">
@@ -984,12 +1014,9 @@
           <p class="phone-caption">Pair screen &mdash; both holdings restated in the coin on the other side</p>
         </div>
       </div>
-    </section>
+    
 
-    <!-- 05 — TECHNICAL ARCHITECTURE -->
-    <section class="case-section">
-      <p class="section-kicker"><span class="section-num">05</span> &middot; Two price paths, because one wasn't allowed</p>
-      <h2 class="section-heading">Technical Architecture</h2>
+      <h3 class="subsection-heading">The system behind them</h3>
       <p class="section-text">Three problems behind the interface shaped the architecture.</p>
 
       <p class="rb-tech-label">Prices &mdash; two independent paths</p>
@@ -1105,12 +1132,44 @@
         </div>
       </div>
       <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
+    
     </section>
 
-    <!-- 06 — LOCALIZATION -->
+    <!-- 05 — TESTING -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">06</span> &middot; Building for a market that isn't in one country</p>
-      <h2 class="section-heading">Localization</h2>
+      <p class="section-kicker"><span class="section-num">05</span> &middot; Four flows, four things I had wrong</p>
+      <h2 class="section-heading">Testing</h2>
+      <p class="section-text">Two rounds through TestFlight, on other people's phones. Each flow gave up one thing I had assumed, and each one changed the build.</p>
+      <div class="rb-tests">
+        <div class="rb-test">
+          <p class="rb-test-flow"><span class="rb-test-num">01</span>Creating a pair</p>
+          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>Nobody could see how to enter the amounts they hold from the watchlist.</p>
+          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>A prompt button on the watchlist, so holdings go in without leaving the screen you are on.</p>
+        </div>
+        <div class="rb-test">
+          <p class="rb-test-flow"><span class="rb-test-num">02</span>Living with the watchlist</p>
+          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>The first thing people reached for was reordering the cards.</p>
+          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>Press and hold to drag &mdash; the order of the list is the user's, not mine.</p>
+        </div>
+        <div class="rb-test">
+          <p class="rb-test-flow"><span class="rb-test-num">03</span>Pair detail and the simulator</p>
+          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>People expected the app to remember their holdings and carry them into the simulator.</p>
+          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>A MAX button that fills in the saved holding, so the simulator starts from real numbers.</p>
+        </div>
+        <div class="rb-test">
+          <p class="rb-test-flow"><span class="rb-test-num">04</span>Hitting the free limits</p>
+          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>The paywall landed out of nowhere and read as a wall.</p>
+          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>A plain note that the free limit is reached first, with a way to read about Pro &mdash; so going further is a choice, not an ambush.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — PUBLISH ON THE APP STORE -->
+    <section class="case-section">
+      <p class="section-kicker"><span class="section-num">06</span> &middot; Shipping to a market that is not one country</p>
+      <h2 class="section-heading">Publish on the App Store</h2>
+
+      <h3 class="subsection-heading">Localization</h3>
       <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start.</p>
       <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
 
@@ -1162,14 +1221,30 @@
           <p class="flow-node-line">Second-pass quality review</p>
         </div>
       </div>
+    
     </section>
 
-    <!-- 07 — OUTCOME -->
+    <!-- 07 — ANALYTICS AND POST-LAUNCH RESEARCH -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">07</span> &middot; Live, and shipped solo</p>
+      <p class="section-kicker"><span class="section-num">07</span> &middot; What the app has to tell me next</p>
+      <h2 class="section-heading">Analytics and post-launch research</h2>
+      <p class="section-text">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether anyone arms a second alert after their first one fires &mdash; the difference between a tool someone tried and a tool someone uses.</p>
+      <div class="rb-pending">
+        <span class="rb-pending-label">Waiting on data</span>
+        <div class="rb-pending-list">
+          <span class="rb-pending-item">Whether a first alert leads to a second</span>
+          <span class="rb-pending-item">Which flow people stop at</span>
+          <span class="rb-pending-item">Whether the free limits sit in the right place</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 — OUTCOME -->
+    <section class="case-section">
+      <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way; what comes next is whether it earns a place in someone's routine.</p>
-      <p class="section-text">Too early for usage evidence. The interface ships in 31 languages and none of them have met a real user yet. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
+      <p class="section-text">The interface ships in 31 languages and none of them have met a real user yet.</p>
       <div class="rb-stats-row">
         <div class="rb-stat-item">
           <span class="rb-stat-item-value">Live</span>
@@ -1186,9 +1261,9 @@
       </div>
     </section>
 
-    <!-- 08 — REFLECTION -->
+    <!-- 09 — REFLECTION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">08</span> &middot; What the build taught me</p>
+      <p class="section-kicker"><span class="section-num">09</span> &middot; What the build taught me</p>
       <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
         <div>
