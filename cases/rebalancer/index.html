@@ -270,6 +270,24 @@
     .rb-market-out-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #5F7A67; }
     .rb-market-out-text { font-size: 14px; color: #3F5246; line-height: 1.55; }
 
+    /* §06 — App Store listing cards. Same components as the §04 screenshots
+       (frame box, .phone-shot, onerror placeholder, caption) with the store
+       slot's own ratio; these are marketing frames, not device shots. Five of
+       them never fit a 760px column legibly, so the row scrolls at every width
+       with a clipped next card as the cue — the mechanism the flows and the
+       phone row already use. */
+    .rb-store {
+      display: flex; flex-direction: row; align-items: flex-start; gap: 16px;
+      margin-top: 24px; max-width: 100%; min-width: 0;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+    }
+    .rb-store::-webkit-scrollbar { display: none; }
+    .rb-store:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    .rb-store > .phone-figure { flex: 0 0 30%; scroll-snap-align: start; }
+    .phone-frame--store { aspect-ratio: 1290 / 2796; }
+
     /* §05 — testing: one card per flow, each carrying what the round found
        and what changed because of it. Colour does the labelling — sand for the
        finding, sage for the fix — the same two tones the diagrams use, so a
@@ -557,6 +575,7 @@
       .rb-road-scroll { overflow: visible; }
       .rb-groups { grid-template-columns: 1fr; }
       .rb-tests { grid-template-columns: 1fr; }
+      .rb-store > .phone-figure { flex: 0 0 62%; }
       /* table -> stacked blocks: the header row goes, each cell shows its own label */
       .rb-market-row { grid-template-columns: 1fr; }
       .rb-market-row--head { display: none; }
@@ -1169,9 +1188,47 @@
       <p class="section-kicker"><span class="section-num">06</span> &middot; Shipping to a market that is not one country</p>
       <h2 class="section-heading">Publish on the App Store</h2>
 
+      <p class="section-text">The listing had to sell the same idea in every storefront, so the cards lead with the pair &mdash; not the feature list.</p>
+      <div class="rb-store" tabindex="0" role="group" aria-label="App Store listing cards — scrollable">
+        <div class="phone-figure">
+          <div class="phone-frame phone-frame--store">
+            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-01-pairs.webp" alt="Listing card: “Create custom pairs — that exchanges don't show”, over the watchlist screen" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
+          </div>
+          <p class="phone-caption">Create custom pairs</p>
+        </div>
+        <div class="phone-figure">
+          <div class="phone-frame phone-frame--store">
+            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-02-convert.webp" alt="Listing card: “See tracked coins convert”, over the holdings screen" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
+          </div>
+          <p class="phone-caption">See tracked coins convert</p>
+        </div>
+        <div class="phone-figure">
+          <div class="phone-frame phone-frame--store">
+            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-03-alerts.webp" alt="Listing card: “Get alerted on your custom pairs”, over a lock screen of delivered alerts" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
+          </div>
+          <p class="phone-caption">Get alerted on your pairs</p>
+        </div>
+        <div class="phone-figure">
+          <div class="phone-frame phone-frame--store">
+            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-04-simulator.webp" alt="Listing card: “Plan the rebalance, step by step”, over the simulator" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
+          </div>
+          <p class="phone-caption">Plan the rebalance</p>
+        </div>
+        <div class="phone-figure">
+          <div class="phone-frame phone-frame--store">
+            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-05-privacy.webp" alt="Listing card: the app collects no personal data — on-device, no accounts, no wallets, tracker only" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
+          </div>
+          <p class="phone-caption">No accounts, no wallets</p>
+        </div>
+      </div>
+
       <h3 class="subsection-heading">Localization</h3>
-      <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start.</p>
-      <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
+      <p class="section-text">The audience for an ALT/ALT tool isn't in one country, so English-only would have narrowed the position from the start. The work was absorbing each market's requirements without growing a settings screen per market &mdash; that, not the word count, is what took the time.</p>
 
       <div class="loc-stat">
         <span class="loc-stat-number">31</span>
