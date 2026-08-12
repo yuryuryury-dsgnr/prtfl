@@ -130,7 +130,7 @@
 
     /* ═══ PHASE 3 ADDITIONS ═══ */
 
-    /* Stage/pipeline flow — §07 AI→Gemini graphic.
+    /* Stage/pipeline flow — §08 AI→Gemini graphic.
        Nodes + arrows, horizontal on desktop; on mobile it stacks with the
        arrow rotated into a downward connector. Adapts Halliburton's
        .pipeline-flow to this page's Inter + card styling. */
@@ -151,7 +151,7 @@
     .flow--compact .flow-node { padding: 14px 16px; }
     .flow--compact .flow-node-title { font-size: 14px; }
 
-    /* Localization (§07) — focal stat + native-script language pills */
+    /* Localization (§08) — focal stat + native-script language pills */
     .loc-stat { display: flex; align-items: baseline; gap: 12px; margin-top: 24px; }
     .loc-stat-number { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
     .loc-stat-label { font-size: 16px; color: #6B6B6B; }
@@ -162,7 +162,7 @@
       border-radius: 100px; padding: 5px 12px; line-height: 1.4;
     }
 
-    /* iPhone mockups (§05). The screenshots already carry the device frame —
+    /* iPhone mockups (§06). The screenshots already carry the device frame —
        bezel, side buttons and Dynamic Island are part of the image — so the
        page draws no chrome of its own. .phone-frame is only an aspect-ratio
        box (450/920, the mockup's own ratio) that reserves the slot while the
@@ -205,7 +205,7 @@
 
     /* ═══ RB TEXT-BREAKUP ACCENTS (unique rb- prefix — no existing class reused) ═══ */
 
-    /* §02 — ROADMAP TIMELINE. The .timeline component is the same one the
+    /* §03 — ROADMAP TIMELINE. The .timeline component is the same one the
        dopas and dobrodoc cases use (horizontal rail + dots on desktop,
        vertical rail on mobile), copied here because case pages carry their
        own CSS. Two additions for this page: pastel dots keyed to the layer
@@ -236,6 +236,33 @@
     @media (min-width: 1080px) {
       .rb-road-scroll { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
     }
+    /* §02 — audience groups. Same shape as the Halliburton case's persona
+       cards (badge, name, Who / Pain) but in this page's vocabulary: the
+       pastel node fills instead of white cards, one hue per group, so a
+       group reads like the diagrams rather than like a separate component.
+       No names, faces, ages or invented quotes — these are groups, not people. */
+    .rb-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+    .rb-group { border: 1px solid; border-radius: 12px; padding: 18px 20px; }
+    .rb-group--holder  { background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
+    .rb-group--tracker { background: var(--rb-action-bg); border-color: var(--rb-action-bd); }
+    .rb-group--builder { background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
+    .rb-group-head { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+    .rb-group-badge {
+      flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 500; color: #FFFFFF; background: #1A1A1A;
+    }
+    .rb-group--holder  .rb-group-badge { background: #7C93AE; }
+    .rb-group--tracker .rb-group-badge { background: #7E9C86; }
+    .rb-group--builder .rb-group-badge { background: #8B82A6; }
+    .rb-group-name { font-size: 14px; font-weight: 500; line-height: 1.3; }
+    .rb-group-line { font-size: 13px; color: #6B6B6B; line-height: 1.55; margin-bottom: 8px; }
+    .rb-group-line:last-child { margin-bottom: 0; }
+    .rb-group-key {
+      display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #9A9A9A;
+    }
+
     /* Research ran alongside the build all spring rather than as a phase of
        its own, so it is drawn as a span bracket over the phases it covers
        instead of a seventh step. The bar mirrors the steps' flex maths —
@@ -284,7 +311,7 @@
     .timeline-step--server::before { background: var(--rb-system-bd);   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
     .timeline-step--store::before  { background: var(--rb-decision-bd); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
 
-    /* §02 — a phase that reversed a decision says so on one line, above its
+    /* §03 — a phase that reversed a decision says so on one line, above its
        tag. Kept to a few words: three of the six steps carry one, and the
        flex row is as tall as its tallest step. */
     .timeline-turn { font-size: 11px; color: #6B6B6B; line-height: 1.45; margin-bottom: 8px; }
@@ -293,7 +320,7 @@
       text-transform: uppercase; color: #9A9A9A;
     }
 
-    /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
+    /* §09 — compact outcome stat trio (borderless, same stat family, smaller) */
     .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
     .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
     .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
@@ -319,7 +346,7 @@
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
-    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §02, §03 and §04.
+    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §02, §04 and §05.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
        every flow). Muted on purpose: these sit on a warm #F8F7F4 page.
@@ -333,7 +360,7 @@
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
-    /* Shared commentary line under a diagram (§02, §03, §04) */
+    /* Shared commentary line under a diagram (§04, §05) */
     .rb-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
     .rb-note + .rb-note { margin-top: 12px; }
 
@@ -345,14 +372,14 @@
     .rb-key-mark--tab { background: #1A1A1A; }
     .rb-key-mark--push { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
     .rb-key-mark--sheet { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
-    /* §02 roadmap legend — round, to echo the timeline dots rather than the
+    /* §03 roadmap legend — round, to echo the timeline dots rather than the
        rectangular node marks. Must sit after the .rb-key-mark base rule:
        same specificity, so source order is what decides the size. */
     .rb-key-mark--iface  { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-screen-bd); }
     .rb-key-mark--server { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-system-bd); }
     .rb-key-mark--store  { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-decision-bd); }
 
-    /* §03 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
+    /* §04 — IA tree. Hierarchy via indentation + L-shaped rails drawn with
        borders on each <li>: ::before is the vertical segment (shortened on
        :last-child so the branch terminates in an elbow), ::after is the
        horizontal stub. Nodes hold real text, so nothing shrinks on mobile. */
@@ -402,7 +429,7 @@
       border-radius: 8px; padding: 6px 11px;
     }
 
-    /* §03 — navigation planes, drawn as a cross-section: each band is offset
+    /* §04 — navigation planes, drawn as a cross-section: each band is offset
        horizontally so the three planes read as depth without any shadow. */
     /* Three planes drawn as a card stack seen slightly from above: each upper
        plane is inset, carries a downward shadow, and OVERLAPS the plane below
@@ -440,7 +467,7 @@
     .rb-plane-slot { flex: 1; text-align: center; font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 7px; padding: 9px 6px; line-height: 1.2; }
     .rb-plane-slot.is-current { background: #1A1A1A; color: #FFFFFF; }
 
-    /* §04 — user flows, drawn left→right the way flow diagrams are actually
+    /* §05 — user flows, drawn left→right the way flow diagrams are actually
        read. .rb-track is a flex row; a fork opens into branch rows stacked
        above and below the axis, joined by a spine + elbows. On a phone the
        track scrolls inside .rb-flow (the same contained-scroll mechanism the
@@ -529,7 +556,7 @@
     .rb-key-mark--end { background: #1A1A1A; border-radius: 100px; }
     .rb-key-mark--outside { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
-    /* §06 — technical architecture. Four small blocks: two price lanes, the
+    /* §07 — technical architecture. Four small blocks: two price lanes, the
        two-leg division, the threshold→push chain, and the stack. All chip /
        flex based so everything wraps instead of ever widening the page. */
     .rb-tech-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 32px 0 10px; }
@@ -589,6 +616,7 @@
          bracket has nothing to span once phases stack, so it flattens into a
          plain note above the rail. */
       .rb-road-scroll { overflow: visible; }
+      .rb-groups { grid-template-columns: 1fr; }
       .rb-road-lane { display: block; margin-bottom: 20px; }
       .rb-road-lane-bar { border-bottom: none; padding-bottom: 0; }
       .rb-road-lane-bar::before, .rb-road-lane-bar::after { display: none; }
@@ -669,9 +697,42 @@
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
     </section>
 
-    <!-- 02 — PROCESS -->
+    <!-- 02 — WHO IT'S FOR -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">02</span> &middot; Eleven weeks, one pair of hands</p>
+      <p class="section-kicker"><span class="section-num">02</span> &middot; Three ways people hit the same wall</p>
+      <h2 class="section-heading">Who it's for</h2>
+      <p class="section-text">I'm in the first group myself. The other two come from what people told me directly and from the workarounds they publish &mdash; not from formal interviews.</p>
+      <div class="rb-groups">
+        <div class="rb-group rb-group--holder">
+          <div class="rb-group-head">
+            <span class="rb-group-badge" aria-hidden="true">G1</span>
+            <span class="rb-group-name">Ratio holder</span>
+          </div>
+          <p class="rb-group-line"><span class="rb-group-key">Who</span>Holds several alts and moves between them on the pair's ratio, not the dollar price.</p>
+          <p class="rb-group-line"><span class="rb-group-key">Pain</span>No exchange or wallet shows ALT/ALT directly &mdash; you read two USDT prices and divide them yourself.</p>
+        </div>
+        <div class="rb-group rb-group--tracker">
+          <div class="rb-group-head">
+            <span class="rb-group-badge" aria-hidden="true">G2</span>
+            <span class="rb-group-name">Manual tracker</span>
+          </div>
+          <p class="rb-group-line"><span class="rb-group-key">Who</span>Follows the ratio by hand &mdash; a spreadsheet, or arithmetic in their head &mdash; and keeps coming back to check.</p>
+          <p class="rb-group-line"><span class="rb-group-key">Pain</span>It all rests on remembering to look. Nothing watches the number, so the moment can pass unnoticed.</p>
+        </div>
+        <div class="rb-group rb-group--builder">
+          <div class="rb-group-head">
+            <span class="rb-group-badge" aria-hidden="true">G3</span>
+            <span class="rb-group-name">Workaround builder</span>
+          </div>
+          <p class="rb-group-line"><span class="rb-group-key">Who</span>Technical enough to chart a spread in TradingView or write their own indicator.</p>
+          <p class="rb-group-line"><span class="rb-group-key">Pain</span>The workaround never becomes a product: TradingView advises against alerts on spread charts, and a script needs an account and setup.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — PROCESS -->
+    <section class="case-section">
+      <p class="section-kicker"><span class="section-num">03</span> &middot; Eleven weeks, one pair of hands</p>
       <h2 class="section-heading">Process</h2>
       <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; with no team and no hand-off, built with Claude Code. Speed like that turns into chaos without a method, so every change went through the same loop &mdash; diagnose, plan, implement one reviewable step at a time &mdash; and the history still shows it: 70 of 355 commits carry a numbered plan step, and only five are reverts.</p>
 
@@ -733,9 +794,9 @@
       </div>
     </section>
 
-    <!-- 03 — INFORMATION ARCHITECTURE -->
+    <!-- 04 — INFORMATION ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">03</span> &middot; Three tabs, and everything else on top</p>
+      <p class="section-kicker"><span class="section-num">04</span> &middot; Three tabs, and everything else on top</p>
       <h2 class="section-heading">Information Architecture</h2>
       <p class="section-text">There was never an IA diagram. The structure got decided in code, screen by screen &mdash; and I reversed myself twice before it settled. This is that structure written down after the fact.</p>
 
@@ -864,9 +925,9 @@
       </div>
     </section>
 
-    <!-- 04 — USER FLOWS -->
+    <!-- 05 — USER FLOWS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">04</span> &middot; Five paths, and the edge I drew</p>
+      <p class="section-kicker"><span class="section-num">05</span> &middot; Five paths, and the edge I drew</p>
       <h2 class="section-heading">User Flows</h2>
       <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
 
@@ -1095,9 +1156,9 @@
       </div>
     </section>
 
-    <!-- 05 — SCREENS -->
+    <!-- 06 — SCREENS -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">05</span> &middot; What it actually looks like</p>
+      <p class="section-kicker"><span class="section-num">06</span> &middot; What it actually looks like</p>
       <h2 class="section-heading">Screens</h2>
       <p class="section-text">Four screens from the shipped app. The structure and the flows behind them are the two sections above; this is what came out.</p>
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
@@ -1132,9 +1193,9 @@
       </div>
     </section>
 
-    <!-- 06 — TECHNICAL ARCHITECTURE -->
+    <!-- 07 — TECHNICAL ARCHITECTURE -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">06</span> &middot; Two price paths, because one wasn't allowed</p>
+      <p class="section-kicker"><span class="section-num">07</span> &middot; Two price paths, because one wasn't allowed</p>
       <h2 class="section-heading">Technical Architecture</h2>
       <p class="section-text">Three problems behind the interface shaped the architecture.</p>
 
@@ -1253,9 +1314,9 @@
       <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
     </section>
 
-    <!-- 07 — LOCALIZATION -->
+    <!-- 08 — LOCALIZATION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">07</span> &middot; Building for a market that isn't in one country</p>
+      <p class="section-kicker"><span class="section-num">08</span> &middot; Building for a market that isn't in one country</p>
       <h2 class="section-heading">Localization</h2>
       <p class="section-text">The audience for an ALT/ALT tool isn't concentrated in one market, so English-only would have narrowed the position from the start.</p>
       <p class="section-text">The design problem was everything around it: every new country brings its own regional requirements, and the app and backend have to absorb them without the interface growing a settings screen per market. That, not the word count, is what took the time.</p>
@@ -1310,9 +1371,9 @@
       </div>
     </section>
 
-    <!-- 08 — OUTCOME -->
+    <!-- 09 — OUTCOME -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
+      <p class="section-kicker"><span class="section-num">09</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way &mdash; but people telling me it would be useful is not the same as people using it.</p>
       <p class="section-text">Too early for usage evidence. The interface ships in 31 languages and none of them have met a real user yet. The next honest signal is whether anyone arms a second alert after their first one fires.</p>
@@ -1332,9 +1393,9 @@
       </div>
     </section>
 
-    <!-- 09 — REFLECTION -->
+    <!-- 10 — REFLECTION -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">09</span> &middot; What the build taught me</p>
+      <p class="section-kicker"><span class="section-num">10</span> &middot; What the build taught me</p>
       <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
         <div>
