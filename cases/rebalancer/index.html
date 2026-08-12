@@ -205,7 +205,7 @@
 
     /* ═══ RB TEXT-BREAKUP ACCENTS (unique rb- prefix — no existing class reused) ═══ */
 
-    /* §03 — ROADMAP TIMELINE. The .timeline component is the same one the
+    /* §02 — ROADMAP TIMELINE. The .timeline component is the same one the
        dopas and dobrodoc cases use (horizontal rail + dots on desktop,
        vertical rail on mobile), copied here because case pages carry their
        own CSS. Two additions for this page: pastel dots keyed to the layer
@@ -236,7 +236,7 @@
     @media (min-width: 1080px) {
       .rb-road-scroll { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
     }
-    /* §02 — audience groups. Same shape as the Halliburton case's persona
+    /* §03 — audience groups. Same shape as the Halliburton case's persona
        cards (badge, name, Who / Pain) but in this page's vocabulary: the
        pastel node fills instead of white cards, one hue per group, so a
        group reads like the diagrams rather than like a separate component.
@@ -311,7 +311,7 @@
     .timeline-step--server::before { background: var(--rb-system-bd);   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
     .timeline-step--store::before  { background: var(--rb-decision-bd); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
 
-    /* §03 — a phase that reversed a decision says so on one line, above its
+    /* §02 — a phase that reversed a decision says so on one line, above its
        tag. Kept to a few words: three of the six steps carry one, and the
        flex row is as tall as its tallest step. */
     .timeline-turn { font-size: 11px; color: #6B6B6B; line-height: 1.45; margin-bottom: 8px; }
@@ -346,7 +346,7 @@
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
-    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §02, §04 and §05.
+    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §03, §04 and §05.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
        every flow). Muted on purpose: these sit on a warm #F8F7F4 page.
@@ -372,7 +372,7 @@
     .rb-key-mark--tab { background: #1A1A1A; }
     .rb-key-mark--push { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
     .rb-key-mark--sheet { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
-    /* §03 roadmap legend — round, to echo the timeline dots rather than the
+    /* §02 roadmap legend — round, to echo the timeline dots rather than the
        rectangular node marks. Must sit after the .rb-key-mark base rule:
        same specificity, so source order is what decides the size. */
     .rb-key-mark--iface  { border-radius: 50%; width: 12px; height: 12px; background: var(--rb-screen-bd); }
@@ -697,43 +697,10 @@
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
     </section>
 
-    <!-- 02 — WHO IT'S FOR -->
+    <!-- 02 — ROADMAP -->
     <section class="case-section">
-      <p class="section-kicker"><span class="section-num">02</span> &middot; Three ways people hit the same wall</p>
-      <h2 class="section-heading">Who it's for</h2>
-      <p class="section-text">I'm in the first group myself. The other two come from what people told me directly and from the workarounds they publish &mdash; not from formal interviews.</p>
-      <div class="rb-groups">
-        <div class="rb-group rb-group--holder">
-          <div class="rb-group-head">
-            <span class="rb-group-badge" aria-hidden="true">G1</span>
-            <span class="rb-group-name">Ratio holder</span>
-          </div>
-          <p class="rb-group-line"><span class="rb-group-key">Who</span>Holds several alts and moves between them on the pair's ratio, not the dollar price.</p>
-          <p class="rb-group-line"><span class="rb-group-key">Pain</span>No exchange or wallet shows ALT/ALT directly &mdash; you read two USDT prices and divide them yourself.</p>
-        </div>
-        <div class="rb-group rb-group--tracker">
-          <div class="rb-group-head">
-            <span class="rb-group-badge" aria-hidden="true">G2</span>
-            <span class="rb-group-name">Manual tracker</span>
-          </div>
-          <p class="rb-group-line"><span class="rb-group-key">Who</span>Follows the ratio by hand &mdash; a spreadsheet, or arithmetic in their head &mdash; and keeps coming back to check.</p>
-          <p class="rb-group-line"><span class="rb-group-key">Pain</span>It all rests on remembering to look. Nothing watches the number, so the moment can pass unnoticed.</p>
-        </div>
-        <div class="rb-group rb-group--builder">
-          <div class="rb-group-head">
-            <span class="rb-group-badge" aria-hidden="true">G3</span>
-            <span class="rb-group-name">Workaround builder</span>
-          </div>
-          <p class="rb-group-line"><span class="rb-group-key">Who</span>Technical enough to chart a spread in TradingView or write their own indicator.</p>
-          <p class="rb-group-line"><span class="rb-group-key">Pain</span>The workaround never becomes a product: TradingView advises against alerts on spread charts, and a script needs an account and setup.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 03 — PROCESS -->
-    <section class="case-section">
-      <p class="section-kicker"><span class="section-num">03</span> &middot; Eleven weeks, one pair of hands</p>
-      <h2 class="section-heading">Process</h2>
+      <p class="section-kicker"><span class="section-num">02</span> &middot; Eleven weeks, one pair of hands</p>
+      <h2 class="section-heading">Roadmap</h2>
       <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; with no team and no hand-off, built with Claude Code. Speed like that turns into chaos without a method, so every change went through the same loop &mdash; diagnose, plan, implement one reviewable step at a time &mdash; and the history still shows it: 70 of 355 commits carry a numbered plan step, and only five are reverts.</p>
 
       <div class="rb-key" aria-hidden="true">
@@ -790,6 +757,39 @@
             <p class="timeline-turn"><span class="timeline-turn-label">Reversed</span> Identity re-keyed to the push token</p>
             <span class="timeline-tag">Fallback chain &middot; identity v2</span>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — WHO IT'S FOR -->
+    <section class="case-section">
+      <p class="section-kicker"><span class="section-num">03</span> &middot; Three ways people hit the same wall</p>
+      <h2 class="section-heading">Who it's for</h2>
+      <p class="section-text">The looking above didn't produce a study &mdash; it produced a picture of who keeps hitting this. I'm the first group myself; the other two came out of those conversations and of the workarounds people publish.</p>
+      <div class="rb-groups">
+        <div class="rb-group rb-group--holder">
+          <div class="rb-group-head">
+            <span class="rb-group-badge" aria-hidden="true">G1</span>
+            <span class="rb-group-name">Ratio holder</span>
+          </div>
+          <p class="rb-group-line"><span class="rb-group-key">Who</span>Holds several alts and moves between them on the pair's ratio, not the dollar price.</p>
+          <p class="rb-group-line"><span class="rb-group-key">Pain</span>No exchange or wallet shows ALT/ALT directly &mdash; you read two USDT prices and divide them yourself.</p>
+        </div>
+        <div class="rb-group rb-group--tracker">
+          <div class="rb-group-head">
+            <span class="rb-group-badge" aria-hidden="true">G2</span>
+            <span class="rb-group-name">Manual tracker</span>
+          </div>
+          <p class="rb-group-line"><span class="rb-group-key">Who</span>Follows the ratio by hand &mdash; a spreadsheet, or arithmetic in their head &mdash; and keeps coming back to check.</p>
+          <p class="rb-group-line"><span class="rb-group-key">Pain</span>It all rests on remembering to look. Nothing watches the number, so the moment can pass unnoticed.</p>
+        </div>
+        <div class="rb-group rb-group--builder">
+          <div class="rb-group-head">
+            <span class="rb-group-badge" aria-hidden="true">G3</span>
+            <span class="rb-group-name">Workaround builder</span>
+          </div>
+          <p class="rb-group-line"><span class="rb-group-key">Who</span>Technical enough to chart a spread in TradingView or write their own indicator.</p>
+          <p class="rb-group-line"><span class="rb-group-key">Pain</span>The workaround never becomes a product: TradingView advises against alerts on spread charts, and a script needs an account and setup.</p>
         </div>
       </div>
     </section>
