@@ -71,7 +71,7 @@
     }
 
     /* ——— SECTIONS ——— */
-    .case-section { padding: 80px 0 0; }
+    .case-section { padding: 80px 0 0; scroll-margin-top: 76px; }
     /* Section head: a small grey meta line carries the ordinal and the creative
        phrase together, then the NAME lands at full size so the case stays
        skimmable. Middle dot as the separator — the same joiner the hero meta
@@ -553,6 +553,40 @@
     .rb-tech-group-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
     .rb-tech-group-row { display: flex; flex-wrap: wrap; gap: 7px; }
 
+    /* ——— MOBILE FLOATING TOC PILL ———
+       Same component as the halliburton case: a fixed pill showing the section
+       you are in, tapping it opens the list. Mobile only — this page has no
+       sidebar to spy on, so the pill is the whole table of contents. */
+    .toc-pill { display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; }
+    .toc-pill-trigger {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(26,26,26,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      color: #fff; border: none; border-radius: 100px;
+      padding: 10px 18px 10px 14px;
+      font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+    }
+    .toc-pill-num { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; }
+    .toc-pill-chevron { width: 14px; height: 14px; transition: transform 0.2s; opacity: 0.6; }
+    .toc-pill.open .toc-pill-chevron { transform: rotate(180deg); }
+    .toc-pill-menu {
+      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: rgba(26,26,26,0.96);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px; padding: 8px; min-width: 210px; display: none;
+    }
+    .toc-pill.open .toc-pill-menu { display: block; }
+    .toc-pill-menu a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px; font-size: 13px;
+      color: rgba(255,255,255,0.6); transition: background 0.15s, color 0.15s;
+    }
+    .toc-pill-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
+    .toc-pill-menu .pill-num { font-size: 11px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
+    .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.5); }
+    @media (max-width: 768px) { .toc-pill { display: flex; } }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
       .case-hero-image { width: 100%; margin-left: 0; }
@@ -647,14 +681,14 @@
     </section>
 
     <!-- 01 — PROBLEM & CONTEXT -->
-    <section class="case-section">
+    <section id="section-01" class="case-section">
       <p class="section-kicker"><span class="section-num">01</span> &middot; I built the tool I kept needing</p>
       <h2 class="section-heading">Problem &amp; Context</h2>
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
     </section>
 
     <!-- 02 — ROADMAP -->
-    <section class="case-section">
+    <section id="section-02" class="case-section">
       <p class="section-kicker"><span class="section-num">02</span> &middot; One pair of hands, all the way through</p>
       <h2 class="section-heading">Roadmap</h2>
       <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; built with Claude Code.</p>
@@ -696,7 +730,7 @@
     </section>
 
     <!-- 03 — RESEARCH -->
-    <section class="case-section">
+    <section id="section-03" class="case-section">
       <p class="section-kicker"><span class="section-num">03</span> &middot; What I checked before building</p>
       <h2 class="section-heading">Research</h2>
       <p class="section-text">Three questions came first: whether anything already did this, who keeps running into it, and how few decisions each path could take.</p>
@@ -995,7 +1029,7 @@
     </section>
 
     <!-- 04 — PROTOTYPE -->
-    <section class="case-section">
+    <section id="section-04" class="case-section">
       <p class="section-kicker"><span class="section-num">04</span> &middot; Designed in code, so the prototype was the app</p>
       <h2 class="section-heading">Prototype</h2>
       <p class="section-text">There was no Figma stage. The prototype ran on a phone from the start, which is why the screens and the system behind them were decided together.</p>
@@ -1154,7 +1188,7 @@
     </section>
 
     <!-- 05 — TESTING -->
-    <section class="case-section">
+    <section id="section-05" class="case-section">
       <p class="section-kicker"><span class="section-num">05</span> &middot; Four flows, four things I had wrong</p>
       <h2 class="section-heading">Testing</h2>
       <p class="section-text">Two rounds through TestFlight, on other people's phones. Each flow gave up one thing I had assumed, and each one changed the build.</p>
@@ -1183,7 +1217,7 @@
     </section>
 
     <!-- 06 — PUBLISH ON THE APP STORE -->
-    <section class="case-section">
+    <section id="section-06" class="case-section">
       <p class="section-kicker"><span class="section-num">06</span> &middot; Shipping to a market that is not one country</p>
       <h2 class="section-heading">Publish on the App Store</h2>
 
@@ -1281,7 +1315,7 @@
     </section>
 
     <!-- 07 — ANALYTICS AND POST-LAUNCH RESEARCH -->
-    <section class="case-section">
+    <section id="section-07" class="case-section">
       <p class="section-kicker"><span class="section-num">07</span> &middot; What the app has to tell me next</p>
       <h2 class="section-heading">Analytics and post-launch research</h2>
       <p class="section-text">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether anyone arms a second alert after their first one fires &mdash; the difference between a tool someone tried and a tool someone uses.</p>
@@ -1296,7 +1330,7 @@
     </section>
 
     <!-- 08 — OUTCOME -->
-    <section class="case-section">
+    <section id="section-08" class="case-section">
       <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. That proves the thing can be built and shipped this way; what comes next is whether it earns a place in someone's routine.</p>
@@ -1318,7 +1352,7 @@
     </section>
 
     <!-- 09 — REFLECTION -->
-    <section class="case-section">
+    <section id="section-09" class="case-section">
       <p class="section-kicker"><span class="section-num">09</span> &middot; What the build taught me</p>
       <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
@@ -1340,6 +1374,25 @@
     </a>
   </div>
 
+  <div class="toc-pill" id="tocPill">
+    <div class="toc-pill-menu" id="tocPillMenu">
+      <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
+      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Roadmap</a>
+      <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> Research</a>
+      <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Prototype</a>
+      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Testing</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Publish</a>
+      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Analytics</a>
+      <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Outcome</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Reflection</a>
+    </div>
+    <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
+      <span class="toc-pill-num" id="tocPillNum">01</span>
+      <span id="tocPillLabel">Problem</span>
+      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -1353,6 +1406,64 @@
   </footer>
 
   <script>
+    // ——— MOBILE TOC PILL: scroll spy + toggle ———
+    // Labels come from the menu links themselves, so adding or renaming a
+    // section means editing one place, not a map that drifts out of sync.
+    (function () {
+      var HEADER_OFFSET = 76;   // sticky header is 57px; the rest is breathing room
+      var pill = document.getElementById('tocPill');
+      if (!pill) return;
+      var trigger = document.getElementById('tocPillTrigger');
+      var num = document.getElementById('tocPillNum');
+      var label = document.getElementById('tocPillLabel');
+      var links = [].slice.call(pill.querySelectorAll('.toc-pill-menu a[data-section]'));
+      var entries = links.map(function (a) {
+        var n = a.querySelector('.pill-num');
+        return {
+          link: a,
+          el: document.getElementById(a.dataset.section),
+          num: n ? n.textContent.trim() : '',
+          text: a.textContent.replace(n ? n.textContent : '', '').trim()
+        };
+      }).filter(function (e) { return e.el; });
+      if (!entries.length) return;
+
+      function sync() {
+        var y = window.scrollY + 120, active = entries[0];
+        entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
+        entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
+        num.textContent = active.num;
+        label.textContent = active.text;
+      }
+      window.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+
+      function setOpen(on) {
+        pill.classList.toggle('open', on);
+        trigger.setAttribute('aria-expanded', on ? 'true' : 'false');
+      }
+      trigger.addEventListener('click', function () { setOpen(!pill.classList.contains('open')); });
+      links.forEach(function (a) {
+        a.addEventListener('click', function (ev) {
+          var el = document.getElementById(a.dataset.section);
+          if (el) {
+            // scroll here rather than leaning on the hash: scroll-margin-top
+            // keeps the section head clear of the sticky header, and the URL is
+            // updated without a second jump. scrollTo rather than
+            // scrollIntoView, so the header offset is explicit and the section
+            // kicker is never hidden under the sticky bar.
+            ev.preventDefault();
+            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET, behavior: 'smooth' });
+            if (history.replaceState) history.replaceState(null, '', '#' + a.dataset.section);
+          }
+          setOpen(false);
+        });
+      });
+      document.addEventListener('click', function (e) { if (!pill.contains(e.target)) setOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    })();
+
     // RB TABS — every .rb-tabgroup is self-contained: a click retargets only
     // the buttons and panels INSIDE its own group, so multiple tab groups on
     // this page can never clear each other's active state.
