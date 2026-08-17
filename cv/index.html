@@ -1,4 +1,15 @@
 <!DOCTYPE html>
+<!--
+  The résumé itself. This page is the source of truth for it; the PDF the site
+  hands out is printed from here by tools/build-cv-pdf.sh.
+
+  Not a public page: nothing on the site links to it and it carries noindex, so
+  edit the copy below freely and reach it by typing the address. Everything the
+  A4 sheet needs — margins, gutters, radius, type sizes — sits in the custom
+  properties on .cv-sheet, and the screen-only block loosens the same tokens for
+  reading. After editing, run the build script: it refuses to publish a CV that
+  has stopped fitting one page.
+-->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -60,6 +71,11 @@
     }
     .cv-btn--ghost:hover { background: rgba(0,0,0,0.04); }
     .cv-actions-note { font-size: 13px; color: #9A9A9A; }
+    .cv-actions-note code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px; color: #6B6B6B;
+      background: rgba(0,0,0,0.04); border-radius: 4px; padding: 2px 5px;
+    }
 
     /* ——— THE SHEET ———————————————————————————————————————————————
        Geometry lives in custom properties. The values declared here are the
@@ -300,33 +316,6 @@
       }
     }
 
-    /* ——— VIEW SWITCH — temporary, only here to pick a direction ——— */
-    .cv-viewswitch {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 4px;
-      padding: 4px; border-radius: 100px;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid rgba(0,0,0,0.10);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
-      backdrop-filter: saturate(180%) blur(12px);
-      -webkit-backdrop-filter: saturate(180%) blur(12px);
-      z-index: 60;
-    }
-    .cv-viewswitch-label {
-      font-size: 11px; color: #9A9A9A; padding: 0 8px 0 10px;
-      text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .cv-viewswitch button {
-      font: inherit; font-size: 13px; font-weight: 500;
-      padding: 7px 14px; border: 0; border-radius: 100px;
-      background: transparent; color: #6B6B6B; cursor: pointer;
-    }
-    .cv-viewswitch button:hover { color: #1A1A1A; }
-    .cv-viewswitch button.is-active { background: #1A1A1A; color: #FFFFFF; }
-    @media (max-width: 520px) {
-      .cv-viewswitch-label { display: none; }
-    }
-
     /* ——— FOOTER (same component as the homepage) ——— */
     .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; }
     .footer-inner { display: flex; justify-content: space-between; align-items: center; }
@@ -372,9 +361,9 @@
     <div class="container">
       <h1>CV</h1>
       <div class="cv-actions">
-        <a href="../assets/CV_Yurii_Fokin.pdf" download class="cv-btn">Download PDF ↓</a>
-        <button type="button" class="cv-btn cv-btn--ghost" id="printBtn">Print / Save as PDF</button>
-        <span class="cv-actions-note">A4 · one page</span>
+        <button type="button" class="cv-btn" id="a4Btn">Preview as A4 ⤢</button>
+        <a href="../assets/CV_Yurii_Fokin.pdf" download class="cv-btn cv-btn--ghost">Download PDF ↓</a>
+        <span class="cv-actions-note">Working page — nothing links here. Run <code>tools/build-cv-pdf.sh</code> to publish the PDF.</span>
       </div>
     </div>
   </section>
@@ -580,14 +569,6 @@
     </div>
   </footer>
 
-  <!-- TEMPORARY: two directions to choose between. Once picked, the loser and
-       this control both go. -->
-  <div class="cv-viewswitch" id="viewSwitch">
-    <span class="cv-viewswitch-label">View</span>
-    <button type="button" data-view="site">1 · Site page</button>
-    <button type="button" data-view="a4">2 · A4 sheet</button>
-  </div>
-
   <script>
     // ——— PHONE ———
     // Held as character codes, not digits: the raw HTML then carries nothing a
@@ -608,12 +589,13 @@
       el.href = 'tel:+' + digits;
     })();
 
-    // ——— VIEW SWITCH + A4 FIT ———
-    // In A4 view the sheet keeps its real 210mm width and is scaled to the
-    // viewport, so the screen shows exactly what the printer would get.
+    // ——— A4 PREVIEW ———
+    // The A4 view keeps the sheet at its real 210mm width and scales it to the
+    // viewport, so the screen shows exactly what the printer would get. That is
+    // the point of the toggle: check the page here before generating the PDF.
     (function () {
       var body = document.body;
-      var buttons = [].slice.call(document.querySelectorAll('#viewSwitch button'));
+      var toggle = document.getElementById('a4Btn');
 
       // Measure 210mm in px once, rather than assuming 96dpi. Taken from a
       // throwaway node so the sheet's own (possibly scaled) box can't feed back
@@ -634,14 +616,18 @@
         }
         // viewport, not the container: in a4 view the container is sized *from*
         // the scale, so reading it here would be circular.
-        var avail = Math.min(document.documentElement.clientWidth, 1080) - 48;
-        var k = Math.min(1, avail / sheetPx);
+        var vw = document.documentElement.clientWidth || window.innerWidth || 0;
+        if (!vw) return;                       // nothing to measure against yet
+        var avail = Math.min(vw, 1080) - 48;
+        // floored: a zero or negative width would otherwise scale the sheet
+        // to nothing and the page would look empty.
+        var k = Math.max(0.2, Math.min(1, avail / sheetPx));
         document.documentElement.style.setProperty('--cv-fit', k.toFixed(4));
       }
 
       function setView(v) {
         body.dataset.view = v;
-        buttons.forEach(function (b) { b.classList.toggle('is-active', b.dataset.view === v); });
+        if (toggle) toggle.textContent = v === 'a4' ? 'Back to page view ⤡' : 'Preview as A4 ⤢';
         try { localStorage.setItem('cvView', v); } catch (e) {}
         fit();
       }
@@ -652,14 +638,13 @@
       try { saved = localStorage.getItem('cvView'); } catch (e) {}
       setView(asked || (saved === 'a4' ? 'a4' : 'site'));
 
-      buttons.forEach(function (b) {
-        b.addEventListener('click', function () { setView(b.dataset.view); });
-      });
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          setView(body.dataset.view === 'a4' ? 'site' : 'a4');
+        });
+      }
       window.addEventListener('resize', fit);
       window.addEventListener('load', fit);
-
-      var print = document.getElementById('printBtn');
-      if (print) print.addEventListener('click', function () { window.print(); });
     })();
   </script>
 </body>
