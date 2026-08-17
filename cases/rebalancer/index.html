@@ -553,11 +553,12 @@
     .rb-tech-group-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
     .rb-tech-group-row { display: flex; flex-wrap: wrap; gap: 7px; }
 
-    /* ——— MOBILE FLOATING TOC PILL ———
-       Same component as the halliburton case: a fixed pill showing the section
-       you are in, tapping it opens the list. Mobile only — this page has no
-       sidebar to spy on, so the pill is the whole table of contents. */
-    .toc-pill { display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; }
+    /* ——— FLOATING TOC PILL ———
+       The halliburton case's pill, shown at every width here: it names the
+       section you are in and opens the list on click. This page has no sidebar,
+       so the pill is the whole table of contents rather than a mobile stand-in
+       for one. */
+    .toc-pill { display: flex; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; }
     .toc-pill-trigger {
       display: flex; align-items: center; gap: 8px;
       background: rgba(26,26,26,0.92);
@@ -585,7 +586,6 @@
     .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
     .toc-pill-menu .pill-num { font-size: 11px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
     .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.5); }
-    @media (max-width: 768px) { .toc-pill { display: flex; } }
 
     /* ——— RESPONSIVE ——— */
     @media (max-width: 1024px) {
