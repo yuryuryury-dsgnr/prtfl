@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Deliberately kept out of search results: the sheet carries a phone number. -->
+  <meta name="robots" content="noindex, nofollow">
+  <title>CV — Yurii Fokin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #1A1A1A;
+      background-color: #F8F7F4;
+    }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ——— TOP NAV (same component as the homepage) ——— */
+    .topnav { padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .topnav-inner { display: flex; justify-content: space-between; align-items: center; }
+    .topnav-logo { font-size: 15px; font-weight: 500; color: #1A1A1A; letter-spacing: -0.01em; }
+    .topnav-links { display: flex; gap: 24px; align-items: center; }
+    .topnav-link { font-size: 14px; font-weight: 500; color: #1A1A1A; }
+    .topnav-link:hover { color: #6B6B6B; }
+
+    /* ——— PAGE HEAD ——— */
+    .cv-intro { padding: 56px 0 32px; }
+    .cv-intro h1 {
+      font-size: 48px; font-weight: 600; letter-spacing: -0.02em;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .cv-intro p { font-size: 17px; color: #6B6B6B; max-width: 620px; }
+
+    .cv-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 28px; }
+    .cv-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 500;
+      padding: 11px 18px; border-radius: 100px;
+      background: #1A1A1A; color: #FFFFFF;
+      transition: background 200ms ease;
+    }
+    .cv-btn:hover { background: #3A3A3A; }
+    .cv-btn--ghost {
+      background: transparent; color: #1A1A1A;
+      border: 1px solid rgba(0,0,0,0.14);
+    }
+    .cv-btn--ghost:hover { background: rgba(0,0,0,0.04); }
+    .cv-actions-note { font-size: 13px; color: #9A9A9A; }
+
+    /* ——— THE SHEET ———————————————————————————————————————————————
+       Geometry lives in custom properties. The values declared here are the
+       real A4 ones, measured off the current PDF — so print needs no rules of
+       its own beyond hiding the site chrome. The screen-only block further
+       down loosens them for reading; being inside @media screen means it
+       never reaches the printer.                                          */
+    .cv-stage { padding-bottom: 80px; }
+
+    .cv-sheet {
+      --pad-x: 4.33mm;
+      --pad-y: 4.3mm;
+      --gap-y: 4.6mm;
+      --gap-x: 4.6mm;
+      --card-pad: 4.4mm;
+      --radius: 1.73mm;
+      --border-c: #ABABAB;
+      --border-w: 0.35mm;
+      --ink: #383838;
+      --ink-soft: #6A6A6A;
+      --photo: 21.1mm;
+
+      --fs-name: 13pt;
+      --fs-role: 11pt;
+      --fs-h2: 11.5pt;
+      --fs-job: 9.5pt;
+      --fs-body: 7pt;
+      --fs-meta: 6.5pt;
+      --fs-label: 6.5pt;
+
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      padding: var(--pad-y) var(--pad-x);
+      background: #FFFFFF;
+      color: var(--ink);
+      font-size: var(--fs-body);
+      /* 1.32 is the step measured off the current PDF (≈9.1 pt at 7 pt type).
+         It is also what makes the content fit A4 — do not loosen it without
+         re-running the measure script. */
+      line-height: 1.32;
+
+      display: grid;
+      grid-template-columns: minmax(0, 2.3154fr) minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      grid-template-areas: "head head" "main side";
+      gap: var(--gap-y) var(--gap-x);
+    }
+
+    /* Columns. Leftover height is shared equally between the cards of a column,
+       so both columns finish flush with the bottom margin the way the current
+       PDF does, and no single card ends up carrying all the empty space. When
+       the slack runs out the sheet overflows — which the build script catches
+       as a second page rather than letting it ship quietly. */
+    .cv-head { grid-area: head; }
+    .cv-main, .cv-side { display: flex; flex-direction: column; gap: var(--gap-y); }
+    .cv-main { grid-area: main; }
+    .cv-side { grid-area: side; }
+    .cv-main > .cv-card, .cv-side > .cv-card { flex: 1 1 auto; }
+
+    .cv-card {
+      border: var(--border-w) solid var(--border-c);
+      border-radius: var(--radius);
+      background: #FFFFFF;
+      padding: var(--card-pad);
+      min-width: 0;
+    }
+
+    .cv-card h2 {
+      font-size: var(--fs-h2); font-weight: 600; letter-spacing: -0.01em;
+      line-height: 1.2; margin-bottom: 2.6mm;
+    }
+
+    /* ——— HEADER CARD ——— */
+    .cv-head-inner { display: flex; align-items: flex-start; gap: 4.3mm; }
+    .cv-photo {
+      flex: 0 0 auto;
+      width: var(--photo); height: var(--photo);
+      border-radius: 50%; object-fit: cover; display: block;
+    }
+    .cv-id { min-width: 0; flex: 1 1 auto; }
+    .cv-name {
+      font-size: var(--fs-name); font-weight: 400; letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .cv-role {
+      font-size: var(--fs-role); line-height: 1.25; margin-bottom: 2.8mm;
+    }
+    .cv-role strong { font-weight: 600; }
+
+    .cv-contacts {
+      display: flex; flex-wrap: wrap; gap: 2mm 8mm;
+      list-style: none;
+    }
+    .cv-contact-label {
+      display: block;
+      font-size: var(--fs-label); font-weight: 600; line-height: 1.3;
+    }
+    .cv-contact-value {
+      display: flex; align-items: center; gap: 1.2mm;
+      font-size: var(--fs-body); line-height: 1.3; color: var(--ink);
+    }
+    .cv-contact-value svg { flex: 0 0 auto; width: 1em; height: 1em; opacity: 0.5; }
+    .cv-contact-value a { text-decoration: underline; text-underline-offset: 0.15em; }
+
+    /* ——— EXPERIENCE ——— */
+    .cv-job + .cv-job { margin-top: 4.6mm; }
+    .cv-job-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 4mm; margin-bottom: 1.6mm;
+    }
+    .cv-job-title {
+      font-size: var(--fs-job); font-weight: 400; line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .cv-job-title strong { font-weight: 600; }
+    .cv-job-dates {
+      flex: 0 0 auto; font-size: var(--fs-meta); line-height: 1.3;
+      color: var(--ink); text-align: right;
+    }
+    .cv-list { list-style: none; }
+    .cv-list li {
+      position: relative; padding-left: 2.4mm; margin-bottom: 0.5mm;
+    }
+    .cv-list li::before {
+      content: '•'; position: absolute; left: 0; top: 0;
+    }
+    .cv-list strong { font-weight: 600; }
+    .cv-sublist { list-style: none; margin: 0.6mm 0 1.4mm 2.4mm; }
+    .cv-sublist li { position: relative; padding-left: 2.4mm; }
+    .cv-sublist li::before { content: '•'; position: absolute; left: 0; top: 0; }
+    .cv-group-label { margin-top: 1mm; }
+
+    /* ——— EDUCATION ——— */
+    .cv-edu-title { font-weight: 600; line-height: 1.35; }
+    .cv-edu-dates { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); margin-top: 1.2mm; }
+
+    /* ——— LANGUAGES ——— */
+    .cv-langs { list-style: none; }
+    .cv-langs li { font-weight: 600; line-height: 1.35; }
+    .cv-langs li + li { margin-top: 2.4mm; }
+
+    /* ——— CERTIFICATES ——— */
+    .cv-certs a { font-weight: 600; text-decoration: underline; text-underline-offset: 0.15em; }
+    .cv-certs li { margin-bottom: 1.6mm; }
+    .cv-certs-note { margin-top: 2mm; }
+
+    /* ——— SCREEN-ONLY: the readable, adaptive rendition ————————————————
+       Everything in here is scoped to @media screen so the printer keeps the
+       A4 token set above untouched. */
+    @media screen {
+
+      /* --- variant 1: page in the site's own key --- */
+      body[data-view="site"] .cv-sheet {
+        --pad-x: 0;
+        --pad-y: 0;
+        --gap-y: 20px;
+        --gap-x: 20px;
+        --card-pad: 28px;
+        --radius: 16px;
+        --border-c: rgba(0,0,0,0.08);
+        --border-w: 1px;
+        --ink: #1A1A1A;
+        --ink-soft: #6B6B6B;
+        --photo: 88px;
+
+        --fs-name: 28px;
+        --fs-role: 17px;
+        --fs-h2: 24px;
+        --fs-job: 18px;
+        --fs-body: 15px;
+        --fs-meta: 13px;
+        --fs-label: 12px;
+
+        width: 100%;
+        height: auto;
+        background: transparent;
+        line-height: 1.6;
+        grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto;
+      }
+      body[data-view="site"] .cv-main > .cv-card,
+      body[data-view="site"] .cv-side > .cv-card { flex: 0 0 auto; }
+      body[data-view="site"] .cv-card h2 { margin-bottom: 20px; }
+      body[data-view="site"] .cv-name { font-weight: 600; letter-spacing: -0.02em; }
+      body[data-view="site"] .cv-role { color: #6B6B6B; margin-bottom: 24px; }
+      body[data-view="site"] .cv-role strong { color: #1A1A1A; }
+      body[data-view="site"] .cv-head-inner { gap: 24px; }
+      body[data-view="site"] .cv-contacts { gap: 16px 40px; }
+      body[data-view="site"] .cv-job + .cv-job { margin-top: 32px; }
+      body[data-view="site"] .cv-job-head { margin-bottom: 10px; }
+      body[data-view="site"] .cv-list li { padding-left: 16px; margin-bottom: 4px; }
+      body[data-view="site"] .cv-list li::before,
+      body[data-view="site"] .cv-sublist li::before { color: #9A9A9A; }
+      body[data-view="site"] .cv-sublist { margin: 4px 0 10px 16px; }
+      body[data-view="site"] .cv-sublist li { padding-left: 16px; }
+      body[data-view="site"] .cv-langs li + li { margin-top: 12px; }
+      body[data-view="site"] .cv-certs li { margin-bottom: 12px; }
+      body[data-view="site"] .cv-edu-dates { color: #6B6B6B; margin-top: 6px; }
+      body[data-view="site"] .cv-job-dates { color: #6B6B6B; }
+      body[data-view="site"] .cv-certs-note { margin-top: 16px; color: #6B6B6B; }
+
+      /* --- variant 2: the sheet itself, scaled to fit the viewport ---
+         A geometric scale, not a re-layout, so what you see is literally what
+         prints. transform leaves the layout box at its full 210mm, so the box
+         around it is sized to the *scaled* dimensions and clips — otherwise the
+         page would scroll sideways on a phone. --cv-fit comes from the script. */
+      body[data-view="a4"] .cv-stage .container {
+        width: calc(210mm * var(--cv-fit, 1));
+        height: calc(297mm * var(--cv-fit, 1));
+        max-width: 100%;
+        padding: 0;
+        overflow: hidden;
+      }
+      body[data-view="a4"] .cv-sheet {
+        transform: scale(var(--cv-fit, 1));
+        transform-origin: top left;
+        box-shadow: 0 2px 24px rgba(0,0,0,0.10);
+      }
+
+      @media (max-width: 860px) {
+        body[data-view="site"] .cv-sheet { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "main" "side"; }
+      }
+      @media (max-width: 768px) {
+        .topnav-inner { flex-wrap: wrap; gap: 12px 16px; }
+        .topnav-links { gap: 16px; }
+        .cv-intro { padding: 40px 0 24px; }
+        .cv-intro h1 { font-size: 36px; }
+        body[data-view="site"] .cv-sheet { --card-pad: 20px; --fs-role: 20px; --fs-h2: 20px; --fs-job: 17px; }
+        body[data-view="site"] .cv-head-inner { flex-direction: column; gap: 16px; }
+        body[data-view="site"] .cv-contacts { gap: 14px 24px; }
+        /* dates next to the job title stop fitting around 400px — drop them
+           under it rather than letting the row push the page sideways */
+        body[data-view="site"] .cv-job-head { flex-direction: column; align-items: flex-start; gap: 2px; }
+        body[data-view="site"] .cv-job-dates { text-align: left; }
+        .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+        .footer-right { flex-wrap: wrap; justify-content: center; }
+      }
+    }
+
+    /* ——— VIEW SWITCH — temporary, only here to pick a direction ——— */
+    .cv-viewswitch {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px; border-radius: 100px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,0,0,0.10);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      z-index: 60;
+    }
+    .cv-viewswitch-label {
+      font-size: 11px; color: #9A9A9A; padding: 0 8px 0 10px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .cv-viewswitch button {
+      font: inherit; font-size: 13px; font-weight: 500;
+      padding: 7px 14px; border: 0; border-radius: 100px;
+      background: transparent; color: #6B6B6B; cursor: pointer;
+    }
+    .cv-viewswitch button:hover { color: #1A1A1A; }
+    .cv-viewswitch button.is-active { background: #1A1A1A; color: #FFFFFF; }
+    @media (max-width: 520px) {
+      .cv-viewswitch-label { display: none; }
+    }
+
+    /* ——— FOOTER (same component as the homepage) ——— */
+    .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; }
+    .footer-left { font-size: 14px; }
+    .footer-name { font-weight: 500; }
+    .footer-role { color: #6B6B6B; }
+    .footer-right { display: flex; gap: 24px; font-size: 14px; color: #6B6B6B; }
+
+    /* ——— PRINT ———————————————————————————————————————————————————
+       No geometry here on purpose: the .cv-sheet defaults already are the A4
+       sheet. This only strips the site chrome and gets out of the way. */
+    @page { size: A4; margin: 0; }
+    @media print {
+      .topnav, .cv-intro, .cv-viewswitch, .footer { display: none !important; }
+      html, body { background: #FFFFFF; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      /* The sheet is the page: nothing above it may add width or offset, so the
+         shared .container is neutralised rather than worked around. */
+      .cv-stage { padding: 0; }
+      .cv-stage .container { max-width: none; padding: 0; margin: 0; }
+      .cv-sheet { margin: 0; transform: none; box-shadow: none; }
+      .cv-card { break-inside: avoid; }
+      a { text-decoration: none; }
+      .cv-contact-value a, .cv-certs a { text-decoration: underline; }
+    }
+  </style>
+</head>
+<body data-view="site">
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="container topnav-inner">
+      <a href="/" class="topnav-logo">Portfolio — Yurii Fokin</a>
+      <div class="topnav-links">
+        <a href="/#work" class="topnav-link">Work →</a>
+        <a href="mailto:yuryuryury@icloud.com" class="topnav-link">Get in touch →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEAD -->
+  <section class="cv-intro">
+    <div class="container">
+      <h1>CV</h1>
+      <div class="cv-actions">
+        <a href="../assets/CV_Yurii_Fokin.pdf" download class="cv-btn">Download PDF ↓</a>
+        <button type="button" class="cv-btn cv-btn--ghost" id="printBtn">Print / Save as PDF</button>
+        <span class="cv-actions-note">A4 · one page</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SHEET -->
+  <div class="cv-stage">
+    <div class="container" id="cvContainer">
+      <article class="cv-sheet" id="cvSheet">
+
+        <!-- HEADER CARD -->
+        <header class="cv-card cv-head">
+          <div class="cv-head-inner">
+            <img class="cv-photo" src="../assets/images/cv/yurii-fokin.webp" alt="Yurii Fokin" width="600" height="600">
+            <div class="cv-id">
+              <p class="cv-name">Yurii Fokin</p>
+              <p class="cv-role"><strong>Lead UX Designer</strong> · 8 years of experience</p>
+              <ul class="cv-contacts">
+                <li>
+                  <span class="cv-contact-label">LinkedIn</span>
+                  <span class="cv-contact-value">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M13.6 0H2.4A2.4 2.4 0 0 0 0 2.4v11.2A2.4 2.4 0 0 0 2.4 16h11.2a2.4 2.4 0 0 0 2.4-2.4V2.4A2.4 2.4 0 0 0 13.6 0ZM5 13H2.8V6.2H5V13Zm-1.1-7.8a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6ZM13.2 13H11V9.3c0-.9-.3-1.5-1.1-1.5-.6 0-1 .4-1.2.9 0 .1-.1.3-.1.5V13H6.4s0-6.1 0-6.8h2.2v1c.3-.5.8-1.1 2-1.1 1.5 0 2.6 1 2.6 3.1V13Z"/></svg>
+                    <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">linkedin.com/in/yuryury</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="cv-contact-label">Email</span>
+                  <span class="cv-contact-value">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1.6 2.4h12.8c.9 0 1.6.7 1.6 1.6v8c0 .9-.7 1.6-1.6 1.6H1.6C.7 13.6 0 12.9 0 12V4c0-.9.7-1.6 1.6-1.6Zm12.8 1.6H1.6l6.4 4 6.4-4ZM1.6 12h12.8V5.9L8 9.7 1.6 5.9V12Z"/></svg>
+                    <a href="mailto:yuryuryury@icloud.com">yuryuryury@icloud.com</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="cv-contact-label">Phone</span>
+                  <span class="cv-contact-value">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5.2 1.1c.5-.2 1.1 0 1.4.5l1.3 2.2c.3.5.2 1.1-.2 1.5l-.9.8c-.2.2-.2.4-.1.6.5 1 1.3 1.8 2.3 2.3.2.1.5.1.6-.1l.8-.9c.4-.4 1-.5 1.5-.2l2.2 1.3c.5.3.7.9.5 1.4l-.6 1.4c-.3.7-1 1.1-1.7 1-2.3-.3-4.4-1.4-6-3-1.6-1.6-2.7-3.7-3-6-.1-.7.3-1.4 1-1.7l1.4-.6Z"/></svg>
+                    <a id="cvPhone" href="#">&nbsp;</a>
+                  </span>
+                </li>
+                <li>
+                  <span class="cv-contact-label">Website</span>
+                  <span class="cv-contact-value">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Zm5.3 4.8h-2A10 10 0 0 0 10 2.1a6.4 6.4 0 0 1 3.3 2.7ZM8 1.7c.6.6 1.2 1.7 1.6 3.1H6.4C6.8 3.4 7.4 2.3 8 1.7ZM1.8 9.6A6.6 6.6 0 0 1 1.6 8c0-.6.1-1.1.2-1.6h2.3A13 13 0 0 0 4 8c0 .6 0 1.1.1 1.6H1.8Zm.9 1.6h2a10 10 0 0 0 1.3 2.7 6.4 6.4 0 0 1-3.3-2.7Zm2-6.4h-2A6.4 6.4 0 0 1 6 2.1 10 10 0 0 0 4.7 4.8ZM8 14.3c-.6-.6-1.2-1.7-1.6-3.1h3.2c-.4 1.4-1 2.5-1.6 3.1Zm1.9-4.7H6.1A11 11 0 0 1 6 8c0-.6 0-1.1.1-1.6h3.8c.1.5.1 1 .1 1.6s0 1.1-.1 1.6Zm.1 4.1a10 10 0 0 0 1.3-2.7h2a6.4 6.4 0 0 1-3.3 2.7Zm1.6-4.1c.1-.5.1-1 .1-1.6s0-1.1-.1-1.6h2.3c.1.5.2 1 .2 1.6s-.1 1.1-.2 1.6h-2.3Z"/></svg>
+                    <a href="https://yuryury.com" target="_blank" rel="noopener">yuryury.com</a>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </header>
+
+        <!-- LEFT COLUMN -->
+        <div class="cv-main">
+
+          <section class="cv-card">
+            <h2>Experience</h2>
+
+            <div class="cv-job">
+              <div class="cv-job-head">
+                <p class="cv-job-title"><strong>Lead UX Designer</strong> at Luxoft (remote)</p>
+                <p class="cv-job-dates">February 2023 – Present · 3+ years</p>
+              </div>
+              <ul class="cv-list">
+                <li><strong>Led end-to-end UX design strategy</strong> from discovery and research to delivery and design system;</li>
+                <li><strong>Implemented task-tracking system</strong>, improving cross-team visibility;</li>
+                <li><strong>Mentored junior designers</strong>;</li>
+                <li><strong>Organized and conducted team building events</strong> “UX coffee” for design department (20 designers);</li>
+                <li><strong>Hired and onboarded designers</strong>, through technical interviews and portfolio reviews;</li>
+                <li><strong>Built design system</strong>, ensuring scalability and consistency across projects;</li>
+                <li><strong>Integrated AI-powered tools</strong>, accelerated early concept generation;</li>
+                <li><strong>Built and tested lo-fi and hi-fi prototypes</strong>;</li>
+                <li><strong>Designed mockups and wireframes</strong>;</li>
+                <li><strong>Conducted user research at all stages</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="cv-job">
+              <div class="cv-job-head">
+                <p class="cv-job-title"><strong>Senior UX/UI Designer</strong> at Omure, NY USA (remote)</p>
+                <p class="cv-job-dates">December 2021 – December 2022 · 1 year</p>
+              </div>
+              <ul class="cv-list">
+                <li>Conducted research at all stages of the project;</li>
+                <li>Conducted in-depth interviews with users;</li>
+                <li>Analyzed competitors and comparative analysis based on competitors;</li>
+                <li>Created user personas;</li>
+                <li>Formed user stories;</li>
+                <li>Created CJM customer journey maps;</li>
+                <li>Helped to develop a design system;</li>
+                <li>Created wireframes and mockups;</li>
+                <li>Created lo-fi &amp; hi-fi prototypes;</li>
+                <li>Conducted usability testing.</li>
+              </ul>
+            </div>
+
+            <div class="cv-job">
+              <div class="cv-job-head">
+                <p class="cv-job-title"><strong>Lead UX/UI Designer</strong> at Naya, Dubai UAE (office)</p>
+                <p class="cv-job-dates">December 2020 – November 2021 · 1 year</p>
+              </div>
+              <ul class="cv-list">
+                <li>Managed a team of 2 designers;</li>
+                <li>Conducted UX research at all stages;</li>
+                <li>Made analysis of competitors;</li>
+                <li>Designed and tested interactive prototype;</li>
+                <li>Created UI design for mobile application;</li>
+                <li>Designed web version of the mobile application;</li>
+                <li>Developed design system;</li>
+                <li>Created branding for the program;</li>
+                <li>Supported development process;</li>
+                <li>Helped QA team;</li>
+                <li>Mentored juniors.</li>
+              </ul>
+            </div>
+
+            <div class="cv-job">
+              <div class="cv-job-head">
+                <p class="cv-job-title"><strong>Junior › Middle › Senior UX/UI Designer</strong> at Synergize, Ukraine (office)</p>
+                <p class="cv-job-dates">November 2017 – October 2020 · 3 years</p>
+              </div>
+              <p class="cv-group-label">Designed:</p>
+              <ul class="cv-sublist">
+                <li>sites;</li>
+                <li>applications;</li>
+                <li>dashboards;</li>
+                <li>logos;</li>
+                <li>identity and branding.</li>
+              </ul>
+              <p class="cv-group-label">Analyzed:</p>
+              <ul class="cv-sublist">
+                <li>target audience;</li>
+                <li>the market;</li>
+                <li>competitors.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="cv-card">
+            <h2>Education</h2>
+            <p class="cv-edu-title">National Technical University of Ukraine — Program Engineering</p>
+            <p class="cv-edu-dates">September 2015 – July 2019</p>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="cv-side">
+
+          <section class="cv-card">
+            <h2>Skills</h2>
+            <ul class="cv-list">
+              <li><strong>Team management</strong> (mentoring, personal development plan, hiring process, task management, 1-to-1 &amp; team calls)</li>
+              <li><strong>Collaboration with cross-functional teams</strong> (collaboration with devs, brainstorms and workshops with PO, task tracking with PM, aligning with marketing, delivering to client)</li>
+              <li><strong>Research &amp; UX strategy</strong> (interviews, surveys, usability testing, early and post-launch research, A/B testing, user personas, CJM customer journey map, user flows, information architecture)</li>
+              <li><strong>Design system architecture</strong> (architecture, variables, tokens, components, layouts)</li>
+              <li><strong>Market analysis</strong> (direct/indirect competitor analysis, comparative analysis, SWOT)</li>
+              <li><strong>Analytics</strong> (Google Analytics)</li>
+              <li><strong>Wireframes and mockups</strong></li>
+              <li><strong>Lo-fi &amp; hi-fi prototypes</strong></li>
+              <li><strong>Generative AI tools</strong> (Figma Make AI, Uizard, Galileo AI, MidJourney, AI research assistant — used to speed up the ideation process)</li>
+            </ul>
+          </section>
+
+          <section class="cv-card">
+            <h2>Languages</h2>
+            <ul class="cv-langs">
+              <li>English — Advanced</li>
+              <li>Ukrainian — Fluent</li>
+              <li>Russian — Advanced</li>
+            </ul>
+          </section>
+
+          <section class="cv-card">
+            <h2>Certificates</h2>
+            <ul class="cv-list cv-certs">
+              <li><a href="https://drive.google.com/file/d/1vfvSVgFycKpOeS7xzKwGZEfd-hzSlywD/view?usp=sharing" target="_blank" rel="noopener">Leadership Academy Advanced</a></li>
+              <li><a href="https://drive.google.com/file/d/10PoQzkz_ZMVMfMS3wsmqhrIoaGRieUHt/view?usp=sharing" target="_blank" rel="noopener">Leadership Academy Core</a></li>
+              <li><a href="https://coursera.org/share/b449a7e4005413376c15272ecd80ad99" target="_blank" rel="noopener">Conduct UX Research and Test Early Concepts</a></li>
+              <li><a href="https://coursera.org/share/959355f5215336a74b708b78d7011276" target="_blank" rel="noopener">Create High-Fidelity Designs and Prototypes in Figma</a></li>
+              <li><a href="https://coursera.org/share/fe54a8c59f20699e9559604ca77fd1fc" target="_blank" rel="noopener">Scrum/Agile Project Management</a></li>
+              <li><a href="https://coursera.org/share/15c56908fe6003ae4a99c5088babe1ec" target="_blank" rel="noopener">Planning the UX Design Process</a></li>
+              <li><a href="https://coursera.org/share/8380a9f1ebf202ed7c9e352e0c82a40d" target="_blank" rel="noopener">Build Wireframes and Low-Fidelity Prototypes</a></li>
+              <li><a href="https://coursera.org/share/8912c8180f453adbe39e8b1c917fb48c" target="_blank" rel="noopener">Build Dynamic User Interfaces (UI) for Websites</a></li>
+            </ul>
+            <p class="cv-certs-note">Credentials in LinkedIn</p>
+          </section>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <span class="footer-name">Portfolio</span> · <span class="footer-role">Yurii Fokin</span>
+        </div>
+        <div class="footer-right">
+          <a href="mailto:yuryuryury@icloud.com">Email</a>
+          <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
+          <span>Batumi, GE</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TEMPORARY: two directions to choose between. Once picked, the loser and
+       this control both go. -->
+  <div class="cv-viewswitch" id="viewSwitch">
+    <span class="cv-viewswitch-label">View</span>
+    <button type="button" data-view="site">1 · Site page</button>
+    <button type="button" data-view="a4">2 · A4 sheet</button>
+  </div>
+
+  <script>
+    // ——— PHONE ———
+    // Held as character codes, not digits: the raw HTML then carries nothing a
+    // phone-shaped regex can find, which is what stops the naive scrapers.
+    // To change the number: in any console run
+    //   YOUR_DIGITS.split('').map(function (c) { return c.charCodeAt(0); })
+    // and paste the result below. Never write the digits out here — a comment
+    // is served with the page like any other text.
+    (function () {
+      var codes = [51,56,48,54,56,57,54,54,51,49,54,56];
+      var groups = [3, 2, 3, 2, 2];   // 380 · 68 · 966 · 31 · 68
+      var digits = codes.map(function (c) { return String.fromCharCode(c); }).join('');
+      var out = [], at = 0;
+      groups.forEach(function (n) { out.push(digits.slice(at, at + n)); at += n; });
+      var el = document.getElementById('cvPhone');
+      if (!el) return;
+      el.textContent = '+' + out.join(' ');
+      el.href = 'tel:+' + digits;
+    })();
+
+    // ——— VIEW SWITCH + A4 FIT ———
+    // In A4 view the sheet keeps its real 210mm width and is scaled to the
+    // viewport, so the screen shows exactly what the printer would get.
+    (function () {
+      var body = document.body;
+      var buttons = [].slice.call(document.querySelectorAll('#viewSwitch button'));
+
+      // Measure 210mm in px once, rather than assuming 96dpi. Taken from a
+      // throwaway node so the sheet's own (possibly scaled) box can't feed back
+      // into the number that decides its scale.
+      var sheetPx = (function () {
+        var probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;visibility:hidden;width:210mm';
+        document.body.appendChild(probe);
+        var w = probe.offsetWidth;
+        document.body.removeChild(probe);
+        return w;
+      })();
+
+      function fit() {
+        if (body.dataset.view !== 'a4') {
+          document.documentElement.style.removeProperty('--cv-fit');
+          return;
+        }
+        // viewport, not the container: in a4 view the container is sized *from*
+        // the scale, so reading it here would be circular.
+        var avail = Math.min(document.documentElement.clientWidth, 1080) - 48;
+        var k = Math.min(1, avail / sheetPx);
+        document.documentElement.style.setProperty('--cv-fit', k.toFixed(4));
+      }
+
+      function setView(v) {
+        body.dataset.view = v;
+        buttons.forEach(function (b) { b.classList.toggle('is-active', b.dataset.view === v); });
+        try { localStorage.setItem('cvView', v); } catch (e) {}
+        fit();
+      }
+
+      // ?view=a4 wins over the remembered choice, so a view can be linked to.
+      var asked = (location.search.match(/[?&]view=(site|a4)/) || [])[1];
+      var saved = null;
+      try { saved = localStorage.getItem('cvView'); } catch (e) {}
+      setView(asked || (saved === 'a4' ? 'a4' : 'site'));
+
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () { setView(b.dataset.view); });
+      });
+      window.addEventListener('resize', fit);
+      window.addEventListener('load', fit);
+
+      var print = document.getElementById('printBtn');
+      if (print) print.addEventListener('click', function () { window.print(); });
+    })();
+  </script>
+</body>
+</html>
