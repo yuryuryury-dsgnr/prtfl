@@ -359,6 +359,40 @@
       transform: translateY(0);
     }
 
+    /* ——— FLOATING TOC PILL ———
+       Shared component across the case pages: a fixed pill naming the section
+       you are in, opening the full list on click. Shown at every width — it is
+       the table of contents, not a mobile stand-in for a sidebar. */
+    .toc-pill { display: flex; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; }
+    .toc-pill-trigger {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(26,26,26,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      color: #fff; border: none; border-radius: 100px;
+      padding: 10px 18px 10px 14px;
+      font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+    }
+    .toc-pill-num { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; }
+    .toc-pill-chevron { width: 14px; height: 14px; transition: transform 0.2s; opacity: 0.6; }
+    .toc-pill.open .toc-pill-chevron { transform: rotate(180deg); }
+    .toc-pill-menu {
+      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: rgba(26,26,26,0.96);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px; padding: 8px; min-width: 210px; display: none;
+      max-height: 70vh; overflow-y: auto;
+    }
+    .toc-pill.open .toc-pill-menu { display: block; }
+    .toc-pill-menu a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px; font-size: 13px;
+      color: rgba(255,255,255,0.6); transition: background 0.15s, color 0.15s;
+    }
+    .toc-pill-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
+    .toc-pill-menu .pill-num { font-size: 11px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
+    .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.5); }
+
     /* ——— RESPONSIVE ——— */
     @media (max-width: 768px) {
       .case-hero h1 { font-size: 36px; }
@@ -409,7 +443,7 @@
     </section>
 
     <!-- 01 — PERSONAS -->
-    <section class="case-section reveal">
+    <section id="section-01" class="case-section reveal">
       <p class="section-label">01 &mdash; Personas</p>
       <h2 class="section-heading">User groups &amp; needs</h2>
       <p class="section-text">Four persona groups were identified through stakeholder interviews and contextual research. Each represents a distinct relationship with data products in the organization.</p>
@@ -493,7 +527,7 @@
     </section>
 
     <!-- 02 — JTBD & USER SCENARIOS -->
-    <section class="case-section reveal">
+    <section id="section-02" class="case-section reveal">
       <p class="section-label">02 &mdash; JTBD &amp; User Scenarios</p>
       <h2 class="section-heading">What users are trying to accomplish</h2>
       <p class="section-text">Jobs To Be Done and user scenarios mapped the core motivations and interaction patterns across all persona groups.</p>
@@ -525,7 +559,7 @@
     </section>
 
     <!-- 03 — UX GOALS & PRINCIPLES -->
-    <section class="case-section reveal">
+    <section id="section-03" class="case-section reveal">
       <p class="section-label">03 &mdash; UX Goals &amp; Principles</p>
       <h2 class="section-heading">Design direction and guardrails</h2>
       <p class="section-text">Goals defined what to validate with users. Principles guided every design decision throughout the project.</p>
@@ -559,7 +593,7 @@
     </section>
 
     <!-- 04 — ROADMAP (NDA) -->
-    <section class="case-section reveal">
+    <section id="section-04" class="case-section reveal">
       <p class="section-label">04 &mdash; Roadmap</p>
       <h2 class="section-heading">Project phases</h2>
       <p class="section-text">A seven-phase roadmap structured the project from initial discovery through post-launch iteration.</p>
@@ -620,7 +654,7 @@
     </section>
 
     <!-- 05 — KPIs & BUSINESS GOALS (NDA) -->
-    <section class="case-section reveal">
+    <section id="section-05" class="case-section reveal">
       <p class="section-label">05 &mdash; KPIs &amp; Business Goals</p>
       <h2 class="section-heading">Measuring success</h2>
       <p class="section-text">KPIs were defined across efficiency, adoption, quality, and business impact to track the marketplace's performance.</p>
@@ -643,7 +677,7 @@
     </section>
 
     <!-- 06 — KEY DELIVERABLES (NDA) -->
-    <section class="case-section reveal">
+    <section id="section-06" class="case-section reveal">
       <p class="section-label">06 &mdash; Key Deliverables</p>
       <h2 class="section-heading">What was produced</h2>
       <p class="section-text">A comprehensive set of UX research and design artifacts delivered across all project phases.</p>
@@ -700,7 +734,7 @@
     </section>
 
     <!-- 07 — PHASE 2 EVOLUTION -->
-    <section class="case-section reveal">
+    <section id="section-07" class="case-section reveal">
       <p class="section-label">07 &mdash; Phase 2 Evolution</p>
       <h2 class="section-heading">From browsing to AI-powered discovery</h2>
       <p class="section-text">Phase 2 evolved the marketplace vision to incorporate trust signals, social knowledge, and AI-powered search.</p>
@@ -743,6 +777,23 @@
 
   </div>
 
+  <div class="toc-pill" id="tocPill">
+    <div class="toc-pill-menu" id="tocPillMenu">
+      <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Personas</a>
+      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> JTBD</a>
+      <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> UX Goals</a>
+      <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Roadmap</a>
+      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> KPIs</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Deliverables</a>
+      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Phase 2</a>
+    </div>
+    <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
+      <span class="toc-pill-num" id="tocPillNum">01</span>
+      <span id="tocPillLabel">Personas</span>
+      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -756,6 +807,60 @@
   </footer>
 
   <script>
+    // ——— TOC PILL: scroll spy + toggle ———
+    // Labels are read from the menu links, so renaming a section is one edit.
+    (function () {
+      var HEADER_OFFSET = 76;   // sticky header is 57px; the rest is breathing room
+      var pill = document.getElementById('tocPill');
+      if (!pill) return;
+      var trigger = document.getElementById('tocPillTrigger');
+      var num = document.getElementById('tocPillNum');
+      var label = document.getElementById('tocPillLabel');
+      var links = [].slice.call(pill.querySelectorAll('.toc-pill-menu a[data-section]'));
+      var entries = links.map(function (a) {
+        var n = a.querySelector('.pill-num');
+        return {
+          link: a,
+          el: document.getElementById(a.dataset.section),
+          num: n ? n.textContent.trim() : '',
+          text: a.textContent.replace(n ? n.textContent : '', '').trim()
+        };
+      }).filter(function (e) { return e.el; });
+      if (!entries.length) return;
+
+      function sync() {
+        var y = window.scrollY + 120, active = entries[0];
+        entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
+        entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
+        num.textContent = active.num;
+        label.textContent = active.text;
+      }
+      window.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+
+      function setOpen(on) {
+        pill.classList.toggle('open', on);
+        trigger.setAttribute('aria-expanded', on ? 'true' : 'false');
+      }
+      trigger.addEventListener('click', function () { setOpen(!pill.classList.contains('open')); });
+      links.forEach(function (a) {
+        a.addEventListener('click', function (ev) {
+          var el = document.getElementById(a.dataset.section);
+          if (el) {
+            // scrollTo rather than the hash, so the offset is explicit and the
+            // sticky header never covers the section head
+            ev.preventDefault();
+            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET, behavior: 'smooth' });
+            if (history.replaceState) history.replaceState(null, '', '#' + a.dataset.section);
+          }
+          setOpen(false);
+        });
+      });
+      document.addEventListener('click', function (e) { if (!pill.contains(e.target)) setOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    })();
+
     // Scroll reveal for sections
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {

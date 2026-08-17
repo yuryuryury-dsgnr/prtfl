@@ -41,51 +41,15 @@
       margin: 0 auto;
       padding: 0 24px;
       display: grid;
-      grid-template-columns: 1fr 200px;
-      gap: 64px;
+      grid-template-columns: 1fr;
       align-items: start;
     }
-    .page-main { min-width: 0; }
+    /* The sidebar is gone, but its measure is not: capping the column at the
+       width it had under the `1fr 200px` grid keeps every line length and every
+       bleed calculation on this page exactly where it was. */
+    .page-main { min-width: 0; max-width: 788px; }
 
     /* ——— STICKY TOC ——— */
-    .toc {
-      position: sticky;
-      top: 80px;
-      padding-top: 80px;
-    }
-    .toc-label {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #9A9A9A;
-      margin-bottom: 16px;
-    }
-    .toc-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .toc-item a {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      font-size: 13px;
-      color: #9A9A9A;
-      padding: 5px 0;
-      transition: color 0.2s;
-      line-height: 1.4;
-    }
-    .toc-item a:hover { color: #1A1A1A; }
-    .toc-item.active a { color: #1A1A1A; font-weight: 500; }
-    .toc-item .toc-num {
-      font-size: 11px;
-      color: #C0BDB8;
-      flex-shrink: 0;
-      transition: color 0.2s;
-    }
-    .toc-item.active .toc-num { color: #9A9A9A; }
 
     /* ——— DISABLED ACCORDION (NDA, no content) ——— */
     .accordion-row-disabled {
@@ -1024,8 +988,6 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { justify-content: center; }
       /* Hide desktop sidebar TOC on mobile */
-      .page-layout { grid-template-columns: 1fr; gap: 0; }
-      .toc { display: none; }
       .problem-grid { grid-template-columns: 1fr; }
       /* Round 1 mobile fixes */
       .persona-section-grid { grid-template-columns: 1fr; }
@@ -1103,9 +1065,9 @@
       .persona-scroller { gap: 16px; }
     }
 
-    /* ——— MOBILE FLOATING TOC PILL ——— */
+    /* ——— FLOATING TOC PILL — the page's whole table of contents ——— */
     .toc-pill {
-      display: none;
+      display: flex;
       position: fixed;
       bottom: 24px;
       left: 50%;
@@ -1172,9 +1134,6 @@
       flex-shrink: 0;
     }
     .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.5); }
-    @media (max-width: 768px) {
-      .toc-pill { display: flex; }
-    }
 
     /* ——————————————————————————————————————————————————
        FROSTED SYSTEM LAYERS — Final Mockups Composition
@@ -1836,22 +1795,6 @@
 
     </div><!-- end .page-main (top grid) -->
 
-    <!-- STICKY TOC (top grid) -->
-    <aside class="toc">
-      <p class="toc-label">Contents</p>
-      <ul class="toc-list">
-        <li class="toc-item" data-section="section-01"><a href="#section-01"><span class="toc-num">01</span> Problem</a></li>
-        <li class="toc-item" data-section="section-02"><a href="#section-02"><span class="toc-num">02</span> Process</a></li>
-        <li class="toc-item" data-section="section-03"><a href="#section-03"><span class="toc-num">03</span> UX Strategy</a></li>
-        <li class="toc-item" data-section="section-04"><a href="#section-04"><span class="toc-num">04</span> Research</a></li>
-        <li class="toc-item" data-section="section-05"><a href="#section-05"><span class="toc-num">05</span> Prototype</a></li>
-        <li class="toc-item" data-section="section-06"><a href="#section-06"><span class="toc-num">06</span> Validation</a></li>
-        <li class="toc-item" data-section="section-07"><a href="#section-07"><span class="toc-num">07</span> Hand-off</a></li>
-        <li class="toc-item" data-section="section-08"><a href="#section-08"><span class="toc-num">08</span> Post-launch</a></li>
-        <li class="toc-item" data-section="section-09"><a href="#section-09"><span class="toc-num">09</span> Outcome</a></li>
-        <li class="toc-item" data-section="section-10"><a href="#section-10"><span class="toc-num">10</span> Reflection</a></li>
-      </ul>
-    </aside>
 
   </div><!-- end .page-layout (top grid) -->
 
@@ -2367,22 +2310,6 @@
 
     </div><!-- end .page-main -->
 
-    <!-- STICKY TOC -->
-    <aside class="toc">
-      <p class="toc-label">Contents</p>
-      <ul class="toc-list">
-        <li class="toc-item" data-section="section-01"><a href="#section-01"><span class="toc-num">01</span> Problem</a></li>
-        <li class="toc-item" data-section="section-02"><a href="#section-02"><span class="toc-num">02</span> Process</a></li>
-        <li class="toc-item" data-section="section-03"><a href="#section-03"><span class="toc-num">03</span> UX Strategy</a></li>
-        <li class="toc-item" data-section="section-04"><a href="#section-04"><span class="toc-num">04</span> Research</a></li>
-        <li class="toc-item" data-section="section-05"><a href="#section-05"><span class="toc-num">05</span> Prototype</a></li>
-        <li class="toc-item" data-section="section-06"><a href="#section-06"><span class="toc-num">06</span> Validation</a></li>
-        <li class="toc-item" data-section="section-07"><a href="#section-07"><span class="toc-num">07</span> Hand-off</a></li>
-        <li class="toc-item" data-section="section-08"><a href="#section-08"><span class="toc-num">08</span> Post-launch</a></li>
-        <li class="toc-item" data-section="section-09"><a href="#section-09"><span class="toc-num">09</span> Outcome</a></li>
-        <li class="toc-item" data-section="section-10"><a href="#section-10"><span class="toc-num">10</span> Reflection</a></li>
-      </ul>
-    </aside>
 
   </div><!-- end .page-layout -->
 
@@ -2493,56 +2420,58 @@
       }
     });
 
-    // ——— TOC SCROLL SPY ———
-    const tocItems = document.querySelectorAll('.toc-item[data-section]');
-    const pillLinks = document.querySelectorAll('.toc-pill-menu a[data-section]');
-    const sections = Array.from(tocItems).map(item =>
-      document.getElementById(item.dataset.section)
-    ).filter(Boolean);
+    // ——— TOC PILL: scroll spy + toggle ———
+    // The sidebar is gone, so the section list comes from the pill's own links,
+    // and their text is the label — one place to edit when a section is renamed.
+    (function () {
+      var HEADER_OFFSET = 76;   // sticky header is 57px; the rest is breathing room
+      var pill = document.getElementById('tocPill');
+      if (!pill) return;
+      var trigger = document.getElementById('tocPillTrigger');
+      var num = document.getElementById('tocPillNum');
+      var label = document.getElementById('tocPillLabel');
+      var links = [].slice.call(pill.querySelectorAll('.toc-pill-menu a[data-section]'));
+      var entries = links.map(function (a) {
+        var n = a.querySelector('.pill-num');
+        return {
+          link: a,
+          el: document.getElementById(a.dataset.section),
+          num: n ? n.textContent.trim() : '',
+          text: a.textContent.replace(n ? n.textContent : '', '').trim()
+        };
+      }).filter(function (e) { return e.el; });
+      if (!entries.length) return;
 
-    const sectionLabels = {
-      'section-01': ['01', 'Problem'],
-      'section-02': ['02', 'Process'],
-      'section-03': ['03', 'UX Strategy'],
-      'section-04': ['04', 'Research'],
-      'section-05': ['05', 'Prototype'],
-      'section-06': ['06', 'Validation'],
-      'section-07': ['07', 'Hand-off'],
-      'section-08': ['08', 'Post-launch'],
-      'section-09': ['09', 'Outcome'],
-      'section-10': ['10', 'Reflection'],
-    };
-
-    const pillNum = document.getElementById('tocPillNum');
-    const pillLabel = document.getElementById('tocPillLabel');
-
-    const onScroll = () => {
-      const scrollY = window.scrollY + 120;
-      let active = sections[0];
-      for (const section of sections) {
-        if (section.offsetTop <= scrollY) active = section;
+      function sync() {
+        var y = window.scrollY + 120, active = entries[0];
+        entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
+        entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
+        num.textContent = active.num;
+        label.textContent = active.text;
       }
-      const activeId = active?.id;
-      tocItems.forEach(item => item.classList.toggle('active', item.dataset.section === activeId));
-      pillLinks.forEach(a => a.classList.toggle('active', a.dataset.section === activeId));
-      if (activeId && sectionLabels[activeId]) {
-        pillNum.textContent = sectionLabels[activeId][0];
-        pillLabel.textContent = sectionLabels[activeId][1];
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+      window.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
 
-    // ——— PILL TOGGLE ———
-    const pill = document.getElementById('tocPill');
-    const pillTrigger = document.getElementById('tocPillTrigger');
-    pillTrigger.addEventListener('click', () => pill.classList.toggle('open'));
-    pillLinks.forEach(a => {
-      a.addEventListener('click', () => pill.classList.remove('open'));
-    });
-    document.addEventListener('click', e => {
-      if (!pill.contains(e.target)) pill.classList.remove('open');
-    });
+      function setOpen(on) {
+        pill.classList.toggle('open', on);
+        trigger.setAttribute('aria-expanded', on ? 'true' : 'false');
+      }
+      trigger.addEventListener('click', function () { setOpen(!pill.classList.contains('open')); });
+      links.forEach(function (a) {
+        a.addEventListener('click', function (ev) {
+          var el = document.getElementById(a.dataset.section);
+          if (el) {
+            ev.preventDefault();
+            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET, behavior: 'smooth' });
+            if (history.replaceState) history.replaceState(null, '', '#' + a.dataset.section);
+          }
+          setOpen(false);
+        });
+      });
+      document.addEventListener('click', function (e) { if (!pill.contains(e.target)) setOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    })();
 
     // ——— PROMPT TABS ———
     (function() {

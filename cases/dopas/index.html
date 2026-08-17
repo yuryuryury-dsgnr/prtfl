@@ -193,6 +193,40 @@
     }
     .footer-right a:hover::after { width: 100%; }
 
+    /* ——— FLOATING TOC PILL ———
+       Shared component across the case pages: a fixed pill naming the section
+       you are in, opening the full list on click. Shown at every width — it is
+       the table of contents, not a mobile stand-in for a sidebar. */
+    .toc-pill { display: flex; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; }
+    .toc-pill-trigger {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(26,26,26,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      color: #fff; border: none; border-radius: 100px;
+      padding: 10px 18px 10px 14px;
+      font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+    }
+    .toc-pill-num { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; }
+    .toc-pill-chevron { width: 14px; height: 14px; transition: transform 0.2s; opacity: 0.6; }
+    .toc-pill.open .toc-pill-chevron { transform: rotate(180deg); }
+    .toc-pill-menu {
+      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: rgba(26,26,26,0.96);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-radius: 16px; padding: 8px; min-width: 210px; display: none;
+      max-height: 70vh; overflow-y: auto;
+    }
+    .toc-pill.open .toc-pill-menu { display: block; }
+    .toc-pill-menu a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px; font-size: 13px;
+      color: rgba(255,255,255,0.6); transition: background 0.15s, color 0.15s;
+    }
+    .toc-pill-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
+    .toc-pill-menu .pill-num { font-size: 11px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
+    .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.5); }
+
     /* ——— RESPONSIVE ——— */
     /* Collapse the hero bleed before the viewport gets narrower than the
        gutters it borrows: below this the -80px pull runs past the screen
@@ -249,7 +283,7 @@
     </section>
 
     <!-- 01 — PROBLEM & CONTEXT -->
-    <section class="case-section">
+    <section id="section-01" class="case-section">
       <p class="section-kicker"><span class="section-num">01</span> &middot; No online option existed</p>
       <h2 class="section-heading">Problem & Context</h2>
       <p class="section-text">Before dopas.dp.ua, bus tickets in Dnipro were sold exclusively offline — at ticket offices and directly from drivers. For a city with diverse ridership spanning all age groups, this meant queues, cash dependency, and no record of purchase.</p>
@@ -257,7 +291,7 @@
     </section>
 
     <!-- 02 — PROCESS -->
-    <section class="case-section">
+    <section id="section-02" class="case-section">
       <p class="section-kicker"><span class="section-num">02</span> &middot; From research to handoff</p>
       <h2 class="section-heading">Process</h2>
       <div class="timeline">
@@ -301,7 +335,7 @@
     </section>
 
     <!-- 03 — MARKET ANALYSIS -->
-    <section class="case-section">
+    <section id="section-03" class="case-section">
       <p class="section-kicker"><span class="section-num">03</span> &middot; What the competition looked like</p>
       <h2 class="section-heading">Artifacts: Market Analysis</h2>
       <div class="card-grid-3">
@@ -339,7 +373,7 @@
     </section>
 
     <!-- 04 — USER FLOW -->
-    <section class="case-section">
+    <section id="section-04" class="case-section">
       <p class="section-kicker"><span class="section-num">04</span> &middot; End-to-end booking flow</p>
       <h2 class="section-heading">Artifacts: User Flow</h2>
       <div class="flow-container">
@@ -425,7 +459,7 @@
     </section>
 
     <!-- 05 — USABILITY FINDINGS -->
-    <section class="case-section">
+    <section id="section-05" class="case-section">
       <p class="section-kicker"><span class="section-num">05</span> &middot; What testing revealed</p>
       <h2 class="section-heading">Artifacts: Usability Findings</h2>
       <div class="card-grid-2">
@@ -457,7 +491,7 @@
     </section>
 
     <!-- 06 — WIREFRAMES -->
-    <section class="case-section">
+    <section id="section-06" class="case-section">
       <p class="section-kicker"><span class="section-num">06</span> &middot; Defining the structure</p>
       <h2 class="section-heading">Wireframes</h2>
       <p class="section-text">Lo-fi wireframes defined the core structure before any visual design decisions were made.</p>
@@ -486,7 +520,7 @@
     </section>
 
     <!-- 07 — MOCKUPS: BEFORE / AFTER -->
-    <section class="case-section">
+    <section id="section-07" class="case-section">
       <p class="section-kicker"><span class="section-num">07</span> &middot; What changed after testing</p>
       <h2 class="section-heading">Mockups: Before / After</h2>
       <p class="section-text">High-fidelity screens reflecting changes made after two rounds of usability testing.</p>
@@ -575,7 +609,7 @@
     </section>
 
     <!-- 08 — OUTCOME -->
-    <section class="case-section">
+    <section id="section-08" class="case-section">
       <p class="section-kicker"><span class="section-num">08</span> &middot; Live and generating revenue</p>
       <h2 class="section-heading">Outcome</h2>
       <p class="outcome-text">Launched in late autumn 2020. Users responded positively — the platform filled a real gap in the local market where no online alternative existed before.</p>
@@ -586,7 +620,7 @@
     </section>
 
     <!-- 09 — REFLECTION -->
-    <section class="case-section">
+    <section id="section-09" class="case-section">
       <p class="section-kicker"><span class="section-num">09</span> &middot; Looking back</p>
       <h2 class="section-heading">Reflection</h2>
       <div class="reflection-grid">
@@ -608,6 +642,25 @@
     </a>
   </div>
 
+  <div class="toc-pill" id="tocPill">
+    <div class="toc-pill-menu" id="tocPillMenu">
+      <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
+      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Process</a>
+      <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> Market</a>
+      <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> User flow</a>
+      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Usability</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Wireframes</a>
+      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Before / After</a>
+      <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Outcome</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Reflection</a>
+    </div>
+    <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
+      <span class="toc-pill-num" id="tocPillNum">01</span>
+      <span id="tocPillLabel">Problem</span>
+      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -620,5 +673,61 @@
     </div>
   </footer>
 
+  <script>
+    // ——— TOC PILL: scroll spy + toggle ———
+    // Labels are read from the menu links, so renaming a section is one edit.
+    (function () {
+      var HEADER_OFFSET = 76;   // sticky header is 57px; the rest is breathing room
+      var pill = document.getElementById('tocPill');
+      if (!pill) return;
+      var trigger = document.getElementById('tocPillTrigger');
+      var num = document.getElementById('tocPillNum');
+      var label = document.getElementById('tocPillLabel');
+      var links = [].slice.call(pill.querySelectorAll('.toc-pill-menu a[data-section]'));
+      var entries = links.map(function (a) {
+        var n = a.querySelector('.pill-num');
+        return {
+          link: a,
+          el: document.getElementById(a.dataset.section),
+          num: n ? n.textContent.trim() : '',
+          text: a.textContent.replace(n ? n.textContent : '', '').trim()
+        };
+      }).filter(function (e) { return e.el; });
+      if (!entries.length) return;
+
+      function sync() {
+        var y = window.scrollY + 120, active = entries[0];
+        entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
+        entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
+        num.textContent = active.num;
+        label.textContent = active.text;
+      }
+      window.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+
+      function setOpen(on) {
+        pill.classList.toggle('open', on);
+        trigger.setAttribute('aria-expanded', on ? 'true' : 'false');
+      }
+      trigger.addEventListener('click', function () { setOpen(!pill.classList.contains('open')); });
+      links.forEach(function (a) {
+        a.addEventListener('click', function (ev) {
+          var el = document.getElementById(a.dataset.section);
+          if (el) {
+            // scrollTo rather than the hash, so the offset is explicit and the
+            // sticky header never covers the section head
+            ev.preventDefault();
+            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET, behavior: 'smooth' });
+            if (history.replaceState) history.replaceState(null, '', '#' + a.dataset.section);
+          }
+          setOpen(false);
+        });
+      });
+      document.addEventListener('click', function (e) { if (!pill.contains(e.target)) setOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    })();
+
+  </script>
 </body>
 </html>
