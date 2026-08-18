@@ -616,45 +616,13 @@
     .rb-key-mark--end { background: var(--rb-end-bg); border: 1px solid var(--rb-end-bd); border-radius: 100px; }
     .rb-key-mark--outside { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
 
-    /* §06 — technical architecture. Four small blocks: two price lanes, the
-       two-leg division, the threshold→push chain, and the stack. All chip /
-       flex based so everything wraps instead of ever widening the page. */
+    /* §04 — what the screens run on: one paragraph naming the hard part, and a
+       flat row of chips. Chip/flex based, so the row wraps instead of ever
+       widening the page. */
     .rb-tech-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A; margin: 32px 0 10px; }
-    .rb-tech-lanes { display: flex; flex-direction: column; gap: 10px; max-width: 620px; }
-    .rb-tech-lane {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 14px 18px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .rb-tech-lane-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9A9A9A; }
-    .rb-tech-hops { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-    .rb-tech-hop { font-size: 13px; font-weight: 500; color: #1A1A1A; background: #F0EFEC; border-radius: 8px; padding: 6px 12px; line-height: 1; }
-    .rb-tech-sep { color: #C0BDB8; font-size: 14px; line-height: 1; flex-shrink: 0; }
-    .rb-tech-why { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 14px; max-width: 640px; }
-
-    /* the two-leg division, set as a small equation */
-    .rb-tech-legs {
-      display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 18px; max-width: 620px;
-    }
-    .rb-tech-leg { font-family: 'Menlo','Monaco','Courier New',monospace; font-size: 12px; color: #1A1A1A; background: #F0EFEC; border-radius: 6px; padding: 7px 10px; line-height: 1; }
-    .rb-tech-leg--out { background: rgba(59,130,246,0.08); color: #1A1A1A; }
-    .rb-tech-op { font-size: 14px; color: #9A9A9A; line-height: 1; flex-shrink: 0; }
-
-    .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .rb-tech-challenge { font-size: 14px; color: #6B6B6B; line-height: 1.7; max-width: 640px; }
+    .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
     .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
-    /* a source the worker CANNOT use — the blocked edge is the evidence, so it
-       is drawn rather than described: struck through, dashed, with the code */
-    .rb-tech-hop--blocked {
-      background: transparent; border: 1px dashed var(--rb-neutral-bd);
-      color: #9A9A9A; text-decoration: line-through; font-weight: 400;
-      display: inline-flex; align-items: center; gap: 7px;
-    }
-    .rb-tech-hop--blocked .rb-tech-code { text-decoration: none; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: #6B6B6B; background: #F0EFEC; border-radius: 4px; padding: 2px 6px; }
-    .rb-tech-origin { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
-    /* the stack, grouped by layer instead of one flat chip soup */
 
     /* ——— FLOATING TOC PILL ———
        The halliburton case's pill, shown at every width here: it names the
@@ -1388,95 +1356,11 @@
       </div>
     
 
-      <h3 class="subsection-heading">The system behind them</h3>
-      <p class="section-text">Three problems behind the interface shaped the architecture.</p>
-
-      <p class="rb-tech-label">Prices &mdash; two independent paths</p>
-      <div class="rb-tech-lanes">
-        <div class="rb-tech-lane">
-          <span class="rb-tech-lane-label"><span class="rb-tech-origin">Lane A</span> &nbsp;From the phone &mdash; residential IP</span>
-          <div class="rb-tech-hops">
-            <span class="rb-tech-hop">Binance</span>
-            <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
-            <span class="rb-tech-hop">CoinGecko</span>
-          </div>
-        </div>
-        <div class="rb-tech-lane">
-          <span class="rb-tech-lane-label"><span class="rb-tech-origin">Lane B</span> &nbsp;From the worker &mdash; data-centre IP</span>
-          <div class="rb-tech-hops">
-            <span class="rb-tech-hop rb-tech-hop--blocked">Binance<span class="rb-tech-code">403</span></span>
-            <span class="rb-tech-hop rb-tech-hop--blocked">CoinGecko<span class="rb-tech-code">rate-limited</span></span>
-          </div>
-          <div class="rb-tech-hops">
-            <span class="rb-tech-hop">OKX</span>
-            <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
-            <span class="rb-tech-hop">Coinbase</span>
-            <span class="rb-tech-sep" aria-hidden="true">&rarr;</span>
-            <span class="rb-tech-hop">Coinpaprika</span>
-          </div>
-        </div>
-      </div>
-      <p class="rb-tech-why">Binance answers a phone but 403s a data centre.</p>
-
-      <p class="rb-tech-label">ALT/ALT &mdash; assembled, not fetched</p>
-      <div class="rb-tech-legs" role="group" aria-label="Base over USD divided by quote over USD equals base over quote">
-        <span class="rb-tech-leg">BASE / USD</span>
-        <span class="rb-tech-op" aria-hidden="true">&divide;</span>
-        <span class="rb-tech-leg">QUOTE / USD</span>
-        <span class="rb-tech-op" aria-hidden="true">=</span>
-        <span class="rb-tech-leg rb-tech-leg--out">BASE / QUOTE</span>
-      </div>
-      <p class="rb-tech-why">No ALT/ALT feed exists &mdash; both legs priced in USD, then divided.</p>
-
-      <p class="rb-tech-label">Threshold &rarr; push</p>
-      <div class="rb-stage">
-        <div class="rb-flow" tabindex="0" role="group" aria-label="From the scheduled run to a delivered push">
-          <div class="rb-track">
-          <div class="rb-step rb-step--system">
-            <span class="rb-step-kind">System</span>
-            <span class="rb-step-title">Scheduled run</span>
-            <span class="rb-step-line">Every minute, on the worker</span>
-          </div>
-          <span class="rb-link" aria-hidden="true"></span>
-          <div class="rb-step rb-step--system">
-            <span class="rb-step-kind">System</span>
-            <span class="rb-step-title">Price both legs</span>
-            <span class="rb-step-line">Derive the ratio</span>
-          </div>
-          <div class="rb-decwrap">
-            <div class="rb-dec"><div class="rb-dec-in">
-              <span class="rb-step-kind">Decision</span>
-              <span class="rb-step-title">Crossed, not already sent?</span>
-            </div></div>
-          </div>
-          <div class="rb-branches">
-            <div class="rb-branch">
-              <span class="rb-branch-label">No</span>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Stay silent</span>
-                <span class="rb-step-line">An alert disarms itself once fired</span>
-              </div>
-            </div>
-            <div class="rb-branch">
-              <span class="rb-branch-label">Yes</span>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Push &rarr; phone</span>
-                <span class="rb-step-line">Delivered with the app closed</span>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
-      </div>
-      <p class="rb-tech-why">Background refresh is unreliable, so the schedule lives on the server.</p>
+      <h3 class="subsection-heading">The backend behind them</h3>
 
       <p class="rb-tech-label">Biggest challenge</p>
       <p class="rb-tech-challenge">The alert is the product, and an alert has to arrive with the app closed &mdash; that one requirement pulled a backend behind a one-person design project. Price sources that answer a phone refuse a data centre, iOS background refresh cannot be trusted, and an alert that has fired must not fire again: every one of those is a server problem, not a screen.</p>
 
-      <p class="rb-tech-label">Stack</p>
       <div class="rb-tech-chips">
         <span class="rb-tech-chip">Cloudflare Workers</span>
         <span class="rb-tech-chip">Cron Triggers</span>
@@ -1488,7 +1372,6 @@
         <span class="rb-tech-chip">Pages</span>
         <span class="rb-tech-chip">StoreKit 2</span>
       </div>
-      <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
     
     </section>
 
