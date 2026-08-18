@@ -449,6 +449,25 @@
       padding: 3px 8px; border-radius: 4px;
     }
     /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
+    /* §08 — the live listing, sat between the claims and the numbers so the
+       section reads assertion → evidence → summary. Borrows the roadmap's
+       bleed at wide widths; the aspect-ratio box holds the slot while the
+       image loads so the stats below never jump. */
+    .rb-shot {
+      margin-top: 28px; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.08); background: #EEEDEA;
+      position: relative; aspect-ratio: 3360 / 1786;
+    }
+    .rb-shot img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .rb-shot-placeholder {
+      position: absolute; inset: 0; align-items: center; justify-content: center;
+      color: #9A9A9A; font-size: 13px; text-align: center; padding: 0 16px;
+    }
+    .rb-shot-caption { font-size: 13px; color: #6B6B6B; line-height: 1.5; margin-top: 12px; max-width: 640px; }
+    @media (min-width: 1080px) {
+      .rb-shot { width: calc(100% + 200px); margin-left: -100px; }
+    }
+
     .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
     .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
     .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
@@ -1532,6 +1551,13 @@
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend and delivery in the same loop. What it settles into in people's routines is the next thing to measure.</p>
       <p class="section-text">The interface ships in 31 languages, so the audience was never scoped to one market.</p>
+
+      <figure class="rb-shot">
+        <img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle &ldquo;Create your own pairs&rdquo;, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="rb-shot-placeholder" style="display:none">App Store listing &mdash; image coming soon</span>
+      </figure>
+      <p class="rb-shot-caption">The product page as it stands in the store &mdash; the same pair-first pitch, from the subtitle down to the cards.</p>
+
       <div class="rb-stats-row">
         <div class="rb-stat-item">
           <span class="rb-stat-item-value">Live</span>
