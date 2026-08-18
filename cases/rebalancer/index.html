@@ -939,7 +939,8 @@
 
       <div class="rb-tabgroup">
         <div class="rb-tabs" role="tablist" aria-label="User flows" tabindex="0">
-          <button class="rb-tab is-active" data-rb-tab="pair" role="tab" aria-selected="true">Create pair</button>
+          <button class="rb-tab is-active" data-rb-tab="discovery" role="tab" aria-selected="true">Discovery</button>
+          <button class="rb-tab" data-rb-tab="pair" role="tab" aria-selected="false">Create pair</button>
           <button class="rb-tab" data-rb-tab="alert" role="tab" aria-selected="false">Set alert</button>
           <button class="rb-tab" data-rb-tab="sim" role="tab" aria-selected="false">Simulate</button>
           <button class="rb-tab" data-rb-tab="hold" role="tab" aria-selected="false">Holdings</button>
@@ -955,7 +956,127 @@
           <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--outside"></span>Sheet / off-app</span>
         </div>
 
-        <div class="rb-tabpanel is-active" data-rb-panel="pair" role="tabpanel">
+        <div class="rb-tabpanel is-active" data-rb-panel="discovery" role="tabpanel">
+          <div class="rb-flow" tabindex="0" role="group" aria-label="Discovery, part one: from the store listing to first launch">
+            <div class="rb-track">
+              <div class="rb-step rb-step--outside">
+                <span class="rb-step-kind">Off-app</span>
+                <span class="rb-step-title">App Store listing</span>
+                <span class="rb-step-line">Five screenshots and a description &mdash; no trial, no preview</span>
+              </div>
+              <span class="rb-link" aria-hidden="true"></span>
+              <div class="rb-decwrap">
+                <div class="rb-dec"><div class="rb-dec-in">
+                  <span class="rb-step-kind">Decision</span>
+                  <span class="rb-step-title">Does this solve my problem?</span>
+                </div></div>
+              </div>
+            <div class="rb-branches">
+              <div class="rb-branch">
+                <span class="rb-branch-label">No</span>
+                <div class="rb-step rb-step--end">
+                  <span class="rb-step-kind">End</span>
+                  <span class="rb-step-title">Never installed</span>
+                  <span class="rb-step-line">The listing is the entire pitch</span>
+                </div>
+              </div>
+              <div class="rb-branch">
+                <span class="rb-branch-label">Yes</span>
+                <div class="rb-step rb-step--action">
+                  <span class="rb-step-kind">Action</span>
+                  <span class="rb-step-title">Install</span>
+                </div>
+                <div class="rb-bound"><span class="rb-bound-label">Inside the app</span></div>
+                <div class="rb-step rb-step--sheet">
+                  <span class="rb-step-kind">Sheet</span>
+                  <span class="rb-step-title">Disclaimer</span>
+                  <span class="rb-step-line">Blocks the app until acknowledged</span>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="rb-flow" tabindex="0" role="group" aria-label="Discovery, part two: the first pair">
+            <div class="rb-track">
+              <div class="rb-step rb-step--screen">
+                <span class="rb-step-kind">Screen</span>
+                <span class="rb-step-title">Empty watchlist</span>
+                <span class="rb-step-line">One line, one button, no tour</span>
+              </div>
+              <span class="rb-link" aria-hidden="true"></span>
+              <div class="rb-decwrap">
+                <div class="rb-dec"><div class="rb-dec-in">
+                  <span class="rb-step-kind">Decision</span>
+                  <span class="rb-step-title">Obvious what to do here?</span>
+                </div></div>
+              </div>
+            <div class="rb-branches">
+              <div class="rb-branch">
+                <span class="rb-branch-label">No</span>
+                <div class="rb-step rb-step--end">
+                  <span class="rb-step-kind">End</span>
+                  <span class="rb-step-title">Leaves with nothing</span>
+                  <span class="rb-step-line">Nothing on screen explains a ratio</span>
+                </div>
+              </div>
+              <div class="rb-branch">
+                <span class="rb-branch-label">Yes</span>
+                <div class="rb-step rb-step--action">
+                  <span class="rb-step-kind">Action</span>
+                  <span class="rb-step-title">Tap Add pair</span>
+                </div>
+                <span class="rb-link" aria-hidden="true"></span>
+                <div class="rb-step rb-step--system">
+                  <span class="rb-step-kind">System</span>
+                  <span class="rb-step-title">A live pair appears</span>
+                  <span class="rb-step-line">Seeded and already tracking, not a blank form</span>
+                </div>
+                <span class="rb-link" aria-hidden="true"></span>
+                <div class="rb-step rb-step--action">
+                  <span class="rb-step-kind">Action</span>
+                  <span class="rb-step-title">Swap in your own coins</span>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="rb-flow" tabindex="0" role="group" aria-label="Discovery, part three: keep it or delete it">
+            <div class="rb-track">
+              <div class="rb-step rb-step--screen">
+                <span class="rb-step-kind">Screen</span>
+                <span class="rb-step-title">Your pair, tracking</span>
+                <span class="rb-step-line">The first ratio that means something to you</span>
+              </div>
+              <span class="rb-link" aria-hidden="true"></span>
+              <div class="rb-decwrap">
+                <div class="rb-dec"><div class="rb-dec-in">
+                  <span class="rb-step-kind">Decision</span>
+                  <span class="rb-step-title">Worth keeping?</span>
+                </div></div>
+              </div>
+            <div class="rb-branches">
+              <div class="rb-branch">
+                <span class="rb-branch-label">No</span>
+                <div class="rb-step rb-step--end">
+                  <span class="rb-step-kind">End</span>
+                  <span class="rb-step-title">Deleted</span>
+                  <span class="rb-step-line">Straight back to the empty state</span>
+                </div>
+              </div>
+              <div class="rb-branch">
+                <span class="rb-branch-label">Yes</span>
+                <div class="rb-step rb-step--end">
+                  <span class="rb-step-kind">End</span>
+                  <span class="rb-step-title">Kept</span>
+                  <span class="rb-step-line">An alert on it is the next thing to do</span>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          <p class="rb-note">There is no onboarding, and that is a decision rather than a gap: no tour, no welcome screens, no coach marks. Tapping the one button produces a pair that is already tracking rather than a blank form, so the app is learned by using it. The disclaimer is the only thing standing in the way, and it is there for App Review, not for the reader. What I would watch is the middle branch &mdash; nothing on that empty screen explains what a ratio is, so the five store screenshots are carrying weight that a first screen probably should.</p>
+        </div>
+        <div class="rb-tabpanel" data-rb-panel="pair" role="tabpanel">
           <div class="rb-flow" tabindex="0" role="group" aria-label="Create a custom pair, read left to right">
             <div class="rb-track">
             <div class="rb-step rb-step--action">
