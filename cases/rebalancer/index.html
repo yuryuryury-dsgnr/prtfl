@@ -171,9 +171,13 @@
     .loc-stat-label { font-size: 16px; color: #6B6B6B; }
     .loc-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; max-width: 640px; }
     .loc-rule { font-size: 12px; color: #9A9A9A; line-height: 1.6; margin-top: 16px; max-width: 640px; }
-    /* sized down and nudged off the baseline: at pill size the emoji sits
-       high and reads bigger than the label next to it */
-    .loc-flag { font-size: 11px; line-height: 1; margin-right: 6px; position: relative; top: 0.5px; }
+    /* a country code rather than a flag emoji: Windows renders regional
+       indicators as the bare letter pair anyway, so this is what a good
+       share of readers would have seen — set deliberately instead */
+    .loc-code {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+      color: #9A9A9A; margin-right: 7px;
+    }
     .loc-pill {
       font-size: 13px; color: #1A1A1A; white-space: nowrap;
       background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
@@ -780,7 +784,7 @@
           <div class="timeline-step">
             <p class="timeline-number">03</p>
             <p class="timeline-title">Testing and iteration</p>
-            <p class="timeline-desc">Two rounds through TestFlight, then reworking what testers actually stumbled on rather than what I felt like polishing.</p>
+            <p class="timeline-desc">Two rounds through TestFlight, then reworking what testers actually stumbled on rather than what looked worth polishing.</p>
             <span class="timeline-tag">Four flows &middot; four changes</span>
           </div>
           <div class="timeline-step">
@@ -1095,7 +1099,7 @@
             </div>
               <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
             </div>
-          <p class="rb-note">There is no onboarding, and that is a decision rather than a gap: no tour, no welcome screens, no coach marks. Tapping the one button produces a pair that is already tracking rather than a blank form, so the app is learned by using it. The one dialog on the way in is a disclaimer with a single acknowledge button, and it is there for App Review rather than for the reader. What I would watch is the middle branch &mdash; nothing on that empty screen explains what a ratio is, so the five store screenshots are carrying weight that a first screen probably should.</p>
+          <p class="rb-note">There is no onboarding, and that is a decision rather than a gap: no tour, no welcome screens, no coach marks. Tapping the one button produces a pair that is already tracking rather than a blank form, so the app is learned by using it. The one dialog on the way in is a disclaimer with a single acknowledge button, and it is there for App Review rather than for the reader. The store screenshots do the explaining before the app opens, which is what lets the first screen stay this quiet. Moving some of that inside is the next thing I would test.</p>
         </div>
         <div class="rb-tabpanel" data-rb-panel="pair" role="tabpanel">
           <div class="rb-stage">
@@ -1459,39 +1463,39 @@
         <span class="loc-stat-number">31</span>
         <span class="loc-stat-label">languages in the app</span>
       </div>
-      <p class="loc-rule">A flag where the language belongs to one market. English, Espa&ntilde;ol, Fran&ccedil;ais, Русский and both Chinese scripts are spoken across several, so those carry the name alone.</p>
+      <p class="loc-rule">A country code where the language belongs to one market. English, Espa&ntilde;ol, Fran&ccedil;ais, Русский and both Chinese scripts are spoken across several, so those carry the name alone.</p>
       <div class="loc-pills">
         <span class="loc-pill loc-pill--wide">English</span>
         <span class="loc-pill loc-pill--wide">Espa&ntilde;ol</span>
         <span class="loc-pill loc-pill--wide">Fran&ccedil;ais</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇩🇪</span>Deutsch</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇮🇹</span>Italiano</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇳🇱</span>Nederlands</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇧🇷</span>Portugu&ecirc;s (BR)</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇵🇹</span>Portugu&ecirc;s (PT)</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">DE</span>Deutsch</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">IT</span>Italiano</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">NL</span>Nederlands</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">BR</span>Portugu&ecirc;s (BR)</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">PT</span>Portugu&ecirc;s (PT)</span>
         <span class="loc-pill loc-pill--wide">Русский</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇺🇦</span>Українська</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇵🇱</span>Polski</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇨🇿</span>Čeština</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇸🇰</span>Slovenčina</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇭🇷</span>Hrvatski</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇭🇺</span>Magyar</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇷🇴</span>Rom&acirc;n&#259;</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇧🇬</span>Български</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇬🇷</span>Ελληνικά</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇹🇷</span>T&uuml;rk&ccedil;e</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇫🇮</span>Suomi</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇸🇪</span>Svenska</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇳🇴</span>Norsk</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇩🇰</span>Dansk</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">UA</span>Українська</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">PL</span>Polski</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">CZ</span>Čeština</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">SK</span>Slovenčina</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">HR</span>Hrvatski</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">HU</span>Magyar</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">RO</span>Rom&acirc;n&#259;</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">BG</span>Български</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">GR</span>Ελληνικά</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">TR</span>T&uuml;rk&ccedil;e</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">FI</span>Suomi</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">SE</span>Svenska</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">NO</span>Norsk</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">DK</span>Dansk</span>
         <span class="loc-pill loc-pill--wide">简体中文</span>
         <span class="loc-pill loc-pill--wide">繁體中文</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇯🇵</span>日本語</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇰🇷</span>한국어</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇮🇳</span>हिन्दी</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇹🇭</span>ไทย</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇮🇩</span>Bahasa Indonesia</span>
-        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇻🇳</span>Tiếng Việt</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">JP</span>日本語</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">KR</span>한국어</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">IN</span>हिन्दी</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">TH</span>ไทย</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">ID</span>Bahasa Indonesia</span>
+        <span class="loc-pill"><span class="loc-code" aria-hidden="true">VN</span>Tiếng Việt</span>
       </div>
       <div class="flow flow--compact" style="margin-top:28px;" role="group" aria-label="Translation pipeline: AI translation, then Gemini quality pass">
         <div class="flow-node">
@@ -1511,9 +1515,9 @@
     <section id="section-07" class="case-section">
       <p class="section-kicker"><span class="section-num">07</span> &middot; What the app has to tell me next</p>
       <h2 class="section-heading">Analytics and post-launch research</h2>
-      <p class="section-text">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether anyone arms a second alert after their first one fires &mdash; the difference between a tool someone tried and a tool someone uses.</p>
+      <p class="section-text">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether a first alert leads to a second &mdash; the signal that it has entered someone's routine.</p>
       <div class="rb-pending">
-        <span class="rb-pending-label">Waiting on data</span>
+        <span class="rb-pending-label">First questions</span>
         <div class="rb-pending-list">
           <span class="rb-pending-item">Whether a first alert leads to a second</span>
           <span class="rb-pending-item">Which flow people stop at</span>
@@ -1526,8 +1530,8 @@
     <section id="section-08" class="case-section">
       <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
       <h2 class="section-heading">Outcome</h2>
-      <p class="section-text">It's live. That proves the thing can be built and shipped this way; what comes next is whether it earns a place in someone's routine.</p>
-      <p class="section-text">The interface ships in 31 languages and none of them have met a real user yet.</p>
+      <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend and delivery in the same loop. What it settles into in people's routines is the next thing to measure.</p>
+      <p class="section-text">The interface ships in 31 languages, so the audience was never scoped to one market.</p>
       <div class="rb-stats-row">
         <div class="rb-stat-item">
           <span class="rb-stat-item-value">Live</span>
@@ -1551,7 +1555,7 @@
       <div class="reflection-grid">
         <div>
           <p class="reflection-title">What I'd do differently</p>
-          <p class="reflection-text">Underestimating the backend was the main misstep. Next time I'd scope the invisible parts first, before a line of interface exists.</p>
+          <p class="reflection-text">The backend turned out bigger than I scoped it. Next time I'd size the invisible parts first, before a line of interface exists.</p>
         </div>
         <div>
           <p class="reflection-title">What I learned</p>
