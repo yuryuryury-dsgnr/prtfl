@@ -519,7 +519,10 @@
     /* the native bar stays hidden: .rb-stage-bar below is the visible one */
     .rb-flow::-webkit-scrollbar { display: none; }
     .rb-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .rb-track { display: flex; align-items: center; width: max-content; padding: 24px 2px 10px; }
+    /* 20 top clears the 17px boundary label that hangs above the lane; 14
+       bottom lands the content the same 24px from both inner edges of the
+       stage once the stage's own 4px and the flow's 10px are counted in */
+    .rb-track { display: flex; align-items: center; width: max-content; padding: 20px 2px 14px; }
 
     /* connector with an arrowhead */
     .rb-link { flex: 0 0 30px; position: relative; height: 1px; background: rgba(0,0,0,0.22); }
