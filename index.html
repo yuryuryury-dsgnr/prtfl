@@ -366,14 +366,11 @@
 
     .case-link .case-link-arrow {
       display: inline-block;
-      opacity: 0;
-      transform: translateX(-4px);
-      transition: opacity 200ms ease, transform 200ms ease;
+      transition: transform 200ms ease;
     }
 
     .case-link:hover .case-link-arrow {
-      opacity: 1;
-      transform: translateX(0);
+      transform: translateX(3px);
     }
 
     .case-link::after {
@@ -403,7 +400,11 @@
       align-items: center;
       gap: 16px;
     }
-    .case-links-row .case-link { margin-top: 0; }
+    .case-links-row .case-link {
+      margin-top: 0;
+      z-index: 2;                /* above .case-card-stretch, which would
+                                    otherwise take every hover on this card */
+    }
     .case-store-link {
       position: relative;
       z-index: 2;               /* above the stretch so it stays independently clickable */
@@ -571,7 +572,7 @@
             <p class="case-role">Solo Lead UX + AI</p>
             <p class="case-result">Built solo, shipped to App Store</p>
             <div class="case-links-row">
-              <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
+              <a href="cases/rebalancer/" class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></a>
               <a href="https://apps.apple.com/ua/app/rebalancer-tool/id6767200669" class="case-store-link" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)">App Store ↗</a>
             </div>
           </div>
