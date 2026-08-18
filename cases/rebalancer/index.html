@@ -542,7 +542,8 @@
     .rb-tech-leg--out { background: rgba(59,130,246,0.08); color: #1A1A1A; }
     .rb-tech-op { font-size: 14px; color: #9A9A9A; line-height: 1; flex-shrink: 0; }
 
-    .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; max-width: 640px; }
+    .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .rb-tech-challenge { font-size: 14px; color: #6B6B6B; line-height: 1.7; max-width: 640px; }
     .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
     /* a source the worker CANNOT use — the blocked edge is the evidence, so it
        is drawn rather than described: struck through, dashed, with the code */
@@ -554,10 +555,6 @@
     .rb-tech-hop--blocked .rb-tech-code { text-decoration: none; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: #6B6B6B; background: #F0EFEC; border-radius: 4px; padding: 2px 6px; }
     .rb-tech-origin { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
     /* the stack, grouped by layer instead of one flat chip soup */
-    .rb-tech-groups { display: flex; flex-direction: column; gap: 12px; max-width: 640px; }
-    .rb-tech-group { display: flex; flex-direction: column; gap: 7px; }
-    .rb-tech-group-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #9A9A9A; }
-    .rb-tech-group-row { display: flex; flex-wrap: wrap; gap: 7px; }
 
     /* ——— FLOATING TOC PILL ———
        The halliburton case's pill, shown at every width here: it names the
@@ -1156,38 +1153,20 @@
       </div>
       <p class="rb-tech-why">Background refresh is unreliable, so the schedule lives on the server.</p>
 
-      <p class="rb-tech-label">The stack</p>
-      <div class="rb-tech-groups">
-        <div class="rb-tech-group">
-          <span class="rb-tech-group-label">Compute &mdash; two workers</span>
-          <div class="rb-tech-group-row">
-            <span class="rb-tech-chip">Cloudflare Workers</span>
-            <span class="rb-tech-chip">Cron Triggers</span>
-          </div>
-        </div>
-        <div class="rb-tech-group">
-          <span class="rb-tech-group-label">Storage &mdash; one per job</span>
-          <div class="rb-tech-group-row">
-            <span class="rb-tech-chip">KV &mdash; devices &amp; thresholds</span>
-            <span class="rb-tech-chip">D1 &mdash; feedback</span>
-            <span class="rb-tech-chip">R2 &mdash; attachments</span>
-          </div>
-        </div>
-        <div class="rb-tech-group">
-          <span class="rb-tech-group-label">Delivery</span>
-          <div class="rb-tech-group-row">
-            <span class="rb-tech-chip">Expo Push</span>
-            <span class="rb-tech-chip">APNs</span>
-          </div>
-        </div>
-        <div class="rb-tech-group">
-          <span class="rb-tech-group-label">Web &amp; payments</span>
-          <div class="rb-tech-group-row">
-            <span class="rb-tech-chip">Pages</span>
-            <span class="rb-tech-chip">Pages Function</span>
-            <span class="rb-tech-chip">StoreKit 2</span>
-          </div>
-        </div>
+      <p class="rb-tech-label">Biggest challenge</p>
+      <p class="rb-tech-challenge">The alert is the product, and an alert has to arrive with the app closed &mdash; that one requirement pulled a backend behind a one-person design project. Price sources that answer a phone refuse a data centre, iOS background refresh cannot be trusted, and an alert that has fired must not fire again: every one of those is a server problem, not a screen.</p>
+
+      <p class="rb-tech-label">Stack</p>
+      <div class="rb-tech-chips">
+        <span class="rb-tech-chip">Cloudflare Workers</span>
+        <span class="rb-tech-chip">Cron Triggers</span>
+        <span class="rb-tech-chip">KV</span>
+        <span class="rb-tech-chip">D1</span>
+        <span class="rb-tech-chip">R2</span>
+        <span class="rb-tech-chip">Expo Push</span>
+        <span class="rb-tech-chip">APNs</span>
+        <span class="rb-tech-chip">Pages</span>
+        <span class="rb-tech-chip">StoreKit 2</span>
       </div>
       <p class="rb-tech-why">All serverless &mdash; nothing to keep alive.</p>
     
