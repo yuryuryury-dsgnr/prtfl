@@ -182,6 +182,62 @@
        box (450/920, the mockup's own ratio) that reserves the slot while the
        image loads, so nothing reflows when it arrives. The image keeps its
        alpha, so the rounded corners outside the device stay transparent. */
+    /* ——— TEMPORARY: Screens layout options ——————————————————————————
+       The framed mockups exist only at 450px wide, so on a 2x screen they stay
+       crisp up to 225px and go soft past that — every option below is sized
+       against that ceiling, not against the space available. */
+    .rb-screens-switch { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 24px; }
+    .rb-screens-switch-label {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #9A9A9A; margin-right: 4px;
+    }
+    .rb-screens-switch button {
+      font: inherit; font-size: 12px; font-weight: 500;
+      padding: 6px 13px; border: 1px solid rgba(0,0,0,0.12); border-radius: 100px;
+      background: transparent; color: #6B6B6B; cursor: pointer;
+    }
+    .rb-screens-switch button:hover { color: #1A1A1A; }
+    .rb-screens-switch button.is-active { background: #1A1A1A; border-color: #1A1A1A; color: #FFFFFF; }
+    .rb-screens-note { font-size: 12px; color: #9A9A9A; margin-top: 10px; }
+
+    /* option A — the 2x2, widened to the full column and stepped */
+    .rb-screens[data-screens="a"] .phone-grid { max-width: 100%; gap: 28px 24px; }
+    /* the caption carries its own max-width, and with justify-items:center the
+       grid cell shrinks to it — so the caption is what actually caps the
+       mockup, and both have to move together */
+    .rb-screens[data-screens="a"] .phone-frame,
+    .rb-screens[data-screens="a"] .phone-caption { max-width: 225px; }
+    @media (min-width: 601px) {
+      .rb-screens[data-screens="a"] .phone-figure:nth-child(odd)  { transform: translateY(-22px); }
+      .rb-screens[data-screens="a"] .phone-figure:nth-child(even) { transform: translateY(22px); }
+      .rb-screens[data-screens="a"] .phone-grid { margin-bottom: 22px; }
+    }
+
+    /* options C and D — one row. Four mockups need more than the 712px column,
+       so the row borrows the same bleed the roadmap uses. */
+    @media (min-width: 601px) {
+      .rb-screens[data-screens="c"] .phone-grid,
+      .rb-screens[data-screens="d"] .phone-grid {
+        display: flex; flex-direction: row; align-items: flex-start;
+        max-width: none; gap: 20px;
+      }
+      .rb-screens[data-screens="c"] .phone-figure,
+      .rb-screens[data-screens="d"] .phone-figure { flex: 1 1 0; min-width: 0; }
+      .rb-screens[data-screens="c"] .phone-frame,
+      .rb-screens[data-screens="d"] .phone-frame,
+      .rb-screens[data-screens="c"] .phone-caption,
+      .rb-screens[data-screens="d"] .phone-caption { max-width: 213px; }
+      .rb-screens[data-screens="d"] .phone-figure:nth-child(even) { transform: translateY(30px); }
+      .rb-screens[data-screens="d"] .phone-grid { margin-bottom: 30px; }
+    }
+    @media (min-width: 1080px) {
+      .rb-screens[data-screens="c"] .phone-grid,
+      .rb-screens[data-screens="d"] .phone-grid {
+        width: calc(100% + 200px); margin-left: -100px;
+      }
+      .rb-screens[data-screens="d"] .phone-grid { margin-bottom: 30px; }
+    }
+
     .phone-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 24px; margin-top: 32px; justify-items: center; max-width: 560px; }
     .phone-figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
     .phone-frame { position: relative; width: 100%; max-width: 208px; aspect-ratio: 450 / 920; }
@@ -487,6 +543,10 @@
       position: relative; height: 6px; margin: 2px 14px 4px;
       border-radius: 100px; background: rgba(0,0,0,0.09);
       cursor: grab; touch-action: none;
+      /* the thumb carries an inline pixel width from the last measurement; if a
+         resize outruns the redraw, clipping here is what stops a stale width
+         from widening the page */
+      overflow: hidden;
     }
     .rb-stage-bar[hidden] { display: none; }
     .rb-stage-bar:active { cursor: grabbing; }
@@ -1331,6 +1391,15 @@
 
       <h3 class="subsection-heading">Screens</h3>
       <p class="section-text">Four screens from the shipped app. The flows behind them are in the section above; this is what came out.</p>
+      <div class="rb-screens-switch" id="screensSwitch">
+        <span class="rb-screens-switch-label">Layout</span>
+        <button type="button" data-screens="now">Now &middot; 2&times;2</button>
+        <button type="button" data-screens="a">A &middot; Stepped 2&times;2</button>
+        <button type="button" data-screens="c">C &middot; One row</button>
+        <button type="button" data-screens="d">D &middot; One row, stepped</button>
+      </div>
+      <p class="rb-screens-note" id="screensNote"></p>
+      <div class="rb-screens" id="screensWrap" data-screens="now">
       <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
         <div class="phone-figure">
           <div class="phone-frame">
@@ -1360,6 +1429,7 @@
           </div>
           <p class="phone-caption">Pair screen &mdash; both holdings restated in the coin on the other side</p>
         </div>
+      </div>
       </div>
     
 
@@ -1767,6 +1837,41 @@
 
     // Tab strips: flag "there is more to the right" so the CSS fade can show.
     // Cheap, passive, and self-correcting on resize / scroll / tab switch.
+    // TEMPORARY: Screens layout options. Reports the resulting mockup size and
+    // section height so the choice is made on numbers, not impressions.
+    (function () {
+      var wrap = document.getElementById('screensWrap');
+      var sw = document.getElementById('screensSwitch');
+      var note = document.getElementById('screensNote');
+      if (!wrap || !sw) return;
+      var buttons = [].slice.call(sw.querySelectorAll('button'));
+      var SRC = 450;                                   // the mockups' real pixel width
+      function report() {
+        var frame = wrap.querySelector('.phone-frame');
+        var grid = wrap.querySelector('.phone-grid');
+        if (!frame || !grid) return;
+        var w = Math.round(frame.getBoundingClientRect().width);
+        var h = Math.round(grid.getBoundingClientRect().height);
+        var density = (SRC / (w * (window.devicePixelRatio || 1))).toFixed(2);
+        note.textContent = 'mockup ' + w + 'px wide · block ' + h + 'px tall · ' +
+          density + '× source pixels per screen pixel' + (density < 1 ? ' — upscaled, will look soft' : '');
+      }
+      function set(v) {
+        wrap.dataset.screens = v;
+        buttons.forEach(function (b) { b.classList.toggle('is-active', b.dataset.screens === v); });
+        try { localStorage.setItem('rbScreensView', v); } catch (e) {}
+        setTimeout(report, 60);
+      }
+      var asked = (location.search.match(/[?&]screens=(now|a|c|d)/) || [])[1];
+      var saved = null;
+      try { saved = localStorage.getItem('rbScreensView'); } catch (e) {}
+      set(asked || saved || 'now');
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () { set(b.dataset.screens); });
+      });
+      window.addEventListener('resize', report);
+    })();
+
     // Drawn scrollbars for the Discovery flows — see the CSS note on why the
     // native one can't do this job. Each rail sits after its flow; the thumb
     // mirrors position and is draggable.
@@ -1783,7 +1888,7 @@
           if (max <= 4) { bar.hidden = true; return; }
           bar.hidden = false;
           var ratio = flow.clientWidth / flow.scrollWidth;
-          var w = Math.max(28, bar.clientWidth * ratio);
+          var w = Math.min(bar.clientWidth, Math.max(28, bar.clientWidth * ratio));
           thumb.style.width = w + 'px';
           thumb.style.transform =
             'translateX(' + (flow.scrollLeft / max) * (bar.clientWidth - w) + 'px)';
