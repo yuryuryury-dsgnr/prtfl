@@ -457,6 +457,7 @@
       --rb-system-bg:   #EBE8F1;  --rb-system-bd:   #C5BED5;   /* system  — lilac */
       --rb-decision-bg: #F2EBDF;  --rb-decision-bd: #D6C7AF;   /* decision— sand  */
       --rb-end-bg:      #EFE3E1;  --rb-end-bd:      #D7BCB7;   /* end     — clay  */
+      --rb-stage-bg:    #EFEEEA;                               /* flow area        */
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
@@ -475,14 +476,8 @@
        and ends; the drawn bar under it says the contents move. */
     .rb-stage {
       margin-top: 14px; padding: 4px 0 10px;
-      background: #EFEEEA; border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
+      background: var(--rb-stage-bg); border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
     }
-    /* the spine trims are painted in the page colour to cut the rail above and
-       below the outer branches — inside the stage they have to match the stage
-       or they show up as pale bars across it */
-    .rb-branch:first-child::after,
-    .rb-branch:last-child::after { background: #EFEEEA; }
-    .rb-bound-label { background: #EFEEEA; }
     /* A drawn scrollbar rather than the native one. macOS resolves scrollbars
        to overlays that reserve no space and fade out when idle, and no CSS
        property overrides that — so the one affordance this area exists to give
@@ -538,8 +533,11 @@
     .rb-branches::after { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
     .rb-branch { position: relative; display: flex; align-items: center; }
     .rb-branch::before { content: ''; position: absolute; left: -24px; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
-    .rb-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: #F8F7F4; }
-    .rb-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: #F8F7F4; }
+    /* these trim the spine above the first branch and below the last one by
+       painting over it — so they have to match whatever is behind the rail,
+       which is the stage, not the page */
+    .rb-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: var(--rb-stage-bg); }
+    .rb-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: var(--rb-stage-bg); }
     .rb-branch-label {
       flex: 0 0 auto; max-width: 118px; margin-right: 12px;
       font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
@@ -550,7 +548,7 @@
     .rb-bound { position: relative; flex: 0 0 1px; align-self: stretch; margin: 0 32px; border-left: 1px dashed rgba(0,0,0,0.34); }
     .rb-bound-label {
       position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%);
-      white-space: nowrap; background: #F8F7F4; padding: 0 8px;
+      white-space: nowrap; background: var(--rb-stage-bg); padding: 0 8px;
       font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #9A9A9A;
     }
 
@@ -979,7 +977,7 @@
           <button class="rb-tab" data-rb-tab="alert" role="tab" aria-selected="false">Set alert</button>
           <button class="rb-tab" data-rb-tab="sim" role="tab" aria-selected="false">Simulate</button>
           <button class="rb-tab" data-rb-tab="hold" role="tab" aria-selected="false">Holdings</button>
-          <button class="rb-tab" data-rb-tab="moment" role="tab" aria-selected="false">Rebalance moment</button>
+          <button class="rb-tab" data-rb-tab="moment" role="tab" aria-selected="false">Alert fires</button>
         </div>
 
         <div class="rb-key" aria-hidden="true">
@@ -1290,7 +1288,7 @@
 
         <div class="rb-tabpanel" data-rb-panel="moment" role="tabpanel">
           <div class="rb-stage">
-            <div class="rb-flow" tabindex="0" role="group" aria-label="The rebalance moment, ending outside the app">
+            <div class="rb-flow" tabindex="0" role="group" aria-label="What happens when an alert fires, ending outside the app">
               <div class="rb-track">
               <div class="rb-step rb-step--system">
                 <span class="rb-step-kind">System</span>
