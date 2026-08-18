@@ -170,6 +170,10 @@
     .loc-stat-number { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
     .loc-stat-label { font-size: 16px; color: #6B6B6B; }
     .loc-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; max-width: 640px; }
+    .loc-rule { font-size: 12px; color: #9A9A9A; line-height: 1.6; margin-top: 16px; max-width: 640px; }
+    /* sized down and nudged off the baseline: at pill size the emoji sits
+       high and reads bigger than the label next to it */
+    .loc-flag { font-size: 11px; line-height: 1; margin-right: 6px; position: relative; top: 0.5px; }
     .loc-pill {
       font-size: 13px; color: #1A1A1A; white-space: nowrap;
       background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
@@ -1455,38 +1459,39 @@
         <span class="loc-stat-number">31</span>
         <span class="loc-stat-label">languages in the app</span>
       </div>
+      <p class="loc-rule">A flag where the language belongs to one market. English, Espa&ntilde;ol, Fran&ccedil;ais, Русский and both Chinese scripts are spoken across several, so those carry the name alone.</p>
       <div class="loc-pills">
-        <span class="loc-pill">English</span>
-        <span class="loc-pill">Espa&ntilde;ol</span>
-        <span class="loc-pill">Fran&ccedil;ais</span>
-        <span class="loc-pill">Deutsch</span>
-        <span class="loc-pill">Italiano</span>
-        <span class="loc-pill">Nederlands</span>
-        <span class="loc-pill">Portugu&ecirc;s (BR)</span>
-        <span class="loc-pill">Portugu&ecirc;s (PT)</span>
-        <span class="loc-pill">Русский</span>
-        <span class="loc-pill">Українська</span>
-        <span class="loc-pill">Polski</span>
-        <span class="loc-pill">Čeština</span>
-        <span class="loc-pill">Slovenčina</span>
-        <span class="loc-pill">Hrvatski</span>
-        <span class="loc-pill">Magyar</span>
-        <span class="loc-pill">Rom&acirc;n&#259;</span>
-        <span class="loc-pill">Български</span>
-        <span class="loc-pill">Ελληνικά</span>
-        <span class="loc-pill">T&uuml;rk&ccedil;e</span>
-        <span class="loc-pill">Suomi</span>
-        <span class="loc-pill">Svenska</span>
-        <span class="loc-pill">Norsk</span>
-        <span class="loc-pill">Dansk</span>
-        <span class="loc-pill">简体中文</span>
-        <span class="loc-pill">繁體中文</span>
-        <span class="loc-pill">日本語</span>
-        <span class="loc-pill">한국어</span>
-        <span class="loc-pill">हिन्दी</span>
-        <span class="loc-pill">ไทย</span>
-        <span class="loc-pill">Bahasa Indonesia</span>
-        <span class="loc-pill">Tiếng Việt</span>
+        <span class="loc-pill loc-pill--wide">English</span>
+        <span class="loc-pill loc-pill--wide">Espa&ntilde;ol</span>
+        <span class="loc-pill loc-pill--wide">Fran&ccedil;ais</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇩🇪</span>Deutsch</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇮🇹</span>Italiano</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇳🇱</span>Nederlands</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇧🇷</span>Portugu&ecirc;s (BR)</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇵🇹</span>Portugu&ecirc;s (PT)</span>
+        <span class="loc-pill loc-pill--wide">Русский</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇺🇦</span>Українська</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇵🇱</span>Polski</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇨🇿</span>Čeština</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇸🇰</span>Slovenčina</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇭🇷</span>Hrvatski</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇭🇺</span>Magyar</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇷🇴</span>Rom&acirc;n&#259;</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇧🇬</span>Български</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇬🇷</span>Ελληνικά</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇹🇷</span>T&uuml;rk&ccedil;e</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇫🇮</span>Suomi</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇸🇪</span>Svenska</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇳🇴</span>Norsk</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇩🇰</span>Dansk</span>
+        <span class="loc-pill loc-pill--wide">简体中文</span>
+        <span class="loc-pill loc-pill--wide">繁體中文</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇯🇵</span>日本語</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇰🇷</span>한국어</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇮🇳</span>हिन्दी</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇹🇭</span>ไทย</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇮🇩</span>Bahasa Indonesia</span>
+        <span class="loc-pill"><span class="loc-flag" aria-hidden="true">🇻🇳</span>Tiếng Việt</span>
       </div>
       <div class="flow flow--compact" style="margin-top:28px;" role="group" aria-label="Translation pipeline: AI translation, then Gemini quality pass">
         <div class="flow-node">
