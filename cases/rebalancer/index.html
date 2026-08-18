@@ -102,9 +102,15 @@
     /* ——— CTA PILL ——— */
     .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
     .cta-pill {
-      display: inline-block; font-size: 14px; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 500;
       padding: 10px 24px; border: 1.5px solid #1A1A1A;
       border-radius: 100px; transition: all 200ms ease;
+    }
+    /* currentColor, so the mark flips to white with the label on hover */
+    .cta-pill svg {
+      width: auto; height: 16px; flex: 0 0 auto;
+      position: relative; top: -1px;   /* optical: the mark reads high against the cap line */
     }
     .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
 
@@ -671,7 +677,7 @@
       <p class="case-hero-role">Solo Lead UX + AI &mdash; design and build with Claude Code</p>
       <p class="case-hero-result">Designed and built solo, from concept to App Store</p>
       <div class="cta-row">
-        <a href="https://apps.apple.com/ua/app/rebalancer-tool/id6767200669" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)">View on the App Store &#8599;</a>
+        <a href="https://apps.apple.com/ua/app/rebalancer-tool/id6767200669" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>View on the App Store &#8599;</a>
       </div>
       <hr class="case-hero-divider" style="margin-top:32px;">
       <div class="case-hero-image">

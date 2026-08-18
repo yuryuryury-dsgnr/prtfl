@@ -411,7 +411,22 @@
       font-weight: 500;
       color: #6B6B6B;
     }
+    .case-store-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #1A1A1A;
+      transition: width 200ms ease;
+    }
+
     .case-store-link:hover { color: #1A1A1A; }
+
+    /* keyed to its own hover, not the card's — the two links in this card are
+       independent, so underlining both at once would misread as one target */
+    .case-store-link:hover::after { width: 100%; }
 
     .case-nda-note {
       font-size: 13px;
