@@ -254,20 +254,55 @@
        point is the shape of the gap. Rows carry their own labels, hidden while
        the header row is visible, so the whole thing becomes labelled blocks on
        mobile instead of a table that has to scroll. */
-    .rb-market {
-      margin-top: 22px; background: #FFFFFF;
-      border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden;
+    /* §03 — comparison grid. Rows are the workarounds the copy already names,
+       columns the capabilities that separate them. The marks carry the meaning
+       so the gaps read at a glance; text appears only to qualify a partial,
+       which is what keeps the grid honest under a close read. Wide by nature,
+       so it scrolls inside its own box rather than moving the page. */
+    .rb-cmp-scroll {
+      margin-top: 22px; max-width: 100%; min-width: 0;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
     }
-    .rb-market-row { display: grid; grid-template-columns: 1.15fr 1fr 1.15fr; }
-    .rb-market-row + .rb-market-row { border-top: 1px solid rgba(0,0,0,0.07); }
-    .rb-market-row--head { background: #F5F4F1; }
-    .rb-market-c { padding: 12px 16px; font-size: 13px; color: #6B6B6B; line-height: 1.5; }
-    .rb-market-row--head .rb-market-c {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.07em;
-      text-transform: uppercase; color: #9A9A9A;
+    .rb-cmp-scroll::-webkit-scrollbar { display: none; }
+    .rb-cmp-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    .rb-cmp-scroll--more {
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+              mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
     }
-    .rb-market-c--name { color: #1A1A1A; font-weight: 500; }
-    .rb-market-k { display: none; }
+    .rb-cmp {
+      min-width: 640px;
+      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; overflow: hidden;
+    }
+    .rb-cmp-row { display: grid; grid-template-columns: 1.75fr repeat(5, 1fr); }
+    .rb-cmp-row + .rb-cmp-row { border-top: 1px solid rgba(0,0,0,0.07); }
+    .rb-cmp-row--head { background: #F5F4F1; }
+    /* the one row with no gaps in it — tinted so the shape of the column reads
+       before any of the labels do */
+    .rb-cmp-row--self { background: var(--rb-screen-bg); }
+    .rb-cmp-c {
+      padding: 12px 12px; display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start; gap: 5px; text-align: center;
+    }
+    .rb-cmp-c--name {
+      align-items: flex-start; text-align: left; padding-left: 16px;
+      font-size: 13px; font-weight: 500; color: #1A1A1A; line-height: 1.4;
+    }
+    .rb-cmp-row--head .rb-cmp-c {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #9A9A9A; line-height: 1.4;
+    }
+    .rb-cmp-mark { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .rb-cmp-mark--yes { background: var(--rb-action-bd); }
+    .rb-cmp-mark--part {
+      background: linear-gradient(to right, var(--rb-decision-bd) 50%, transparent 50%);
+      border: 1px solid var(--rb-decision-bd);
+    }
+    .rb-cmp-mark--no { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
+    /* only ever attached to a partial: says what the half-mark is standing for */
+    .rb-cmp-note { font-size: 10px; line-height: 1.35; color: #9A9A9A; }
     .rb-market-out {
       display: flex; flex-direction: column; gap: 6px; margin-top: 18px;
       background: var(--rb-action-bg); border: 1px solid var(--rb-action-bd);
@@ -620,16 +655,11 @@
       .rb-groups { grid-template-columns: 1fr; }
       .rb-tests { grid-template-columns: 1fr; }
       .rb-store > .phone-figure { flex: 0 0 62%; }
-      /* table -> stacked blocks: the header row goes, each cell shows its own label */
-      .rb-market-row { grid-template-columns: 1fr; }
-      .rb-market-row--head { display: none; }
-      .rb-market-c { padding: 12px 16px 0; }
-      .rb-market-c:last-child { padding-bottom: 14px; }
-      .rb-market-c--name { padding-top: 14px; }
-      .rb-market-k {
-        display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-        text-transform: uppercase; color: #9A9A9A;
-      }
+      /* the grid keeps its shape and scrolls inside itself — stacking it into
+         blocks would destroy the one thing it is for, which is the column of
+         gaps read top to bottom */
+      .rb-cmp-c { padding: 10px 8px; }
+      .rb-cmp-c--name { padding-left: 14px; }
       .rb-road-scroll--more { -webkit-mask-image: none; mask-image: none; }
       .timeline { grid-template-columns: 1fr; gap: 24px; padding-left: 24px; min-width: 0; }
       .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
@@ -747,36 +777,122 @@
 
       <h3 class="subsection-heading">Market analysis</h3>
       <p class="section-text">I went looking for the app I wanted to buy. What exists are four workarounds, each stopping in a different place.</p>
-      <div class="rb-market">
-        <div class="rb-market-row rb-market-row--head">
-          <span class="rb-market-c">Where people look now</span>
-          <span class="rb-market-c">What it gives</span>
-          <span class="rb-market-c">Where it stops</span>
+      <div class="rb-cmp-scroll" tabindex="0" role="group" aria-label="Comparison grid — scrollable">
+        <div class="rb-cmp">
+          <div class="rb-cmp-row rb-cmp-row--head">
+            <span class="rb-cmp-c rb-cmp-c--name">Where people look now</span>
+            <span class="rb-cmp-c">Any ALT/ALT pair</span>
+            <span class="rb-cmp-c">Kept as a pair</span>
+            <span class="rb-cmp-c">Ratio history</span>
+            <span class="rb-cmp-c">Alert on the ratio</span>
+            <span class="rb-cmp-c">Holdings in it</span>
+          </div>
+          <div class="rb-cmp-row">
+            <span class="rb-cmp-c rb-cmp-c--name">TradingView spread charts</span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
+              <span class="rb-cmp-note">a chart layout</span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+            </span>
+          </div>
+          <div class="rb-cmp-row">
+            <span class="rb-cmp-c rb-cmp-c--name">Community Pine scripts</span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
+              <span class="rb-cmp-note">per chart, per script</span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+            </span>
+          </div>
+          <div class="rb-cmp-row">
+            <span class="rb-cmp-c rb-cmp-c--name">Converters &mdash; Coinbase, MetaMask and the rest</span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
+              <span class="rb-cmp-note">one amount, typed in</span>
+            </span>
+          </div>
+          <div class="rb-cmp-row">
+            <span class="rb-cmp-c rb-cmp-c--name">Portfolio trackers</span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+              <span class="rb-cmp-note">fixed bases</span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
+              <span class="rb-cmp-note">of the portfolio</span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
+              <span class="rb-cmp-note">on the USD price</span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+          </div>
+          <div class="rb-cmp-row rb-cmp-row--self">
+            <span class="rb-cmp-c rb-cmp-c--name">Rebalancer</span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+            <span class="rb-cmp-c">
+              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
+            </span>
+          </div>
         </div>
-        <div class="rb-market-row">
-          <span class="rb-market-c rb-market-c--name">TradingView spread charts</span>
-          <span class="rb-market-c"><span class="rb-market-k">Gives</span>A chart of any ratio you can write as a symbol.</span>
-          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>TradingView itself advises against alerts on spread charts and says there is no technical fix.</span>
-        </div>
-        <div class="rb-market-row">
-          <span class="rb-market-c rb-market-c--name">Community Pine scripts</span>
-          <span class="rb-market-c"><span class="rb-market-k">Gives</span>A ratio with an alert, written by the people who needed one.</span>
-          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>Never becomes a product: an account, a chart and setup per script. That they exist at all is the clearest sign of the gap.</span>
-        </div>
-        <div class="rb-market-row">
-          <span class="rb-market-c rb-market-c--name">Converters &mdash; Coinbase, MetaMask and the rest</span>
-          <span class="rb-market-c"><span class="rb-market-k">Gives</span>Today's ratio between any two coins, instantly.</span>
-          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>One look and it's gone &mdash; no saved pair, no history to come back to, no alert.</span>
-        </div>
-        <div class="rb-market-row">
-          <span class="rb-market-c rb-market-c--name">Portfolio trackers</span>
-          <span class="rb-market-c"><span class="rb-market-k">Gives</span>Your holdings restated in another base currency.</span>
-          <span class="rb-market-c"><span class="rb-market-k">Stops at</span>A fixed list of bases &mdash; BTC, ETH, XRP, LTC. An arbitrary ALT/ALT pair is not on it.</span>
-        </div>
+      </div>
+      <div class="rb-key" aria-hidden="true">
+        <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--yes"></span>Does it</span>
+        <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--part"></span>Partly</span>
+        <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--no"></span>Doesn't</span>
       </div>
       <div class="rb-market-out">
         <span class="rb-market-out-label">What that means</span>
-        <span class="rb-market-out-text">Nothing tracks an arbitrary ALT/ALT pair as an object you keep, with an alert on its ratio. The gap is technical rather than commercial: no exchange publishes an ALT/ALT feed, so the ratio has to be assembled from two USD legs and divided &mdash; which is exactly where every workaround above stops.</span>
+        <span class="rb-market-out-text">The gap is technical rather than commercial: no exchange publishes an ALT/ALT feed, so the ratio has to be assembled from two USD legs and divided &mdash; which is exactly where every row above stops.</span>
       </div>
 
       <h3 class="subsection-heading">User personas</h3>
@@ -1492,7 +1608,8 @@
       var scrollers = [].concat(
         [].map.call(document.querySelectorAll('.rb-tabs'), function (el) { return { el: el, cls: 'rb-tabs--more' }; }),
         [].map.call(document.querySelectorAll('.rb-flow'), function (el) { return { el: el, cls: 'rb-flow--more' }; }),
-        [].map.call(document.querySelectorAll('.rb-road-scroll'), function (el) { return { el: el, cls: 'rb-road-scroll--more' }; })
+        [].map.call(document.querySelectorAll('.rb-road-scroll'), function (el) { return { el: el, cls: 'rb-road-scroll--more' }; }),
+        [].map.call(document.querySelectorAll('.rb-cmp-scroll'), function (el) { return { el: el, cls: 'rb-cmp-scroll--more' }; })
       );
       if (!scrollers.length) return;
       function sync() {
