@@ -47,6 +47,22 @@
     .topnav-links { display: flex; gap: 24px; align-items: center; }
     .topnav-link { font-size: 14px; font-weight: 500; color: #1A1A1A; }
     .topnav-link:hover { color: #6B6B6B; }
+    /* Contact is the primary action, so it carries the same button treatment as
+       .hero-link--primary; the CV link steps back to grey. On desktop the pill
+       stays last, where a right-aligned row puts its most prominent item. */
+    .topnav-link--primary {
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 6px;
+      padding: 7px 15px;
+      transition: border-color 200ms ease, background 200ms ease, color 200ms ease;
+    }
+    .topnav-link--primary:hover {
+      color: #1A1A1A;
+      border-color: rgba(0,0,0,0.36);
+      background: rgba(0,0,0,0.025);
+    }
+    .topnav-link--secondary { color: #6B6B6B; }
+    .topnav-link--secondary:hover { color: #1A1A1A; }
 
     /* ——— CUSTOM CURSOR ——— */
     .cursor-dot {
@@ -493,24 +509,15 @@
       .topnav-inner { flex-wrap: wrap; gap: 16px; }
       .topnav-links { gap: 12px; }
 
-      /* Two actions of unequal weight read as one string when they share a
-         size, colour and 16px of air. Split them by role instead of by
-         distance: the primary one takes the button treatment already used by
-         .hero-link--primary, the secondary steps back to grey.
-         order: -1 puts contact first here without touching the desktop DOM. */
+      /* The row is left-aligned here, so the prominent slot is the first one —
+         the opposite of the right-aligned desktop row. Bare text lines are also
+         too small to hit with a thumb, hence the 44px floor. */
       .topnav-link { min-height: 44px; display: inline-flex; align-items: center; }
-      .topnav-link--primary {
-        order: -1;
-        border: 1px solid rgba(0,0,0,0.2);
-        border-radius: 8px;
-        padding: 0 16px;
-        transition: border-color 200ms ease, background 200ms ease;
-      }
+      .topnav-link--primary { order: -1; padding: 0 16px; }
       .topnav-link--primary:active {
         border-color: rgba(0,0,0,0.36);
         background: rgba(0,0,0,0.025);
       }
-      .topnav-link--secondary { color: #6B6B6B; }
 
       .hero-name {
         font-size: 26px;
