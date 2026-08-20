@@ -487,8 +487,30 @@
 
     /* ——— RESPONSIVE ——— */
     @media (max-width: 768px) {
-      .topnav-inner { flex-wrap: wrap; gap: 12px 16px; }
-      .topnav-links { gap: 16px; }
+      /* the pill supplies its own vertical air, so the nav no longer needs
+         24px of it on top of that */
+      .topnav { padding: 16px 0; }
+      .topnav-inner { flex-wrap: wrap; gap: 16px; }
+      .topnav-links { gap: 12px; }
+
+      /* Two actions of unequal weight read as one string when they share a
+         size, colour and 16px of air. Split them by role instead of by
+         distance: the primary one takes the button treatment already used by
+         .hero-link--primary, the secondary steps back to grey.
+         order: -1 puts contact first here without touching the desktop DOM. */
+      .topnav-link { min-height: 44px; display: inline-flex; align-items: center; }
+      .topnav-link--primary {
+        order: -1;
+        border: 1px solid rgba(0,0,0,0.2);
+        border-radius: 8px;
+        padding: 0 16px;
+        transition: border-color 200ms ease, background 200ms ease;
+      }
+      .topnav-link--primary:active {
+        border-color: rgba(0,0,0,0.36);
+        background: rgba(0,0,0,0.025);
+      }
+      .topnav-link--secondary { color: #6B6B6B; }
 
       .hero-name {
         font-size: 26px;
@@ -522,8 +544,8 @@
     <div class="container topnav-inner">
       <a href="/" class="topnav-logo">Portfolio — Yurii Fokin</a>
       <div class="topnav-links">
-        <a href="assets/CV_Yurii_Fokin.pdf" download class="topnav-link">Download CV ↓</a>
-        <a href="mailto:yuryuryury@icloud.com" class="topnav-link">Get in touch →</a>
+        <a href="assets/CV_Yurii_Fokin.pdf" download class="topnav-link topnav-link--secondary">Download CV ↓</a>
+        <a href="mailto:yuryuryury@icloud.com" class="topnav-link topnav-link--primary">Get in touch →</a>
       </div>
     </div>
   </nav>
