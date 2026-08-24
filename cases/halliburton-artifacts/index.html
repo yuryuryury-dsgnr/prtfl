@@ -465,6 +465,32 @@
       html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
       .cursor-dot, .cursor-ring { display: none !important; }
     }
+  
+    /* The full-bleed variant on the parent case relies on that page's wider
+       wrapper; here it would escape the container, so this one stays inside it. */
+    .next-case {
+      max-width: 760px; margin: 80px auto 0; padding: 32px 24px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.015);
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 200ms ease;
+    }
+    .next-case:hover { background: rgba(0,0,0,0.03); }
+    .next-case-label {
+      font-size: 14px; color: #6B6B6B;
+      transition: transform 200ms ease;
+    }
+    .next-case:hover .next-case-label { transform: translateX(4px); }
+    .next-case-name { font-size: 14px; font-weight: 500; }
+      /* Two exits, grouped so the sticky header keeps its two-part balance:
+       back to the parent case, and out to the homepage. */
+    .case-header-links { display: inline-flex; align-items: center; gap: 16px; }
+    .case-header-home {
+      font-size: 14px; font-weight: 400; color: #6B6B6B;
+      min-height: 44px; display: inline-flex; align-items: center;
+    }
+    .case-header-home:hover { color: #1A1A1A; }
+    @media (max-width: 520px) { .case-header-home { display: none; } }
   </style>
 </head>
 <body>
@@ -475,7 +501,10 @@
   <!-- STICKY HEADER -->
   <header class="case-header">
     <div class="case-header-inner">
-      <a href="../halliburton/" class="case-header-back">&larr; Back to case</a>
+      <span class="case-header-links">
+        <a href="../halliburton/" class="case-header-back">&larr; Back to case</a>
+        <a href="../../" class="case-header-home">Portfolio</a>
+      </span>
       <span class="case-header-name">Data Marketplace &mdash; Artifacts</span>
     </div>
   </header>
@@ -853,6 +882,11 @@
 
   <!-- FOOTER -->
   </main>
+
+  <a class="next-case" href="../rebalancer/">
+    <span class="next-case-label">Next case</span>
+    <span class="next-case-name">Rebalancer &rarr;</span>
+  </a>
 
   <footer class="footer">
     <div class="footer-inner">

@@ -1486,6 +1486,17 @@
       html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
       .cursor-dot, .cursor-ring { display: none !important; }
     }
+      /* The artifacts sub-page holds the personas, JTBD, roadmap and KPIs in
+       full; without this it is reachable only by typing the address. */
+    .artifacts-link {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 28px;
+      min-height: 44px; padding: 0 18px; font-size: 15px; font-weight: 500;
+      color: #1A1A1A; border: 1px solid rgba(0,0,0,0.2); border-radius: 8px;
+      transition: border-color 200ms ease, background 200ms ease;
+    }
+    .artifacts-link:hover { border-color: rgba(0,0,0,0.36); background: rgba(0,0,0,0.025); }
+    .artifacts-link:hover .artifacts-link-arrow { transform: translateX(3px); }
+    .artifacts-link-arrow { display: inline-block; transition: transform 200ms ease; }
   </style>
 </head>
 <body>
@@ -1849,6 +1860,11 @@
         </div>
         </div><!-- end .persona-scroller -->
       </div>
+
+      <a class="artifacts-link" href="../halliburton-artifacts/">
+        <span class="artifacts-link-text">See the full research and strategy artifacts</span>
+        <span class="artifacts-link-arrow" aria-hidden="true">&rarr;</span>
+      </a>
     </section>
 
     <!-- 05 — PROTOTYPE & DESIGN SYSTEM -->
