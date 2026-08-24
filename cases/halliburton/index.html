@@ -65,33 +65,6 @@
 
     /* ——— STICKY TOC ——— */
 
-    /* ——— DISABLED ACCORDION (NDA, no content) ——— */
-    .accordion-row-disabled {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      cursor: default;
-      user-select: none;
-    }
-    .accordion-row-disabled .accordion-row-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #6B6B6B;
-    }
-    .accordion-row-disabled .accordion-nda-tag {
-      opacity: 0.6;
-    }
-    .accordion-row-disabled .accordion-row-icon {
-      width: 16px; height: 16px;
-      color: #D0CEC9;
-      flex-shrink: 0;
-    }
-
     /* ——— HERO ——— */
     .case-hero { padding: 80px 0 48px; }
     .case-hero h1 {
@@ -713,42 +686,111 @@
       font-weight: 700;
     }
 
-    .persona-grid {
+
+    /* ——— §03 STRATEGY CARDS ———
+       Was an accordion: eight rows, six of them closed, so the strategy was
+       1081px of headings on desktop and nothing else until the reader clicked
+       six times. Fully open it ran 2284px. Cards land between the two and
+       nothing is hidden.
+
+       Rows in a grid stretch to a common height, so pairs are matched by
+       volume with the source order kept. Two cards run full width because
+       their content asks for it: Vision & Problem lays its three values in a
+       row (the same figure §01 uses), and Key deliverables puts eleven short
+       items into three columns instead of one long column. */
+    .strategy-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 16px;
+      margin-top: 24px;
     }
-    .persona-card {
+    .strategy-grid > .strategy-card--wide { grid-column: 1 / -1; }
+    .strategy-card {
       background: #FFFFFF;
       border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 8px;
-      padding: 16px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+      border-radius: 12px;
+      padding: 24px;
     }
-    .persona-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #F0EFEC;
+    .strategy-card-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: #1A1A1A;
+      margin: 0;
+    }
+    /* .case-section li sets 14/1.7 on the element, so a size on the ul never
+       reaches it — these have to out-specify it */
+    .strategy-card .strategy-list { list-style: none; padding: 0; margin: 12px 0 0; }
+    .strategy-card .strategy-list li {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6B6B6B;
+      margin-bottom: 6px;
+      padding-left: 14px;
+      position: relative;
+    }
+    .strategy-card .strategy-list li:last-child { margin-bottom: 0; }
+    .strategy-card .strategy-list li::before {
+      content: '\00B7';
+      position: absolute;
+      left: 0;
+      color: #6B6B6B;
+      font-weight: 700;
+    }
+    .strategy-card .strategy-list li b { color: #1A1A1A; font-weight: 500; }
+    .strategy-list--cols { columns: 3; column-gap: 28px; }
+    .strategy-list--cols li { break-inside: avoid; }
+
+    /* label/value pairs, not tabular data: a fixed label column costs ~70px of
+       a 386px card and makes every value wrap twice as often as it needs to */
+    .strategy-dl { margin: 12px 0 0; }
+    .strategy-dl > div {
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .strategy-dl > div:first-child { padding-top: 4px; }
+    .strategy-dl > div:last-child { border-bottom: none; padding-bottom: 0; }
+    .strategy-dl dt {
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.6;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #6B6B6B;
+    }
+    .strategy-dl dd {
+      margin: 1px 0 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6B6B6B;
+    }
+    .strategy-dl--row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0 28px;
+    }
+    .strategy-dl--row > div { padding: 0; border-bottom: none; }
+    .strategy-dl--row dd { margin-top: 4px; }
+
+    .strategy-card--locked {
+      background: transparent;
+      border-style: dashed;
+      border-color: rgba(0,0,0,0.17);
+    }
+    .strategy-card--locked .strategy-card-title { color: #6B6B6B; }
+    .strategy-lock {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 500;
-      color: #6B6B6B;
-      flex-shrink: 0;
+      gap: 10px;
+      margin-top: 12px;
     }
-    .persona-card-title {
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    .persona-card-desc {
-      font-size: 12px;
-      color: #6B6B6B;
-      line-height: 1.5;
+    .strategy-lock svg { width: 17px; height: 17px; stroke: #6B6B6B; flex-shrink: 0; }
+
+    @media (max-width: 900px) {
+      .strategy-dl--row { grid-template-columns: 1fr; }
+      .strategy-dl--row > div { padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+      .strategy-dl--row > div:last-child { border-bottom: none; padding-bottom: 0; }
+      .strategy-list--cols { columns: 2; }
     }
 
     /* ——— VALIDATION CARDS ——— */
@@ -896,7 +938,6 @@
     /* ——— RESPONSIVE ——— */
     @media (max-width: 768px) {
       .case-hero h1 { font-size: 36px; }
-      .persona-grid { grid-template-columns: 1fr; }
       .strategy-table th, .strategy-table td:first-child { width: 100px; }
       
       .reflection-grid { grid-template-columns: 1fr; }
@@ -965,7 +1006,7 @@
     /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ——— */
     @media (max-width: 600px) {
       .problem-grid,
-      .persona-grid,
+      .strategy-grid,
       .reflection-grid,
       .validation-grid,
       .persona-scroller,
@@ -987,26 +1028,30 @@
          rows stay viewport-bounded and scroll internally instead of widening the page */
       .tg-graph > .tg-col { min-width: 0; }
       .problem-grid::-webkit-scrollbar,
-      .persona-grid::-webkit-scrollbar,
+      .strategy-grid::-webkit-scrollbar,
       .reflection-grid::-webkit-scrollbar,
       .validation-grid::-webkit-scrollbar,
       .persona-scroller::-webkit-scrollbar,
       .tg-cards::-webkit-scrollbar { display: none; }
       .problem-grid:focus-visible,
-      .persona-grid:focus-visible,
+      .strategy-grid:focus-visible,
       .reflection-grid:focus-visible,
       .validation-grid:focus-visible,
       .persona-scroller:focus-visible,
       .tg-cards:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
       .problem-grid > .problem-card,
-      .persona-grid > .persona-card,
+      .strategy-grid > .strategy-card,
       .reflection-grid > .reflection-col,
       .validation-grid > .validation-card,
       .persona-scroller > .persona-detail-card,
       .tg-cards > .tg-card { scroll-snap-align: start; }
       /* item widths sized as a fraction of the strip so a next-card peek is guaranteed */
       .problem-grid > .problem-card { flex: 0 0 80%; }
-      .persona-grid > .persona-card { flex: 0 0 64%; }
+      .strategy-grid > .strategy-card { flex: 0 0 78%; }
+      /* the strip is one row, so a card that spans two columns on desktop is
+         just another card here */
+      .strategy-grid > .strategy-card--wide { grid-column: auto; }
+      .strategy-list--cols { columns: 1; }
       .reflection-grid > .reflection-col { flex: 0 0 80%; }
       .validation-grid > .validation-card { flex: 0 0 82%; }
       .persona-scroller > .persona-detail-card { flex: 0 0 82%; }
@@ -1331,167 +1376,155 @@
       <!-- PHASE 1 PANEL -->
       <div class="phase-panel active" id="phase1">
         <p class="section-text">Phase 1 built the foundation &mdash; one marketplace to find, trust, and access any data asset. Structure and core workflows first; AI and social came later.</p>
-        <div class="accordion">
-          <details open>
-            <summary>Vision &amp; Problem</summary>
-            <div class="accordion-body">
-              <table class="strategy-table">
-                <tr><th scope="row">Vision</th><td>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</td></tr>
-                <tr><th scope="row">Problem</th><td>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</td></tr>
-                <tr><th scope="row">Success looks like</th><td>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</td></tr>
-              </table>
-            </div>
-          </details>
-          <details>
-            <summary>Persona groups</summary>
-            <div class="accordion-body">
-              <div class="persona-grid" tabindex="0" role="group" aria-label="Persona snapshots — scrollable">
-                <div class="persona-card">
-                  <div class="persona-avatar">G1</div>
-                  <div>
-                    <p class="persona-card-title">Data Scientist / Engineer</p>
-                    <p class="persona-card-desc">Browse data products, fast and relevant search, preview data, request &amp; obtain access quickly.</p>
-                  </div>
-                </div>
-                <div class="persona-card">
-                  <div class="persona-avatar">G2</div>
-                  <div>
-                    <p class="persona-card-title">Business User</p>
-                    <p class="persona-card-desc">Find existing reports across BI tools that answer questions from trusted data.</p>
-                  </div>
-                </div>
-                <div class="persona-card">
-                  <div class="persona-avatar">G3</div>
-                  <div>
-                    <p class="persona-card-title">Data Product Owner</p>
-                    <p class="persona-card-desc">Manage data product info, approve/reject accesses, define level of access.</p>
-                  </div>
-                </div>
-                <div class="persona-card">
-                  <div class="persona-avatar">G4</div>
-                  <div>
-                    <p class="persona-card-title">Data POD Lead</p>
-                    <p class="persona-card-desc">Oversee data products across teams, monitor quality and access patterns.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
-          <details>
-            <summary>UX Goals</summary>
-            <div class="accordion-body">
-              <ul class="accordion-list">
-                <li>Help users find the right data product quickly</li>
-                <li>Make data product cards and details easy to understand</li>
-                <li>Simplify the access request flow</li>
-                <li>Make access statuses and permissions clear</li>
-                <li>Differentiate View and Edit access levels clearly</li>
-                <li>Enable product owners to add and manage products with minimal friction</li>
-              </ul>
-            </div>
-          </details>
-          <details>
-            <summary>Core user scenarios</summary>
-            <div class="accordion-body">
-              <ul class="accordion-list">
-                <li>Search and discover relevant data products</li>
-                <li>Filter and narrow down data products</li>
-                <li>Open dataset detail page and understand if it's usable</li>
-                <li>Request and get 1-click access directly from dataset page</li>
-                <li>Track access request status</li>
-                <li>Compare data sets</li>
-                <li>Add and manage data products</li>
-                <li>Manage access levels</li>
-              </ul>
-            </div>
-          </details>
-          <details>
-            <summary>UX Principles</summary>
-            <div class="accordion-body">
-              <ul class="accordion-list">
-                <li><strong>Reduce cognitive load</strong> &mdash; engineers already drown in data; the UI shouldn't add noise.</li>
-                <li><strong>Trust over decoration</strong> &mdash; every element earns its place; metadata, status, and lineage come first.</li>
-                <li><strong>Speed as a feature</strong> &mdash; every flow optimized for &ldquo;minutes, not weeks.&rdquo;</li>
-                <li><strong>Desktop-first</strong> &mdash; users live in multi-window data environments.</li>
-              </ul>
-            </div>
-          </details>
-          <div class="accordion-row-disabled">
-            <span class="accordion-row-left"><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="strategy-grid" tabindex="0" role="group" aria-label="Phase 1 strategy, eight cards — scrollable">
+
+          <div class="strategy-card strategy-card--wide">
+            <p class="strategy-card-title">Vision &amp; Problem</p>
+            <dl class="strategy-dl strategy-dl--row">
+              <div><dt>Vision</dt><dd>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</dd></div>
+              <div><dt>Problem</dt><dd>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</dd></div>
+              <div><dt>Success looks like</dt><dd>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</dd></div>
+            </dl>
           </div>
-          <div class="accordion-row-disabled">
-            <span class="accordion-row-left"><span>Roadmap &mdash; 7 phases, 18 months</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+
+          <div class="strategy-card">
+            <p class="strategy-card-title">Persona groups</p>
+            <ul class="strategy-list">
+              <li><b>G1 &middot; Data Scientist / Engineer</b> Browse data products, fast and relevant search, preview data, request &amp; obtain access quickly.</li>
+              <li><b>G2 &middot; Business User</b> Find existing reports across BI tools that answer questions from trusted data.</li>
+              <li><b>G3 &middot; Data Product Owner</b> Manage data product info, approve/reject accesses, define level of access.</li>
+              <li><b>G4 &middot; Data POD Lead</b> Oversee data products across teams, monitor quality and access patterns.</li>
+            </ul>
           </div>
-          <details>
-            <summary>Key deliverables</summary>
-            <div class="accordion-body">
-              <p style="font-size:14px; color:#6B6B6B; margin-bottom:12px;">What I delivered end-to-end on this project:</p>
-              <ul class="accordion-list">
-                <li>UX strategy for 2 product phases</li>
-                <li>Personas (4 groups)</li>
-                <li>User journey maps</li>
-                <li>Jobs-to-be-done</li>
-                <li>User flows (5 flows)</li>
-                <li>Information architecture</li>
-                <li>Wireframes and mockups</li>
-                <li>Interactive prototype</li>
-                <li>Scalable design system</li>
-                <li>2 rounds of usability testing reports</li>
-                <li>Post-launch research report</li>
-              </ul>
-            </div>
-          </details>
+
+          <div class="strategy-card">
+            <p class="strategy-card-title">UX Goals</p>
+            <ul class="strategy-list">
+              <li>Help users find the right data product quickly</li>
+              <li>Make data product cards and details easy to understand</li>
+              <li>Simplify the access request flow</li>
+              <li>Make access statuses and permissions clear</li>
+              <li>Differentiate View and Edit access levels clearly</li>
+              <li>Enable product owners to add and manage products with minimal friction</li>
+            </ul>
+          </div>
+
+          <div class="strategy-card">
+            <p class="strategy-card-title">Core user scenarios</p>
+            <ul class="strategy-list">
+              <li>Search and discover relevant data products</li>
+              <li>Filter and narrow down data products</li>
+              <li>Open dataset detail page and understand if it's usable</li>
+              <li>Request and get 1-click access directly from dataset page</li>
+              <li>Track access request status</li>
+              <li>Compare data sets</li>
+              <li>Add and manage data products</li>
+              <li>Manage access levels</li>
+            </ul>
+          </div>
+
+          <div class="strategy-card">
+            <p class="strategy-card-title">UX Principles</p>
+            <ul class="strategy-list">
+              <li>Reduce cognitive load &mdash; engineers already drown in data; the UI shouldn't add noise.</li>
+              <li>Trust over decoration &mdash; every element earns its place; metadata, status, and lineage come first.</li>
+              <li>Speed as a feature &mdash; every flow optimized for &ldquo;minutes, not weeks.&rdquo;</li>
+              <li>Desktop-first &mdash; users live in multi-window data environments.</li>
+            </ul>
+          </div>
+
+          <div class="strategy-card strategy-card--wide">
+            <p class="strategy-card-title">Key deliverables</p>
+            <ul class="strategy-list strategy-list--cols">
+              <li>UX strategy for 2 product phases</li>
+              <li>Personas (4 groups)</li>
+              <li>User journey maps</li>
+              <li>Jobs-to-be-done</li>
+              <li>User flows (5 flows)</li>
+              <li>Information architecture</li>
+              <li>Wireframes and mockups</li>
+              <li>Interactive prototype</li>
+              <li>Scalable design system</li>
+              <li>2 rounds of usability testing reports</li>
+              <li>Post-launch research report</li>
+            </ul>
+          </div>
+
+          <div class="strategy-card strategy-card--locked">
+            <p class="strategy-card-title">Success metrics</p>
+            <p class="strategy-lock">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="accordion-nda-tag">NDA</span>
+            </p>
+          </div>
+
+          <div class="strategy-card strategy-card--locked">
+            <p class="strategy-card-title">Roadmap &mdash; 7 phases, 18 months</p>
+            <p class="strategy-lock">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="accordion-nda-tag">NDA</span>
+            </p>
+          </div>
+
         </div>
       </div>
 
       <!-- PHASE 2 PANEL -->
       <div class="phase-panel" id="phase2">
         <p class="section-text">Phase 2 turns browsing into AI-powered discovery. Users describe what they need in plain language and get ranked, trustworthy results.</p>
-        <div class="accordion">
-          <details open>
-            <summary>Vision &amp; Problem</summary>
-            <div class="accordion-body">
-              <table class="strategy-table">
-                <tr><th scope="row">Vision</th><td>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</td></tr>
-                <tr><th scope="row">Problem</th><td>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</td></tr>
-                <tr><th scope="row">Success looks like</th><td>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</td></tr>
-              </table>
-            </div>
-          </details>
-          <details>
-            <summary>Structural changes</summary>
-            <div class="accordion-body">
-              <table class="strategy-table">
-                <tr><th scope="row">Phase 1 &rarr; 2</th><td>The existing browse experience moves to a secondary role. A new AI-powered entry point takes its place &mdash; built around intent rather than navigation.</td></tr>
-              </table>
-            </div>
-          </details>
-          <details>
-            <summary>UX Goals</summary>
-            <div class="accordion-body">
-              <ul class="accordion-list">
-                <li>Reduce time to find the right data product from weeks to minutes</li>
-                <li>Give users confidence to trust data before requesting access</li>
-                <li>Make approval decisions faster for owners</li>
-                <li>Surface peer knowledge that currently lives only in people's heads</li>
-                <li>Support both technical and business user journeys</li>
-              </ul>
-            </div>
-          </details>
-          <div class="accordion-row-disabled">
-            <span class="accordion-row-left"><span>AI capabilities</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="strategy-grid" tabindex="0" role="group" aria-label="Phase 2 strategy, six cards — scrollable">
+
+          <div class="strategy-card strategy-card--wide">
+            <p class="strategy-card-title">Vision &amp; Problem</p>
+            <dl class="strategy-dl strategy-dl--row">
+              <div><dt>Vision</dt><dd>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</dd></div>
+              <div><dt>Problem</dt><dd>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</dd></div>
+              <div><dt>Success looks like</dt><dd>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</dd></div>
+            </dl>
           </div>
-          <div class="accordion-row-disabled">
-            <span class="accordion-row-left"><span>Feature clusters</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+
+          <div class="strategy-card strategy-card--wide">
+            <p class="strategy-card-title">Structural changes</p>
+            <dl class="strategy-dl">
+              <div><dt>Phase 1 &rarr; 2</dt><dd>The existing browse experience moves to a secondary role. A new AI-powered entry point takes its place &mdash; built around intent rather than navigation.</dd></div>
+            </dl>
           </div>
-          <div class="accordion-row-disabled">
-            <span class="accordion-row-left"><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+
+          <div class="strategy-card strategy-card--wide">
+            <p class="strategy-card-title">UX Goals</p>
+            <ul class="strategy-list">
+              <li>Reduce time to find the right data product from weeks to minutes</li>
+              <li>Give users confidence to trust data before requesting access</li>
+              <li>Make approval decisions faster for owners</li>
+              <li>Surface peer knowledge that currently lives only in people's heads</li>
+              <li>Support both technical and business user journeys</li>
+            </ul>
           </div>
+
+          <div class="strategy-card strategy-card--locked">
+            <p class="strategy-card-title">AI capabilities</p>
+            <p class="strategy-lock">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="accordion-nda-tag">NDA</span>
+            </p>
+          </div>
+
+          <div class="strategy-card strategy-card--locked">
+            <p class="strategy-card-title">Feature clusters</p>
+            <p class="strategy-lock">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="accordion-nda-tag">NDA</span>
+            </p>
+          </div>
+
+          <div class="strategy-card strategy-card--locked strategy-card--wide">
+            <p class="strategy-card-title">Success metrics</p>
+            <p class="strategy-lock">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="accordion-nda-tag">NDA</span>
+            </p>
+          </div>
+
         </div>
       </div>
     </section>
@@ -2163,9 +2196,15 @@
     document.querySelectorAll('.phase-toggle-btn[data-phase]').forEach(btn => {
       btn.addEventListener('click', () => {
         const group = btn.closest('.phase-toggle') || document;
-        group.querySelectorAll('.phase-toggle-btn').forEach(b => b.classList.remove('active'));
+        group.querySelectorAll('.phase-toggle-btn').forEach(b => {
+          b.classList.remove('active');
+          // aria-pressed was written once in the markup and never updated, so a
+          // screen reader kept announcing Phase 1 as the pressed tab forever
+          if (b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed', 'false');
+        });
         document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
+        if (btn.hasAttribute('aria-pressed')) btn.setAttribute('aria-pressed', 'true');
         const panel = document.getElementById(btn.dataset.phase);
         if (panel) panel.classList.add('active');
       });
