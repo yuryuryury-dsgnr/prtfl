@@ -508,7 +508,11 @@
       font-size: 11px; color: #9A9A9A; font-weight: 500;
     }
     .mg-browser[data-mg-theme="dark"] .mg-url { color: #6B6B6B; }
-    .mg-canvas { position: relative; width: 100%; }
+    .mg-canvas { position: relative; width: 100%;
+      /* the canvas held 27px until the first mockup decoded, then jumped to
+         756px — reserve the ratio so nothing below it moves */
+      aspect-ratio: 2880 / 1800;
+    }
     .mg-img {
       width: 100%; height: auto; display: block;
       opacity: 0; position: absolute; top: 0; left: 0;
@@ -1471,7 +1475,7 @@
       <hr class="case-hero-divider">
 
       <div class="case-hero-image">
-        <img src="../../assets/images/halliburton/halliburton-hero.webp" alt="Data Marketplace — project overview" loading="lazy">
+        <img src="../../assets/images/halliburton/halliburton-hero.webp" alt="Data Marketplace — project overview" width="2425" height="1364" fetchpriority="high">
       </div>
     </section>
   </div>
@@ -1835,19 +1839,19 @@
                   <img class="mg-img active" data-mg-tab="main"
                        data-mg-light="images/mockups/main-light.webp"
                        data-mg-dark="images/mockups/main-dark.webp"
-                       src="images/mockups/main-light.webp" alt="Main — home page" loading="lazy">
+                       src="images/mockups/main-light.webp" alt="Main — home page" loading="lazy" width="2880" height="1800">
                   <img class="mg-img" data-mg-tab="explore"
                        data-mg-light="images/mockups/explore-light.webp"
-                       data-mg-dark="images/mockups/explore-dark.webp" alt="Explore" loading="lazy">
+                       data-mg-dark="images/mockups/explore-dark.webp" alt="Explore" loading="lazy" width="2880" height="1800">
                   <img class="mg-img" data-mg-tab="detail"
                        data-mg-light="images/mockups/detail-light.webp"
-                       data-mg-dark="images/mockups/detail-dark.webp" alt="Detail" loading="lazy">
+                       data-mg-dark="images/mockups/detail-dark.webp" alt="Detail" loading="lazy" width="2880" height="1800">
                   <img class="mg-img" data-mg-tab="request"
                        data-mg-light="images/mockups/request-light.webp"
-                       data-mg-dark="images/mockups/request-dark.webp" alt="Request Access" loading="lazy">
+                       data-mg-dark="images/mockups/request-dark.webp" alt="Request Access" loading="lazy" width="2880" height="1800">
                   <img class="mg-img" data-mg-tab="admin"
                        data-mg-light="images/mockups/admin-light.webp"
-                       data-mg-dark="images/mockups/admin-dark.webp" alt="Admin" loading="lazy">
+                       data-mg-dark="images/mockups/admin-dark.webp" alt="Admin" loading="lazy" width="2880" height="1800">
                 </div>
               </div>
 
