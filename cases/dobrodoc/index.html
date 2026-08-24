@@ -366,6 +366,22 @@
       html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
       
     }
+      /* Below 760px the 900-unit viewBox scales the 9-10px labels down to about
+       3.5 CSS px — the diagram becomes a grey smudge. Let it keep its real
+       width and scroll instead, the pattern the Rebalancer flows already use. */
+    @media (max-width: 760px) {
+      .flow-container {
+        overflow-x: auto; overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        margin-left: -24px; margin-right: -24px;
+        padding: 0 24px;
+      }
+      .flow-container::-webkit-scrollbar { display: none; }
+      .flow-container > svg { width: 900px !important; min-width: 900px; max-width: none !important; }
+      .flow-container:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    }
   </style>
 </head>
 <body>
@@ -526,7 +542,7 @@
     <section id="section-05" class="case-section">
       <p class="section-kicker"><span class="section-num">05</span> &middot; Multi-scenario flow</p>
       <h2 class="section-heading">Artifacts: User Flow</h2>
-      <div class="flow-container">
+      <div class="flow-container" tabindex="0" role="group" aria-label="User flow diagram, scrollable">
         <svg viewBox="0 0 900 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;" role="img" aria-label="Booking flow: from opening the app to a confirmed appointment, showing the multi-scenario paths">
           <!-- Entry -->
           <circle cx="60" cy="80" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>

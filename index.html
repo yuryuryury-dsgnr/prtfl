@@ -639,7 +639,12 @@
         });
 
         // Text cursor for paragraphs and headings
-        var textEls = document.querySelectorAll('p, h1, h2, h3, .hero-bio, .hero-title, .about-text');
+        // a case card is an <a> wrapping an h3 and two <p>s, so without this the
+        // text caret wins over the link ring on the page's only clickable element
+        var textEls = Array.prototype.filter.call(
+          document.querySelectorAll('p, h1, h2, h3'),
+          function (el) { return !el.closest('a, button'); }
+        );
         textEls.forEach(function(el) {
           el.addEventListener('mouseenter', function() {
             dot.classList.add('text-hover');
@@ -654,10 +659,9 @@
       addHoverListeners();
 
       // Hide default cursor
-      document.documentElement.style.cursor = 'none';
-      var style = document.createElement('style');
-      style.textContent = 'a,button,input,textarea,select,.card,.hero-link{cursor:none!important}';
-      document.head.appendChild(style);
+      // The system pointer stays: hiding it leaves anyone who relies on it — a
+      // magnifier, a trackpad user tracking a small target — with an 8px dot
+      // that lags behind where they actually are.
 
       // Animation loop — dot follows tight, ring follows with lag
       function animate() {

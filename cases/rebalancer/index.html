@@ -686,6 +686,10 @@
       background: rgba(26,26,26,0.96);
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border-radius: 16px; padding: 8px; min-width: 210px; display: none;
+    
+      /* 10 entries at 417px tall put its top at -95px on an 844x390
+         landscape phone — the first entries were unreachable. */
+      max-height: 70vh; overflow-y: auto;
     }
     .toc-pill.open .toc-pill-menu { display: block; }
     .toc-pill-menu a {
