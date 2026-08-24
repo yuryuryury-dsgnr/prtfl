@@ -68,49 +68,12 @@
     .topnav-link--secondary:hover { color: #1A1A1A; }
 
     /* ——— CUSTOM CURSOR ——— */
-    .cursor-dot {
-      position: fixed;
-      top: 0; left: 0;
-      width: 8px; height: 8px;
-      background: #1A1A1A;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transition: width 0.3s cubic-bezier(0.23,1,0.32,1),
-                  height 0.3s cubic-bezier(0.23,1,0.32,1),
-                  background 0.3s ease,
-                  opacity 0.3s ease;
-      mix-blend-mode: difference;
-      will-change: transform;
-    }
     
-    .cursor-dot.hover {
-      width: 48px; height: 48px;
-      background: rgba(26,26,26,0.08);
-      mix-blend-mode: normal;
-    }
-    .cursor-ring.hover {
-      width: 48px; height: 48px;
-      border-color: rgba(26,26,26,0.12);
-    }
-    .cursor-dot.text-hover {
-      width: 3px; height: 28px;
-      border-radius: 2px;
-      mix-blend-mode: difference;
-    }
-    .cursor-ring.text-hover {
-      opacity: 0;
-    }
     @media (pointer: coarse) {
       
     }
 
     /* ——— HERO ——— */
-    .hero {
-      padding: 56px 0 48px;
-      position: relative;
-      overflow: hidden;
-    }
 
     
 
@@ -124,21 +87,10 @@
 
     /* 520 rather than 480: the line needs 488px to stay whole, and the extra
        32 keeps a small copy edit from orphaning its last word again */
-    .hero-bio-hook {
-      font-size: 16px;
-      color: #6B6B6B;
-      max-width: 520px;
-      margin-bottom: 32px;
-    }
 
-    .hero-bio-hook strong {
-      font-weight: 500;
-    }
 
     
 
-    .hero-meta dt { color: #6B6B6B; font-weight: 400; }
-    .hero-meta dd { color: #1A1A1A; margin: 0; }
 
     
 
@@ -156,9 +108,6 @@
 
     /* ——— ABOUT ——— */
     /* ——— CASES ——— */
-    .cases {
-      padding: 0 0 120px;
-    }
 
     
 
@@ -166,12 +115,6 @@
 
     
 
-    .case-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
 
     
 
@@ -198,11 +141,6 @@
     
 
     /* ——— Rebalancer card: two independent links (isolated, not shared) ——— */
-    .case-card-stretch {
-      position: absolute;
-      inset: 0;
-      z-index: 1;               /* above the position:relative .case-thumb so the whole tile is clickable */
-    }
     
     
     
@@ -212,7 +150,6 @@
 
     /* keyed to its own hover, not the card's — the two links in this card are
        independent, so underlining both at once would misread as one target */
-    .case-store-link:hover::after { width: 100%; }
 
     /* ——— FOOTER ——— */
     .footer {
@@ -318,8 +255,8 @@
     }
     .skip-link:focus { top: 12px; }
   
-    /* Honour the system setting: the site animates a cursor loop, reveal-on-
-       scroll, a staggered timeline and smooth scrolling. */
+    /* Honour the system setting. This page carries no scripts, so only the
+       link and focus transitions are left to neutralise. */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -327,8 +264,6 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
-      
     }
   </style>
 </head>

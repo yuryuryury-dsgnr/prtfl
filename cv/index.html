@@ -342,7 +342,7 @@
        sheet. This only strips the site chrome and gets out of the way. */
     @page { size: A4; margin: 0; }
     @media print {
-      .topnav, .cv-intro, .cv-viewswitch, .footer { display: none !important; }
+      .topnav, .cv-intro, .footer { display: none !important; }
       html, body { background: #FFFFFF; }
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       /* The sheet is the page: nothing above it may add width or offset, so the
@@ -372,7 +372,6 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
       
     }
   </style>
