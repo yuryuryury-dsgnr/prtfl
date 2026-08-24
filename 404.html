@@ -83,20 +83,7 @@
       mix-blend-mode: difference;
       will-change: transform;
     }
-    .cursor-ring {
-      position: fixed;
-      top: 0; left: 0;
-      width: 36px; height: 36px;
-      border: 1.5px solid rgba(26,26,26,0.25);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transition: width 0.4s cubic-bezier(0.23,1,0.32,1),
-                  height 0.4s cubic-bezier(0.23,1,0.32,1),
-                  border-color 0.3s ease,
-                  opacity 0.3s ease;
-      will-change: transform;
-    }
+    
     .cursor-dot.hover {
       width: 48px; height: 48px;
       background: rgba(26,26,26,0.08);
@@ -115,7 +102,7 @@
       opacity: 0;
     }
     @media (pointer: coarse) {
-      .cursor-dot, .cursor-ring { display: none; }
+      
     }
 
     /* ——— HERO ——— */
@@ -125,42 +112,15 @@
       overflow: hidden;
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
+    
 
-    .hero-eyebrow {
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: #767676;
-      margin-bottom: 12px;
-    }
+    
 
-    .hero-name {
-      font-size: 34px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      max-width: 720px;
-      margin-bottom: 12px;
-    }
+    
 
-    .hero-title {
-      font-size: 16px;
-      color: #6B6B6B;
-      margin-bottom: 16px;
-    }
+    
 
-    .hero-bio {
-      font-size: 22px;
-      color: #1A1A1A;
-      max-width: 520px;
-      line-height: 1.4;
-      margin-bottom: 16px;
-    }
+    
 
     /* 520 rather than 480: the line needs 488px to stay whole, and the extra
        32 keeps a small copy edit from orphaning its last word again */
@@ -175,58 +135,24 @@
       font-weight: 500;
     }
 
-    .hero-meta {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 6px 0;
-      margin-bottom: 32px;
-      font-size: 14px;
-      max-width: 520px;
-    }
+    
 
     .hero-meta dt { color: #6B6B6B; font-weight: 400; }
     .hero-meta dd { color: #1A1A1A; margin: 0; }
 
-    .hero-link--primary {
-      border: 1px solid rgba(0,0,0,0.2);
-      border-radius: 6px;
-      padding: 7px 15px;
-      transition: border-color 200ms ease, background 200ms ease;
-    }
+    
 
-    .hero-link--primary:hover {
-      border-color: rgba(0,0,0,0.36);
-      background: rgba(0,0,0,0.025);
-    }
+    
 
-    .hero-link--primary::after { display: none; }
+    
 
-    .hero-links {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-    }
+    
 
-    .hero-link {
-      font-size: 14px;
-      font-weight: 500;
-      position: relative;
-    }
+    
 
-    .hero-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #1A1A1A;
-      transition: width 200ms ease;
-    }
+    
 
-    .hero-link:hover::after {
-      width: 100%;
-    }
+    
 
     /* ——— ABOUT ——— */
     /* ——— CASES ——— */
@@ -234,31 +160,11 @@
       padding: 0 0 120px;
     }
 
-    .cases-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
+    
 
-    .case-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      padding: 0;
-      transition: transform 200ms ease, border-color 200ms ease;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-    }
+    
 
-    .case-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      background: #EEEDEA;
-      position: relative;
-      overflow: hidden;
-    }
+    
 
     .case-thumb img {
       width: 100%;
@@ -267,88 +173,29 @@
       display: block;
     }
 
-    .case-thumb-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #C5C4C0;
-      font-size: 13px;
-      letter-spacing: 0.02em;
-    }
+    
 
-    .case-body {
-      padding: 24px 28px 28px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
+    
 
-    .case-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0,0,0,0.16);
-    }
+    
 
-    .case-meta {
-      font-size: 12px;
-      color: #6B6B6B;
-      margin-bottom: 8px;
-    }
+    
 
-    .case-name {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 10px;
-    }
+    
 
-    .case-role {
-      font-size: 14px;
-      color: #6B6B6B;
-      margin-bottom: 4px;
-    }
+    
 
-    .case-result {
-      font-size: 14px;
-      color: #6B6B6B;
-      margin-bottom: 16px;
-    }
+    
 
-    .case-link {
-      font-size: 14px;
-      font-weight: 500;
-      margin-top: auto;
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 0;
-      width: fit-content;
-    }
+    
 
-    .case-link .case-link-arrow {
-      display: inline-block;
-      transition: transform 200ms ease;
-    }
+    
 
-    .case-link:hover .case-link-arrow {
-      transform: translateX(3px);
-    }
+    
 
-    .case-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #1A1A1A;
-      transition: width 200ms ease;
-    }
+    
 
-    .case-link:hover::after {
-      width: 100%;
-    }
+    
 
     /* ——— Rebalancer card: two independent links (isolated, not shared) ——— */
     .case-card-stretch {
@@ -356,36 +203,12 @@
       inset: 0;
       z-index: 1;               /* above the position:relative .case-thumb so the whole tile is clickable */
     }
-    .case-links-row {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .case-links-row .case-link {
-      margin-top: 0;
-      z-index: 2;                /* above .case-card-stretch, which would
-                                    otherwise take every hover on this card */
-    }
-    .case-store-link {
-      position: relative;
-      z-index: 2;               /* above the stretch so it stays independently clickable */
-      font-size: 14px;
-      font-weight: 500;
-      color: #6B6B6B;
-    }
-    .case-store-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #1A1A1A;
-      transition: width 200ms ease;
-    }
+    
+    
+    
+    
 
-    .case-store-link:hover { color: #1A1A1A; }
+    
 
     /* keyed to its own hover, not the card's — the two links in this card are
        independent, so underlining both at once would misread as one target */
@@ -459,17 +282,11 @@
         background: rgba(0,0,0,0.025);
       }
 
-      .hero-name {
-        font-size: 26px;
-      }
+      
 
-      .cases-grid {
-        grid-template-columns: 1fr;
-      }
+      
 
-      .cases {
-        padding: 16px 0 80px;
-      }
+      
 
       .footer-inner {
         flex-direction: column;
@@ -511,14 +328,13 @@
         scroll-behavior: auto !important;
       }
       html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
-      .cursor-dot, .cursor-ring { display: none !important; }
+      
     }
   </style>
 </head>
 <body>
 
   <a class="skip-link" href="#main">Skip to content</a>
-
 
   <nav class="topnav">
     <div class="container topnav-inner">

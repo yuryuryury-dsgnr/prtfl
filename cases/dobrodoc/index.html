@@ -110,7 +110,7 @@
 
     /* ——— CARD GRIDS ——— */
     .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-    .card-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+    
     .card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; }
     .card-number { font-size: 14px; font-weight: 500; color: #6B6B6B; margin-bottom: 8px; }
     .card-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
@@ -149,7 +149,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; color: #6B6B6B; font-weight: 500;
     }
-    .wireframe-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
+    
 
     /* ——— iPHONE 16 FRAME ——— */
     .phone-pair {
@@ -236,11 +236,7 @@
       margin-top: 16px;
       line-height: 1.5;
     }
-    .phone-solo {
-      display: flex;
-      justify-content: center;
-      margin: 40px 0;
-    }
+    
 
     @media (max-width: 520px) {
       .phone-pair { flex-direction: column; align-items: center; gap: 32px; }
@@ -334,8 +330,8 @@
       .case-hero h1 { font-size: 36px; }
       .section-heading { font-size: 32px; }
       .card-grid-3 { grid-template-columns: 1fr; }
-      .card-grid-2 { grid-template-columns: 1fr; }
-      .wireframe-grid { grid-template-columns: 1fr; }
+      
+      
       .ba-columns { grid-template-columns: 1fr; }
       .reflection-grid { grid-template-columns: 1fr; }
       .round-columns { grid-template-columns: 1fr; }
@@ -368,14 +364,13 @@
         scroll-behavior: auto !important;
       }
       html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
-      .cursor-dot, .cursor-ring { display: none !important; }
+      
     }
   </style>
 </head>
 <body>
 
   <a class="skip-link" href="#main">Skip to content</a>
-
 
   <!-- HEADER -->
   <header class="case-header">
