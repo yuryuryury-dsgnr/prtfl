@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script>document.documentElement.className += " js";</script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -987,12 +988,15 @@
     .footer-right a:hover::after { width: 100%; }
 
     /* ——— SCROLL REVEAL ——— */
-    .reveal {
+    /* Hidden only once the script has confirmed it is running: the class comes
+       off <html> in the head, so with JS off the content is simply visible
+       rather than a page of blank sections. */
+    html.js .reveal {
       opacity: 0;
       transform: translateY(16px);
       transition: opacity 600ms ease, transform 600ms ease;
     }
-    .reveal.visible {
+    html.js .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
@@ -1451,6 +1455,15 @@
       .mc-mid   { left: 9%; top: 18px; opacity: 0.3; filter: blur(3px); }
       .mc-back  { left: 12%; top: 4px; opacity: 0.15; filter: blur(6px); transform: rotate(0deg); }
       .mc-annotation { display: none; }
+    }
+  
+    /* Printing a long case study is a normal way to read it later — nothing
+       may depend on the scroll observer having fired. */
+    @media print {
+      html.js .reveal, html.js .reveal.visible,
+      .timeline-step { opacity: 1 !important; transform: none !important; }
+      .toc-pill, .case-header-back { display: none !important; }
+      a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 10px; color: #6B6B6B; }
     }
   </style>
 </head>
