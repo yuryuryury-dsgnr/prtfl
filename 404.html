@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page not found — Yurii Fokin</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #1A1A1A;
+      background-color: #F8F7F4;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ——— TOP NAV ——— */
+    .topnav { padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .topnav-inner { display: flex; justify-content: space-between; align-items: center; }
+    .topnav-logo { font-size: 15px; font-weight: 500; color: #1A1A1A; letter-spacing: -0.01em; }
+    .topnav-links { display: flex; gap: 24px; align-items: center; }
+    .topnav-link { font-size: 14px; font-weight: 500; color: #1A1A1A; }
+    .topnav-link:hover { color: #6B6B6B; }
+    /* Contact is the primary action, so it carries the same button treatment as
+       .hero-link--primary; the CV link steps back to grey. On desktop the pill
+       stays last, where a right-aligned row puts its most prominent item. */
+    .topnav-link--primary {
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 6px;
+      padding: 7px 15px;
+      transition: border-color 200ms ease, background 200ms ease, color 200ms ease;
+    }
+    .topnav-link--primary:hover {
+      color: #1A1A1A;
+      border-color: rgba(0,0,0,0.36);
+      background: rgba(0,0,0,0.025);
+    }
+    .topnav-link--secondary { color: #6B6B6B; }
+    .topnav-link--secondary:hover { color: #1A1A1A; }
+
+    /* ——— CUSTOM CURSOR ——— */
+    .cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: 8px; height: 8px;
+      background: #1A1A1A;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: width 0.3s cubic-bezier(0.23,1,0.32,1),
+                  height 0.3s cubic-bezier(0.23,1,0.32,1),
+                  background 0.3s ease,
+                  opacity 0.3s ease;
+      mix-blend-mode: difference;
+      will-change: transform;
+    }
+    .cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(26,26,26,0.25);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: width 0.4s cubic-bezier(0.23,1,0.32,1),
+                  height 0.4s cubic-bezier(0.23,1,0.32,1),
+                  border-color 0.3s ease,
+                  opacity 0.3s ease;
+      will-change: transform;
+    }
+    .cursor-dot.hover {
+      width: 48px; height: 48px;
+      background: rgba(26,26,26,0.08);
+      mix-blend-mode: normal;
+    }
+    .cursor-ring.hover {
+      width: 48px; height: 48px;
+      border-color: rgba(26,26,26,0.12);
+    }
+    .cursor-dot.text-hover {
+      width: 3px; height: 28px;
+      border-radius: 2px;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring.text-hover {
+      opacity: 0;
+    }
+    @media (pointer: coarse) {
+      .cursor-dot, .cursor-ring { display: none; }
+    }
+
+    /* ——— HERO ——— */
+    .hero {
+      padding: 56px 0 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #767676;
+      margin-bottom: 12px;
+    }
+
+    .hero-name {
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      max-width: 720px;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 16px;
+      color: #6B6B6B;
+      margin-bottom: 16px;
+    }
+
+    .hero-bio {
+      font-size: 22px;
+      color: #1A1A1A;
+      max-width: 520px;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    /* 520 rather than 480: the line needs 488px to stay whole, and the extra
+       32 keeps a small copy edit from orphaning its last word again */
+    .hero-bio-hook {
+      font-size: 16px;
+      color: #6B6B6B;
+      max-width: 520px;
+      margin-bottom: 32px;
+    }
+
+    .hero-bio-hook strong {
+      font-weight: 500;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 6px 0;
+      margin-bottom: 32px;
+      font-size: 14px;
+      max-width: 520px;
+    }
+
+    .hero-meta dt { color: #9A9A9A; font-weight: 400; }
+    .hero-meta dd { color: #1A1A1A; margin: 0; }
+
+    .hero-link--primary {
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 6px;
+      padding: 7px 15px;
+      transition: border-color 200ms ease, background 200ms ease;
+    }
+
+    .hero-link--primary:hover {
+      border-color: rgba(0,0,0,0.36);
+      background: rgba(0,0,0,0.025);
+    }
+
+    .hero-link--primary::after { display: none; }
+
+    .hero-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-link {
+      font-size: 14px;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .hero-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #1A1A1A;
+      transition: width 200ms ease;
+    }
+
+    .hero-link:hover::after {
+      width: 100%;
+    }
+
+    /* ——— ABOUT ——— */
+    /* ——— CASES ——— */
+    .cases {
+      padding: 0 0 120px;
+    }
+
+    .cases-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .case-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      padding: 0;
+      transition: transform 200ms ease, border-color 200ms ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .case-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: #EEEDEA;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .case-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .case-thumb-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #C5C4C0;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+
+    .case-body {
+      padding: 24px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .case-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,0,0,0.16);
+    }
+
+    .case-meta {
+      font-size: 12px;
+      color: #9A9A9A;
+      margin-bottom: 8px;
+    }
+
+    .case-name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+
+    .case-role {
+      font-size: 14px;
+      color: #6B6B6B;
+      margin-bottom: 4px;
+    }
+
+    .case-result {
+      font-size: 14px;
+      color: #6B6B6B;
+      margin-bottom: 16px;
+    }
+
+    .case-link {
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: auto;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      width: fit-content;
+    }
+
+    .case-link .case-link-arrow {
+      display: inline-block;
+      transition: transform 200ms ease;
+    }
+
+    .case-link:hover .case-link-arrow {
+      transform: translateX(3px);
+    }
+
+    .case-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #1A1A1A;
+      transition: width 200ms ease;
+    }
+
+    .case-link:hover::after {
+      width: 100%;
+    }
+
+    /* ——— Rebalancer card: two independent links (isolated, not shared) ——— */
+    .case-card-stretch {
+      position: absolute;
+      inset: 0;
+      z-index: 1;               /* above the position:relative .case-thumb so the whole tile is clickable */
+    }
+    .case-links-row {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .case-links-row .case-link {
+      margin-top: 0;
+      z-index: 2;                /* above .case-card-stretch, which would
+                                    otherwise take every hover on this card */
+    }
+    .case-store-link {
+      position: relative;
+      z-index: 2;               /* above the stretch so it stays independently clickable */
+      font-size: 14px;
+      font-weight: 500;
+      color: #6B6B6B;
+    }
+    .case-store-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #1A1A1A;
+      transition: width 200ms ease;
+    }
+
+    .case-store-link:hover { color: #1A1A1A; }
+
+    /* keyed to its own hover, not the card's — the two links in this card are
+       independent, so underlining both at once would misread as one target */
+    .case-store-link:hover::after { width: 100%; }
+
+    /* ——— FOOTER ——— */
+    .footer {
+      border-top: 1px solid rgba(0,0,0,0.08);
+      padding: 40px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-size: 14px;
+    }
+
+    .footer-name {
+      font-weight: 500;
+    }
+
+    .footer-role {
+      color: #6B6B6B;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+      color: #6B6B6B;
+    }
+
+    .footer-right a {
+      position: relative;
+    }
+
+    .footer-right a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #6B6B6B;
+      transition: width 200ms ease;
+    }
+
+    .footer-right a:hover::after {
+      width: 100%;
+    }
+
+    /* ——— RESPONSIVE ——— */
+    @media (max-width: 768px) {
+      /* the pill supplies its own vertical air, so the nav no longer needs
+         24px of it on top of that */
+      .topnav { padding: 16px 0; }
+      .topnav-inner { flex-wrap: wrap; gap: 16px; }
+      .topnav-links { gap: 12px; }
+
+      /* The row is left-aligned here, so the prominent slot is the first one —
+         the opposite of the right-aligned desktop row. Bare text lines are also
+         too small to hit with a thumb, hence the 44px floor. */
+      .topnav-link { min-height: 44px; display: inline-flex; align-items: center; }
+      .topnav-link--primary { order: -1; padding: 0 16px; }
+      .topnav-link--primary:active {
+        border-color: rgba(0,0,0,0.36);
+        background: rgba(0,0,0,0.025);
+      }
+
+      .hero-name {
+        font-size: 26px;
+      }
+
+      .cases-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cases {
+        padding: 16px 0 80px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .footer-right {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+  <style>
+    .nf { padding: 120px 0 160px; }
+    .nf-code { font-size: 14px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #9A9A9A; margin-bottom: 14px; }
+    .nf h1 { font-size: 34px; font-weight: 600; letter-spacing: -0.03em;
+      line-height: 1.1; max-width: 720px; margin-bottom: 12px; }
+    .nf p { font-size: 16px; color: #6B6B6B; max-width: 520px; margin-bottom: 32px; }
+    .nf-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    @media (max-width: 768px) { .nf { padding: 72px 0 104px; } .nf h1 { font-size: 26px; } }
+  </style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <div class="container topnav-inner">
+      <a href="/" class="topnav-logo">Portfolio — Yurii Fokin</a>
+      <div class="topnav-links">
+        <a href="/assets/CV_Yurii_Fokin.pdf" download class="topnav-link topnav-link--secondary">Download CV ↓</a>
+        <a href="mailto:yuryuryury@icloud.com" class="topnav-link topnav-link--primary">Get in touch →</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="nf">
+    <div class="container">
+      <p class="nf-code">404</p>
+      <h1>This page isn’t here.</h1>
+      <p>The address may be mistyped, or the page may have moved. The work is all one click away.</p>
+      <div class="nf-links">
+        <a href="/#work" class="topnav-link topnav-link--primary">See the work →</a>
+        <a href="/" class="topnav-link topnav-link--secondary">Go to the homepage</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <span class="footer-name">Portfolio</span> · <span class="footer-role">Yurii Fokin</span>
+        </div>
+        <div class="footer-right">
+          <a href="mailto:yuryuryury@icloud.com">Email</a>
+          <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
+          <span>Batumi, GE</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
