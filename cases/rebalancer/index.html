@@ -718,12 +718,6 @@
       .footer-right { flex-wrap: wrap; justify-content: center; }
       .case-section { padding: 64px 0 0; }
       .reflection-grid { grid-template-columns: 1fr; }
-      /* roadmap → vertical rail, same as dopas/dobrodoc. No scroller needed
-         once the steps stack, so the wrapper stops clipping and drops its
-         fade (the class can still be on it from a wider layout). The span
-         bracket has nothing to span once phases stack, so it flattens into a
-         plain note above the rail. */
-      .rb-road-scroll { overflow: visible; }
       .rb-groups { grid-template-columns: 1fr; }
       .rb-tests { grid-template-columns: 1fr; }
       .rb-store > .phone-figure { flex: 0 0 62%; }
@@ -732,11 +726,15 @@
          gaps read top to bottom */
       .rb-cmp-c { padding: 10px 8px; }
       .rb-cmp-c--name { padding-left: 14px; }
-      .rb-road-scroll--more { -webkit-mask-image: none; mask-image: none; }
-      .timeline { grid-template-columns: 1fr; gap: 24px; padding-left: 24px; min-width: 0; }
-      .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
-      .timeline-step { padding-top: 0; padding-left: 16px; padding-right: 0; }
-      .timeline-step::before { top: 4px; left: -24px; }
+      /* Mobile keeps the horizontal rail rather than unrolling it into a tall
+         vertical list. .rb-road-scroll is already the scroller and already
+         carries the rail on the .timeline track, so the phases only need a
+         width that guarantees a peek at the next one — and the wrapper has to
+         keep clipping, which is why the old `overflow: visible` release and
+         the mask reset are both gone. */
+      .timeline { grid-template-columns: repeat(5, 72%); gap: 0; padding-left: 0; min-width: 0; }
+      .rb-road-scroll { scroll-snap-type: x proximity; }
+      .timeline-step { scroll-snap-align: start; padding-top: 48px; padding-left: 0; padding-right: 16px; }
       /* tab strip → bounded internal scroll; a clipped next tab is the peek */
       .rb-tabs {
         width: 100%; max-width: 100%; min-width: 0;
@@ -787,6 +785,40 @@
       /* One list rhythm across the cases: 14px at 1.7, the same as the
        secondary text it sits beside. */
     .case-section li, .section-text li { font-size: 14px; line-height: 1.7; }
+  
+    /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ———
+       Same pattern as the other cases. The pastel fills stay; only the
+       flow changes. */
+    @media (max-width: 600px) {
+      .rb-groups,
+      .rb-tests,
+      .reflection-grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+      }
+      .rb-groups::-webkit-scrollbar,
+      .rb-tests::-webkit-scrollbar,
+      .reflection-grid::-webkit-scrollbar { display: none; }
+      .rb-groups:focus-visible,
+      .rb-tests:focus-visible,
+      .reflection-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .rb-groups > .rb-group,
+      .rb-tests > .rb-test,
+      .reflection-grid > div { scroll-snap-align: start; }
+      .rb-groups > .rb-group { flex: 0 0 82%; }
+      .rb-tests > .rb-test { flex: 0 0 82%; }
+      .reflection-grid > div { flex: 0 0 80%; }
+    }
   </style>
 </head>
 <body>
@@ -997,7 +1029,7 @@
 
       <h3 class="subsection-heading">User personas</h3>
       <p class="section-text">Three groups came out of the conversations and the reading. I belong to the first one myself, which is where the product started; the interviews put the other two beside it.</p>
-      <div class="rb-groups">
+      <div class="rb-groups" tabindex="0" role="group" aria-label="Audience groups — scrollable">
         <div class="rb-group rb-group--investor">
           <div class="rb-group-head">
             <span class="rb-group-eyebrow">
@@ -1454,7 +1486,7 @@
       <p class="section-kicker"><span class="section-num">05</span> &middot; Four flows, four things I had wrong</p>
       <h2 class="section-heading">Testing</h2>
       <p class="section-text">Two rounds through TestFlight, on other people's phones. Each flow gave up one thing I had assumed, and each one changed the build.</p>
-      <div class="rb-tests">
+      <div class="rb-tests" tabindex="0" role="group" aria-label="Usability test findings — scrollable">
         <div class="rb-test">
           <p class="rb-test-flow"><span class="rb-test-num">01</span>Creating a pair</p>
           <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>Nobody could see how to enter the amounts they hold from the watchlist.</p>
@@ -1625,7 +1657,7 @@
     <section id="section-09" class="case-section">
       <p class="section-kicker"><span class="section-num">09</span> &middot; What the build taught me</p>
       <h2 class="section-heading">Reflection</h2>
-      <div class="reflection-grid">
+      <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
         <div>
           <p class="reflection-title">What I'd do differently</p>
           <p class="reflection-text">The backend turned out bigger than I scoped it. Next time I'd size the invisible parts first, before a line of interface exists.</p>

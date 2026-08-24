@@ -258,14 +258,40 @@
       .wireframe-grid { grid-template-columns: 1fr; }
       .ba-columns { grid-template-columns: 1fr; }
       .reflection-grid { grid-template-columns: 1fr; }
+      /* Mobile: the process stays a horizontal rail and scrolls, instead of
+         unrolling into a tall vertical list. The container rail can't be used
+         here — an absolutely positioned ::before on a scroll container stops
+         at the visible edge, not the scroll width — so each step carries its
+         own segment of the rail via ::after and the dot is lifted above it. */
       .timeline {
-        flex-direction: column; gap: 24px; padding-left: 24px;
+        flex-direction: row;
+        gap: 0;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        padding-left: 0;
       }
-      .timeline::before {
-        top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto;
+      .timeline::-webkit-scrollbar { display: none; }
+      .timeline:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .timeline::before { display: none; }
+      .timeline-step {
+        flex: 0 0 72%;
+        scroll-snap-align: start;
+        padding-top: 48px;
+        padding-left: 0;
+        padding-right: 16px;
+        padding-bottom: 0;
       }
-      .timeline-step { padding-top: 0; padding-left: 16px; padding-right: 0; }
-      .timeline-step::before { top: 4px; left: -24px; }
+      .timeline-step::after {
+        content: ''; position: absolute; top: 24px; left: 0; right: 0;
+        height: 2px; background: rgba(0,0,0,0.08);
+      }
+      .timeline-step::before { top: 18px; left: 0; z-index: 1; }
       .next-case { flex-direction: column; gap: 8px; text-align: center; }
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
@@ -312,6 +338,45 @@
       /* One list rhythm across the cases: 14px at 1.7, the same as the
        secondary text it sits beside. */
     .case-section li, .section-text li { font-size: 14px; line-height: 1.7; }
+  
+    /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ———
+       Same pattern as the Data Marketplace case. The wireframe row gains the
+       most: five stacked frames ran over 1600px tall on a phone. */
+    @media (max-width: 600px) {
+      .card-grid-3,
+      .card-grid-2,
+      .wireframe-grid,
+      .reflection-grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+      }
+      .card-grid-3::-webkit-scrollbar,
+      .card-grid-2::-webkit-scrollbar,
+      .wireframe-grid::-webkit-scrollbar,
+      .reflection-grid::-webkit-scrollbar { display: none; }
+      .card-grid-3:focus-visible,
+      .card-grid-2:focus-visible,
+      .wireframe-grid:focus-visible,
+      .reflection-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .card-grid-3 > .card,
+      .card-grid-2 > .card,
+      .wireframe-grid > .wireframe-item,
+      .reflection-grid > div { scroll-snap-align: start; }
+      .card-grid-3 > .card { flex: 0 0 80%; }
+      .card-grid-2 > .card { flex: 0 0 80%; }
+      .wireframe-grid > .wireframe-item { flex: 0 0 78%; }
+      .reflection-grid > div { flex: 0 0 80%; }
+    }
   </style>
 </head>
 <body>
@@ -354,7 +419,7 @@
     <section id="section-02" class="case-section">
       <p class="section-kicker"><span class="section-num">02</span> &middot; From research to handoff</p>
       <h2 class="section-heading">Process</h2>
-      <div class="timeline">
+      <div class="timeline" tabindex="0" role="group" aria-label="Process, six phases — scrollable">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
           <p class="timeline-title">Market Analysis</p>
@@ -398,7 +463,7 @@
     <section id="section-03" class="case-section">
       <p class="section-kicker"><span class="section-num">03</span> &middot; What the competition looked like</p>
       <h2 class="section-heading">Artifacts: Market Analysis</h2>
-      <div class="card-grid-3">
+      <div class="card-grid-3" tabindex="0" role="group" aria-label="Research activities — scrollable">
         <div class="card">
           <p class="card-number">01</p>
           <p class="card-title">Direct competitive audit</p>
@@ -522,7 +587,7 @@
     <section id="section-05" class="case-section">
       <p class="section-kicker"><span class="section-num">05</span> &middot; What testing revealed</p>
       <h2 class="section-heading">Artifacts: Usability Findings</h2>
-      <div class="card-grid-2">
+      <div class="card-grid-2" tabindex="0" role="group" aria-label="Findings — scrollable">
         <div class="card">
           <p class="card-number">01</p>
           <p class="card-title">Seat selection too late in the flow</p>
@@ -555,7 +620,7 @@
       <p class="section-kicker"><span class="section-num">06</span> &middot; Defining the structure</p>
       <h2 class="section-heading">Wireframes</h2>
       <p class="section-text">Lo-fi wireframes defined the core structure before any visual design decisions were made.</p>
-      <div class="wireframe-grid">
+      <div class="wireframe-grid" tabindex="0" role="group" aria-label="Wireframes — scrollable">
         <div class="wireframe-item">
           <div class="wireframe-placeholder">Homepage</div>
           <p class="wireframe-caption">Entry point. Search widget front and centre — destination, date, passenger count.</p>
@@ -683,7 +748,7 @@
     <section id="section-09" class="case-section">
       <p class="section-kicker"><span class="section-num">09</span> &middot; Looking back</p>
       <h2 class="section-heading">Reflection</h2>
-      <div class="reflection-grid">
+      <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
         <div>
           <p class="reflection-title">What I'd do differently</p>
           <p class="reflection-text">Start with a design system from day one. Building components ad hoc slowed the hi-fi phase and created inconsistencies fixed during handoff.</p>

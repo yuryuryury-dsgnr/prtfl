@@ -425,12 +425,40 @@
       .two-col { grid-template-columns: 1fr; gap: 32px; }
       .strategy-table th, .strategy-table td:first-child { width: 100px; }
       .deliverables-grid { grid-template-columns: 1fr 1fr; }
-      .timeline { flex-direction: column; gap: 0; }
-      .timeline::before {
-        top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto;
+      /* Mobile: the process stays a horizontal rail and scrolls, instead of
+         unrolling into a tall vertical list. The container rail can't be used
+         here — an absolutely positioned ::before on a scroll container stops
+         at the visible edge, not the scroll width — so each step carries its
+         own segment of the rail via ::after and the dot is lifted above it. */
+      .timeline {
+        flex-direction: row;
+        gap: 0;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        padding-left: 0;
       }
-      .timeline-step { padding-top: 0; padding-left: 32px; padding-bottom: 32px; }
-      .timeline-step::before { top: 4px; left: 0; }
+      .timeline::-webkit-scrollbar { display: none; }
+      .timeline:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .timeline::before { display: none; }
+      .timeline-step {
+        flex: 0 0 72%;
+        scroll-snap-align: start;
+        padding-top: 48px;
+        padding-left: 0;
+        padding-right: 16px;
+        padding-bottom: 0;
+      }
+      .timeline-step::after {
+        content: ''; position: absolute; top: 24px; left: 0; right: 0;
+        height: 2px; background: rgba(0,0,0,0.08);
+      }
+      .timeline-step::before { top: 18px; left: 0; z-index: 1; }
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { justify-content: center; }
     }
@@ -496,6 +524,35 @@
       /* One list rhythm across the cases: 14px at 1.7, the same as the
        secondary text it sits beside. */
     .case-section li, .section-text li { font-size: 14px; line-height: 1.7; }
+  
+    /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ———
+       Same pattern as the case page it hangs off. Deliverables are short
+       cards, so they take a narrower basis and show two at a time. */
+    @media (max-width: 600px) {
+      .persona-grid,
+      .deliverables-grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+      }
+      .persona-grid::-webkit-scrollbar,
+      .deliverables-grid::-webkit-scrollbar { display: none; }
+      .persona-grid:focus-visible,
+      .deliverables-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .persona-grid > .persona-card,
+      .deliverables-grid > .deliverable-card { scroll-snap-align: start; }
+      .persona-grid > .persona-card { flex: 0 0 82%; }
+      .deliverables-grid > .deliverable-card { flex: 0 0 62%; }
+    }
   </style>
 </head>
 <body>
@@ -538,7 +595,7 @@
       <h2 class="section-heading">User groups &amp; needs</h2>
       <p class="section-text">Four persona groups were identified through stakeholder interviews and contextual research. Each represents a distinct relationship with data products in the organization.</p>
 
-      <div class="persona-grid">
+      <div class="persona-grid" tabindex="0" role="group" aria-label="Personas — scrollable">
         <!-- G1 -->
         <div class="persona-card">
           <div class="persona-card-header">
@@ -691,7 +748,7 @@
       <div class="nda-block nda-block-standalone">
         <div class="nda-content" aria-hidden="true">
           <div style="padding: 24px;">
-            <div class="timeline">
+            <div class="timeline" tabindex="0" role="group" aria-label="Process, seven phases — scrollable">
               <div class="timeline-step visible">
                 <p class="timeline-number">1</p>
                 <p class="timeline-title">Discovery</p>
@@ -774,7 +831,7 @@
 
       <div class="nda-block nda-block-standalone">
         <div class="nda-content" aria-hidden="true">
-          <div class="deliverables-grid">
+          <div class="deliverables-grid" tabindex="0" role="group" aria-label="Deliverables — scrollable">
             <div class="deliverable-card">
               <div class="deliverable-icon"></div>
               <p class="deliverable-title">UX Strategy &amp; Roadmap</p>

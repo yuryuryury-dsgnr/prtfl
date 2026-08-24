@@ -900,12 +900,40 @@
       .strategy-table th, .strategy-table td:first-child { width: 100px; }
       
       .reflection-grid { grid-template-columns: 1fr; }
-      .timeline { flex-direction: column; gap: 0; }
-      .timeline::before {
-        top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto;
+      /* Mobile: the process stays a horizontal rail and scrolls, instead of
+         unrolling into a tall vertical list. The container rail can't be used
+         here — an absolutely positioned ::before on a scroll container stops
+         at the visible edge, not the scroll width — so each step carries its
+         own segment of the rail via ::after and the dot is lifted above it. */
+      .timeline {
+        flex-direction: row;
+        gap: 0;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        padding-left: 0;
       }
-      .timeline-step { padding-top: 0; padding-left: 32px; padding-bottom: 32px; }
-      .timeline-step::before { top: 4px; left: 0; }
+      .timeline::-webkit-scrollbar { display: none; }
+      .timeline:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .timeline::before { display: none; }
+      .timeline-step {
+        flex: 0 0 72%;
+        scroll-snap-align: start;
+        padding-top: 48px;
+        padding-left: 0;
+        padding-right: 16px;
+        padding-bottom: 0;
+      }
+      .timeline-step::after {
+        content: ''; position: absolute; top: 24px; left: 0; right: 0;
+        height: 2px; background: rgba(0,0,0,0.08);
+      }
+      .timeline-step::before { top: 18px; left: 0; z-index: 1; }
       .next-case { flex-direction: column; gap: 8px; align-items: flex-start; }
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { justify-content: center; }
@@ -1250,7 +1278,7 @@
     <section id="section-02" class="case-section reveal">
       <p class="section-kicker"><span class="section-num">02</span> &middot; From vision to shipped product</p>
       <h2 class="section-heading">Process</h2>
-      <div class="timeline">
+      <div class="timeline" tabindex="0" role="group" aria-label="Process, six phases — scrollable">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
           <p class="timeline-title">Discovery</p>

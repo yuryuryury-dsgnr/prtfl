@@ -338,10 +338,40 @@
       .ba-columns { grid-template-columns: 1fr; }
       .reflection-grid { grid-template-columns: 1fr; }
       .round-columns { grid-template-columns: 1fr; }
-      .timeline { flex-direction: column; gap: 24px; padding-left: 24px; }
-      .timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
-      .timeline-step { padding-top: 0; padding-left: 16px; padding-right: 0; }
-      .timeline-step::before { top: 4px; left: -24px; }
+      /* Mobile: the process stays a horizontal rail and scrolls, instead of
+         unrolling into a tall vertical list. The container rail can't be used
+         here — an absolutely positioned ::before on a scroll container stops
+         at the visible edge, not the scroll width — so each step carries its
+         own segment of the rail via ::after and the dot is lifted above it. */
+      .timeline {
+        flex-direction: row;
+        gap: 0;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        padding-left: 0;
+      }
+      .timeline::-webkit-scrollbar { display: none; }
+      .timeline:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .timeline::before { display: none; }
+      .timeline-step {
+        flex: 0 0 72%;
+        scroll-snap-align: start;
+        padding-top: 48px;
+        padding-left: 0;
+        padding-right: 16px;
+        padding-bottom: 0;
+      }
+      .timeline-step::after {
+        content: ''; position: absolute; top: 24px; left: 0; right: 0;
+        height: 2px; background: rgba(0,0,0,0.08);
+      }
+      .timeline-step::before { top: 18px; left: 0; z-index: 1; }
       .next-case { flex-direction: column; gap: 8px; text-align: center; }
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
@@ -384,6 +414,35 @@
       .flow-container::-webkit-scrollbar { display: none; }
       .flow-container > svg { width: 900px !important; min-width: 900px; max-width: none !important; }
       .flow-container:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    }
+  
+    /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ———
+       Same pattern as the Data Marketplace case, so a card set behaves the
+       same way whichever case you are reading. */
+    @media (max-width: 600px) {
+      .card-grid-3,
+      .reflection-grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+      }
+      .card-grid-3::-webkit-scrollbar,
+      .reflection-grid::-webkit-scrollbar { display: none; }
+      .card-grid-3:focus-visible,
+      .reflection-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .card-grid-3 > .card,
+      .reflection-grid > div { scroll-snap-align: start; }
+      .card-grid-3 > .card { flex: 0 0 80%; }
+      .reflection-grid > div { flex: 0 0 80%; }
     }
   </style>
 </head>
@@ -428,7 +487,7 @@
     <section id="section-02" class="case-section">
       <p class="section-kicker"><span class="section-num">02</span> &middot; From audit to handoff</p>
       <h2 class="section-heading">Process</h2>
-      <div class="timeline">
+      <div class="timeline" tabindex="0" role="group" aria-label="Process, seven phases — scrollable">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
           <p class="timeline-title">UX Audit</p>
@@ -510,7 +569,7 @@
     <section id="section-04" class="case-section">
       <p class="section-kicker"><span class="section-num">04</span> &middot; Understanding the users</p>
       <h2 class="section-heading">Artifacts: Research & Discovery</h2>
-      <div class="card-grid-3">
+      <div class="card-grid-3" tabindex="0" role="group" aria-label="Research activities — scrollable">
         <div class="card">
           <p class="card-number">01</p>
           <p class="card-title">Stakeholder interviews</p>
@@ -835,7 +894,7 @@
     <section id="section-10" class="case-section">
       <p class="section-kicker"><span class="section-num">10</span> &middot; Looking back</p>
       <h2 class="section-heading">Reflection</h2>
-      <div class="reflection-grid">
+      <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
         <div>
           <p class="reflection-title">What I'd do differently</p>
           <p class="reflection-text">Start with a design system from day one. Component inconsistencies between screens slowed the hi-fi phase and required cleanup before handoff.</p>
