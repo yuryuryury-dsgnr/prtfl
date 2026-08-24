@@ -349,9 +349,33 @@
       .case-section { padding: 64px 0 0; }
       .strategy-table td:first-child { width: 120px; }
     }
+      /* Visible only when focused: a keyboard user should not have to tab
+       through the header on every page to reach the case. */
+    .skip-link {
+      position: absolute; left: 12px; top: -60px; z-index: 100;
+      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
+    }
+    .skip-link:focus { top: 12px; }
+  
+    /* Honour the system setting: the site animates a cursor loop, reveal-on-
+       scroll, a staggered timeline and smooth scrolling. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
   </style>
 </head>
 <body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
 
   <!-- HEADER -->
   <header class="case-header">
@@ -360,6 +384,8 @@
       <span class="case-header-name">DobroDoc+</span>
     </div>
   </header>
+
+  <main id="main">
 
   <!-- HERO -->
   <div class="container">
@@ -506,7 +532,7 @@
       <p class="section-kicker"><span class="section-num">05</span> &middot; Multi-scenario flow</p>
       <h2 class="section-heading">Artifacts: User Flow</h2>
       <div class="flow-container">
-        <svg viewBox="0 0 900 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;">
+        <svg viewBox="0 0 900 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;" role="img" aria-label="Booking flow: from opening the app to a confirmed appointment, showing the multi-scenario paths">
           <!-- Entry -->
           <circle cx="60" cy="80" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>
           <text x="60" y="84" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Start</text>
@@ -815,7 +841,7 @@
   </div>
 
   <div class="toc-pill" id="tocPill">
-    <div class="toc-pill-menu" id="tocPillMenu">
+    <nav class="toc-pill-menu" id="tocPillMenu" aria-label="Sections">
       <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
       <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Process</a>
       <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> UX Strategy</a>
@@ -826,7 +852,7 @@
       <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Before / After</a>
       <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Outcome</a>
       <a href="#section-10" data-section="section-10"><span class="pill-num">10</span> Reflection</a>
-    </div>
+    </nav>
     <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
       <span class="toc-pill-num" id="tocPillNum">01</span>
       <span id="tocPillLabel">Problem</span>
@@ -835,6 +861,8 @@
   </div>
 
   <!-- FOOTER -->
+  </main>
+
   <footer class="footer">
     <div class="footer-inner">
       <div><span class="footer-name">Yurii Fokin</span> · <span class="footer-role">Lead Product Designer</span></div>

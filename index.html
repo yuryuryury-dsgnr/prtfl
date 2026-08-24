@@ -494,9 +494,38 @@
         justify-content: center;
       }
     }
+      /* Visible only when focused: a keyboard user should not have to tab
+       through the header on every page to reach the case. */
+    .skip-link {
+      position: absolute; left: 12px; top: -60px; z-index: 100;
+      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
+    }
+    .skip-link:focus { top: 12px; }
+  
+    /* Honour the system setting: the site animates a cursor loop, reveal-on-
+       scroll, a staggered timeline and smooth scrolling. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
+      /* Present for screen readers and the document outline, not on screen. */
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
   </style>
 </head>
 <body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
 
   <!-- TOP NAV -->
   <nav class="topnav">
@@ -509,10 +538,12 @@
     </div>
   </nav>
 
+  <main id="main">
+
   <!-- HERO -->
   <section class="hero">
     <div class="container hero-content">
-      <p class="hero-name">Leading product design.</p>
+      <h1 class="hero-name">Leading product design.</h1>
       <p class="hero-bio-hook">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
       <dl class="hero-meta">
         <dt>Location</dt><dd>Batumi, Georgia · open to EU/US remote</dd>
@@ -525,6 +556,7 @@
   <!-- CASES -->
   <section class="cases" id="work">
     <div class="container">
+      <h2 class="visually-hidden">Selected work</h2>
       <div class="cases-grid">
 
         <!-- Card 1: Data Marketplace -->
@@ -592,6 +624,8 @@
   </section>
 
   <!-- FOOTER -->
+  </main>
+
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
@@ -614,6 +648,7 @@
     // ——— CUSTOM CURSOR ———
     (function() {
       if (window.matchMedia('(pointer: coarse)').matches) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const dot = document.querySelector('.cursor-dot');
       const ring = document.querySelector('.cursor-ring');

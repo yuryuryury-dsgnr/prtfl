@@ -342,7 +342,7 @@
       line-height: 1.6;
     }
     .persona-field-table tr:last-child td { border-bottom: none; }
-    .persona-field-table td:first-child {
+    .persona-field-table th, .persona-field-table td:first-child {
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.06em;
@@ -635,7 +635,7 @@
     .strategy-table tr:last-child td {
       border-bottom: none;
     }
-    .strategy-table td:first-child {
+    .strategy-table th, .strategy-table td:first-child {
       font-weight: 500;
       color: #1A1A1A;
       width: 140px;
@@ -750,7 +750,7 @@
     .accordion .accordion-body .strategy-table {
       margin-top: 0;
     }
-    .accordion .accordion-body .strategy-table td:first-child {
+    .accordion .accordion-body .strategy-table th, .strategy-table td:first-child {
       width: 120px;
     }
     .accordion-nda-tag {
@@ -1005,7 +1005,7 @@
     @media (max-width: 768px) {
       .case-hero h1 { font-size: 36px; }
       .persona-grid { grid-template-columns: 1fr; }
-      .strategy-table td:first-child { width: 100px; }
+      .strategy-table th, .strategy-table td:first-child { width: 100px; }
       .wireframe-grid { grid-template-columns: 1fr; }
       .reflection-grid { grid-template-columns: 1fr; }
       .timeline { flex-direction: column; gap: 0; }
@@ -1465,9 +1465,33 @@
       .toc-pill, .case-header-back { display: none !important; }
       a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 10px; color: #6B6B6B; }
     }
+      /* Visible only when focused: a keyboard user should not have to tab
+       through the header on every page to reach the case. */
+    .skip-link {
+      position: absolute; left: 12px; top: -60px; z-index: 100;
+      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
+    }
+    .skip-link:focus { top: 12px; }
+  
+    /* Honour the system setting: the site animates a cursor loop, reveal-on-
+       scroll, a staggered timeline and smooth scrolling. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
   </style>
 </head>
 <body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
 
   <!-- STICKY HEADER -->
   <header class="case-header">
@@ -1476,6 +1500,8 @@
       <span class="case-header-name">Data Marketplace</span>
     </div>
   </header>
+
+  <main id="main">
 
   <!-- HERO (full width container) -->
   <div class="page-layout" style="padding-top:0;padding-bottom:0;display:block;max-width:1100px;">
@@ -1492,7 +1518,7 @@
       </dl>
 
       <div class="case-hero-nda-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <span><strong>Sensitive data and metadata are under NDA.</strong> No real values appear in these screens &mdash; every name, metric, and asset shown is a placeholder, and some internal business details are withheld. Process, approach, and design decisions are shown in full.</span>
       </div>
 
@@ -1585,8 +1611,8 @@
       <h2 class="section-heading">UX Strategy</h2>
 
       <div class="phase-toggle">
-        <button class="phase-toggle-btn active" data-phase="phase1">Phase 1 &mdash; MVP</button>
-        <button class="phase-toggle-btn" data-phase="phase2">Phase 2 &mdash; Trust, Social &amp; AI</button>
+        <button class="phase-toggle-btn active" data-phase="phase1" aria-pressed="true">Phase 1 &mdash; MVP</button>
+        <button class="phase-toggle-btn" data-phase="phase2" aria-pressed="false">Phase 2 &mdash; Trust, Social &amp; AI</button>
       </div>
 
       <!-- PHASE 1 PANEL -->
@@ -1597,9 +1623,9 @@
             <summary>Vision &amp; Problem</summary>
             <div class="accordion-body">
               <table class="strategy-table">
-                <tr><td>Vision</td><td>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</td></tr>
-                <tr><td>Problem</td><td>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</td></tr>
-                <tr><td>Success looks like</td><td>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</td></tr>
+                <tr><th scope="row">Vision</th><td>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</td></tr>
+                <tr><th scope="row">Problem</th><td>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</td></tr>
+                <tr><th scope="row">Success looks like</th><td>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes &mdash; not days or weeks.</td></tr>
               </table>
             </div>
           </details>
@@ -1679,11 +1705,11 @@
           </details>
           <div class="accordion-row-disabled">
             <span class="accordion-row-left"><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <div class="accordion-row-disabled">
             <span class="accordion-row-left"><span>Roadmap &mdash; 7 phases, 18 months</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <details>
             <summary>Key deliverables</summary>
@@ -1715,9 +1741,9 @@
             <summary>Vision &amp; Problem</summary>
             <div class="accordion-body">
               <table class="strategy-table">
-                <tr><td>Vision</td><td>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</td></tr>
-                <tr><td>Problem</td><td>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</td></tr>
-                <tr><td>Success looks like</td><td>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</td></tr>
+                <tr><th scope="row">Vision</th><td>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</td></tr>
+                <tr><th scope="row">Problem</th><td>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</td></tr>
+                <tr><th scope="row">Success looks like</th><td>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</td></tr>
               </table>
             </div>
           </details>
@@ -1725,7 +1751,7 @@
             <summary>Structural changes</summary>
             <div class="accordion-body">
               <table class="strategy-table">
-                <tr><td>Phase 1 &rarr; 2</td><td>The existing browse experience moves to a secondary role. A new AI-powered entry point takes its place &mdash; built around intent rather than navigation.</td></tr>
+                <tr><th scope="row">Phase 1 &rarr; 2</th><td>The existing browse experience moves to a secondary role. A new AI-powered entry point takes its place &mdash; built around intent rather than navigation.</td></tr>
               </table>
             </div>
           </details>
@@ -1743,15 +1769,15 @@
           </details>
           <div class="accordion-row-disabled">
             <span class="accordion-row-left"><span>AI capabilities</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <div class="accordion-row-disabled">
             <span class="accordion-row-left"><span>Feature clusters</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <div class="accordion-row-disabled">
             <span class="accordion-row-left"><span>Success metrics</span><span class="accordion-nda-tag">NDA</span></span>
-            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="accordion-row-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
         </div>
       </div>
@@ -1764,14 +1790,14 @@
       <p class="section-text">4 persona groups, user flows, and end-to-end journey maps shaped every design decision.</p>
 
       <div class="phase-toggle">
-        <button class="phase-toggle-btn active">Personas &mdash; 4 groups</button>
+        <button class="phase-toggle-btn active" aria-pressed="true">Personas &mdash; 4 groups</button>
         <button class="phase-toggle-btn disabled" aria-disabled="true" tabindex="-1">
-          <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <span>User Flows &mdash; 5 flows</span>
           <span class="tab-nda-tag">NDA</span>
         </button>
         <button class="phase-toggle-btn disabled" aria-disabled="true" tabindex="-1">
-          <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <span>User Journey Map</span>
           <span class="tab-nda-tag">NDA</span>
         </button>
@@ -1787,8 +1813,8 @@
             <div><p class="persona-detail-name">Data Scientist / Engineer</p></div>
           </div>
           <table class="persona-field-table">
-            <tr><td>Who</td><td>Technical specialist working with Python, ML models, and data integrations.</td></tr>
-            <tr><td>Pain</td><td>Hard to find datasets across sources; long approval cycles; unclear ownership.</td></tr>
+            <tr><th scope="row">Who</th><td>Technical specialist working with Python, ML models, and data integrations.</td></tr>
+            <tr><th scope="row">Pain</th><td>Hard to find datasets across sources; long approval cycles; unclear ownership.</td></tr>
           </table>
         </div>
         <div class="persona-detail-card">
@@ -1797,8 +1823,8 @@
             <div><p class="persona-detail-name">Business User</p></div>
           </div>
           <table class="persona-field-table">
-            <tr><td>Who</td><td>Analysts, PMs, and business stakeholders using BI tools.</td></tr>
-            <tr><td>Pain</td><td>Too much raw data, too few curated business-ready reports; hard to trust freshness.</td></tr>
+            <tr><th scope="row">Who</th><td>Analysts, PMs, and business stakeholders using BI tools.</td></tr>
+            <tr><th scope="row">Pain</th><td>Too much raw data, too few curated business-ready reports; hard to trust freshness.</td></tr>
           </table>
         </div>
         <div class="persona-detail-card">
@@ -1807,8 +1833,8 @@
             <div><p class="persona-detail-name">Data Product Owner</p></div>
           </div>
           <table class="persona-field-table">
-            <tr><td>Who</td><td>Product manager responsible for governance and lifecycle of data products.</td></tr>
-            <tr><td>Pain</td><td>Fragmented ownership; too many manual approval steps; slow onboarding.</td></tr>
+            <tr><th scope="row">Who</th><td>Product manager responsible for governance and lifecycle of data products.</td></tr>
+            <tr><th scope="row">Pain</th><td>Fragmented ownership; too many manual approval steps; slow onboarding.</td></tr>
           </table>
         </div>
         <div class="persona-detail-card">
@@ -1817,8 +1843,8 @@
             <div><p class="persona-detail-name">Data POD Lead</p></div>
           </div>
           <table class="persona-field-table">
-            <tr><td>Who</td><td>Team/Tech Lead for a data engineering POD or domain.</td></tr>
-            <tr><td>Pain</td><td>Heavy manual documentation work; poor visibility into who uses their products.</td></tr>
+            <tr><th scope="row">Who</th><td>Team/Tech Lead for a data engineering POD or domain.</td></tr>
+            <tr><th scope="row">Pain</th><td>Heavy manual documentation work; poor visibility into who uses their products.</td></tr>
           </table>
         </div>
         </div><!-- end .persona-scroller -->
@@ -1844,15 +1870,15 @@
 
               <div class="mg-toolbar">
                 <div class="phase-toggle mg-tabs">
-                  <button class="phase-toggle-btn active" data-mg-tab="main">Main</button>
-                  <button class="phase-toggle-btn" data-mg-tab="explore">Explore</button>
-                  <button class="phase-toggle-btn" data-mg-tab="detail">Detail</button>
-                  <button class="phase-toggle-btn" data-mg-tab="request">Request Access</button>
-                  <button class="phase-toggle-btn" data-mg-tab="admin">Admin</button>
+                  <button class="phase-toggle-btn active" data-mg-tab="main" aria-pressed="true">Main</button>
+                  <button class="phase-toggle-btn" data-mg-tab="explore" aria-pressed="false">Explore</button>
+                  <button class="phase-toggle-btn" data-mg-tab="detail" aria-pressed="false">Detail</button>
+                  <button class="phase-toggle-btn" data-mg-tab="request" aria-pressed="false">Request Access</button>
+                  <button class="phase-toggle-btn" data-mg-tab="admin" aria-pressed="false">Admin</button>
                 </div>
                 <div class="ds-theme-toggle" id="mg-theme-toggle">
-                  <button class="ds-theme-btn active" data-mg-theme="light">Light</button>
-                  <button class="ds-theme-btn" data-mg-theme="dark">Dark</button>
+                  <button class="ds-theme-btn active" data-mg-theme="light" aria-pressed="true">Light</button>
+                  <button class="ds-theme-btn" data-mg-theme="dark" aria-pressed="false">Dark</button>
                 </div>
               </div>
 
@@ -1895,8 +1921,8 @@
 
             <div class="ds-theme-bar">
               <div class="ds-theme-toggle" id="tg-theme-toggle">
-                <button class="ds-theme-btn active" data-theme="light">Light</button>
-                <button class="ds-theme-btn" data-theme="dark">Dark</button>
+                <button class="ds-theme-btn active" data-theme="light" aria-pressed="true">Light</button>
+                <button class="ds-theme-btn" data-theme="dark" aria-pressed="false">Dark</button>
               </div>
             </div>
 
@@ -2280,10 +2306,10 @@
           <summary><span>What we'll measure</span></summary>
           <div class="accordion-body">
             <table class="strategy-table">
-              <tr><td>Adoption</td><td>Active users, onboarding completion rates, and frequency of return visits across all persona groups.</td></tr>
-              <tr><td>Task success</td><td>Time-to-find for datasets, search-to-access conversion, and first-attempt success rate for access requests.</td></tr>
-              <tr><td>Satisfaction</td><td>In-product micro-surveys and follow-up interviews triggered by key user actions.</td></tr>
-              <tr><td>Pain points</td><td>Friction identified through AI-summarized session replays, support tickets, and heatmap analysis.</td></tr>
+              <tr><th scope="row">Adoption</th><td>Active users, onboarding completion rates, and frequency of return visits across all persona groups.</td></tr>
+              <tr><th scope="row">Task success</th><td>Time-to-find for datasets, search-to-access conversion, and first-attempt success rate for access requests.</td></tr>
+              <tr><th scope="row">Satisfaction</th><td>In-product micro-surveys and follow-up interviews triggered by key user actions.</td></tr>
+              <tr><th scope="row">Pain points</th><td>Friction identified through AI-summarized session replays, support tickets, and heatmap analysis.</td></tr>
             </table>
           </div>
         </details>
@@ -2292,10 +2318,10 @@
           <summary><span>Modern research stack</span></summary>
           <div class="accordion-body">
             <table class="strategy-table">
-              <tr><td>Analytics copilot</td><td>Natural language queries across usage data to spot trends and cohorts faster than manual dashboards.</td></tr>
-              <tr><td>AI session replay</td><td>LLM-generated insights from user sessions instead of watching hundreds of recordings manually.</td></tr>
-              <tr><td>Continuous interviews</td><td>Weekly short conversations with real users, built into the process rather than run as one-off studies.</td></tr>
-              <tr><td>Feedback synthesis</td><td>Combining survey responses, support tickets, and interviews into themed insights automatically via LLM synthesis.</td></tr>
+              <tr><th scope="row">Analytics copilot</th><td>Natural language queries across usage data to spot trends and cohorts faster than manual dashboards.</td></tr>
+              <tr><th scope="row">AI session replay</th><td>LLM-generated insights from user sessions instead of watching hundreds of recordings manually.</td></tr>
+              <tr><th scope="row">Continuous interviews</th><td>Weekly short conversations with real users, built into the process rather than run as one-off studies.</td></tr>
+              <tr><th scope="row">Feedback synthesis</th><td>Combining survey responses, support tickets, and interviews into themed insights automatically via LLM synthesis.</td></tr>
             </table>
           </div>
         </details>
@@ -2304,10 +2330,10 @@
           <summary><span>Feedback-driven iteration</span></summary>
           <div class="accordion-body">
             <table class="strategy-table">
-              <tr><td>Listen</td><td>Collect feedback through multiple channels &mdash; surveys, session replays, interviews, and support tickets.</td></tr>
-              <tr><td>Synthesize</td><td>Theme the findings and prioritize by impact on user tasks and business goals.</td></tr>
-              <tr><td>Ship</td><td>Iterate on the most critical friction points in fast, focused cycles.</td></tr>
-              <tr><td>Validate</td><td>Re-measure to confirm the change actually moved the metric.</td></tr>
+              <tr><th scope="row">Listen</th><td>Collect feedback through multiple channels &mdash; surveys, session replays, interviews, and support tickets.</td></tr>
+              <tr><th scope="row">Synthesize</th><td>Theme the findings and prioritize by impact on user tasks and business goals.</td></tr>
+              <tr><th scope="row">Ship</th><td>Iterate on the most critical friction points in fast, focused cycles.</td></tr>
+              <tr><th scope="row">Validate</th><td>Re-measure to confirm the change actually moved the metric.</td></tr>
             </table>
           </div>
         </details>
@@ -2355,7 +2381,7 @@
 
   <!-- MOBILE TOC PILL -->
   <div class="toc-pill" id="tocPill">
-    <div class="toc-pill-menu" id="tocPillMenu">
+    <nav class="toc-pill-menu" id="tocPillMenu" aria-label="Sections">
       <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
       <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Process</a>
       <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> UX Strategy</a>
@@ -2366,15 +2392,17 @@
       <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Post-launch</a>
       <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Outcome</a>
       <a href="#section-10" data-section="section-10"><span class="pill-num">10</span> Reflection</a>
-    </div>
-    <button class="toc-pill-trigger" id="tocPillTrigger">
+    </nav>
+    <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
       <span class="toc-pill-num" id="tocPillNum">01</span>
       <span id="tocPillLabel">Problem</span>
-      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
     </button>
   </div>
 
   <!-- FOOTER -->
+  </main>
+
   <footer class="footer">
     <div class="footer-inner">
       <div><span class="footer-name">Yurii Fokin</span> &middot; <span class="footer-role">Lead Product Designer</span></div>
@@ -2666,23 +2694,26 @@
         imgs.forEach(function(img) {
           var src = state.theme === 'dark' ? img.getAttribute('data-mg-dark') : img.getAttribute('data-mg-light');
           if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
-          img.classList.toggle('active', img.getAttribute('data-mg-tab') === state.tab);
+          var on = img.getAttribute('data-mg-tab') === state.tab;
+          img.classList.toggle('active', on);
+          // opacity alone leaves all five in the accessibility tree at once
+          if (on) img.removeAttribute('aria-hidden'); else img.setAttribute('aria-hidden', 'true');
         });
         if (browser) browser.setAttribute('data-mg-theme', state.theme);
         if (caption) caption.textContent = captions[state.tab] || '';
       }
       tabs.forEach(function(btn) {
         btn.addEventListener('click', function() {
-          tabs.forEach(function(b) { b.classList.remove('active'); });
-          btn.classList.add('active');
+          tabs.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+          btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
           state.tab = btn.getAttribute('data-mg-tab');
           apply();
         });
       });
       themeBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
-          themeBtns.forEach(function(b) { b.classList.remove('active'); });
-          btn.classList.add('active');
+          themeBtns.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+          btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
           state.theme = btn.getAttribute('data-mg-theme');
           apply();
         });

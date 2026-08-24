@@ -492,9 +492,33 @@
     .nf p { font-size: 16px; color: #6B6B6B; max-width: 520px; margin-bottom: 32px; }
     .nf-links { display: flex; gap: 12px; flex-wrap: wrap; }
     @media (max-width: 768px) { .nf { padding: 72px 0 104px; } .nf h1 { font-size: 26px; } }
+      /* Visible only when focused: a keyboard user should not have to tab
+       through the header on every page to reach the case. */
+    .skip-link {
+      position: absolute; left: 12px; top: -60px; z-index: 100;
+      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
+    }
+    .skip-link:focus { top: 12px; }
+  
+    /* Honour the system setting: the site animates a cursor loop, reveal-on-
+       scroll, a staggered timeline and smooth scrolling. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
   </style>
 </head>
 <body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
 
   <nav class="topnav">
     <div class="container topnav-inner">
@@ -505,6 +529,8 @@
       </div>
     </div>
   </nav>
+
+  <main id="main">
 
   <section class="nf">
     <div class="container">
@@ -517,6 +543,7 @@
       </div>
     </div>
   </section>
+  </main>
 
   <footer class="footer">
     <div class="container">

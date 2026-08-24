@@ -354,9 +354,33 @@
       a { text-decoration: none; }
       .cv-contact-value a, .cv-certs a { text-decoration: underline; }
     }
+      /* Visible only when focused: a keyboard user should not have to tab
+       through the header on every page to reach the case. */
+    .skip-link {
+      position: absolute; left: 12px; top: -60px; z-index: 100;
+      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
+    }
+    .skip-link:focus { top: 12px; }
+  
+    /* Honour the system setting: the site animates a cursor loop, reveal-on-
+       scroll, a staggered timeline and smooth scrolling. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
   </style>
 </head>
 <body data-view="site">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
 
   <!-- TOP NAV -->
   <nav class="topnav">
@@ -368,6 +392,8 @@
       </div>
     </div>
   </nav>
+
+  <main id="main">
 
   <!-- PAGE HEAD -->
   <section class="cv-intro">
@@ -566,6 +592,8 @@
   </div>
 
   <!-- FOOTER -->
+  </main>
+
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">

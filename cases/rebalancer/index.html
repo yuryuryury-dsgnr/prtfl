@@ -757,9 +757,33 @@
       .rb-dec-in { padding: 11px 22px; }
       .rb-bound-label { margin-left: 10px; }
     }
+      /* Visible only when focused: a keyboard user should not have to tab
+       through the header on every page to reach the case. */
+    .skip-link {
+      position: absolute; left: 12px; top: -60px; z-index: 100;
+      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
+    }
+    .skip-link:focus { top: 12px; }
+  
+    /* Honour the system setting: the site animates a cursor loop, reveal-on-
+       scroll, a staggered timeline and smooth scrolling. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
+      .cursor-dot, .cursor-ring { display: none !important; }
+    }
   </style>
 </head>
 <body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
 
   <!-- HEADER -->
   <header class="case-header">
@@ -768,6 +792,8 @@
       <span class="case-header-name">Rebalancer</span>
     </div>
   </header>
+
+  <main id="main">
 
   <!-- HERO -->
   <div class="container">
@@ -1500,34 +1526,34 @@
         <span class="loc-pill loc-pill--wide">English</span>
         <span class="loc-pill loc-pill--wide">Espa&ntilde;ol</span>
         <span class="loc-pill loc-pill--wide">Fran&ccedil;ais</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">DE</span>Deutsch</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">IT</span>Italiano</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">NL</span>Nederlands</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">BR</span>Portugu&ecirc;s (BR)</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">PT</span>Portugu&ecirc;s (PT)</span>
+        <span class="loc-pill" lang="de"><span class="loc-code" aria-hidden="true">DE</span>Deutsch</span>
+        <span class="loc-pill" lang="it"><span class="loc-code" aria-hidden="true">IT</span>Italiano</span>
+        <span class="loc-pill" lang="nl"><span class="loc-code" aria-hidden="true">NL</span>Nederlands</span>
+        <span class="loc-pill" lang="pt-BR"><span class="loc-code" aria-hidden="true">BR</span>Portugu&ecirc;s (BR)</span>
+        <span class="loc-pill" lang="pt-PT"><span class="loc-code" aria-hidden="true">PT</span>Portugu&ecirc;s (PT)</span>
         <span class="loc-pill loc-pill--wide">Русский</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">UA</span>Українська</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">PL</span>Polski</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">CZ</span>Čeština</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">SK</span>Slovenčina</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">HR</span>Hrvatski</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">HU</span>Magyar</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">RO</span>Rom&acirc;n&#259;</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">BG</span>Български</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">GR</span>Ελληνικά</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">TR</span>T&uuml;rk&ccedil;e</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">FI</span>Suomi</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">SE</span>Svenska</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">NO</span>Norsk</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">DK</span>Dansk</span>
+        <span class="loc-pill" lang="uk"><span class="loc-code" aria-hidden="true">UA</span>Українська</span>
+        <span class="loc-pill" lang="pl"><span class="loc-code" aria-hidden="true">PL</span>Polski</span>
+        <span class="loc-pill" lang="cs"><span class="loc-code" aria-hidden="true">CZ</span>Čeština</span>
+        <span class="loc-pill" lang="sk"><span class="loc-code" aria-hidden="true">SK</span>Slovenčina</span>
+        <span class="loc-pill" lang="hr"><span class="loc-code" aria-hidden="true">HR</span>Hrvatski</span>
+        <span class="loc-pill" lang="hu"><span class="loc-code" aria-hidden="true">HU</span>Magyar</span>
+        <span class="loc-pill" lang="ro"><span class="loc-code" aria-hidden="true">RO</span>Rom&acirc;n&#259;</span>
+        <span class="loc-pill" lang="bg"><span class="loc-code" aria-hidden="true">BG</span>Български</span>
+        <span class="loc-pill" lang="el"><span class="loc-code" aria-hidden="true">GR</span>Ελληνικά</span>
+        <span class="loc-pill" lang="tr"><span class="loc-code" aria-hidden="true">TR</span>T&uuml;rk&ccedil;e</span>
+        <span class="loc-pill" lang="fi"><span class="loc-code" aria-hidden="true">FI</span>Suomi</span>
+        <span class="loc-pill" lang="sv"><span class="loc-code" aria-hidden="true">SE</span>Svenska</span>
+        <span class="loc-pill" lang="nb"><span class="loc-code" aria-hidden="true">NO</span>Norsk</span>
+        <span class="loc-pill" lang="da"><span class="loc-code" aria-hidden="true">DK</span>Dansk</span>
         <span class="loc-pill loc-pill--wide">简体中文</span>
         <span class="loc-pill loc-pill--wide">繁體中文</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">JP</span>日本語</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">KR</span>한국어</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">IN</span>हिन्दी</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">TH</span>ไทย</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">ID</span>Bahasa Indonesia</span>
-        <span class="loc-pill"><span class="loc-code" aria-hidden="true">VN</span>Tiếng Việt</span>
+        <span class="loc-pill" lang="ja"><span class="loc-code" aria-hidden="true">JP</span>日本語</span>
+        <span class="loc-pill" lang="ko"><span class="loc-code" aria-hidden="true">KR</span>한국어</span>
+        <span class="loc-pill" lang="hi"><span class="loc-code" aria-hidden="true">IN</span>हिन्दी</span>
+        <span class="loc-pill" lang="th"><span class="loc-code" aria-hidden="true">TH</span>ไทย</span>
+        <span class="loc-pill" lang="id"><span class="loc-code" aria-hidden="true">ID</span>Bahasa Indonesia</span>
+        <span class="loc-pill" lang="vi"><span class="loc-code" aria-hidden="true">VN</span>Tiếng Việt</span>
       </div>
       <div class="flow flow--compact" style="margin-top:28px;" role="group" aria-label="Translation pipeline: AI translation, then Gemini quality pass">
         <div class="flow-node">
@@ -1611,7 +1637,7 @@
   </div>
 
   <div class="toc-pill" id="tocPill">
-    <div class="toc-pill-menu" id="tocPillMenu">
+    <nav class="toc-pill-menu" id="tocPillMenu" aria-label="Sections">
       <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
       <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Roadmap</a>
       <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> Research</a>
@@ -1621,7 +1647,7 @@
       <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Analytics</a>
       <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Outcome</a>
       <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Reflection</a>
-    </div>
+    </nav>
     <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
       <span class="toc-pill-num" id="tocPillNum">01</span>
       <span id="tocPillLabel">Problem</span>
@@ -1630,6 +1656,8 @@
   </div>
 
   <!-- FOOTER -->
+  </main>
+
   <footer class="footer">
     <div class="footer-inner">
       <div><span class="footer-name">Yurii Fokin</span> &middot; <span class="footer-role">Lead Product Designer</span></div>
