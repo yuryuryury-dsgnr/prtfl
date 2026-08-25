@@ -23,13 +23,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F7F4; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F6F7F9; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 100;
-      background: #F8F7F4;
+      background: #F6F7F9;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -61,7 +61,7 @@
     .case-hero-image {
       width: calc(100% + 160px);
       margin-left: -80px;
-      background: #EEEDEA;
+      background: #ECEEEF;
       border-radius: 16px;
       margin-top: 48px;
       position: relative;
@@ -79,7 +79,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #C5C4C0;
+      color: #C2C5C7;
       font-size: 14px;
     }
 
@@ -211,7 +211,7 @@
        asset still reads as a screen rather than collapsing the grid */
     .phone-placeholder {
       position: absolute; inset: 0; align-items: center; justify-content: center;
-      background: #EEEDEA; border-radius: 26px;
+      background: #ECEEEF; border-radius: 26px;
       font-size: 12px; color: #6B6B6B; text-align: center; padding: 0 12px;
     }
     .phone-caption { font-size: 13px; color: #6B6B6B; text-align: center; line-height: 1.5; max-width: 208px; }
@@ -312,7 +312,7 @@
     }
     .rb-cmp-row { display: grid; grid-template-columns: 1.75fr repeat(5, 1fr); }
     .rb-cmp-row + .rb-cmp-row { border-top: 1px solid rgba(0,0,0,0.07); }
-    .rb-cmp-row--head { background: #F5F4F1; }
+    .rb-cmp-row--head { background: #F3F5F6; }
     /* the one row with no gaps in it — tinted so the shape of the column reads
        before any of the labels do */
     .rb-cmp-row--self { background: var(--rb-screen-bg); }
@@ -439,13 +439,13 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F8F7F4;
+      background: #1A1A1A; border: 3px solid #F6F7F9;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC;
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #EEF0F1;
       padding: 3px 8px; border-radius: 4px;
     }
     /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
@@ -455,7 +455,7 @@
        image loads so the stats below never jump. */
     .rb-shot {
       margin-top: 28px; border-radius: 12px; overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.08); background: #EEEDEA;
+      border: 1px solid rgba(0,0,0,0.08); background: #ECEEEF;
       position: relative; aspect-ratio: 3360 / 1786;
     }
     .rb-shot img { width: 100%; height: 100%; display: block; object-fit: cover; }
@@ -489,14 +489,16 @@
     }
     .rb-tab:last-child { border-right: none; }
     .rb-tab:hover { background: rgba(0,0,0,0.02); }
-    .rb-tab.is-active { background: #1A1A1A; color: #FFFFFF; }
+    /* selected, not pressed — a step down the page's own blue ramp instead
+       of solid ink, matching the toggles on the other cases */
+    .rb-tab.is-active { background: #DAE0E7; color: #1A1A1A; }
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
     /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §03 and §04.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
-       every flow). Muted on purpose: these sit on a warm #F8F7F4 page.
+       every flow). Muted on purpose: these sit on a warm #F6F7F9 page.
        Shape + stroke style still carry the type on their own — colour is a
        second, redundant channel, so nothing depends on seeing it. ═══ */
     :root {
@@ -505,7 +507,7 @@
       --rb-system-bg:   #EFECF5;  --rb-system-bd:   #C5BED5;   /* system  — lilac */
       --rb-decision-bg: #F2EBDF;  --rb-decision-bd: #D6C7AF;   /* decision— sand  */
       --rb-end-bg:      #F7EBE9;  --rb-end-bd:      #D7BCB7;   /* end     — clay  */
-      --rb-stage-bg:    #EFEEEA;                               /* flow area        */
+      --rb-stage-bg:    #EDEEF1;                               /* flow area        */
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
@@ -648,7 +650,7 @@
        widening the page. */
     .rb-tech-challenge { font-size: 14px; color: #6B6B6B; line-height: 1.7; max-width: 640px; }
     .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-    .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
+    .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #EEF0F1; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
 
     /* ——— FLOATING TOC PILL ———
        The halliburton case's pill, shown at every width here: it names the
@@ -745,7 +747,7 @@
        through the header on every page to reach the case. */
     .skip-link {
       position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      background: #1A1A1A; color: #F6F7F9; font-size: 14px; font-weight: 500;
       padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
     }
     .skip-link:focus { top: 12px; }

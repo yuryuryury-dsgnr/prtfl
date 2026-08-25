@@ -24,13 +24,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F7F4; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F6F7F9; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 100;
-      background: #F8F7F4;
+      background: #F6F7F9;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -101,7 +101,7 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      background: #EFEDE6;
+      background: #EAEDF2;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       padding: 16px 20px;
@@ -126,7 +126,7 @@
     .case-hero-image {
       width: calc(100% + 160px);
       margin-left: -80px;
-      background: #E8E6E1;
+      background: #E3E6EA;
       border-radius: 16px;
       margin-top: 48px;
       position: relative;
@@ -221,7 +221,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #D9D6D0;
+      background: #D2D7DB;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -308,9 +308,9 @@
     /* ——— TOKEN GRAPH ——— */
     .ds-token-intro { font-size: 14px; color: #6B6B6B; line-height: 1.6; margin-bottom: 24px; }
     .ds-theme-bar { display: flex; justify-content: flex-end; margin-bottom: 16px; }
-    .ds-theme-toggle { display: inline-flex; background: #EDECEA; border-radius: 20px; padding: 3px; }
+    .ds-theme-toggle { display: inline-flex; background: #EBECEE; border-radius: 20px; padding: 3px; }
     .ds-theme-btn { padding: 5px 14px; border-radius: 16px; border: none; cursor: pointer; font-size: 12px; font-weight: 500; color: #6B6B6B; background: transparent; transition: all 0.15s; }
-    .ds-theme-btn.active { background: #1A1A1A; color: #FFFFFF; }
+    .ds-theme-btn.active { background: #DAE0E7; color: #1A1A1A; }
     .tg-graph { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
     .tg-col-header { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6B6B; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(0,0,0,0.07); }
     .tg-cards { display: flex; flex-direction: column; gap: 6px; }
@@ -363,7 +363,7 @@
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: 10px;
       overflow: hidden;
-      background: #F5F4F1;
+      background: #F3F5F6;
       transition: background 200ms ease, border-color 200ms ease;
     }
     .mg-browser[data-mg-theme="dark"] {
@@ -373,7 +373,7 @@
     .mg-chrome {
       display: flex; align-items: center; gap: 12px;
       height: 32px; padding: 0 12px;
-      background: #EDECEA;
+      background: #EBECEE;
       border-bottom: 1px solid rgba(0,0,0,0.08);
       transition: background 200ms ease, border-color 200ms ease;
     }
@@ -497,9 +497,12 @@
     }
     .phase-toggle-btn:last-child { border-right: none; }
     .phase-toggle-btn:hover { background: rgba(0,0,0,0.02); }
+    /* the selected tab used to be solid ink, which read as a pressed button
+       rather than as "you are here" — a step down the page's own blue ramp
+       says the same thing without shouting, and keeps 12:1 on the label */
     .phase-toggle-btn.active {
-      background: #1A1A1A;
-      color: #FFFFFF;
+      background: #DAE0E7;
+      color: #1A1A1A;
     }
     .phase-panel { display: none; }
     .phase-panel.active { display: block; }
@@ -772,7 +775,7 @@
       position: sticky;
       left: 0;
       z-index: 3;
-      background: #F8F7F4;
+      background: #F6F7F9;
       padding-left: 0;
     }
     .jm-stage,
@@ -812,6 +815,14 @@
     }
     .jm-goal + .journey-sheet { margin-top: 14px; }
 
+    /* four maps stacked made §04 the longest section on the page by a wide
+       margin. They are four readings of one instrument, which is what a tab
+       group is for — the content is all still in the DOM, one panel deep. */
+    .jm-tabs { margin-top: 24px; margin-bottom: 0; }
+    .jm-panel { display: none; }
+    .jm-panel.active { display: block; }
+    .jm-panel .jm-group { margin-top: 26px; }
+
     /* .case-section li carries 14/1.7 on the element itself, so this has to
        out-specify it rather than set a size on the ul */
     .journey-map .jm-list { list-style: none; padding: 0; margin: 0; }
@@ -847,7 +858,7 @@
        the board fills those cards; here they take the chip colour the rest of
        the site uses for a filled surface */
     .jm-row-answer .jm-card {
-      background: #F0EFEC;
+      background: #EEF0F1;
       border-color: rgba(0,0,0,0.05);
       color: #1A1A1A;
     }
@@ -942,13 +953,13 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F8F7F4;
+      background: #1A1A1A; border: 3px solid #F6F7F9;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #F0EFEC;
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #EEF0F1;
       padding: 3px 8px; border-radius: 4px; margin-top: auto; align-self: flex-start;
     }
 
@@ -1288,7 +1299,7 @@
        through the header on every page to reach the case. */
     .skip-link {
       position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F8F7F4; font-size: 14px; font-weight: 500;
+      background: #1A1A1A; color: #F6F7F9; font-size: 14px; font-weight: 500;
       padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
     }
     .skip-link:focus { top: 12px; }
@@ -1701,6 +1712,13 @@
       <h3 class="subsection-heading">User journey maps &mdash; 4 groups</h3>
       <p class="section-text" style="margin-top:16px;">One map per group, each on its own stages, all five lanes the same: what they do, what they ask themselves, how it feels, what gets in the way, and what the design answered.</p>
 
+      <div class="phase-toggle jm-tabs" role="tablist" aria-label="Persona group">
+        <button class="phase-toggle-btn active" type="button" role="tab" data-jm="jm-g1" id="jm-g1-tab" aria-controls="jm-g1" aria-selected="true" tabindex="0">Data scientist</button>
+        <button class="phase-toggle-btn" type="button" role="tab" data-jm="jm-g2" id="jm-g2-tab" aria-controls="jm-g2" aria-selected="false" tabindex="-1">Business user</button>
+        <button class="phase-toggle-btn" type="button" role="tab" data-jm="jm-g3" id="jm-g3-tab" aria-controls="jm-g3" aria-selected="false" tabindex="-1">Product owner</button>
+        <button class="phase-toggle-btn" type="button" role="tab" data-jm="jm-g4" id="jm-g4-tab" aria-controls="jm-g4" aria-selected="false" tabindex="-1">POD lead</button>
+      </div>
+      <div class="jm-panel active" id="jm-g1" role="tabpanel" aria-labelledby="jm-g1-tab">
         <h4 class="jm-group">Group 1 &mdash; Data Scientist / Engineer</h4>
         <p class="jm-goal">Finds a data product and gets access to it.</p>
         <div class="journey-sheet" style="--jm-stages: 6;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 1 — Data Scientist / Engineer journey map, 6 stages &mdash; scrollable">
@@ -1802,6 +1820,8 @@
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="jm-panel" id="jm-g2" role="tabpanel" aria-labelledby="jm-g2-tab" hidden>
         <h4 class="jm-group">Group 2 &mdash; Business user</h4>
         <p class="jm-goal">Gets an answer out of numbers they can trust.</p>
         <div class="journey-sheet" style="--jm-stages: 4;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 2 — Business user journey map, 4 stages &mdash; scrollable">
@@ -1884,6 +1904,8 @@
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="jm-panel" id="jm-g3" role="tabpanel" aria-labelledby="jm-g3-tab" hidden>
         <h4 class="jm-group">Group 3 &mdash; Data product owner</h4>
         <p class="jm-goal">Decides what gets built, and keeps it worth keeping.</p>
         <div class="journey-sheet" style="--jm-stages: 4;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 3 — Data product owner journey map, 4 stages &mdash; scrollable">
@@ -1962,6 +1984,8 @@
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="jm-panel" id="jm-g4" role="tabpanel" aria-labelledby="jm-g4-tab" hidden>
         <h4 class="jm-group">Group 4 &mdash; Data POD lead</h4>
         <p class="jm-goal">Builds the product and keeps it running.</p>
         <div class="journey-sheet" style="--jm-stages: 5;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 4 — Data POD lead journey map, 5 stages &mdash; scrollable">
@@ -2050,7 +2074,7 @@
             </tbody>
           </table>
         </div>
-
+      </div>
     </section>
 
     <!-- 05 — PROTOTYPE & DESIGN SYSTEM -->
@@ -2652,6 +2676,40 @@
         if (panel) panel.classList.add('active');
       });
     });
+
+    // ——— §04 JOURNEY GROUPS ———
+    // Scoped on purpose: the §03 handler above clears every .phase-panel on the
+    // page, so these panels carry their own class and never meet it.
+    (function () {
+      var tablist = document.querySelector('.jm-tabs');
+      if (!tablist) return;
+      var tabs = [].slice.call(tablist.querySelectorAll('.phase-toggle-btn[data-jm]'));
+
+      function select(btn, focus) {
+        tabs.forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+          b.setAttribute('tabindex', on ? '0' : '-1');
+          var panel = document.getElementById(b.dataset.jm);
+          if (!panel) return;
+          panel.classList.toggle('active', on);
+          if (on) panel.removeAttribute('hidden');
+          else panel.setAttribute('hidden', '');
+        });
+        if (focus) btn.focus();
+      }
+
+      tabs.forEach(function (btn, i) {
+        btn.addEventListener('click', function () { select(btn); });
+        btn.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (d) { e.preventDefault(); select(tabs[(i + d + tabs.length) % tabs.length], true); }
+          else if (e.key === 'Home') { e.preventDefault(); select(tabs[0], true); }
+          else if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+        });
+      });
+    })();
 
     // ——— TOC PILL: scroll spy + toggle ———
     // The sidebar is gone, so the section list comes from the pill's own links,
