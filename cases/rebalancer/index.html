@@ -1094,7 +1094,7 @@
       <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
 
       <div class="rb-tabgroup">
-        <div class="rb-tabs" role="tablist" aria-label="User flows" tabindex="0">
+        <div class="rb-tabs" data-no-rail role="tablist" aria-label="User flows" tabindex="0">
           <button class="rb-tab is-active" data-rb-tab="discovery" role="tab" aria-selected="true">Discovery</button>
           <button class="rb-tab" data-rb-tab="pair" role="tab" aria-selected="false">Create pair</button>
           <button class="rb-tab" data-rb-tab="alert" role="tab" aria-selected="false">Set alert</button>
@@ -1896,7 +1896,9 @@
       var rails = [];
 
       function attach(el) {
-        if (el.dataset.railed) return;
+        // a tab strip says what it is through the clipped next tab; a bar
+        // under it reads as chrome stacked on chrome
+        if (el.dataset.railed || el.closest('[data-no-rail]')) return;
         el.dataset.railed = '1';
         var rail = document.createElement('div');
         rail.className = 'scroll-rail';

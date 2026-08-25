@@ -1034,7 +1034,9 @@
       var rails = [];
 
       function attach(el) {
-        if (el.dataset.railed) return;
+        // a tab strip says what it is through the clipped next tab; a bar
+        // under it reads as chrome stacked on chrome
+        if (el.dataset.railed || el.closest('[data-no-rail]')) return;
         el.dataset.railed = '1';
         var rail = document.createElement('div');
         rail.className = 'scroll-rail';

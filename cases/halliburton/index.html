@@ -426,10 +426,22 @@
     .pipeline-node-title { font-family: 'Menlo','Monaco','Courier New',monospace; font-size: 11px; font-weight: 600; color: #1A1A1A; line-height: 1.4; }
     .pipeline-node-caption { font-size: 11px; color: #6B6B6B; line-height: 1.5; }
     .pipeline-arrow { color: #6B6B6B; font-size: 18px; padding-top: 17px; flex-shrink: 0; line-height: 1; }
+    /* A pipeline read top to bottom stops being a pipeline. It keeps its
+       direction on a phone and scrolls sideways instead. */
     @media (max-width: 640px) {
-      
-      .pipeline-flow { flex-direction: column; gap: 4px; }
-      .pipeline-arrow { padding-top: 0; text-align: center; }
+      .pipeline-flow {
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+      }
+      .pipeline-flow::-webkit-scrollbar { display: none; }
+      .pipeline-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .pipeline-node { flex: 0 0 62%; scroll-snap-align: start; }
     }
 
     /* ——— NDA BANNER ——— */
@@ -467,39 +479,6 @@
        it — it used to carry this inline on each of the two panels */
     .phase-panel > .section-text:first-child { margin: 24px 0; }
 
-    /* ——— STRATEGY TABLE ——— */
-    .strategy-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 16px;
-    }
-    .strategy-table tr:nth-child(even) td {
-      background: #F8F7F4;
-    }
-    .strategy-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      vertical-align: top;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .strategy-table tr:first-child td {
-      padding-top: 14px;
-    }
-    .strategy-table tr:last-child td {
-      border-bottom: none;
-    }
-    .strategy-table th, .strategy-table td:first-child {
-      font-weight: 500;
-      color: #1A1A1A;
-      width: 140px;
-      padding-right: 20px;
-      border-radius: 6px 0 0 6px;
-    }
-    .strategy-table td:last-child {
-      color: #6B6B6B;
-      border-radius: 0 6px 6px 0;
-    }
 
     /* ——— PHASE TOGGLE ——— */
     .phase-toggle {
@@ -559,54 +538,6 @@
       margin-left: 2px;
     }
 
-    /* ——— ACCORDION ——— */
-    .accordion {
-      background: #FFFFFF;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 10px;
-      margin-top: 16px;
-      overflow: hidden;
-    }
-    .accordion details {
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-    }
-    .accordion details:last-child {
-      border-bottom: none;
-    }
-    .accordion summary {
-      padding: 16px 20px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background 150ms ease;
-    }
-    .accordion summary:hover {
-      background: rgba(0,0,0,0.02);
-    }
-    .accordion summary::-webkit-details-marker { display: none; }
-    .accordion summary::after {
-      content: '+';
-      font-size: 18px;
-      font-weight: 400;
-      color: #6B6B6B;
-      transition: transform 200ms ease;
-    }
-    .accordion details[open] summary::after {
-      content: '\2212';
-    }
-    .accordion .accordion-body {
-      padding: 0 20px 20px;
-    }
-    .accordion .accordion-body .strategy-table {
-      margin-top: 0;
-    }
-    .accordion .accordion-body .strategy-table th, .strategy-table td:first-child {
-      width: 120px;
-    }
     .accordion-nda-tag {
       font-size: 11px;
       color: #6B6B6B;
@@ -898,7 +829,6 @@
     /* ——— RESPONSIVE ——— */
     @media (max-width: 768px) {
       .case-hero h1 { font-size: 36px; }
-      .strategy-table th, .strategy-table td:first-child { width: 100px; }
       
       .reflection-grid { grid-template-columns: 1fr; }
       /* Mobile: the process stays a horizontal rail and scrolls, instead of
@@ -1332,7 +1262,7 @@
       <p class="section-kicker"><span class="section-num">03</span> &middot; Two phases of product evolution</p>
       <h2 class="section-heading">UX Strategy</h2>
 
-      <div class="phase-toggle">
+      <div class="phase-toggle" data-no-rail>
         <button class="phase-toggle-btn active" data-phase="phase1" aria-pressed="true">Phase 1 &mdash; MVP</button>
         <button class="phase-toggle-btn" data-phase="phase2" aria-pressed="false">Phase 2 &mdash; Trust, Social &amp; AI</button>
       </div>
@@ -1455,7 +1385,6 @@
               <li>User journey maps</li>
               <li>Jobs-to-be-done</li>
               <li>User flows (5 flows)</li>
-              <li>Information architecture</li>
               <li>Wireframes and mockups</li>
               <li>Interactive prototype</li>
               <li>Scalable design system</li>
@@ -1531,7 +1460,7 @@
       <h2 class="section-heading">Research</h2>
       <p class="section-text">4 persona groups, user flows, and end-to-end journey maps shaped every design decision.</p>
 
-      <div class="phase-toggle">
+      <div class="phase-toggle" data-no-rail>
         <button class="phase-toggle-btn active" aria-pressed="true">Personas &mdash; 4 groups</button>
         <button class="phase-toggle-btn disabled" aria-disabled="true" tabindex="-1">
           <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -1610,7 +1539,7 @@
     <div class="mockup-gallery">
 
               <div class="mg-toolbar">
-                <div class="phase-toggle mg-tabs">
+                <div class="phase-toggle mg-tabs" data-no-rail>
                   <button class="phase-toggle-btn active" data-mg-tab="main" aria-pressed="true">Main</button>
                   <button class="phase-toggle-btn" data-mg-tab="explore" aria-pressed="false">Explore</button>
                   <button class="phase-toggle-btn" data-mg-tab="detail" aria-pressed="false">Detail</button>
@@ -1973,7 +1902,7 @@
     <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
     <section id="section-06" class="case-section reveal">
       <p class="section-kicker"><span class="section-num">06</span> &middot; Testing with the people who'd actually use it</p>
-      <h2 class="section-heading">Validation</h2>
+      <h2 class="section-heading">Usability testing</h2>
       <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
 
       <div class="validation-grid" tabindex="0" role="group" aria-label="Validation sessions — scrollable">
@@ -2013,7 +1942,7 @@
       <p class="section-text">Traditional hand-off means screenshots, redlines, and a PDF that's outdated the moment you save it. Instead, I connected developers directly to the Figma design system through MCP (Model Context Protocol) &mdash; they pulled specs, tokens, and interaction states straight into their IDE in real time.</p>
 
       <p class="ds-eyebrow">How it flows</p>
-      <div class="pipeline-flow">
+      <div class="pipeline-flow" tabindex="0" role="group" aria-label="Design-to-code pipeline, four steps — scrollable">
         <div class="pipeline-node">
           <span class="pipeline-node-title">Figma file</span>
           <span class="pipeline-node-caption">Design system, tokens, variables</span>
@@ -2042,42 +1971,37 @@
       <h2 class="section-heading">Post-launch Research</h2>
       <p class="section-text">The platform is in active use while testing continues. Rather than waiting to measure success, I designed the post-launch research program upfront &mdash; combining analytics, AI-powered tools, and continuous user feedback.</p>
 
-      <div class="accordion">
-        <details open>
-          <summary><span>What we'll measure</span></summary>
-          <div class="accordion-body">
-            <table class="strategy-table">
-              <tr><th scope="row">Adoption</th><td>Active users, onboarding completion rates, and frequency of return visits across all persona groups.</td></tr>
-              <tr><th scope="row">Task success</th><td>Time-to-find for datasets, search-to-access conversion, and first-attempt success rate for access requests.</td></tr>
-              <tr><th scope="row">Satisfaction</th><td>In-product micro-surveys and follow-up interviews triggered by key user actions.</td></tr>
-              <tr><th scope="row">Pain points</th><td>Friction identified through AI-summarized session replays, support tickets, and heatmap analysis.</td></tr>
-            </table>
+      <div class="strategy-sheet" tabindex="0" role="group" aria-label="Post-launch research, three columns — scrollable">
+          <div class="strategy-col">
+            <p class="strategy-col-num">01</p>
+            <p class="strategy-col-title">What we'll measure</p>
+            <dl class="strategy-dl">
+              <div><dt>Adoption</dt><dd>Active users, onboarding completion rates, and frequency of return visits across all persona groups.</dd></div>
+              <div><dt>Task success</dt><dd>Time-to-find for datasets, search-to-access conversion, and first-attempt success rate for access requests.</dd></div>
+              <div><dt>Satisfaction</dt><dd>In-product micro-surveys and follow-up interviews triggered by key user actions.</dd></div>
+              <div><dt>Pain points</dt><dd>Friction identified through AI-summarized session replays, support tickets, and heatmap analysis.</dd></div>
+            </dl>
           </div>
-        </details>
-
-        <details>
-          <summary><span>Modern research stack</span></summary>
-          <div class="accordion-body">
-            <table class="strategy-table">
-              <tr><th scope="row">Analytics copilot</th><td>Natural language queries across usage data to spot trends and cohorts faster than manual dashboards.</td></tr>
-              <tr><th scope="row">AI session replay</th><td>LLM-generated insights from user sessions instead of watching hundreds of recordings manually.</td></tr>
-              <tr><th scope="row">Continuous interviews</th><td>Weekly short conversations with real users, built into the process rather than run as one-off studies.</td></tr>
-              <tr><th scope="row">Feedback synthesis</th><td>Combining survey responses, support tickets, and interviews into themed insights automatically via LLM synthesis.</td></tr>
-            </table>
+          <div class="strategy-col">
+            <p class="strategy-col-num">02</p>
+            <p class="strategy-col-title">Modern research stack</p>
+            <dl class="strategy-dl">
+              <div><dt>Analytics copilot</dt><dd>Natural language queries across usage data to spot trends and cohorts faster than manual dashboards.</dd></div>
+              <div><dt>AI session replay</dt><dd>LLM-generated insights from user sessions instead of watching hundreds of recordings manually.</dd></div>
+              <div><dt>Continuous interviews</dt><dd>Weekly short conversations with real users, built into the process rather than run as one-off studies.</dd></div>
+              <div><dt>Feedback synthesis</dt><dd>Combining survey responses, support tickets, and interviews into themed insights automatically via LLM synthesis.</dd></div>
+            </dl>
           </div>
-        </details>
-
-        <details>
-          <summary><span>Feedback-driven iteration</span></summary>
-          <div class="accordion-body">
-            <table class="strategy-table">
-              <tr><th scope="row">Listen</th><td>Collect feedback through multiple channels &mdash; surveys, session replays, interviews, and support tickets.</td></tr>
-              <tr><th scope="row">Synthesize</th><td>Theme the findings and prioritize by impact on user tasks and business goals.</td></tr>
-              <tr><th scope="row">Ship</th><td>Iterate on the most critical friction points in fast, focused cycles.</td></tr>
-              <tr><th scope="row">Validate</th><td>Re-measure to confirm the change actually moved the metric.</td></tr>
-            </table>
+          <div class="strategy-col">
+            <p class="strategy-col-num">03</p>
+            <p class="strategy-col-title">Feedback-driven iteration</p>
+            <dl class="strategy-dl">
+              <div><dt>Listen</dt><dd>Collect feedback through multiple channels &mdash; surveys, session replays, interviews, and support tickets.</dd></div>
+              <div><dt>Synthesize</dt><dd>Theme the findings and prioritize by impact on user tasks and business goals.</dd></div>
+              <div><dt>Ship</dt><dd>Iterate on the most critical friction points in fast, focused cycles.</dd></div>
+              <div><dt>Validate</dt><dd>Re-measure to confirm the change actually moved the metric.</dd></div>
+            </dl>
           </div>
-        </details>
       </div>
     </section>
 
@@ -2127,7 +2051,7 @@
       <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> UX Strategy</a>
       <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Research</a>
       <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Prototype</a>
-      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Validation</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Usability testing</a>
       <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Hand-off</a>
       <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Post-launch</a>
       <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Outcome</a>
@@ -2403,7 +2327,9 @@
       var rails = [];
 
       function attach(el) {
-        if (el.dataset.railed) return;
+        // a tab strip says what it is through the clipped next tab; a bar
+        // under it reads as chrome stacked on chrome
+        if (el.dataset.railed || el.closest('[data-no-rail]')) return;
         el.dataset.railed = '1';
         var rail = document.createElement('div');
         rail.className = 'scroll-rail';
