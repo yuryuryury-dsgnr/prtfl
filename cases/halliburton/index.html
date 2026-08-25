@@ -628,6 +628,8 @@
       color: #6B6B6B;
     }
     .strategy-dl dd .strategy-list { margin-top: 6px; }
+    /* the last lane is what the design answered, not what the user felt */
+    .strategy-dl .is-answer dd { color: #1A1A1A; }
     .strategy-dl dd {
       margin: 1px 0 0;
       font-size: 13px;
@@ -1499,9 +1501,131 @@
       </div>
 
       <h3 class="subsection-heading">User journey map</h3>
-      <div class="subsection-nda">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span>Protected under NDA</span>
+      <p class="section-text" style="margin-top:16px;">Group 1 &mdash; Data Scientist / Engineer. Goal: to find a data product and get access. The same map was drawn for all four groups; the opportunities in the last row are what the design answered.</p>
+
+      <div class="strategy-sheet" tabindex="0" role="group" aria-label="User journey map, six stages — scrollable">
+          <div class="strategy-col">
+            <p class="strategy-col-num">01</p>
+            <p class="strategy-col-title">Need</p>
+            <dl class="strategy-dl">
+              <div><dt>Actions</dt><dd>Defines task &amp; identifies needed data</dd></div>
+              <div><dt>Thinking</dt><dd>&ldquo;What data is available?&rdquo;</dd></div>
+              <div><dt>Emotion</dt><dd>Uncertainty</dd></div>
+              <div><dt>Pain point</dt><dd>No single data catalog</dd></div>
+              <div class="is-answer"><dt>Opportunity</dt><dd>Dataset recommendations</dd></div>
+            </dl>
+          </div>
+          <div class="strategy-col">
+            <p class="strategy-col-num">02</p>
+            <p class="strategy-col-title">Search</p>
+            <dl class="strategy-dl">
+              <div><dt>Actions</dt><dd>
+                    <ul class="strategy-list">
+                      <li>Searches for datasets by column, tag, team, or domain.</li>
+                      <li>Compares similar datasets.</li>
+                      <li>Checks schema, lineage, owners.</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Thinking</dt><dd>
+                    <ul class="strategy-list">
+                      <li>&ldquo;Does a dataset for this already exist?&rdquo;</li>
+                      <li>&ldquo;Who owns this?&rdquo;</li>
+                      <li>&ldquo;Can I trust these numbers?&rdquo;</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Emotion</dt><dd>Frustration</dd></div>
+              <div><dt>Pain point</dt><dd>Duplicates, chaos, outdated data</dd></div>
+              <div class="is-answer"><dt>Opportunity</dt><dd>Unified marketplace + filters</dd></div>
+            </dl>
+          </div>
+          <div class="strategy-col">
+            <p class="strategy-col-num">03</p>
+            <p class="strategy-col-title">Evaluate</p>
+            <dl class="strategy-dl">
+              <div><dt>Actions</dt><dd>
+                    <ul class="strategy-list">
+                      <li>Reviews schema, preview rows, lineage, and metadata.</li>
+                      <li>Checks freshness, null rate, anomalies, drift.</li>
+                      <li>Compares versions.</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Thinking</dt><dd>
+                    <ul class="strategy-list">
+                      <li>&ldquo;Is this reliable for production?&rdquo;</li>
+                      <li>&ldquo;Will it break my pipeline?&rdquo;</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Emotion</dt><dd>Cautious optimism</dd></div>
+              <div><dt>Pain point</dt><dd>No quality, lineage, documentation</dd></div>
+              <div class="is-answer"><dt>Opportunity</dt><dd>Quality score, lineage graph, user feedback and ratings</dd></div>
+            </dl>
+          </div>
+          <div class="strategy-col">
+            <p class="strategy-col-num">04</p>
+            <p class="strategy-col-title">Access</p>
+            <dl class="strategy-dl">
+              <div><dt>Actions</dt><dd>
+                    <ul class="strategy-list">
+                      <li>Submits an access request.</li>
+                      <li>Looks for the approver.</li>
+                      <li>Waits for confirmation.</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Thinking</dt><dd>
+                    <ul class="strategy-list">
+                      <li>&ldquo;Why does it take so long?&rdquo;</li>
+                      <li>&ldquo;Where is my request now?&rdquo;</li>
+                      <li>&ldquo;Who should approve this?&rdquo;</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Emotion</dt><dd>Irritation</dd></div>
+              <div><dt>Pain point</dt><dd>Long approvals, no transparency</dd></div>
+              <div class="is-answer"><dt>Opportunity</dt><dd>Auto-approval, status tracking</dd></div>
+            </dl>
+          </div>
+          <div class="strategy-col">
+            <p class="strategy-col-num">05</p>
+            <p class="strategy-col-title">Integrate</p>
+            <dl class="strategy-dl">
+              <div><dt>Actions</dt><dd>
+                    <ul class="strategy-list">
+                      <li>Retrieves connection details.</li>
+                      <li>Adds dataset to Airflow/Databricks/ML pipeline.</li>
+                      <li>Runs tests.</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Thinking</dt><dd>
+                    <ul class="strategy-list">
+                      <li>&ldquo;Is this dataset stable?&rdquo;</li>
+                      <li>&ldquo;Will schema stay consistent?&rdquo;</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Emotion</dt><dd>Focus</dd></div>
+              <div><dt>Pain point</dt><dd>No code examples, schema issues</dd></div>
+              <div class="is-answer"><dt>Opportunity</dt><dd>Code snippets, schema contracts, open data in relevant system</dd></div>
+            </dl>
+          </div>
+          <div class="strategy-col">
+            <p class="strategy-col-num">06</p>
+            <p class="strategy-col-title">Monitor</p>
+            <dl class="strategy-dl">
+              <div><dt>Actions</dt><dd>
+                    <ul class="strategy-list">
+                      <li>Monitors data freshness, anomalies, schema changes.</li>
+                      <li>Responds to alerts.</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Thinking</dt><dd>
+                    <ul class="strategy-list">
+                      <li>&ldquo;Is everything still working?&rdquo;</li>
+                      <li>&ldquo;Why did the null rate spike?&rdquo;</li>
+                    </ul>
+                  </dd></div>
+              <div><dt>Emotion</dt><dd>Calm or stress</dd></div>
+              <div><dt>Pain point</dt><dd>No alerts, late issue detection</dd></div>
+              <div class="is-answer"><dt>Opportunity</dt><dd>Alerts, freshness indicators, impact analysis</dd></div>
+            </dl>
+          </div>
       </div>
 
     </section>
