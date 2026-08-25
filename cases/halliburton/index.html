@@ -728,6 +728,7 @@
       text-transform: uppercase;
       color: #6B6B6B;
     }
+    .strategy-dl dd .strategy-list { margin-top: 6px; }
     .strategy-dl dd {
       margin: 1px 0 0;
       font-size: 13px;
@@ -1285,8 +1286,8 @@
     <!-- 02 — PROCESS -->
     <section id="section-02" class="case-section reveal">
       <p class="section-kicker"><span class="section-num">02</span> &middot; From vision to shipped product</p>
-      <h2 class="section-heading">Process</h2>
-      <div class="timeline" tabindex="0" role="group" aria-label="Process, six phases — scrollable">
+      <h2 class="section-heading">Roadmap</h2>
+      <div class="timeline" tabindex="0" role="group" aria-label="Roadmap, six phases — scrollable">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
           <p class="timeline-title">Discovery</p>
@@ -1307,7 +1308,7 @@
         </div>
         <div class="timeline-step">
           <p class="timeline-number">4.0</p>
-          <p class="timeline-title">Validation</p>
+          <p class="timeline-title">Usability testing</p>
           <p class="timeline-desc">Two rounds of testing with real users &mdash; Data POD Leads and Product Owners. Caught blind spots before a single line of code was written.</p>
           <span class="timeline-tag">2 rounds &middot; 10 users</span>
         </div>
@@ -1379,13 +1380,39 @@
               <span class="accordion-nda-tag">NDA</span>
             </p>
           </div>
-          <div class="strategy-col strategy-col--locked">
+          <div class="strategy-col">
             <p class="strategy-col-num">05</p>
             <p class="strategy-col-title">UX KPI</p>
-            <p class="strategy-lock">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span class="accordion-nda-tag">NDA</span>
-            </p>
+            <dl class="strategy-dl">
+              <div>
+                <dt>Efficiency &mdash; reduce</dt>
+                <dd>
+                  <ul class="strategy-list">
+                    <li>Search time &mdash; from weeks to under 5 minutes</li>
+                    <li>Access request time &mdash; from months to days</li>
+                  </ul>
+                </dd>
+              </div>
+              <div>
+                <dt>Adoption &mdash; increase</dt>
+                <dd>
+                  <ul class="strategy-list">
+                    <li>Engineers actively using the marketplace</li>
+                    <li>Data products onboarded</li>
+                    <li>Repeat usage rate</li>
+                  </ul>
+                </dd>
+              </div>
+              <div>
+                <dt>Quality &amp; satisfaction &mdash; increase</dt>
+                <dd>
+                  <ul class="strategy-list">
+                    <li>User satisfaction score (CSAT)</li>
+                    <li>Users who find the right product on first search</li>
+                  </ul>
+                </dd>
+              </div>
+            </dl>
           </div>
           <div class="strategy-col">
             <p class="strategy-col-num">06</p>
@@ -1409,16 +1436,8 @@
               <span class="accordion-nda-tag">NDA</span>
             </p>
           </div>
-          <div class="strategy-col strategy-col--locked">
-            <p class="strategy-col-num">08</p>
-            <p class="strategy-col-title">Information architecture</p>
-            <p class="strategy-lock">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span class="accordion-nda-tag">NDA</span>
-            </p>
-          </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">09</p>
+            <p class="strategy-col-num">08</p>
             <p class="strategy-col-title">UX Principles</p>
             <ul class="strategy-list">
               <li>Reduce cognitive load &mdash; engineers already drown in data; the UI shouldn't add noise.</li>
@@ -1428,7 +1447,7 @@
             </ul>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">10</p>
+            <p class="strategy-col-num">09</p>
             <p class="strategy-col-title">Key deliverables</p>
             <ul class="strategy-list">
               <li>UX strategy for 2 product phases</li>
@@ -1443,14 +1462,6 @@
               <li>2 rounds of usability testing reports</li>
               <li>Post-launch research report</li>
             </ul>
-          </div>
-          <div class="strategy-col strategy-col--locked">
-            <p class="strategy-col-num">11</p>
-            <p class="strategy-col-title">Roadmap &mdash; 7 phases, 18 months</p>
-            <p class="strategy-lock">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span class="accordion-nda-tag">NDA</span>
-            </p>
           </div>
         </div>
       </div>
@@ -2112,7 +2123,7 @@
   <div class="toc-pill" id="tocPill">
     <nav class="toc-pill-menu" id="tocPillMenu" aria-label="Sections">
       <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
-      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Process</a>
+      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Roadmap</a>
       <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> UX Strategy</a>
       <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Research</a>
       <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Prototype</a>
