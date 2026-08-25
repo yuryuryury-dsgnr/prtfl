@@ -55,8 +55,11 @@
     .case-hero-image {
       width: calc(100% + 160px);
       margin-left: -80px;
-      background: #E3EFFA;
-      border-radius: 16px;
+      /* a white mat, 6px, with the inner radius at 12 minus the mat so
+         the two curves stay concentric */
+      padding: 6px;
+      background: #FFFFFF;
+      border-radius: 12px;
       margin-top: 48px;
       position: relative;
       overflow: hidden;
@@ -65,7 +68,7 @@
       width: 100%;
       height: auto;
       display: block;
-      border-radius: 12px;
+      border-radius: 6px;
     }
     .case-hero-image-placeholder {
       position: absolute;
