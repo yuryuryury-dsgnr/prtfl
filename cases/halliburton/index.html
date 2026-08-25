@@ -570,13 +570,12 @@
       scroll-snap-align: start;
     }
     .strategy-col:last-child { border-right: none; }
-    .strategy-col-num {
-      margin: 0 0 6px;
-      font-size: 11px;
+    /* the number rides on the title line, at the title's size — "01 Need"
+       reads as one thing where a stacked label read as two */
+    .strategy-col-num,
+    .jm-num {
+      margin-right: 9px;
       font-weight: 500;
-      line-height: 1.6;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
       color: #6B6B6B;
     }
     .strategy-col-title {
@@ -664,7 +663,7 @@
 
        border-collapse: separate is what lets the lane rail stay sticky. */
     .journey-sheet {
-      --jm-lane: 168px;
+      --jm-lane: 132px;
       --jm-cell: 316px;
       --jm-gut: 12px;
       --jm-pad: 20px;
@@ -688,8 +687,11 @@
       border-collapse: separate;
       border-spacing: 0;
       table-layout: fixed;
-      /* fixed layout takes its columns from here: the rail plus six stages */
-      width: calc(var(--jm-lane) + 6 * var(--jm-cell));
+      /* fixed layout takes its columns from here, and any surplus is shared
+         out across them — so the stage count has to be the real one per map,
+         or a four-stage map silently widens its own rail and comes to rest
+         60px in, with the first card half under it */
+      width: calc(var(--jm-lane) + var(--jm-stages) * var(--jm-cell));
     }
     .jm-caption {
       position: absolute;
@@ -785,21 +787,6 @@
       text-transform: uppercase;
       color: #1A1A1A;
     }
-    .jm-lane-note {
-      margin: 5px 0 0;
-      font-size: 12px;
-      line-height: 1.5;
-      color: #6B6B6B;
-    }
-    .jm-num {
-      margin: 0 0 6px;
-      font-size: 11px;
-      font-weight: 500;
-      line-height: 1.6;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #6B6B6B;
-    }
     .jm-title {
       margin: 0;
       font-size: 15px;
@@ -807,6 +794,23 @@
       line-height: 1.3;
       color: #1A1A1A;
     }
+
+    /* one map per persona group, so each needs its own name and its own goal
+       before the sheet it belongs to */
+    .jm-group {
+      margin: 40px 0 0;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: #1A1A1A;
+    }
+    .jm-goal {
+      margin: 6px 0 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6B6B6B;
+    }
+    .jm-goal + .journey-sheet { margin-top: 14px; }
 
     /* .case-section li carries 14/1.7 on the element itself, so this has to
        out-specify it rather than set a size on the ul */
@@ -849,15 +853,13 @@
     }
 
     @media (max-width: 600px) {
-      /* the rail has to stay narrow enough to leave a card readable, which is
-         room for the lane names but not for the notes under them */
+      /* the rail has to stay narrow enough to leave a card readable */
       .journey-sheet {
-        --jm-lane: 108px;
+        --jm-lane: 104px;
         --jm-cell: 252px;
         --jm-gut: 8px;
         --jm-pad: 16px;
       }
-      .jm-lane-note { display: none; }
     }
 
 
@@ -1467,8 +1469,7 @@
         <p class="section-text">Phase 1 built the foundation &mdash; one marketplace to find, trust, and access any data asset. Structure and core workflows first; AI and social came later.</p>
         <div class="strategy-sheet" tabindex="0" role="group" aria-label="Phase 1 strategy, eleven columns — scrollable">
           <div class="strategy-col">
-            <p class="strategy-col-num">01</p>
-            <p class="strategy-col-title">Vision &amp; Problem</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">01</span>Vision &amp; Problem</p>
             <dl class="strategy-dl">
               <div><dt>Vision</dt><dd>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</dd></div>
               <div><dt>Problem</dt><dd>Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</dd></div>
@@ -1476,8 +1477,7 @@
             </dl>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">02</p>
-            <p class="strategy-col-title">Persona groups</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">02</span>Persona groups</p>
             <ul class="strategy-list">
               <li><b>G1 &middot; Data Scientist / Engineer</b> Browse data products, fast and relevant search, preview data, request &amp; obtain access quickly.</li>
               <li><b>G2 &middot; Business User</b> Find existing reports across BI tools that answer questions from trusted data.</li>
@@ -1486,8 +1486,7 @@
             </ul>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">03</p>
-            <p class="strategy-col-title">UX Goals</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">03</span>UX Goals</p>
             <ul class="strategy-list">
               <li>Help users find the right data product quickly</li>
               <li>Make data product cards and details easy to understand</li>
@@ -1498,16 +1497,14 @@
             </ul>
           </div>
           <div class="strategy-col strategy-col--locked">
-            <p class="strategy-col-num">04</p>
-            <p class="strategy-col-title">Business Goals</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">04</span>Business Goals</p>
             <p class="strategy-lock">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span class="accordion-nda-tag">NDA</span>
             </p>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">05</p>
-            <p class="strategy-col-title">UX KPI</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">05</span>UX KPI</p>
             <dl class="strategy-dl">
               <div>
                 <dt>Efficiency &mdash; reduce</dt>
@@ -1540,8 +1537,7 @@
             </dl>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">06</p>
-            <p class="strategy-col-title">Core user scenarios</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">06</span>Core user scenarios</p>
             <ul class="strategy-list">
               <li>Search and discover relevant data products</li>
               <li>Filter and narrow down data products</li>
@@ -1554,16 +1550,14 @@
             </ul>
           </div>
           <div class="strategy-col strategy-col--locked">
-            <p class="strategy-col-num">07</p>
-            <p class="strategy-col-title">Key features</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">07</span>Key features</p>
             <p class="strategy-lock">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span class="accordion-nda-tag">NDA</span>
             </p>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">08</p>
-            <p class="strategy-col-title">UX Principles</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">08</span>UX Principles</p>
             <ul class="strategy-list">
               <li>Reduce cognitive load &mdash; engineers already drown in data; the UI shouldn't add noise.</li>
               <li>Trust over decoration &mdash; every element earns its place; metadata, status, and lineage come first.</li>
@@ -1572,8 +1566,7 @@
             </ul>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">09</p>
-            <p class="strategy-col-title">Key deliverables</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">09</span>Key deliverables</p>
             <ul class="strategy-list">
               <li>UX strategy for 2 product phases</li>
               <li>Personas (4 groups)</li>
@@ -1595,8 +1588,7 @@
         <p class="section-text">Phase 2 turns browsing into AI-powered discovery. Users describe what they need in plain language and get ranked, trustworthy results.</p>
         <div class="strategy-sheet" tabindex="0" role="group" aria-label="Phase 2 strategy, six columns — scrollable">
           <div class="strategy-col">
-            <p class="strategy-col-num">01</p>
-            <p class="strategy-col-title">Vision &amp; Problem</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">01</span>Vision &amp; Problem</p>
             <dl class="strategy-dl">
               <div><dt>Vision</dt><dd>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</dd></div>
               <div><dt>Problem</dt><dd>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</dd></div>
@@ -1604,15 +1596,13 @@
             </dl>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">02</p>
-            <p class="strategy-col-title">Structural changes</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">02</span>Structural changes</p>
             <dl class="strategy-dl">
               <div><dt>Phase 1 &rarr; 2</dt><dd>The existing browse experience moves to a secondary role. A new AI-powered entry point takes its place &mdash; built around intent rather than navigation.</dd></div>
             </dl>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">03</p>
-            <p class="strategy-col-title">UX Goals</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">03</span>UX Goals</p>
             <ul class="strategy-list">
               <li>Reduce time to find the right data product from weeks to minutes</li>
               <li>Give users confidence to trust data before requesting access</li>
@@ -1622,24 +1612,21 @@
             </ul>
           </div>
           <div class="strategy-col strategy-col--locked">
-            <p class="strategy-col-num">04</p>
-            <p class="strategy-col-title">AI capabilities</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">04</span>AI capabilities</p>
             <p class="strategy-lock">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span class="accordion-nda-tag">NDA</span>
             </p>
           </div>
           <div class="strategy-col strategy-col--locked">
-            <p class="strategy-col-num">05</p>
-            <p class="strategy-col-title">Feature clusters</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">05</span>Feature clusters</p>
             <p class="strategy-lock">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span class="accordion-nda-tag">NDA</span>
             </p>
           </div>
           <div class="strategy-col strategy-col--locked">
-            <p class="strategy-col-num">06</p>
-            <p class="strategy-col-title">UX KPI</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">06</span>UX KPI</p>
             <p class="strategy-lock">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span class="accordion-nda-tag">NDA</span>
@@ -1711,126 +1698,358 @@
         <span>Protected under NDA</span>
       </div>
 
-      <h3 class="subsection-heading">User journey map</h3>
-      <p class="section-text" style="margin-top:16px;">Group 1 &mdash; Data Scientist / Engineer. Goal: find a data product and get access to it. The same map was drawn for all four persona groups.</p>
+      <h3 class="subsection-heading">User journey maps &mdash; 4 groups</h3>
+      <p class="section-text" style="margin-top:16px;">One map per group, each on its own stages, all five lanes the same: what they do, what they ask themselves, how it feels, what gets in the way, and what the design answered.</p>
 
-      <div class="journey-sheet" tabindex="0" role="group" data-fade-sides="right" aria-label="User journey map, six stages &mdash; scrollable">
-        <table class="journey-map">
-          <caption class="jm-caption">Group 1 &mdash; Data Scientist / Engineer. Current journey, six stages.</caption>
-          <thead>
-            <tr>
-              <td class="jm-lane">
-                <p class="jm-lane-name">Stage</p>
-                <p class="jm-lane-note">The six steps to the goal</p>
-              </td>
-              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">01</p><p class="jm-title">Need</p></div></th>
-              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">02</p><p class="jm-title">Search</p></div></th>
-              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">03</p><p class="jm-title">Evaluate</p></div></th>
-              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">04</p><p class="jm-title">Access</p></div></th>
-              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">05</p><p class="jm-title">Integrate</p></div></th>
-              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">06</p><p class="jm-title">Monitor</p></div></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row" class="jm-lane">
-                <p class="jm-lane-name">Actions</p>
-                <p class="jm-lane-note">What they do here</p>
-              </th>
-              <td class="jm-cell"><div class="jm-card"><p>Defines the task and identifies the data it needs.</p></div></td>
-              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
-                  <li>Searches by column, tag, team, or domain.</li>
-                  <li>Compares similar datasets.</li>
-                  <li>Checks schema, lineage, owners.</li>
-                </ul>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
-                  <li>Reviews schema, preview rows, lineage, metadata.</li>
-                  <li>Checks freshness, null rate, anomalies, drift.</li>
-                  <li>Compares versions.</li>
-                </ul>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
-                  <li>Submits an access request.</li>
-                  <li>Looks for the approver.</li>
-                  <li>Waits for confirmation.</li>
-                </ul>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
-                  <li>Retrieves connection details.</li>
-                  <li>Adds the dataset to an Airflow / Databricks / ML pipeline.</li>
-                  <li>Runs tests.</li>
-                </ul>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
-                  <li>Monitors freshness, anomalies, schema changes.</li>
-                  <li>Responds to alerts.</li>
-                </ul>
-              </div></td>
-            </tr>
-            <tr>
-              <th scope="row" class="jm-lane">
-                <p class="jm-lane-name">Thinking</p>
-                <p class="jm-lane-note">What they ask themselves</p>
-              </th>
-              <td class="jm-cell"><div class="jm-card"><p>&ldquo;What data is available?&rdquo;</p></div></td>
-              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Does a dataset for this already exist?&rdquo;</p>
-                <p>&ldquo;Who owns this?&rdquo;</p>
-                <p>&ldquo;Can I trust these numbers?&rdquo;</p>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Is this reliable for production?&rdquo;</p>
-                <p>&ldquo;Will it break my pipeline?&rdquo;</p>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Why does it take so long?&rdquo;</p>
-                <p>&ldquo;Where is my request now?&rdquo;</p>
-                <p>&ldquo;Who should approve this?&rdquo;</p>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Is this dataset stable?&rdquo;</p>
-                <p>&ldquo;Will the schema stay consistent?&rdquo;</p>
-              </div></td>
-              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Is everything still working?&rdquo;</p>
-                <p>&ldquo;Why did the null rate spike?&rdquo;</p>
-              </div></td>
-            </tr>
-            <tr>
-              <th scope="row" class="jm-lane">
-                <p class="jm-lane-name">Emotion</p>
-                <p class="jm-lane-note">How it feels, worst to best</p>
-              </th>
-              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Uncertainty</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Frustration</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Cautious optimism</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Irritation</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Focus</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Calm or stress</p></div></td>
-            </tr>
-            <tr>
-              <th scope="row" class="jm-lane">
-                <p class="jm-lane-name">Pain point</p>
-                <p class="jm-lane-note">What gets in the way</p>
-              </th>
-              <td class="jm-cell"><div class="jm-card"><p>No single data catalog</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>Duplicates, chaos, outdated data</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>No quality, lineage, documentation</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>Long approvals, no transparency</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>No code examples, schema issues</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>No alerts, late issue detection</p></div></td>
-            </tr>
-            <tr class="jm-row-answer">
-              <th scope="row" class="jm-lane">
-                <p class="jm-lane-name">Opportunity</p>
-                <p class="jm-lane-note">What the design answered</p>
-              </th>
-              <td class="jm-cell"><div class="jm-card"><p>Dataset recommendations</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>Unified marketplace + filters</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>Quality score, lineage graph, user feedback and ratings</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>Auto-approval, status tracking</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>Code snippets, schema contracts, open data in the relevant system</p></div></td>
-              <td class="jm-cell"><div class="jm-card"><p>Alerts, freshness indicators, impact analysis</p></div></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <h4 class="jm-group">Group 1 &mdash; Data Scientist / Engineer</h4>
+        <p class="jm-goal">Finds a data product and gets access to it.</p>
+        <div class="journey-sheet" style="--jm-stages: 6;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 1 — Data Scientist / Engineer journey map, 6 stages &mdash; scrollable">
+          <table class="journey-map">
+            <caption class="jm-caption">Group 1 &mdash; Data Scientist / Engineer &mdash; current journey, 6 stages.</caption>
+            <thead>
+              <tr>
+                <td class="jm-lane"><p class="jm-lane-name">Stage</p></td>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">01</span>Need</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">02</span>Search</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">03</span>Evaluate</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">04</span>Access</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">05</span>Integrate</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">06</span>Monitor</p></div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Actions</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>Defines the task and identifies the data it needs.</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Searches by column, tag, team, or domain.</li>
+                    <li>Compares similar datasets.</li>
+                    <li>Checks schema, lineage, owners.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Reviews schema, preview rows, lineage, metadata.</li>
+                    <li>Checks freshness, null rate, anomalies, drift.</li>
+                    <li>Compares versions.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Submits an access request.</li>
+                    <li>Looks for the approver.</li>
+                    <li>Waits for confirmation.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Retrieves connection details.</li>
+                    <li>Adds the dataset to an Airflow / Databricks / ML pipeline.</li>
+                    <li>Runs tests.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Monitors freshness, anomalies, schema changes.</li>
+                    <li>Responds to alerts.</li>
+                  </ul></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Thinking</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>&ldquo;What data is available?&rdquo;</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Does a dataset for this already exist?&rdquo;</li>
+                    <li>&ldquo;Who owns this?&rdquo;</li>
+                    <li>&ldquo;Can I trust these numbers?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Is this reliable for production?&rdquo;</li>
+                    <li>&ldquo;Will it break my pipeline?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Why does it take so long?&rdquo;</li>
+                    <li>&ldquo;Where is my request now?&rdquo;</li>
+                    <li>&ldquo;Who should approve this?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Is this dataset stable?&rdquo;</li>
+                    <li>&ldquo;Will the schema stay consistent?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Is everything still working?&rdquo;</li>
+                    <li>&ldquo;Why did the null rate spike?&rdquo;</li>
+                  </ul></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Uncertainty</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Frustration</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Cautious optimism</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Irritation</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Focus</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Calm or stress</p></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>No single data catalog</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Duplicates, chaos, outdated data</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>No quality, lineage, documentation</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Long approvals, no transparency</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>No code examples, schema issues</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>No alerts, late issue detection</p></div></td>
+              </tr>
+              <tr class="jm-row-answer">
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Opportunity</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>Dataset recommendations</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Unified marketplace + filters</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Quality score, lineage graph, user feedback and ratings</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Auto-approval, status tracking</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Code snippets, schema contracts, open data in the relevant system</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Alerts, freshness indicators, impact analysis</p></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="jm-group">Group 2 &mdash; Business user</h4>
+        <p class="jm-goal">Gets an answer out of numbers they can trust.</p>
+        <div class="journey-sheet" style="--jm-stages: 4;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 2 — Business user journey map, 4 stages &mdash; scrollable">
+          <table class="journey-map">
+            <caption class="jm-caption">Group 2 &mdash; Business user &mdash; current journey, 4 stages.</caption>
+            <thead>
+              <tr>
+                <td class="jm-lane"><p class="jm-lane-name">Stage</p></td>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">01</span>Discover</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">02</span>Understand</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">03</span>Use</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">04</span>Share</p></div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Actions</p></th>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Searches for dashboards or certified datasets.</li>
+                    <li>Filters by KPI, domain, business topic.</li>
+                    <li>Checks which data is trusted.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Reads metric definitions.</li>
+                    <li>Compares with previous dashboards.</li>
+                    <li>Validates that numbers match.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Builds simple visuals.</li>
+                    <li>Uses natural-language queries.</li>
+                    <li>Creates dashboards based on certified data.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Shares dashboards with stakeholders.</li>
+                    <li>Generates reports.</li>
+                    <li>Explains insights in meetings.</li>
+                  </ul></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Thinking</p></th>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Where is the report I need?&rdquo;</li>
+                    <li>&ldquo;Which metric definition is correct?&rdquo;</li>
+                    <li>&ldquo;Which dataset can I trust?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;What exactly does this KPI measure?&rdquo;</li>
+                    <li>&ldquo;Why do numbers differ between dashboards?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;I need insights quickly.&rdquo;</li>
+                    <li>&ldquo;I don&rsquo;t want raw data &mdash; I want KPIs.&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Can others trust this data?&rdquo;</li>
+                    <li>&ldquo;Will the numbers stay consistent?&rdquo;</li>
+                  </ul></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Confusion</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></span><p>Cognitive overload</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Productive</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Confidence or uncertainty</p></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>Too many raw tables, unclear naming, inconsistent metrics</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Inconsistent definitions, outdated data</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Reliance on engineers, errors due to outdated data</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Low trust, unclear validation</p></div></td>
+              </tr>
+              <tr class="jm-row-answer">
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Opportunity</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>Curated catalog, business-ready filters, certified metrics</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Unified metric library, data dictionary, consistency checks, ratings</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&ldquo;Open in BI&rdquo; button, AI assistant for questions</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Trust badges, automated business validation</p></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="jm-group">Group 3 &mdash; Data product owner</h4>
+        <p class="jm-goal">Decides what gets built, and keeps it worth keeping.</p>
+        <div class="journey-sheet" style="--jm-stages: 4;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 3 — Data product owner journey map, 4 stages &mdash; scrollable">
+          <table class="journey-map">
+            <caption class="jm-caption">Group 3 &mdash; Data product owner &mdash; current journey, 4 stages.</caption>
+            <thead>
+              <tr>
+                <td class="jm-lane"><p class="jm-lane-name">Stage</p></td>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">01</span>Proposal generation</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">02</span>Approvals</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">03</span>Monitor adoption</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">04</span>Maintain roadmap</p></div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Actions</p></th>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Reviews new data product proposals.</li>
+                    <li>Checks for duplicates.</li>
+                    <li>Validates the need with business.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Reviews documentation and quality.</li>
+                    <li>Checks compliance.</li>
+                    <li>Approves or rejects.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Tracks usage metrics.</li>
+                    <li>Monitors adoption across teams.</li>
+                    <li>Reviews incidents.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Plans improvements.</li>
+                    <li>Aligns with POD leads.</li>
+                    <li>Ensures standards.</li>
+                  </ul></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Thinking</p></th>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Do we really need a new dataset?&rdquo;</li>
+                    <li>&ldquo;Does something similar already exist?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Is this data trustworthy?&rdquo;</li>
+                    <li>&ldquo;Are docs complete?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Is this product actually being used?&rdquo;</li>
+                    <li>&ldquo;Where are the bottlenecks?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&ldquo;What should we improve next?&rdquo;</p></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Cautious</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Responsibility</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Confident</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Calm productivity</p></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>Fragmented ownership, missing catalog</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Manual checks, incomplete metadata</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Low visibility, scattered metrics</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&mdash;</p></div></td>
+              </tr>
+              <tr class="jm-row-answer">
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Opportunity</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>AI duplicate detection, governance templates</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Auto-checklist, completeness score</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Unified adoption dashboard</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&mdash;</p></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="jm-group">Group 4 &mdash; Data POD lead</h4>
+        <p class="jm-goal">Builds the product and keeps it running.</p>
+        <div class="journey-sheet" style="--jm-stages: 5;" tabindex="0" role="group" data-fade-sides="right" aria-label="Group 4 — Data POD lead journey map, 5 stages &mdash; scrollable">
+          <table class="journey-map">
+            <caption class="jm-caption">Group 4 &mdash; Data POD lead &mdash; current journey, 5 stages.</caption>
+            <thead>
+              <tr>
+                <td class="jm-lane"><p class="jm-lane-name">Stage</p></td>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">01</span>Understand requirements</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">02</span>Build</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">03</span>Publish</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">04</span>Operate</p></div></th>
+                <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-title"><span class="jm-num">05</span>Improve</p></div></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Actions</p></th>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Receives context from the product owner.</li>
+                    <li>Reviews source systems.</li>
+                    <li>Evaluates feasibility.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Writes pipelines.</li>
+                    <li>Implements quality checks.</li>
+                    <li>Documents schema and lineage.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Publishes the data product to the marketplace.</li>
+                    <li>Fills in metadata, tags, SLA.</li>
+                    <li>Notifies consumers.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Handles alerts.</li>
+                    <li>Fixes pipeline failures.</li>
+                    <li>Checks consumer impact.</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>Optimizes pipelines.</li>
+                    <li>Adds new fields.</li>
+                    <li>Improves quality and SLA.</li>
+                  </ul></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Thinking</p></th>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;What SLA is required?&rdquo;</li>
+                    <li>&ldquo;Do similar pipelines already exist?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Will this scale?&rdquo;</li>
+                    <li>&ldquo;Can I automate documentation?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&ldquo;Is the description clear?&rdquo;</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><ul class="jm-list">
+                    <li>&ldquo;Who will be affected by this incident?&rdquo;</li>
+                    <li>&ldquo;Why did the schema change?&rdquo;</li>
+                  </ul></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&ldquo;What can be automated next?&rdquo;</p></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Curiosity</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Neutral, to frustration on manual work</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Confident</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></span><p>Stress</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Satisfaction</p></div></td>
+              </tr>
+              <tr>
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>Lack of context, unclear business need</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Manual metadata, lineage tracking</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>No consistent templates</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>No user visibility, unclear root causes</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&mdash;</p></div></td>
+              </tr>
+              <tr class="jm-row-answer">
+                <th scope="row" class="jm-lane"><p class="jm-lane-name">Opportunity</p></th>
+                <td class="jm-cell"><div class="jm-card"><p>Business context block, similar-product suggestions, a way to see where the data is</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Auto-metadata, lineage auto-detection</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Auto-fill from the pipeline, publish-as-code, automated publishing to the marketplace</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>Impact analysis, incident assistant</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><p>&mdash;</p></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
     </section>
 
@@ -2285,8 +2504,7 @@
 
       <div class="strategy-sheet" tabindex="0" role="group" aria-label="Post-launch research, three columns — scrollable">
           <div class="strategy-col">
-            <p class="strategy-col-num">01</p>
-            <p class="strategy-col-title">What we'll measure</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">01</span>What we'll measure</p>
             <dl class="strategy-dl">
               <div><dt>Adoption</dt><dd>Active users, onboarding completion rates, and frequency of return visits across all persona groups.</dd></div>
               <div><dt>Task success</dt><dd>Time-to-find for datasets, search-to-access conversion, and first-attempt success rate for access requests.</dd></div>
@@ -2295,8 +2513,7 @@
             </dl>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">02</p>
-            <p class="strategy-col-title">Modern research stack</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">02</span>Modern research stack</p>
             <dl class="strategy-dl">
               <div><dt>Analytics copilot</dt><dd>Natural language queries across usage data to spot trends and cohorts faster than manual dashboards.</dd></div>
               <div><dt>AI session replay</dt><dd>LLM-generated insights from user sessions instead of watching hundreds of recordings manually.</dd></div>
@@ -2305,8 +2522,7 @@
             </dl>
           </div>
           <div class="strategy-col">
-            <p class="strategy-col-num">03</p>
-            <p class="strategy-col-title">Feedback-driven iteration</p>
+            <p class="strategy-col-title"><span class="strategy-col-num">03</span>Feedback-driven iteration</p>
             <dl class="strategy-dl">
               <div><dt>Listen</dt><dd>Collect feedback through multiple channels &mdash; surveys, session replays, interviews, and support tickets.</dd></div>
               <div><dt>Synthesize</dt><dd>Theme the findings and prioritize by impact on user tasks and business goals.</dd></div>
