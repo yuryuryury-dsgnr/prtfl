@@ -281,10 +281,6 @@
     }
     .rb-road-scroll::-webkit-scrollbar { display: none; }
     .rb-road-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .rb-road-scroll--more {
-      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent 100%);
-              mask-image: linear-gradient(to right, #000 calc(100% - 34px), transparent 100%);
-    }
     /* Wide screens: let the rail run 80px past the text column on each side
        (the hero-image trick). 920px holds all six steps at 152px, so the
        roadmap is seen whole instead of scrolled. max-width has to be released
@@ -309,10 +305,6 @@
     }
     .rb-cmp-scroll::-webkit-scrollbar { display: none; }
     .rb-cmp-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .rb-cmp-scroll--more {
-      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
-              mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
-    }
     .rb-cmp {
       min-width: 640px;
       background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
@@ -749,10 +741,6 @@
          does), which makes a scrollable strip look complete. This fade is
          toggled by JS only while there is more to the right, so the edge
          always reads as "continues". */
-      .rb-tabs--more {
-        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
-                mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
-      }
       /* flow rails tighten so step text keeps as much width as possible */
       .rb-flow li { padding-left: 18px; }
       .rb-step::after, .rb-decwrap::after { left: -18px; width: 18px; }
@@ -820,28 +808,33 @@
       .reflection-grid > div { flex: 0 0 80%; }
     }
 
-    /* ——— SCROLL RAIL ———
-       macOS hides overlay scrollbars until you actually scroll, and a styled
-       ::-webkit-scrollbar still reserves no space there — measured 0px. So a
-       row that scrolls looked exactly like one that does not. This bar is
-       drawn by the page: always visible, in the site's own greys, and added
-       only to the containers that really overflow at the current width. */
-    .scroll-rail {
-      height: 3px;
-      margin-top: 12px;
-      border-radius: 2px;
-      background: rgba(0,0,0,0.07);
-      position: relative;
-      overflow: hidden;
+
+    /* ——— EDGE FADE ———
+       A scrollable row dissolves on whichever side still holds content, so it
+       says "there is more this way" before you touch it. Conditional, never
+       decorative: the attribute is only there while something is actually left
+       in that direction, so the fade cannot claim more where the row ends.
+
+       :focus-within drops the mask — otherwise a keyboard user tabbing to the
+       last visible card watches their own focus ring dissolve. */
+    [data-fade] {
+      --fade-edge: 34px;
     }
-    .scroll-rail i {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      display: block;
-      border-radius: 2px;
-      background: rgba(0,0,0,0.28);
+    [data-fade="right"] {
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
+              mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
+    }
+    [data-fade="left"] {
+      -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
+              mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
+    }
+    [data-fade="both"] {
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
+              mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
+    }
+    [data-fade]:focus-within {
+      -webkit-mask-image: none;
+              mask-image: none;
     }
   </style>
 </head>
@@ -1094,7 +1087,7 @@
       <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
 
       <div class="rb-tabgroup">
-        <div class="rb-tabs" data-no-rail role="tablist" aria-label="User flows" tabindex="0">
+        <div class="rb-tabs" role="tablist" aria-label="User flows" tabindex="0">
           <button class="rb-tab is-active" data-rb-tab="discovery" role="tab" aria-selected="true">Discovery</button>
           <button class="rb-tab" data-rb-tab="pair" role="tab" aria-selected="false">Create pair</button>
           <button class="rb-tab" data-rb-tab="alert" role="tab" aria-selected="false">Set alert</button>
@@ -1868,63 +1861,28 @@
       });
     })();
 
-    (function () {
-      var scrollers = [].concat(
-        [].map.call(document.querySelectorAll('.rb-tabs'), function (el) { return { el: el, cls: 'rb-tabs--more' }; }),
-        [].map.call(document.querySelectorAll('.rb-road-scroll'), function (el) { return { el: el, cls: 'rb-road-scroll--more' }; }),
-        [].map.call(document.querySelectorAll('.rb-cmp-scroll'), function (el) { return { el: el, cls: 'rb-cmp-scroll--more' }; })
-      );
-      if (!scrollers.length) return;
-      function sync() {
-        scrollers.forEach(function (s) {
-          var more = s.el.scrollWidth - s.el.scrollLeft - s.el.clientWidth > 4;
-          s.el.classList.toggle(s.cls, more);
-        });
-      }
-      scrollers.forEach(function (s) { s.el.addEventListener('scroll', sync, { passive: true }); });
-      window.addEventListener('resize', sync);
-      // a flow only gets measured once its tab panel is visible
-      document.querySelectorAll('.rb-tab').forEach(function (b) { b.addEventListener('click', sync); });
-      sync();
-    })();
   
-    // ——— SCROLL RAIL ———
-    // Finds the containers that actually scroll sideways and gives each a drawn
-    // bar. No selector list to keep in sync: it asks the layout, so a container
-    // that only scrolls under a breakpoint gets a rail exactly when it does.
+  
+    // ——— EDGE FADE ———
+    // Finds the containers that actually scroll sideways and marks which side
+    // still has content. No selector list to keep in sync: it asks the layout,
+    // so a row that only scrolls under a breakpoint is marked exactly when it
+    // does, and unmarked when it stops.
     (function () {
-      var rails = [];
+      var updates = [];
 
       function attach(el) {
-        // a tab strip says what it is through the clipped next tab; a bar
-        // under it reads as chrome stacked on chrome
-        if (el.dataset.railed || el.closest('[data-no-rail]')) return;
-        el.dataset.railed = '1';
-        var rail = document.createElement('div');
-        rail.className = 'scroll-rail';
-        rail.setAttribute('aria-hidden', 'true');
-        var thumb = document.createElement('i');
-        rail.appendChild(thumb);
-        el.insertAdjacentElement('afterend', rail);
-
+        if (el.dataset.faded) return;
+        el.dataset.faded = '1';
         function update() {
-          // Some scrollers are wider than the column they sit in — §03's sheet
-          // grows rightwards, the flow container bleeds both ways on negative
-          // margins. Copy the host's box, margins included, or the rail either
-          // ends short of what it scrolls or pushes the page sideways.
-          var hs = getComputedStyle(el);
-          rail.style.width = el.offsetWidth + 'px';
-          rail.style.marginLeft = hs.marginLeft;
-          rail.style.marginRight = hs.marginRight;
-          var vis = el.clientWidth, all = el.scrollWidth, track = rail.clientWidth;
-          if (!vis || !track || all - vis < 2) { rail.style.display = 'none'; return; }
-          rail.style.display = '';
-          var w = Math.max(24, Math.round(vis / all * track));
-          thumb.style.width = w + 'px';
-          thumb.style.transform = 'translateX(' + Math.round(el.scrollLeft / (all - vis) * (track - w)) + 'px)';
+          var left = el.scrollLeft > 4;
+          var right = el.scrollWidth - el.scrollLeft - el.clientWidth > 4;
+          var side = left && right ? 'both' : right ? 'right' : left ? 'left' : '';
+          if (side) el.setAttribute('data-fade', side);
+          else el.removeAttribute('data-fade');
         }
         el.addEventListener('scroll', update, { passive: true });
-        rails.push(update);
+        updates.push(update);
         update();
       }
 
@@ -1934,14 +1892,14 @@
           var ox = getComputedStyle(all[i]).overflowX;
           if ((ox === 'auto' || ox === 'scroll') && all[i].scrollWidth - all[i].clientWidth > 2) attach(all[i]);
         }
-        for (var j = 0; j < rails.length; j++) rails[j]();
+        for (var j = 0; j < updates.length; j++) updates[j]();
       }
 
       scan();
       var t;
       function later() { clearTimeout(t); t = setTimeout(scan, 120); }
       window.addEventListener('resize', later);
-      // panels behind a tab are zero-width until shown, so re-check after a click
+      // a panel behind a tab has no width until shown, so re-check after a click
       document.addEventListener('click', later, true);
     })();
   </script>

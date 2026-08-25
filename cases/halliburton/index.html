@@ -1116,28 +1116,33 @@
        secondary text it sits beside. */
     .case-section li, .section-text li { font-size: 14px; line-height: 1.7; }
 
-    /* ——— SCROLL RAIL ———
-       macOS hides overlay scrollbars until you actually scroll, and a styled
-       ::-webkit-scrollbar still reserves no space there — measured 0px. So a
-       row that scrolls looked exactly like one that does not. This bar is
-       drawn by the page: always visible, in the site's own greys, and added
-       only to the containers that really overflow at the current width. */
-    .scroll-rail {
-      height: 3px;
-      margin-top: 12px;
-      border-radius: 2px;
-      background: rgba(0,0,0,0.07);
-      position: relative;
-      overflow: hidden;
+
+    /* ——— EDGE FADE ———
+       A scrollable row dissolves on whichever side still holds content, so it
+       says "there is more this way" before you touch it. Conditional, never
+       decorative: the attribute is only there while something is actually left
+       in that direction, so the fade cannot claim more where the row ends.
+
+       :focus-within drops the mask — otherwise a keyboard user tabbing to the
+       last visible card watches their own focus ring dissolve. */
+    [data-fade] {
+      --fade-edge: 34px;
     }
-    .scroll-rail i {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      display: block;
-      border-radius: 2px;
-      background: rgba(0,0,0,0.28);
+    [data-fade="right"] {
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
+              mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
+    }
+    [data-fade="left"] {
+      -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
+              mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
+    }
+    [data-fade="both"] {
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
+              mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
+    }
+    [data-fade]:focus-within {
+      -webkit-mask-image: none;
+              mask-image: none;
     }
   </style>
 </head>
@@ -1262,7 +1267,7 @@
       <p class="section-kicker"><span class="section-num">03</span> &middot; Two phases of product evolution</p>
       <h2 class="section-heading">UX Strategy</h2>
 
-      <div class="phase-toggle" data-no-rail>
+      <div class="phase-toggle">
         <button class="phase-toggle-btn active" data-phase="phase1" aria-pressed="true">Phase 1 &mdash; MVP</button>
         <button class="phase-toggle-btn" data-phase="phase2" aria-pressed="false">Phase 2 &mdash; Trust, Social &amp; AI</button>
       </div>
@@ -1460,7 +1465,7 @@
       <h2 class="section-heading">Research</h2>
       <p class="section-text">4 persona groups, user flows, and end-to-end journey maps shaped every design decision.</p>
 
-      <div class="phase-toggle" data-no-rail>
+      <div class="phase-toggle">
         <button class="phase-toggle-btn active" aria-pressed="true">Personas &mdash; 4 groups</button>
         <button class="phase-toggle-btn disabled" aria-disabled="true" tabindex="-1">
           <svg class="tab-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -1539,7 +1544,7 @@
     <div class="mockup-gallery">
 
               <div class="mg-toolbar">
-                <div class="phase-toggle mg-tabs" data-no-rail>
+                <div class="phase-toggle mg-tabs">
                   <button class="phase-toggle-btn active" data-mg-tab="main" aria-pressed="true">Main</button>
                   <button class="phase-toggle-btn" data-mg-tab="explore" aria-pressed="false">Explore</button>
                   <button class="phase-toggle-btn" data-mg-tab="detail" aria-pressed="false">Detail</button>
@@ -2319,43 +2324,27 @@
       });
     })();
   
-    // ——— SCROLL RAIL ———
-    // Finds the containers that actually scroll sideways and gives each a drawn
-    // bar. No selector list to keep in sync: it asks the layout, so a container
-    // that only scrolls under a breakpoint gets a rail exactly when it does.
+  
+    // ——— EDGE FADE ———
+    // Finds the containers that actually scroll sideways and marks which side
+    // still has content. No selector list to keep in sync: it asks the layout,
+    // so a row that only scrolls under a breakpoint is marked exactly when it
+    // does, and unmarked when it stops.
     (function () {
-      var rails = [];
+      var updates = [];
 
       function attach(el) {
-        // a tab strip says what it is through the clipped next tab; a bar
-        // under it reads as chrome stacked on chrome
-        if (el.dataset.railed || el.closest('[data-no-rail]')) return;
-        el.dataset.railed = '1';
-        var rail = document.createElement('div');
-        rail.className = 'scroll-rail';
-        rail.setAttribute('aria-hidden', 'true');
-        var thumb = document.createElement('i');
-        rail.appendChild(thumb);
-        el.insertAdjacentElement('afterend', rail);
-
+        if (el.dataset.faded) return;
+        el.dataset.faded = '1';
         function update() {
-          // Some scrollers are wider than the column they sit in — §03's sheet
-          // grows rightwards, the flow container bleeds both ways on negative
-          // margins. Copy the host's box, margins included, or the rail either
-          // ends short of what it scrolls or pushes the page sideways.
-          var hs = getComputedStyle(el);
-          rail.style.width = el.offsetWidth + 'px';
-          rail.style.marginLeft = hs.marginLeft;
-          rail.style.marginRight = hs.marginRight;
-          var vis = el.clientWidth, all = el.scrollWidth, track = rail.clientWidth;
-          if (!vis || !track || all - vis < 2) { rail.style.display = 'none'; return; }
-          rail.style.display = '';
-          var w = Math.max(24, Math.round(vis / all * track));
-          thumb.style.width = w + 'px';
-          thumb.style.transform = 'translateX(' + Math.round(el.scrollLeft / (all - vis) * (track - w)) + 'px)';
+          var left = el.scrollLeft > 4;
+          var right = el.scrollWidth - el.scrollLeft - el.clientWidth > 4;
+          var side = left && right ? 'both' : right ? 'right' : left ? 'left' : '';
+          if (side) el.setAttribute('data-fade', side);
+          else el.removeAttribute('data-fade');
         }
         el.addEventListener('scroll', update, { passive: true });
-        rails.push(update);
+        updates.push(update);
         update();
       }
 
@@ -2365,14 +2354,14 @@
           var ox = getComputedStyle(all[i]).overflowX;
           if ((ox === 'auto' || ox === 'scroll') && all[i].scrollWidth - all[i].clientWidth > 2) attach(all[i]);
         }
-        for (var j = 0; j < rails.length; j++) rails[j]();
+        for (var j = 0; j < updates.length; j++) updates[j]();
       }
 
       scan();
       var t;
       function later() { clearTimeout(t); t = setTimeout(scan, 120); }
       window.addEventListener('resize', later);
-      // panels behind a tab are zero-width until shown, so re-check after a click
+      // a panel behind a tab has no width until shown, so re-check after a click
       document.addEventListener('click', later, true);
     })();
   </script>
