@@ -1049,6 +1049,8 @@
         function update() {
           var left = el.scrollLeft > 4;
           var right = el.scrollWidth - el.scrollLeft - el.clientWidth > 4;
+          // a sheet with a sticky row-header rail must never fade its left edge
+          if (el.getAttribute('data-fade-sides') === 'right') left = false;
           var side = left && right ? 'both' : right ? 'right' : left ? 'left' : '';
           if (side) el.setAttribute('data-fade', side);
           else el.removeAttribute('data-fade');

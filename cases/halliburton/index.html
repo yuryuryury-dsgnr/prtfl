@@ -628,8 +628,6 @@
       color: #6B6B6B;
     }
     .strategy-dl dd .strategy-list { margin-top: 6px; }
-    /* the last lane is what the design answered, not what the user felt */
-    .strategy-dl .is-answer dd { color: #1A1A1A; }
     .strategy-dl dd {
       margin: 1px 0 0;
       font-size: 13px;
@@ -647,6 +645,168 @@
 
     @media (max-width: 600px) {
       .strategy-col { flex: 0 0 82%; }
+    }
+
+    /* ——— USER JOURNEY MAP ———
+       The strategy sheet repeats its lane names inside every column, which is
+       right when the columns are unlike one another. A journey map is the
+       other case: six stages, the same five lanes under each. Naming the lanes
+       once, on the left, is how the board reads in Figma — and it is what makes
+       the artefact work, because the rows become comparable. The emotion row
+       then reads as a curve and the pain row as a list of what to fix.
+
+       A real table, because this is one: stage headers across, lane headers
+       down. border-collapse: separate is what lets the lane rail stay sticky. */
+    .journey-sheet {
+      --jm-lane: 168px;
+      --jm-cell: 300px;
+      margin-top: 24px;
+      max-width: 100%;
+      min-width: 0;
+      background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x proximity;
+      /* snap past the rail, or a stage comes to rest underneath it */
+      scroll-padding-left: var(--jm-lane);
+    }
+    .journey-sheet::-webkit-scrollbar { display: none; }
+    .journey-sheet:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+
+    .journey-map {
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      /* fixed layout takes its columns from here: the rail plus six stages */
+      width: calc(var(--jm-lane) + 6 * var(--jm-cell));
+    }
+    .jm-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .journey-map th,
+    .journey-map td {
+      vertical-align: top;
+      text-align: left;
+      font-weight: 400;
+      padding: 14px 22px 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      border-right: 1px solid rgba(0,0,0,0.07);
+    }
+    .journey-map thead th,
+    .journey-map thead td { padding-top: 20px; padding-bottom: 18px; }
+    .journey-map tbody tr:last-child th,
+    .journey-map tbody tr:last-child td { border-bottom: none; }
+    .journey-map th:last-child,
+    .journey-map td:last-child { border-right: none; }
+    .journey-map td {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6B6B6B;
+    }
+    .journey-map td p { margin: 0 0 5px; }
+    .journey-map td p:last-child { margin-bottom: 0; }
+
+    /* the rail keeps the row named while you pan out to stage 06 — the one
+       place this departs from the board, which you read zoomed out */
+    .jm-lane {
+      width: var(--jm-lane);
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #FFFFFF;
+    }
+    .jm-stage {
+      width: var(--jm-cell);
+      scroll-snap-align: start;
+    }
+    .jm-lane-name {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.6;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1A1A1A;
+    }
+    .jm-lane-note {
+      margin: 5px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #6B6B6B;
+    }
+    .jm-num {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.6;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #6B6B6B;
+    }
+    .jm-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: #1A1A1A;
+    }
+
+    /* .case-section li carries 14/1.7 on the element itself, so this has to
+       out-specify it rather than set a size on the ul */
+    .journey-map .jm-list { list-style: none; padding: 0; margin: 0; }
+    .journey-map .jm-list li {
+      position: relative;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6B6B6B;
+      margin-bottom: 6px;
+      padding-left: 14px;
+    }
+    .journey-map .jm-list li:last-child { margin-bottom: 0; }
+    .journey-map .jm-list li::before {
+      content: '\00B7';
+      position: absolute;
+      left: 0;
+      color: #6B6B6B;
+      font-weight: 700;
+    }
+
+    /* the board grades emotion with a face; five dots carry the same reading
+       without importing an emoji into a page that has none */
+    .jm-scale { display: flex; gap: 5px; margin: 4px 0 9px; }
+    .jm-scale i {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.14);
+    }
+    .jm-scale i.on { background: #1A1A1A; }
+
+    /* the last row is what the design answered, not what the user reported */
+    .jm-row-answer td { color: #1A1A1A; }
+    .jm-row-answer td,
+    .jm-row-answer .jm-lane { background: #FBFBFB; }
+
+    @media (max-width: 600px) {
+      /* the rail has to stay narrow enough to leave a stage readable, which
+         is room for the lane names but not for the notes under them */
+      .journey-sheet { --jm-lane: 112px; --jm-cell: 236px; }
+      .journey-map th, .journey-map td { padding: 13px 14px 15px; }
+      .journey-map thead th, .journey-map thead td { padding-top: 16px; padding-bottom: 15px; }
+      .jm-lane-note { display: none; }
     }
 
 
@@ -1501,131 +1661,134 @@
       </div>
 
       <h3 class="subsection-heading">User journey map</h3>
-      <p class="section-text" style="margin-top:16px;">Group 1 &mdash; Data Scientist / Engineer. Goal: to find a data product and get access. The same map was drawn for all four groups; the opportunities in the last row are what the design answered.</p>
+      <p class="section-text" style="margin-top:16px;">Group 1 &mdash; Data Scientist / Engineer. Goal: find a data product and get access to it. The same map was drawn for all four persona groups.</p>
 
-      <div class="strategy-sheet" tabindex="0" role="group" aria-label="User journey map, six stages — scrollable">
-          <div class="strategy-col">
-            <p class="strategy-col-num">01</p>
-            <p class="strategy-col-title">Need</p>
-            <dl class="strategy-dl">
-              <div><dt>Actions</dt><dd>Defines task &amp; identifies needed data</dd></div>
-              <div><dt>Thinking</dt><dd>&ldquo;What data is available?&rdquo;</dd></div>
-              <div><dt>Emotion</dt><dd>Uncertainty</dd></div>
-              <div><dt>Pain point</dt><dd>No single data catalog</dd></div>
-              <div class="is-answer"><dt>Opportunity</dt><dd>Dataset recommendations</dd></div>
-            </dl>
-          </div>
-          <div class="strategy-col">
-            <p class="strategy-col-num">02</p>
-            <p class="strategy-col-title">Search</p>
-            <dl class="strategy-dl">
-              <div><dt>Actions</dt><dd>
-                    <ul class="strategy-list">
-                      <li>Searches for datasets by column, tag, team, or domain.</li>
-                      <li>Compares similar datasets.</li>
-                      <li>Checks schema, lineage, owners.</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Thinking</dt><dd>
-                    <ul class="strategy-list">
-                      <li>&ldquo;Does a dataset for this already exist?&rdquo;</li>
-                      <li>&ldquo;Who owns this?&rdquo;</li>
-                      <li>&ldquo;Can I trust these numbers?&rdquo;</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Emotion</dt><dd>Frustration</dd></div>
-              <div><dt>Pain point</dt><dd>Duplicates, chaos, outdated data</dd></div>
-              <div class="is-answer"><dt>Opportunity</dt><dd>Unified marketplace + filters</dd></div>
-            </dl>
-          </div>
-          <div class="strategy-col">
-            <p class="strategy-col-num">03</p>
-            <p class="strategy-col-title">Evaluate</p>
-            <dl class="strategy-dl">
-              <div><dt>Actions</dt><dd>
-                    <ul class="strategy-list">
-                      <li>Reviews schema, preview rows, lineage, and metadata.</li>
-                      <li>Checks freshness, null rate, anomalies, drift.</li>
-                      <li>Compares versions.</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Thinking</dt><dd>
-                    <ul class="strategy-list">
-                      <li>&ldquo;Is this reliable for production?&rdquo;</li>
-                      <li>&ldquo;Will it break my pipeline?&rdquo;</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Emotion</dt><dd>Cautious optimism</dd></div>
-              <div><dt>Pain point</dt><dd>No quality, lineage, documentation</dd></div>
-              <div class="is-answer"><dt>Opportunity</dt><dd>Quality score, lineage graph, user feedback and ratings</dd></div>
-            </dl>
-          </div>
-          <div class="strategy-col">
-            <p class="strategy-col-num">04</p>
-            <p class="strategy-col-title">Access</p>
-            <dl class="strategy-dl">
-              <div><dt>Actions</dt><dd>
-                    <ul class="strategy-list">
-                      <li>Submits an access request.</li>
-                      <li>Looks for the approver.</li>
-                      <li>Waits for confirmation.</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Thinking</dt><dd>
-                    <ul class="strategy-list">
-                      <li>&ldquo;Why does it take so long?&rdquo;</li>
-                      <li>&ldquo;Where is my request now?&rdquo;</li>
-                      <li>&ldquo;Who should approve this?&rdquo;</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Emotion</dt><dd>Irritation</dd></div>
-              <div><dt>Pain point</dt><dd>Long approvals, no transparency</dd></div>
-              <div class="is-answer"><dt>Opportunity</dt><dd>Auto-approval, status tracking</dd></div>
-            </dl>
-          </div>
-          <div class="strategy-col">
-            <p class="strategy-col-num">05</p>
-            <p class="strategy-col-title">Integrate</p>
-            <dl class="strategy-dl">
-              <div><dt>Actions</dt><dd>
-                    <ul class="strategy-list">
-                      <li>Retrieves connection details.</li>
-                      <li>Adds dataset to Airflow/Databricks/ML pipeline.</li>
-                      <li>Runs tests.</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Thinking</dt><dd>
-                    <ul class="strategy-list">
-                      <li>&ldquo;Is this dataset stable?&rdquo;</li>
-                      <li>&ldquo;Will schema stay consistent?&rdquo;</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Emotion</dt><dd>Focus</dd></div>
-              <div><dt>Pain point</dt><dd>No code examples, schema issues</dd></div>
-              <div class="is-answer"><dt>Opportunity</dt><dd>Code snippets, schema contracts, open data in relevant system</dd></div>
-            </dl>
-          </div>
-          <div class="strategy-col">
-            <p class="strategy-col-num">06</p>
-            <p class="strategy-col-title">Monitor</p>
-            <dl class="strategy-dl">
-              <div><dt>Actions</dt><dd>
-                    <ul class="strategy-list">
-                      <li>Monitors data freshness, anomalies, schema changes.</li>
-                      <li>Responds to alerts.</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Thinking</dt><dd>
-                    <ul class="strategy-list">
-                      <li>&ldquo;Is everything still working?&rdquo;</li>
-                      <li>&ldquo;Why did the null rate spike?&rdquo;</li>
-                    </ul>
-                  </dd></div>
-              <div><dt>Emotion</dt><dd>Calm or stress</dd></div>
-              <div><dt>Pain point</dt><dd>No alerts, late issue detection</dd></div>
-              <div class="is-answer"><dt>Opportunity</dt><dd>Alerts, freshness indicators, impact analysis</dd></div>
-            </dl>
-          </div>
+      <div class="journey-sheet" tabindex="0" role="group" data-fade-sides="right" aria-label="User journey map, six stages &mdash; scrollable">
+        <table class="journey-map">
+          <caption class="jm-caption">Group 1 &mdash; Data Scientist / Engineer. Current journey, six stages.</caption>
+          <thead>
+            <tr>
+              <td class="jm-lane">
+                <p class="jm-lane-name">Stage</p>
+                <p class="jm-lane-note">The six steps to the goal</p>
+              </td>
+              <th scope="col" class="jm-stage"><p class="jm-num">01</p><p class="jm-title">Need</p></th>
+              <th scope="col" class="jm-stage"><p class="jm-num">02</p><p class="jm-title">Search</p></th>
+              <th scope="col" class="jm-stage"><p class="jm-num">03</p><p class="jm-title">Evaluate</p></th>
+              <th scope="col" class="jm-stage"><p class="jm-num">04</p><p class="jm-title">Access</p></th>
+              <th scope="col" class="jm-stage"><p class="jm-num">05</p><p class="jm-title">Integrate</p></th>
+              <th scope="col" class="jm-stage"><p class="jm-num">06</p><p class="jm-title">Monitor</p></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row" class="jm-lane">
+                <p class="jm-lane-name">Actions</p>
+                <p class="jm-lane-note">What they do here</p>
+              </th>
+              <td><p>Defines the task and identifies the data it needs.</p></td>
+              <td>
+                <ul class="jm-list">
+                  <li>Searches by column, tag, team, or domain.</li>
+                  <li>Compares similar datasets.</li>
+                  <li>Checks schema, lineage, owners.</li>
+                </ul>
+              </td>
+              <td>
+                <ul class="jm-list">
+                  <li>Reviews schema, preview rows, lineage, metadata.</li>
+                  <li>Checks freshness, null rate, anomalies, drift.</li>
+                  <li>Compares versions.</li>
+                </ul>
+              </td>
+              <td>
+                <ul class="jm-list">
+                  <li>Submits an access request.</li>
+                  <li>Looks for the approver.</li>
+                  <li>Waits for confirmation.</li>
+                </ul>
+              </td>
+              <td>
+                <ul class="jm-list">
+                  <li>Retrieves connection details.</li>
+                  <li>Adds the dataset to an Airflow / Databricks / ML pipeline.</li>
+                  <li>Runs tests.</li>
+                </ul>
+              </td>
+              <td>
+                <ul class="jm-list">
+                  <li>Monitors freshness, anomalies, schema changes.</li>
+                  <li>Responds to alerts.</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="jm-lane">
+                <p class="jm-lane-name">Thinking</p>
+                <p class="jm-lane-note">What they ask themselves</p>
+              </th>
+              <td><p>&ldquo;What data is available?&rdquo;</p></td>
+              <td>
+                <p>&ldquo;Does a dataset for this already exist?&rdquo;</p>
+                <p>&ldquo;Who owns this?&rdquo;</p>
+                <p>&ldquo;Can I trust these numbers?&rdquo;</p>
+              </td>
+              <td>
+                <p>&ldquo;Is this reliable for production?&rdquo;</p>
+                <p>&ldquo;Will it break my pipeline?&rdquo;</p>
+              </td>
+              <td>
+                <p>&ldquo;Why does it take so long?&rdquo;</p>
+                <p>&ldquo;Where is my request now?&rdquo;</p>
+                <p>&ldquo;Who should approve this?&rdquo;</p>
+              </td>
+              <td>
+                <p>&ldquo;Is this dataset stable?&rdquo;</p>
+                <p>&ldquo;Will the schema stay consistent?&rdquo;</p>
+              </td>
+              <td>
+                <p>&ldquo;Is everything still working?&rdquo;</p>
+                <p>&ldquo;Why did the null rate spike?&rdquo;</p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="jm-lane">
+                <p class="jm-lane-name">Emotion</p>
+                <p class="jm-lane-note">How it feels, worst to best</p>
+              </th>
+              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Uncertainty</p></td>
+              <td><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Frustration</p></td>
+              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Cautious optimism</p></td>
+              <td><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Irritation</p></td>
+              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Focus</p></td>
+              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Calm or stress</p></td>
+            </tr>
+            <tr>
+              <th scope="row" class="jm-lane">
+                <p class="jm-lane-name">Pain point</p>
+                <p class="jm-lane-note">What gets in the way</p>
+              </th>
+              <td><p>No single data catalog</p></td>
+              <td><p>Duplicates, chaos, outdated data</p></td>
+              <td><p>No quality, lineage, documentation</p></td>
+              <td><p>Long approvals, no transparency</p></td>
+              <td><p>No code examples, schema issues</p></td>
+              <td><p>No alerts, late issue detection</p></td>
+            </tr>
+            <tr class="jm-row-answer">
+              <th scope="row" class="jm-lane">
+                <p class="jm-lane-name">Opportunity</p>
+                <p class="jm-lane-note">What the design answered</p>
+              </th>
+              <td><p>Dataset recommendations</p></td>
+              <td><p>Unified marketplace + filters</p></td>
+              <td><p>Quality score, lineage graph, user feedback and ratings</p></td>
+              <td><p>Auto-approval, status tracking</p></td>
+              <td><p>Code snippets, schema contracts, open data in the relevant system</p></td>
+              <td><p>Alerts, freshness indicators, impact analysis</p></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
     </section>
@@ -2442,6 +2605,8 @@
         function update() {
           var left = el.scrollLeft > 4;
           var right = el.scrollWidth - el.scrollLeft - el.clientWidth > 4;
+          // a sheet with a sticky row-header rail must never fade its left edge
+          if (el.getAttribute('data-fade-sides') === 'right') left = false;
           var side = left && right ? 'both' : right ? 'right' : left ? 'left' : '';
           if (side) el.setAttribute('data-fade', side);
           else el.removeAttribute('data-fade');
