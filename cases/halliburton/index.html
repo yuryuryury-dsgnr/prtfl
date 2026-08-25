@@ -651,21 +651,27 @@
        The strategy sheet repeats its lane names inside every column, which is
        right when the columns are unlike one another. A journey map is the
        other case: six stages, the same five lanes under each. Naming the lanes
-       once, on the left, is how the board reads in Figma — and it is what makes
-       the artefact work, because the rows become comparable. The emotion row
-       then reads as a curve and the pain row as a list of what to fix.
+       once, on the left, is how the board reads — and it is what makes the
+       artefact work, because the rows become comparable. The emotion row then
+       reads as a curve and the pain row as a list of what to fix.
 
-       A real table, because this is one: stage headers across, lane headers
-       down. border-collapse: separate is what lets the lane rail stay sticky. */
+       A real table underneath, because this is one: stage headers across, lane
+       headers down. What the table gives for free is the thing the board draws
+       by hand — every cell in a row shares a band, so the map stays legible
+       when you pan. The cells themselves are cards, floating on the page with
+       a thread running down each column and a mini arrow between the stages,
+       so the sequence reads as a sequence and not as a spreadsheet.
+
+       border-collapse: separate is what lets the lane rail stay sticky. */
     .journey-sheet {
       --jm-lane: 168px;
-      --jm-cell: 300px;
+      --jm-cell: 316px;
+      --jm-gut: 12px;
+      --jm-pad: 20px;
+      --jm-thread: rgba(0,0,0,0.10);
       margin-top: 24px;
       max-width: 100%;
       min-width: 0;
-      background: #FFFFFF;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
       overflow-x: auto;
       overflow-y: hidden;
       scrollbar-width: none;
@@ -698,40 +704,78 @@
     }
     .journey-map th,
     .journey-map td {
-      vertical-align: top;
+      position: relative;
+      /* content-sized cards centred in the band, the way they sit on a board —
+         a card stretched to the tallest cell in its row would read as an empty
+         box rather than as a short answer */
+      vertical-align: middle;
       text-align: left;
       font-weight: 400;
-      padding: 14px 22px 16px;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-      border-right: 1px solid rgba(0,0,0,0.07);
+      padding: 8px var(--jm-gut);
     }
-    .journey-map thead th,
-    .journey-map thead td { padding-top: 20px; padding-bottom: 18px; }
-    .journey-map tbody tr:last-child th,
-    .journey-map tbody tr:last-child td { border-bottom: none; }
-    .journey-map th:last-child,
-    .journey-map td:last-child { border-right: none; }
     .journey-map td {
       font-size: 13px;
       line-height: 1.6;
       color: #6B6B6B;
     }
-    .journey-map td p { margin: 0 0 5px; }
-    .journey-map td p:last-child { margin-bottom: 0; }
+
+    .jm-card {
+      position: relative;
+      z-index: 1;
+      background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      padding: var(--jm-pad);
+    }
+    .jm-card p { margin: 0 0 5px; }
+    .jm-card p:last-child { margin-bottom: 0; }
+
+    /* the thread down a column: full height behind the card, which covers it,
+       so it only shows in the gaps — and it stops at the first and last card
+       instead of running off into nothing */
+    .jm-stage::before,
+    .jm-cell::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      transform: translateX(-50%);
+      background: var(--jm-thread);
+    }
+    .jm-stage::before { top: 50%; }
+    .journey-map tbody tr:last-child .jm-cell::before { bottom: 50%; }
+
+    /* and the arrow between one stage and the next, sitting in the gutter */
+    .jm-stage:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: calc(-1 * var(--jm-gut));
+      width: calc(var(--jm-gut) * 2);
+      height: 8px;
+      margin-top: -4px;
+      background: center / contain no-repeat
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8' viewBox='0 0 24 8'%3E%3Cpath d='M1 4h20M18 1l3 3-3 3' fill='none' stroke='%23AFACA6' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
 
     /* the rail keeps the row named while you pan out to stage 06 — the one
-       place this departs from the board, which you read zoomed out */
-    .jm-lane {
+       place this departs from the board, which you read zoomed out. It carries
+       the page colour so the cards vanish under it rather than through it. */
+    .journey-map .jm-lane {
       width: var(--jm-lane);
+      /* .journey-map th is (0,1,1) and sets position: relative — a bare
+         .jm-lane loses to it and the rail silently stops sticking */
       position: sticky;
       left: 0;
-      z-index: 2;
-      background: #FFFFFF;
+      z-index: 3;
+      background: #F8F7F4;
+      padding-left: 0;
     }
-    .jm-stage {
-      width: var(--jm-cell);
-      scroll-snap-align: start;
-    }
+    .jm-stage,
+    .jm-cell { width: var(--jm-cell); }
+    .jm-stage { scroll-snap-align: start; }
     .jm-lane-name {
       margin: 0;
       font-size: 11px;
@@ -786,7 +830,7 @@
 
     /* the board grades emotion with a face; five dots carry the same reading
        without importing an emoji into a page that has none */
-    .jm-scale { display: flex; gap: 5px; margin: 4px 0 9px; }
+    .jm-scale { display: flex; gap: 5px; margin: 2px 0 9px; }
     .jm-scale i {
       width: 5px;
       height: 5px;
@@ -795,17 +839,24 @@
     }
     .jm-scale i.on { background: #1A1A1A; }
 
-    /* the last row is what the design answered, not what the user reported */
-    .jm-row-answer td { color: #1A1A1A; }
-    .jm-row-answer td,
-    .jm-row-answer .jm-lane { background: #FBFBFB; }
+    /* the last row is what the design answered, not what the user reported —
+       the board fills those cards; here they take the chip colour the rest of
+       the site uses for a filled surface */
+    .jm-row-answer .jm-card {
+      background: #F0EFEC;
+      border-color: rgba(0,0,0,0.05);
+      color: #1A1A1A;
+    }
 
     @media (max-width: 600px) {
-      /* the rail has to stay narrow enough to leave a stage readable, which
-         is room for the lane names but not for the notes under them */
-      .journey-sheet { --jm-lane: 112px; --jm-cell: 236px; }
-      .journey-map th, .journey-map td { padding: 13px 14px 15px; }
-      .journey-map thead th, .journey-map thead td { padding-top: 16px; padding-bottom: 15px; }
+      /* the rail has to stay narrow enough to leave a card readable, which is
+         room for the lane names but not for the notes under them */
+      .journey-sheet {
+        --jm-lane: 108px;
+        --jm-cell: 252px;
+        --jm-gut: 8px;
+        --jm-pad: 16px;
+      }
       .jm-lane-note { display: none; }
     }
 
@@ -1672,12 +1723,12 @@
                 <p class="jm-lane-name">Stage</p>
                 <p class="jm-lane-note">The six steps to the goal</p>
               </td>
-              <th scope="col" class="jm-stage"><p class="jm-num">01</p><p class="jm-title">Need</p></th>
-              <th scope="col" class="jm-stage"><p class="jm-num">02</p><p class="jm-title">Search</p></th>
-              <th scope="col" class="jm-stage"><p class="jm-num">03</p><p class="jm-title">Evaluate</p></th>
-              <th scope="col" class="jm-stage"><p class="jm-num">04</p><p class="jm-title">Access</p></th>
-              <th scope="col" class="jm-stage"><p class="jm-num">05</p><p class="jm-title">Integrate</p></th>
-              <th scope="col" class="jm-stage"><p class="jm-num">06</p><p class="jm-title">Monitor</p></th>
+              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">01</p><p class="jm-title">Need</p></div></th>
+              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">02</p><p class="jm-title">Search</p></div></th>
+              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">03</p><p class="jm-title">Evaluate</p></div></th>
+              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">04</p><p class="jm-title">Access</p></div></th>
+              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">05</p><p class="jm-title">Integrate</p></div></th>
+              <th scope="col" class="jm-stage"><div class="jm-card"><p class="jm-num">06</p><p class="jm-title">Monitor</p></div></th>
             </tr>
           </thead>
           <tbody>
@@ -1686,106 +1737,96 @@
                 <p class="jm-lane-name">Actions</p>
                 <p class="jm-lane-note">What they do here</p>
               </th>
-              <td><p>Defines the task and identifies the data it needs.</p></td>
-              <td>
-                <ul class="jm-list">
+              <td class="jm-cell"><div class="jm-card"><p>Defines the task and identifies the data it needs.</p></div></td>
+              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
                   <li>Searches by column, tag, team, or domain.</li>
                   <li>Compares similar datasets.</li>
                   <li>Checks schema, lineage, owners.</li>
                 </ul>
-              </td>
-              <td>
-                <ul class="jm-list">
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
                   <li>Reviews schema, preview rows, lineage, metadata.</li>
                   <li>Checks freshness, null rate, anomalies, drift.</li>
                   <li>Compares versions.</li>
                 </ul>
-              </td>
-              <td>
-                <ul class="jm-list">
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
                   <li>Submits an access request.</li>
                   <li>Looks for the approver.</li>
                   <li>Waits for confirmation.</li>
                 </ul>
-              </td>
-              <td>
-                <ul class="jm-list">
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
                   <li>Retrieves connection details.</li>
                   <li>Adds the dataset to an Airflow / Databricks / ML pipeline.</li>
                   <li>Runs tests.</li>
                 </ul>
-              </td>
-              <td>
-                <ul class="jm-list">
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <ul class="jm-list">
                   <li>Monitors freshness, anomalies, schema changes.</li>
                   <li>Responds to alerts.</li>
                 </ul>
-              </td>
+              </div></td>
             </tr>
             <tr>
               <th scope="row" class="jm-lane">
                 <p class="jm-lane-name">Thinking</p>
                 <p class="jm-lane-note">What they ask themselves</p>
               </th>
-              <td><p>&ldquo;What data is available?&rdquo;</p></td>
-              <td>
-                <p>&ldquo;Does a dataset for this already exist?&rdquo;</p>
+              <td class="jm-cell"><div class="jm-card"><p>&ldquo;What data is available?&rdquo;</p></div></td>
+              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Does a dataset for this already exist?&rdquo;</p>
                 <p>&ldquo;Who owns this?&rdquo;</p>
                 <p>&ldquo;Can I trust these numbers?&rdquo;</p>
-              </td>
-              <td>
-                <p>&ldquo;Is this reliable for production?&rdquo;</p>
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Is this reliable for production?&rdquo;</p>
                 <p>&ldquo;Will it break my pipeline?&rdquo;</p>
-              </td>
-              <td>
-                <p>&ldquo;Why does it take so long?&rdquo;</p>
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Why does it take so long?&rdquo;</p>
                 <p>&ldquo;Where is my request now?&rdquo;</p>
                 <p>&ldquo;Who should approve this?&rdquo;</p>
-              </td>
-              <td>
-                <p>&ldquo;Is this dataset stable?&rdquo;</p>
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Is this dataset stable?&rdquo;</p>
                 <p>&ldquo;Will the schema stay consistent?&rdquo;</p>
-              </td>
-              <td>
-                <p>&ldquo;Is everything still working?&rdquo;</p>
+              </div></td>
+              <td class="jm-cell"><div class="jm-card">                <p>&ldquo;Is everything still working?&rdquo;</p>
                 <p>&ldquo;Why did the null rate spike?&rdquo;</p>
-              </td>
+              </div></td>
             </tr>
             <tr>
               <th scope="row" class="jm-lane">
                 <p class="jm-lane-name">Emotion</p>
                 <p class="jm-lane-note">How it feels, worst to best</p>
               </th>
-              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Uncertainty</p></td>
-              <td><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Frustration</p></td>
-              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Cautious optimism</p></td>
-              <td><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Irritation</p></td>
-              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Focus</p></td>
-              <td><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Calm or stress</p></td>
+              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Uncertainty</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Frustration</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Cautious optimism</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Irritation</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Focus</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Calm or stress</p></div></td>
             </tr>
             <tr>
               <th scope="row" class="jm-lane">
                 <p class="jm-lane-name">Pain point</p>
                 <p class="jm-lane-note">What gets in the way</p>
               </th>
-              <td><p>No single data catalog</p></td>
-              <td><p>Duplicates, chaos, outdated data</p></td>
-              <td><p>No quality, lineage, documentation</p></td>
-              <td><p>Long approvals, no transparency</p></td>
-              <td><p>No code examples, schema issues</p></td>
-              <td><p>No alerts, late issue detection</p></td>
+              <td class="jm-cell"><div class="jm-card"><p>No single data catalog</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>Duplicates, chaos, outdated data</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>No quality, lineage, documentation</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>Long approvals, no transparency</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>No code examples, schema issues</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>No alerts, late issue detection</p></div></td>
             </tr>
             <tr class="jm-row-answer">
               <th scope="row" class="jm-lane">
                 <p class="jm-lane-name">Opportunity</p>
                 <p class="jm-lane-note">What the design answered</p>
               </th>
-              <td><p>Dataset recommendations</p></td>
-              <td><p>Unified marketplace + filters</p></td>
-              <td><p>Quality score, lineage graph, user feedback and ratings</p></td>
-              <td><p>Auto-approval, status tracking</p></td>
-              <td><p>Code snippets, schema contracts, open data in the relevant system</p></td>
-              <td><p>Alerts, freshness indicators, impact analysis</p></td>
+              <td class="jm-cell"><div class="jm-card"><p>Dataset recommendations</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>Unified marketplace + filters</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>Quality score, lineage graph, user feedback and ratings</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>Auto-approval, status tracking</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>Code snippets, schema contracts, open data in the relevant system</p></div></td>
+              <td class="jm-cell"><div class="jm-card"><p>Alerts, freshness indicators, impact analysis</p></div></td>
             </tr>
           </tbody>
         </table>
