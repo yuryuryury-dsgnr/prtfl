@@ -443,6 +443,30 @@
       .card-grid-3 > .card { flex: 0 0 80%; }
       .reflection-grid > div { flex: 0 0 80%; }
     }
+
+    /* ——— SCROLL RAIL ———
+       macOS hides overlay scrollbars until you actually scroll, and a styled
+       ::-webkit-scrollbar still reserves no space there — measured 0px. So a
+       row that scrolls looked exactly like one that does not. This bar is
+       drawn by the page: always visible, in the site's own greys, and added
+       only to the containers that really overflow at the current width. */
+    .scroll-rail {
+      height: 3px;
+      margin-top: 12px;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.07);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-rail i {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      display: block;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.28);
+    }
   </style>
 </head>
 <body>
@@ -1001,6 +1025,61 @@
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
     })();
 
+  
+    // ——— SCROLL RAIL ———
+    // Finds the containers that actually scroll sideways and gives each a drawn
+    // bar. No selector list to keep in sync: it asks the layout, so a container
+    // that only scrolls under a breakpoint gets a rail exactly when it does.
+    (function () {
+      var rails = [];
+
+      function attach(el) {
+        if (el.dataset.railed) return;
+        el.dataset.railed = '1';
+        var rail = document.createElement('div');
+        rail.className = 'scroll-rail';
+        rail.setAttribute('aria-hidden', 'true');
+        var thumb = document.createElement('i');
+        rail.appendChild(thumb);
+        el.insertAdjacentElement('afterend', rail);
+
+        function update() {
+          // Some scrollers are wider than the column they sit in — §03's sheet
+          // grows rightwards, the flow container bleeds both ways on negative
+          // margins. Copy the host's box, margins included, or the rail either
+          // ends short of what it scrolls or pushes the page sideways.
+          var hs = getComputedStyle(el);
+          rail.style.width = el.offsetWidth + 'px';
+          rail.style.marginLeft = hs.marginLeft;
+          rail.style.marginRight = hs.marginRight;
+          var vis = el.clientWidth, all = el.scrollWidth, track = rail.clientWidth;
+          if (!vis || !track || all - vis < 2) { rail.style.display = 'none'; return; }
+          rail.style.display = '';
+          var w = Math.max(24, Math.round(vis / all * track));
+          thumb.style.width = w + 'px';
+          thumb.style.transform = 'translateX(' + Math.round(el.scrollLeft / (all - vis) * (track - w)) + 'px)';
+        }
+        el.addEventListener('scroll', update, { passive: true });
+        rails.push(update);
+        update();
+      }
+
+      function scan() {
+        var all = document.querySelectorAll('*');
+        for (var i = 0; i < all.length; i++) {
+          var ox = getComputedStyle(all[i]).overflowX;
+          if ((ox === 'auto' || ox === 'scroll') && all[i].scrollWidth - all[i].clientWidth > 2) attach(all[i]);
+        }
+        for (var j = 0; j < rails.length; j++) rails[j]();
+      }
+
+      scan();
+      var t;
+      function later() { clearTimeout(t); t = setTimeout(scan, 120); }
+      window.addEventListener('resize', later);
+      // panels behind a tab are zero-width until shown, so re-check after a click
+      document.addEventListener('click', later, true);
+    })();
   </script>
 </body>
 </html>
