@@ -388,7 +388,10 @@
        :focus-within drops the mask — otherwise a keyboard user tabbing to the
        last visible card watches their own focus ring dissolve. */
     [data-fade] {
-      --fade-edge: 34px;
+      /* 34px is right on a phone, where the row is 342px wide; on a 1028px
+         sheet the same 34px is a third of the proportion and barely registers,
+         so it grows with the viewport and stops before it eats a column */
+      --fade-edge: clamp(34px, 6vw, 72px);
     }
     [data-fade="right"] {
       -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);

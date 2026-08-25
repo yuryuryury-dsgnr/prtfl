@@ -337,13 +337,6 @@
     .rb-cmp-mark--no { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
     /* only ever attached to a partial: says what the half-mark is standing for */
     .rb-cmp-note { font-size: 10px; line-height: 1.35; color: #6B6B6B; }
-    .rb-market-out {
-      display: flex; flex-direction: column; gap: 6px; margin-top: 18px;
-      background: var(--rb-action-bg); border: 1px solid var(--rb-action-bd);
-      border-radius: 12px; padding: 16px 20px;
-    }
-    .rb-market-out-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #4E6655; }
-    .rb-market-out-text { font-size: 14px; color: #3F5246; line-height: 1.55; }
 
     /* §06 — App Store listing cards. Same components as the §04 screenshots
        (frame box, .phone-shot, onerror placeholder, caption) with the store
@@ -653,7 +646,6 @@
     /* §04 — what the screens run on: one paragraph naming the hard part, and a
        flat row of chips. Chip/flex based, so the row wraps instead of ever
        widening the page. */
-    .rb-tech-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6B6B; margin: 32px 0 10px; }
     .rb-tech-challenge { font-size: 14px; color: #6B6B6B; line-height: 1.7; max-width: 640px; }
     .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
     .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #F0EFEC; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
@@ -818,7 +810,10 @@
        :focus-within drops the mask — otherwise a keyboard user tabbing to the
        last visible card watches their own focus ring dissolve. */
     [data-fade] {
-      --fade-edge: 34px;
+      /* 34px is right on a phone, where the row is 342px wide; on a 1028px
+         sheet the same 34px is a third of the proportion and barely registers,
+         so it grows with the viewport and stops before it eats a column */
+      --fade-edge: clamp(34px, 6vw, 72px);
     }
     [data-fade="right"] {
       -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
@@ -1039,10 +1034,6 @@
         <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--part"></span>Partly</span>
         <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--no"></span>Doesn't</span>
       </div>
-      <div class="rb-market-out">
-        <span class="rb-market-out-label">What that means</span>
-        <span class="rb-market-out-text">The gap is technical rather than commercial: no exchange publishes an ALT/ALT feed, so the ratio has to be assembled from two USD legs and divided &mdash; which is exactly where every row above stops.</span>
-      </div>
 
       <h3 class="subsection-heading">User personas</h3>
       <p class="section-text">Three groups came out of the conversations and the reading. I belong to the first one myself, which is where the product started; the interviews put the other two beside it.</p>
@@ -1214,7 +1205,6 @@
             </div>
               <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
             </div>
-          <p class="rb-note">There is no onboarding, and that is a decision rather than a gap: no tour, no welcome screens, no coach marks. Tapping the one button produces a pair that is already tracking rather than a blank form, so the app is learned by using it. The one dialog on the way in is a disclaimer with a single acknowledge button, and it is there for App Review rather than for the reader. The store screenshots do the explaining before the app opens, which is what lets the first screen stay this quiet. Moving some of that inside is the next thing I would test.</p>
         </div>
         <div class="rb-tabpanel" data-rb-panel="pair" role="tabpanel">
           <div class="rb-stage">
@@ -1479,9 +1469,8 @@
       </div>
     
 
-      <h3 class="subsection-heading">The backend behind them</h3>
+      <h3 class="subsection-heading">Biggest challenge</h3>
 
-      <p class="rb-tech-label">Biggest challenge</p>
       <p class="rb-tech-challenge">The alert is the product, and an alert has to arrive with the app closed &mdash; that one requirement pulled a backend behind a one-person design project. Price sources that answer a phone refuse a data centre, iOS background refresh cannot be trusted, and an alert that has fired must not fire again: every one of those is a server problem, not a screen.</p>
 
       <div class="rb-tech-chips">
