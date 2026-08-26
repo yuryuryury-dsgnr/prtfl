@@ -101,6 +101,10 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
+      /* hugs its own sentence rather than ruling a line across the page —
+         it is an aside, and a full-width bar reads as a section banner */
+      width: fit-content;
+      max-width: 100%;
       background: #E1EFFA;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
@@ -343,11 +347,6 @@
     .mockup-gallery { display: flex; flex-direction: column; gap: 16px; width: calc(100% + 160px); margin-left: -80px; }
     .mg-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
     .mg-toolbar .ds-theme-toggle { flex-shrink: 0; }
-    .mockup-gallery .phase-toggle {
-      margin-bottom: 0; min-width: 0;
-      overflow-x: auto; flex-wrap: nowrap;
-      scrollbar-width: none;
-    }
     .mockup-gallery .phase-toggle::-webkit-scrollbar { display: none; }
     /* Bleed collapse thresholds are set by the geometry, not by a round
        number: .page-layout caps its content at 1052px, so a ±80px bleed is
@@ -399,15 +398,33 @@
          756px — reserve the ratio so nothing below it moves */
       aspect-ratio: 2880 / 1800;
     }
-    .mg-img {
-      width: 100%; height: auto; display: block;
-      opacity: 0; position: absolute; top: 0; left: 0;
-      transition: opacity 200ms ease;
+    .mg-img { width: 100%; height: auto; display: block; }
+
+    /* ——— THE STRIP ———
+       Five screens in a row that drifts left on its own and stops the moment
+       you touch it. The drift moves scrollLeft rather than a transform, so the
+       row stays a real scroller: a swipe, a trackpad, a shift-wheel and a Tab
+       all work, and the edge fade finds it like every other row on the site. */
+    .mg-strip {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
     }
-    .mg-img.active { opacity: 1; position: relative; }
-    .mg-caption {
-      font-size: 13px; color: #6B6B6B;
-      text-align: center; line-height: 1.5; margin: 0;
+    .mg-strip::-webkit-scrollbar { display: none; }
+    .mg-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    .mg-track { display: flex; gap: 20px; width: max-content; }
+    /* an absolute basis, never a percentage: the track is width: max-content,
+       so a percentage basis has nothing definite to resolve against and the
+       items stopped being a row at all — at 390 the page went from 9537px to
+       23073px because all ten had stacked */
+    .mg-item { flex: 0 0 min(560px, 78vw); margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .mg-cap { font-size: 13px; color: #6B6B6B; line-height: 1.5; margin: 0; padding: 0 2px; }
+    .mg-cap b { color: #1A1A1A; font-weight: 500; }
+    .mg-hint { font-size: 13px; color: #6B6B6B; line-height: 1.6; margin: 0; }
+    @media (max-width: 700px) {
+      .mg-hint { display: none; }
     }
     @media (max-width: 640px) {
       .mockup-gallery .ds-theme-bar { justify-content: flex-start; }
@@ -2087,45 +2104,82 @@
     <div class="mockup-gallery">
 
               <div class="mg-toolbar">
-                <div class="phase-toggle mg-tabs">
-                  <button class="phase-toggle-btn active" data-mg-tab="main" aria-pressed="true">Main</button>
-                  <button class="phase-toggle-btn" data-mg-tab="explore" aria-pressed="false">Explore</button>
-                  <button class="phase-toggle-btn" data-mg-tab="detail" aria-pressed="false">Detail</button>
-                  <button class="phase-toggle-btn" data-mg-tab="request" aria-pressed="false">Request Access</button>
-                  <button class="phase-toggle-btn" data-mg-tab="admin" aria-pressed="false">Admin</button>
-                </div>
+                <p class="mg-hint">Five screens, drifting &mdash; scroll the row to take over.</p>
                 <div class="ds-theme-toggle" id="mg-theme-toggle">
                   <button class="ds-theme-btn active" data-mg-theme="light" aria-pressed="true">Light</button>
                   <button class="ds-theme-btn" data-mg-theme="dark" aria-pressed="false">Dark</button>
                 </div>
               </div>
 
-              <div class="mg-browser" data-mg-theme="light">
-                <div class="mg-chrome">
-                  <div class="mg-dots"><span></span><span></span><span></span></div>
-                  <div class="mg-url">Data Marketplace</div>
+              <div class="mg-strip" tabindex="0" role="group" aria-label="Final mockups, five screens &mdash; scrollable">
+                <div class="mg-track">
+              <figure class="mg-item">
+                <div class="mg-browser" data-mg-theme="light">
+                  <div class="mg-chrome">
+                    <div class="mg-dots"><span></span><span></span><span></span></div>
+                    <div class="mg-url">Main</div>
+                  </div>
+                  <div class="mg-canvas">
+                    <img class="mg-img" data-mg-light="images/mockups/main-light.webp" data-mg-dark="images/mockups/main-dark.webp"
+                         src="images/mockups/main-light.webp" alt="Main" fetchpriority="high" width="2880" height="1800">
+                  </div>
                 </div>
-                <div class="mg-canvas">
-                  <img class="mg-img active" data-mg-tab="main"
-                       data-mg-light="images/mockups/main-light.webp"
-                       data-mg-dark="images/mockups/main-dark.webp"
-                       src="images/mockups/main-light.webp" alt="Main — home page" loading="lazy" width="2880" height="1800">
-                  <img class="mg-img" data-mg-tab="explore"
-                       data-mg-light="images/mockups/explore-light.webp"
-                       data-mg-dark="images/mockups/explore-dark.webp" alt="Explore" loading="lazy" width="2880" height="1800">
-                  <img class="mg-img" data-mg-tab="detail"
-                       data-mg-light="images/mockups/detail-light.webp"
-                       data-mg-dark="images/mockups/detail-dark.webp" alt="Detail" loading="lazy" width="2880" height="1800">
-                  <img class="mg-img" data-mg-tab="request"
-                       data-mg-light="images/mockups/request-light.webp"
-                       data-mg-dark="images/mockups/request-dark.webp" alt="Request Access" loading="lazy" width="2880" height="1800">
-                  <img class="mg-img" data-mg-tab="admin"
-                       data-mg-light="images/mockups/admin-light.webp"
-                       data-mg-dark="images/mockups/admin-dark.webp" alt="Admin" loading="lazy" width="2880" height="1800">
+                <figcaption class="mg-cap"><b>Main</b> &mdash; AI-powered home page with natural language search and personalized recommendations</figcaption>
+              </figure>
+              <figure class="mg-item">
+                <div class="mg-browser" data-mg-theme="light">
+                  <div class="mg-chrome">
+                    <div class="mg-dots"><span></span><span></span><span></span></div>
+                    <div class="mg-url">Explore</div>
+                  </div>
+                  <div class="mg-canvas">
+                    <img class="mg-img" data-mg-light="images/mockups/explore-light.webp" data-mg-dark="images/mockups/explore-dark.webp"
+                         src="images/mockups/explore-light.webp" alt="Explore" loading="lazy" width="2880" height="1800">
+                  </div>
+                </div>
+                <figcaption class="mg-cap"><b>Explore</b> &mdash; Browse and filter data products across the organization</figcaption>
+              </figure>
+              <figure class="mg-item">
+                <div class="mg-browser" data-mg-theme="light">
+                  <div class="mg-chrome">
+                    <div class="mg-dots"><span></span><span></span><span></span></div>
+                    <div class="mg-url">Detail</div>
+                  </div>
+                  <div class="mg-canvas">
+                    <img class="mg-img" data-mg-light="images/mockups/detail-light.webp" data-mg-dark="images/mockups/detail-dark.webp"
+                         src="images/mockups/detail-light.webp" alt="Detail" loading="lazy" width="2880" height="1800">
+                  </div>
+                </div>
+                <figcaption class="mg-cap"><b>Detail</b> &mdash; Dataset detail page with metadata, quality score, and access controls</figcaption>
+              </figure>
+              <figure class="mg-item">
+                <div class="mg-browser" data-mg-theme="light">
+                  <div class="mg-chrome">
+                    <div class="mg-dots"><span></span><span></span><span></span></div>
+                    <div class="mg-url">Request Access</div>
+                  </div>
+                  <div class="mg-canvas">
+                    <img class="mg-img" data-mg-light="images/mockups/request-light.webp" data-mg-dark="images/mockups/request-dark.webp"
+                         src="images/mockups/request-light.webp" alt="Request Access" loading="lazy" width="2880" height="1800">
+                  </div>
+                </div>
+                <figcaption class="mg-cap"><b>Request Access</b> &mdash; Multi-step access request flow with governance context</figcaption>
+              </figure>
+              <figure class="mg-item">
+                <div class="mg-browser" data-mg-theme="light">
+                  <div class="mg-chrome">
+                    <div class="mg-dots"><span></span><span></span><span></span></div>
+                    <div class="mg-url">Admin</div>
+                  </div>
+                  <div class="mg-canvas">
+                    <img class="mg-img" data-mg-light="images/mockups/admin-light.webp" data-mg-dark="images/mockups/admin-dark.webp"
+                         src="images/mockups/admin-light.webp" alt="Admin" loading="lazy" width="2880" height="1800">
+                  </div>
+                </div>
+                <figcaption class="mg-cap"><b>Admin</b> &mdash; Admin panel for managing data products and access permissions</figcaption>
+              </figure>
                 </div>
               </div>
-
-              <p class="mg-caption" id="mg-caption">AI-powered home page with natural language search and personalized recommendations</p>
             </div>
 
   </div><!-- end hoisted .page-layout -->
@@ -2846,51 +2900,84 @@
 
     // ——— Mockup Composition: Parallax on scroll ———
 
-    // Mockup gallery — tab switch + light/dark toggle
-    (function() {
-      var captions = {
-        main:    'AI-powered home page with natural language search and personalized recommendations',
-        explore: 'Browse and filter data products across the organization',
-        detail:  'Dataset detail page with metadata, quality score, and access controls',
-        request: 'Multi-step access request flow with governance context',
-        admin:   'Admin panel for managing data products and access permissions'
-      };
-      var tabs = document.querySelectorAll('.mg-tabs .phase-toggle-btn');
-      var imgs = document.querySelectorAll('.mg-img');
-      var browser = document.querySelector('.mg-browser');
-      var caption = document.getElementById('mg-caption');
-      var themeBtns = document.querySelectorAll('#mg-theme-toggle .ds-theme-btn');
-      if (!tabs.length || !imgs.length) return;
-      var state = { theme: 'light', tab: 'main' };
+    // Mockup gallery — a drifting strip plus the light/dark toggle
+    (function () {
+      var strip = document.querySelector('.mg-strip');
+      var track = strip && strip.querySelector('.mg-track');
+      if (!strip || !track) return;
 
-      function apply() {
-        imgs.forEach(function(img) {
-          var src = state.theme === 'dark' ? img.getAttribute('data-mg-dark') : img.getAttribute('data-mg-light');
+      // A second copy of the row makes the wrap seamless: when the scroll
+      // passes the halfway mark we subtract it, and the pixels under the
+      // pointer do not change. The copies are decorative.
+      [].slice.call(track.children).forEach(function (node) {
+        var copy = node.cloneNode(true);
+        copy.setAttribute('aria-hidden', 'true');
+        [].forEach.call(copy.querySelectorAll('img'), function (im) { im.setAttribute('loading', 'lazy'); });
+        track.appendChild(copy);
+      });
+
+      var themeBtns = document.querySelectorAll('#mg-theme-toggle .ds-theme-btn');
+      var theme = 'light';
+      function applyTheme() {
+        [].forEach.call(document.querySelectorAll('.mg-img'), function (img) {
+          var src = img.getAttribute(theme === 'dark' ? 'data-mg-dark' : 'data-mg-light');
           if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
-          var on = img.getAttribute('data-mg-tab') === state.tab;
-          img.classList.toggle('active', on);
-          // opacity alone leaves all five in the accessibility tree at once
-          if (on) img.removeAttribute('aria-hidden'); else img.setAttribute('aria-hidden', 'true');
         });
-        if (browser) browser.setAttribute('data-mg-theme', state.theme);
-        if (caption) caption.textContent = captions[state.tab] || '';
+        [].forEach.call(document.querySelectorAll('.mg-browser'), function (b) {
+          b.setAttribute('data-mg-theme', theme);
+        });
       }
-      tabs.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          tabs.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      [].forEach.call(themeBtns, function (btn) {
+        btn.addEventListener('click', function () {
+          [].forEach.call(themeBtns, function (b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
           btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
-          state.tab = btn.getAttribute('data-mg-tab');
-          apply();
+          theme = btn.getAttribute('data-mg-theme');
+          applyTheme();
         });
       });
-      themeBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          themeBtns.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
-          btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
-          state.theme = btn.getAttribute('data-mg-theme');
-          apply();
-        });
-      });
+
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var SPEED = 22;              // px per second — a drift, not a carousel
+      // The position is carried in a variable, not read back off the element:
+      // 22px/s is 0.35px a frame, and scrollLeft rounds, so reading it back
+      // rounded every step to zero and the row never moved.
+      var half = 0, paused = false, userUntil = 0, mine = -1, last = 0, pos = 0;
+      function measure() { half = track.scrollWidth / 2; }
+      measure();
+      window.addEventListener('resize', measure);
+      if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
+
+      strip.addEventListener('pointerenter', function () { paused = true; });
+      strip.addEventListener('pointerleave', function () { paused = false; });
+      strip.addEventListener('focusin',  function () { paused = true; });
+      strip.addEventListener('focusout', function () { paused = false; });
+      // Our own writes fire scroll too — only a value we did not set is the user.
+      strip.addEventListener('scroll', function () {
+        if (Math.abs(strip.scrollLeft - mine) > 1.5) {
+          userUntil = performance.now() + 1500;
+          pos = strip.scrollLeft;          // hand the position over to the user
+        }
+      }, { passive: true });
+
+      function step(now) {
+        var dt = last ? Math.min(now - last, 50) : 16;
+        last = now;
+        if (half > 0) {
+          if (!paused && now > userUntil) {
+            pos += SPEED * dt / 1000;
+            if (pos >= half) pos -= half;
+            strip.scrollLeft = pos;
+            mine = strip.scrollLeft;
+          } else if (strip.scrollLeft >= half) {
+            pos = strip.scrollLeft - half;
+            strip.scrollLeft = pos;
+            mine = strip.scrollLeft;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
     })();
   
   
