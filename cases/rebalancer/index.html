@@ -88,15 +88,12 @@
 
     /* ——— SECTIONS ——— */
     .case-section { padding: 104px 0 0; scroll-margin-top: 76px; }
-    /* Section head: a small grey meta line carries the ordinal and the creative
-       phrase together, then the NAME lands at full size so the case stays
-       skimmable. Middle dot as the separator — the same joiner the hero meta
-       and the stack caption already use. */
-    .section-kicker {
-      font-size: 16px; color: #6B6B6B; line-height: 1.5;
-      margin-bottom: 6px; max-width: 640px;
-    }
-    .section-num { color: #6B6B6B; }
+    /* the number rides on the heading line now, at the heading's own size.
+       The space before the title is a real one — without it a screen reader
+       announces "01Roadmap" as a single word — so the margin carries only
+       the remainder: 0.18em + the space measures the same 15.2px at 38px
+       and 12.8px at 32px that the bare 0.4em margin did. */
+    .section-num { margin-right: 0.18em; color: #6B6B6B; }
     .section-heading {
       font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
       line-height: 1.2; margin-bottom: 24px;
@@ -871,15 +868,13 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section id="section-01" class="case-section">
-      <p class="section-kicker"><span class="section-num">01</span> &middot; I built the tool I kept needing</p>
-      <h2 class="section-heading">Problem &amp; Context</h2>
+      <h2 class="section-heading"><span class="section-num">01</span> Problem &amp; Context</h2>
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
     </section>
 
     <!-- 02 — ROADMAP -->
     <section id="section-02" class="case-section">
-      <p class="section-kicker"><span class="section-num">02</span> &middot; One pair of hands, all the way through</p>
-      <h2 class="section-heading">Roadmap</h2>
+      <h2 class="section-heading"><span class="section-num">02</span> Roadmap</h2>
       <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; built with Claude Code.</p>
 
       <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Design process in five stages, from research to post-launch">
@@ -920,8 +915,7 @@
 
     <!-- 03 — RESEARCH -->
     <section id="section-03" class="case-section">
-      <p class="section-kicker"><span class="section-num">03</span> &middot; What I checked before building</p>
-      <h2 class="section-heading">Research</h2>
+      <h2 class="section-heading"><span class="section-num">03</span> Research</h2>
       <p class="section-text">Three questions came first: whether anything already did this, who keeps running into it, and how few decisions each path could take.</p>
 
       <h3 class="subsection-heading">Market analysis</h3>
@@ -1436,8 +1430,7 @@
 
     <!-- 04 — PROTOTYPE -->
     <section id="section-04" class="case-section">
-      <p class="section-kicker"><span class="section-num">04</span> &middot; Designed in code, so the prototype was the app</p>
-      <h2 class="section-heading">Prototype</h2>
+      <h2 class="section-heading"><span class="section-num">04</span> Prototype</h2>
       <p class="section-text">There was no Figma stage. The prototype ran on a phone from the start, which is why the screens and the system behind them were decided together.</p>
 
       <h3 class="subsection-heading">Screens</h3>
@@ -1494,8 +1487,7 @@
 
     <!-- 05 — TESTING -->
     <section id="section-05" class="case-section">
-      <p class="section-kicker"><span class="section-num">05</span> &middot; Four flows, four things I had wrong</p>
-      <h2 class="section-heading">Testing</h2>
+      <h2 class="section-heading"><span class="section-num">05</span> Testing</h2>
       <p class="section-text">Two rounds through TestFlight, on other people's phones. Each flow gave up one thing I had assumed, and each one changed the build.</p>
       <div class="rb-tests" tabindex="0" role="group" aria-label="Usability test findings — scrollable">
         <div class="rb-test">
@@ -1523,8 +1515,7 @@
 
     <!-- 06 — PUBLISH ON THE APP STORE -->
     <section id="section-06" class="case-section">
-      <p class="section-kicker"><span class="section-num">06</span> &middot; Shipping to a market that is not one country</p>
-      <h2 class="section-heading">Publish on the App Store</h2>
+      <h2 class="section-heading"><span class="section-num">06</span> Publish on the App Store</h2>
 
       <p class="section-text">The listing had to sell the same idea in every storefront, so the cards lead with the pair &mdash; not the feature list.</p>
       <div class="rb-store" tabindex="0" role="group" aria-label="App Store listing cards — scrollable">
@@ -1622,8 +1613,7 @@
 
     <!-- 07 — ANALYTICS AND POST-LAUNCH RESEARCH -->
     <section id="section-07" class="case-section">
-      <p class="section-kicker"><span class="section-num">07</span> &middot; What the app has to tell me next</p>
-      <h2 class="section-heading">Analytics and post-launch research</h2>
+      <h2 class="section-heading"><span class="section-num">07</span> Analytics and post-launch research</h2>
       <p class="section-text">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether a first alert leads to a second &mdash; the signal that it has entered someone's routine.</p>
       <div class="rb-pending">
         <span class="rb-pending-label">First questions</span>
@@ -1637,8 +1627,7 @@
 
     <!-- 08 — OUTCOME -->
     <section id="section-08" class="case-section">
-      <p class="section-kicker"><span class="section-num">08</span> &middot; Live, and shipped solo</p>
-      <h2 class="section-heading">Outcome</h2>
+      <h2 class="section-heading"><span class="section-num">08</span> Outcome</h2>
       <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend and delivery in the same loop. What it settles into in people's routines is the next thing to measure.</p>
       <p class="section-text">The interface ships in 31 languages, so the audience was never scoped to one market.</p>
 
@@ -1666,8 +1655,7 @@
 
     <!-- 09 — REFLECTION -->
     <section id="section-09" class="case-section">
-      <p class="section-kicker"><span class="section-num">09</span> &middot; What the build taught me</p>
-      <h2 class="section-heading">Reflection</h2>
+      <h2 class="section-heading"><span class="section-num">09</span> Reflection</h2>
       <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
         <div>
           <p class="reflection-title">What I'd do differently</p>
