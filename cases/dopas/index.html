@@ -93,7 +93,6 @@
        announces "01Roadmap" as a single word — so the margin carries only
        the remainder: 0.18em + the space measures the same 15.2px at 38px
        and 12.8px at 32px that the bare 0.4em margin did. */
-    .section-num { margin-right: 0.18em; color: #6B6B6B; }
     .section-heading {
       font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
       line-height: 1.2; margin-bottom: 24px;
@@ -106,19 +105,6 @@
        that the gutter is 24px and the number would fall off the page, so it
        stays inline. The leading space in the markup is trimmed at the start of
        the line, which is what keeps the name flush. */
-    /* 1260 is where the gutter is wide enough: the page column is 1100 centred
-       inside a 24px inset, so the room on each side is (vw - 1100) / 2 + 24 —
-       104px at 1260, and the ordinal column is 65 (the widest number, 04 at
-       48.9, plus the 15.2 gap). Below that the number would fall off the page,
-       so it stays inline. */
-    @media (min-width: 1260px) {
-      .section-heading { position: relative; }
-      .section-num {
-        position: absolute;
-        right: 100%;
-        margin-right: 0.4em;
-      }
-    }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
 
     /* ——— TIMELINE ——— */
@@ -203,9 +189,6 @@
     .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
 
     /* ——— REFLECTION ——— */
-    .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
-    .reflection-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-    .reflection-text { font-size: 14px; color: #6B6B6B; line-height: 1.6; }
 
     /* ——— NEXT CASE ——— */
     .next-case {
@@ -278,7 +261,6 @@
       .card-grid-2 { grid-template-columns: 1fr; }
       .wireframe-grid { grid-template-columns: 1fr; }
       .ba-columns { grid-template-columns: 1fr; }
-      .reflection-grid { grid-template-columns: 1fr; }
       /* Mobile: the process stays a horizontal rail and scrolls, instead of
          unrolling into a tall vertical list. The container rail can't be used
          here — an absolutely positioned ::before on a scroll container stops
@@ -366,8 +348,7 @@
     @media (max-width: 600px) {
       .card-grid-3,
       .card-grid-2,
-      .wireframe-grid,
-      .reflection-grid {
+      .wireframe-grid {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -383,20 +364,16 @@
       }
       .card-grid-3::-webkit-scrollbar,
       .card-grid-2::-webkit-scrollbar,
-      .wireframe-grid::-webkit-scrollbar,
-      .reflection-grid::-webkit-scrollbar { display: none; }
+      .wireframe-grid::-webkit-scrollbar { display: none; }
       .card-grid-3:focus-visible,
       .card-grid-2:focus-visible,
-      .wireframe-grid:focus-visible,
-      .reflection-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .wireframe-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
       .card-grid-3 > .card,
       .card-grid-2 > .card,
-      .wireframe-grid > .wireframe-item,
-      .reflection-grid > div { scroll-snap-align: start; }
+      .wireframe-grid > .wireframe-item { scroll-snap-align: start; }
       .card-grid-3 > .card { flex: 0 0 80%; }
       .card-grid-2 > .card { flex: 0 0 80%; }
       .wireframe-grid > .wireframe-item { flex: 0 0 78%; }
-      .reflection-grid > div { flex: 0 0 80%; }
     }
 
 
@@ -462,14 +439,14 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section id="section-01" class="case-section">
-      <h2 class="section-heading"><span class="section-num">01</span> Problem & Context</h2>
+      <h2 class="section-heading">Problem & Context</h2>
       <p class="section-text">Before dopas.dp.ua, bus tickets in Dnipro were sold exclusively offline — at ticket offices and directly from drivers. For a city with diverse ridership spanning all age groups, this meant queues, cash dependency, and no record of purchase.</p>
       <p class="section-text">The challenge: build an online ticketing platform from zero that works for everyone — from teenagers booking on a phone to elderly passengers unfamiliar with digital services.</p>
     </section>
 
     <!-- 02 — PROCESS -->
     <section id="section-02" class="case-section">
-      <h2 class="section-heading"><span class="section-num">02</span> Process</h2>
+      <h2 class="section-heading">Process</h2>
       <div class="timeline" tabindex="0" role="group" aria-label="Process, six phases — scrollable">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
@@ -512,7 +489,7 @@
 
     <!-- 03 — MARKET ANALYSIS -->
     <section id="section-03" class="case-section">
-      <h2 class="section-heading"><span class="section-num">03</span> Artifacts: Market Analysis</h2>
+      <h2 class="section-heading">Artifacts: Market Analysis</h2>
       <div class="card-grid-3" tabindex="0" role="group" aria-label="Research activities — scrollable">
         <div class="card">
           <p class="card-number">01</p>
@@ -549,7 +526,7 @@
 
     <!-- 04 — USER FLOW -->
     <section id="section-04" class="case-section">
-      <h2 class="section-heading"><span class="section-num">04</span> Artifacts: User Flow</h2>
+      <h2 class="section-heading">Artifacts: User Flow</h2>
       <div class="flow-container" tabindex="0" role="group" aria-label="User flow diagram, scrollable">
         <svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;" role="img" aria-label="Ticket purchase flow: from search to a paid ticket, showing where users dropped out">
           <!-- Row 1: main flow -->
@@ -634,7 +611,7 @@
 
     <!-- 05 — USABILITY FINDINGS -->
     <section id="section-05" class="case-section">
-      <h2 class="section-heading"><span class="section-num">05</span> Artifacts: Usability Findings</h2>
+      <h2 class="section-heading">Artifacts: Usability Findings</h2>
       <div class="card-grid-2" tabindex="0" role="group" aria-label="Findings — scrollable">
         <div class="card">
           <p class="card-number">01</p>
@@ -665,7 +642,7 @@
 
     <!-- 06 — WIREFRAMES -->
     <section id="section-06" class="case-section">
-      <h2 class="section-heading"><span class="section-num">06</span> Wireframes</h2>
+      <h2 class="section-heading">Wireframes</h2>
       <p class="section-text">Lo-fi wireframes defined the core structure before any visual design decisions were made.</p>
       <div class="wireframe-grid" tabindex="0" role="group" aria-label="Wireframes — scrollable">
         <div class="wireframe-item">
@@ -693,7 +670,7 @@
 
     <!-- 07 — MOCKUPS: BEFORE / AFTER -->
     <section id="section-07" class="case-section">
-      <h2 class="section-heading"><span class="section-num">07</span> Mockups: Before / After</h2>
+      <h2 class="section-heading">Mockups: Before / After</h2>
       <p class="section-text">High-fidelity screens reflecting changes made after two rounds of usability testing.</p>
 
       <div style="margin-top: 32px;">
@@ -781,7 +758,7 @@
 
     <!-- 08 — OUTCOME -->
     <section id="section-08" class="case-section">
-      <h2 class="section-heading"><span class="section-num">08</span> Outcome</h2>
+      <h2 class="section-heading">Outcome</h2>
       <p class="outcome-text">Launched in late autumn 2020. Users responded positively — the platform filled a real gap in the local market where no online alternative existed before.</p>
       <p class="outcome-text">dopas.dp.ua has been live and generating revenue since launch.</p>
       <div class="cta-row">
@@ -791,17 +768,9 @@
 
     <!-- 09 — REFLECTION -->
     <section id="section-09" class="case-section">
-      <h2 class="section-heading"><span class="section-num">09</span> Reflection</h2>
-      <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
-        <div>
-          <p class="reflection-title">What I'd do differently</p>
-          <p class="reflection-text">Start with a design system from day one. Building components ad hoc slowed the hi-fi phase and created inconsistencies fixed during handoff.</p>
-        </div>
-        <div>
-          <p class="reflection-title">What I learned</p>
-          <p class="reflection-text">Usability testing is non-negotiable — two sessions caught four critical flow issues that would have shipped as bugs. No amount of design intuition replaces watching a real user get stuck.</p>
-        </div>
-      </div>
+      <h2 class="section-heading">Reflection</h2>
+      <p class="section-text">I&rsquo;d start with a design system from day one. Building components ad hoc slowed the hi-fi phase and created inconsistencies fixed during handoff.</p>
+      <p class="section-text">Usability testing is non-negotiable &mdash; two sessions caught four critical flow issues that would have shipped as bugs. No amount of design intuition replaces watching a real user get stuck.</p>
     </section>
 
     <!-- NEXT CASE -->

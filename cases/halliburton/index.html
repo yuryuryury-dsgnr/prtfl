@@ -464,7 +464,6 @@
        announces "01Roadmap" as a single word — so the margin carries only
        the remainder: 0.18em + the space measures the same 15.2px at 38px
        and 12.8px at 32px that the bare 0.4em margin did. */
-    .section-num { margin-right: 0.18em; color: #6B6B6B; }
     .section-heading {
       font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
       line-height: 1.2; margin-bottom: 24px;
@@ -477,19 +476,6 @@
        that the gutter is 24px and the number would fall off the page, so it
        stays inline. The leading space in the markup is trimmed at the start of
        the line, which is what keeps the name flush. */
-    /* 1260 is where the gutter is wide enough: the page column is 1100 centred
-       inside a 24px inset, so the room on each side is (vw - 1100) / 2 + 24 —
-       104px at 1260, and the ordinal column is 65 (the widest number, 04 at
-       48.9, plus the 15.2 gap). Below that the number would fall off the page,
-       so it stays inline. */
-    @media (min-width: 1260px) {
-      .section-heading { position: relative; }
-      .section-num {
-        position: absolute;
-        right: 100%;
-        margin-right: 0.4em;
-      }
-    }
     .subsection-heading {
       font-size: 28px; font-weight: 600; letter-spacing: -0.015em;
       color: #1A1A1A;
@@ -973,36 +959,7 @@
     }
 
     /* ——— TIMELINE ——— */
-    /* The roadmap gets a surface of its own. It bleeds outward by exactly its
-       own padding, so the first step's text still starts on the same vertical
-       line as the heading above it and as the body copy elsewhere — the box
-       grows into the page gutter instead of pushing the content inward. 24 is
-       the page's own gutter, so at 768 and below the box reaches the viewport
-       edge and there is never anything to overflow. */
-    .timeline-box {
-      background: #E1EFFA;
-      border-radius: 24px;
-      /* the horizontal padding and the negative margin are the same number, so
-         the heading inside starts on exactly the vertical line it started on
-         when it sat outside — the panel grows into the page gutter rather than
-         pushing its own contents inward */
-      padding: 32px 24px;
-      margin: 40px -24px 0;
-    }
-    /* once the ordinal hangs outside the column the panel has to reach past it
-       too, or the number sits on the page instead of on the panel. 89 = the
-       24px inset plus the 65px ordinal column, so the number keeps exactly the
-       same 24px from the panel edge that everything else has. */
-    @media (min-width: 1260px) {
-      .timeline-box {
-        padding-left: 89px;
-        padding-right: 89px;
-        margin-left: -89px;
-        margin-right: -89px;
-      }
-    }
-    .timeline-box .section-heading { margin-bottom: 8px; }
-    .timeline { display: flex; gap: 0; position: relative; }
+    .timeline { display: flex; gap: 0; margin-top: 32px; position: relative; }
     .timeline::before {
       content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
     }
@@ -1018,17 +975,13 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      /* the ring punches the dot out of the rail, so it wears the surface
-         it sits on — the panel now, not the page */
-      background: #1A1A1A; border: 3px solid #E1EFFA;
+      background: #1A1A1A; border: 3px solid #F4F9FD;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
-    /* white on the tinted panel: the chip used to be #E4F1FA, which is a
-       neighbour of the panel and would have all but vanished on it */
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #FFFFFF;
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #E4F1FA;
       padding: 3px 8px; border-radius: 4px; margin-top: auto; align-self: flex-start;
     }
 
@@ -1048,10 +1001,6 @@
     /* ——— OUTCOME ——— */
 
     /* ——— REFLECTION ——— */
-    .reflection-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 24px; align-items: stretch; }
-    .reflection-col { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; }
-    .reflection-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 8px; }
-    .reflection-text { font-size: 13px; color: #6B6B6B; line-height: 1.6; }
 
     /* ——— NEXT CASE ——— */
     .next-case {
@@ -1102,8 +1051,6 @@
     /* ——— RESPONSIVE ——— */
     @media (max-width: 768px) {
       .case-hero h1 { font-size: 36px; }
-      
-      .reflection-grid { grid-template-columns: 1fr; }
       /* Mobile: the process stays a horizontal rail and scrolls, instead of
          unrolling into a tall vertical list. The container rail can't be used
          here — an absolutely positioned ::before on a scroll container stops
@@ -1169,7 +1116,6 @@
     /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ——— */
     @media (max-width: 600px) {
       .problem-grid,
-      .reflection-grid,
       .validation-grid,
       .persona-scroller,
       .tg-cards {
@@ -1190,23 +1136,19 @@
          rows stay viewport-bounded and scroll internally instead of widening the page */
       .tg-graph > .tg-col { min-width: 0; }
       .problem-grid::-webkit-scrollbar,
-      .reflection-grid::-webkit-scrollbar,
       .validation-grid::-webkit-scrollbar,
       .persona-scroller::-webkit-scrollbar,
       .tg-cards::-webkit-scrollbar { display: none; }
       .problem-grid:focus-visible,
-      .reflection-grid:focus-visible,
       .validation-grid:focus-visible,
       .persona-scroller:focus-visible,
       .tg-cards:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
       .problem-grid > .problem-card,
-      .reflection-grid > .reflection-col,
       .validation-grid > .validation-card,
       .persona-scroller > .persona-detail-card,
       .tg-cards > .tg-card { scroll-snap-align: start; }
       /* item widths sized as a fraction of the strip so a next-card peek is guaranteed */
       .problem-grid > .problem-card { flex: 0 0 80%; }
-      .reflection-grid > .reflection-col { flex: 0 0 80%; }
       .validation-grid > .validation-card { flex: 0 0 82%; }
       .persona-scroller > .persona-detail-card { flex: 0 0 82%; }
       .tg-cards > .tg-card { flex: 0 0 42%; }
@@ -1467,9 +1409,9 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section id="section-01" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">01</span> Problem &amp; Context</h2>
+      <h2 class="section-heading">Problem &amp; Context</h2>
 
-      <div class="problem-grid" style="margin-top:48px;" tabindex="0" role="group" aria-label="Problem, goal, and success — scrollable">
+      <div class="problem-grid" style="margin-top:48px;" tabindex="0" role="group" aria-label="Problem and goal — scrollable">
         <div class="problem-card">
           <p class="problem-card-label">Problem</p>
           <h3>Scattered and unfindable</h3>
@@ -1481,18 +1423,12 @@
           <h3>One entry point</h3>
           <p>A unified marketplace for curated data, reports, models, and AI agents &mdash; part of Halliburton's Data Ribbon.</p>
         </div>
-        <div class="problem-card">
-          <p class="problem-card-label">Success</p>
-          <h3>Minutes, not weeks</h3>
-          <p>Engineers find, validate, and request access to any data asset in under a few minutes.</p>
-        </div>
       </div>
     </section>
 
     <!-- 02 — PROCESS -->
     <section id="section-02" class="case-section reveal">
-      <div class="timeline-box">
-      <h2 class="section-heading"><span class="section-num">02</span> Roadmap</h2>
+      <h2 class="section-heading">Roadmap</h2>
       <div class="timeline" tabindex="0" role="group" aria-label="Roadmap, six phases — scrollable">
         <div class="timeline-step">
           <p class="timeline-number">1.0</p>
@@ -1531,12 +1467,11 @@
           <span class="timeline-tag">Analytics &middot; iteration</span>
         </div>
       </div>
-      </div>
     </section>
 
     <!-- 03 — UX STRATEGY (Phase 1 + Phase 2 toggle) -->
     <section id="section-03" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">03</span> UX Strategy</h2>
+      <h2 class="section-heading">UX Strategy</h2>
 
       <div class="phase-toggle">
         <button class="phase-toggle-btn active" data-phase="phase1" aria-pressed="true">Phase 1 &mdash; MVP</button>
@@ -1717,7 +1652,7 @@
 
     <!-- 04 — RESEARCH -->
     <section id="section-04" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">04</span> Research</h2>
+      <h2 class="section-heading">Research</h2>
       <p class="section-text">4 persona groups, user flows, and end-to-end journey maps shaped every design decision.</p>
 
 
@@ -2146,7 +2081,7 @@
 
     <!-- 05 — PROTOTYPE & DESIGN SYSTEM -->
     <section id="section-05" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">05</span> Prototype &amp; Design System</h2>
+      <h2 class="section-heading">Prototype &amp; Design System</h2>
       <p class="section-text">Instead of pixel-perfect mockups, I started with an AI prototype to test concepts and layouts before investing in high-fidelity design.</p>
       <p class="section-text">Once the structure was proven, I built a scalable design system &mdash; reusable components, tokens, and patterns &mdash; then the final mockups for the dev team.</p>
     </section>
@@ -2558,7 +2493,7 @@
 
     <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
     <section id="section-06" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">06</span> Usability testing</h2>
+      <h2 class="section-heading">Usability testing</h2>
       <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
 
       <div class="validation-grid" tabindex="0" role="group" aria-label="Validation sessions — scrollable">
@@ -2593,7 +2528,7 @@
 
     <!-- 07 — HAND-OFF TO DEV -->
     <section id="section-07" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">07</span> Hand-off to Dev</h2>
+      <h2 class="section-heading">Hand-off to Dev</h2>
       <p class="section-text">Traditional hand-off means screenshots, redlines, and a PDF that's outdated the moment you save it. Instead, I connected developers directly to the Figma design system through MCP (Model Context Protocol) &mdash; they pulled specs, tokens, and interaction states straight into their IDE in real time.</p>
 
       <p class="ds-eyebrow">How it flows</p>
@@ -2622,7 +2557,7 @@
 
     <!-- 08 — POST-LAUNCH RESEARCH -->
     <section id="section-08" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">08</span> Post-launch Research</h2>
+      <h2 class="section-heading">Post-launch Research</h2>
       <p class="section-text">The platform is in active use while testing continues. Rather than waiting to measure success, I designed the post-launch research program upfront &mdash; combining analytics, AI-powered tools, and continuous user feedback.</p>
 
       <div class="strategy-sheet" tabindex="0" role="group" aria-label="Post-launch research, three columns — scrollable">
@@ -2658,28 +2593,16 @@
 
     <!-- 09 — OUTCOME -->
     <section id="section-09" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">09</span> Outcome</h2>
+      <h2 class="section-heading">Outcome</h2>
       <p class="section-text">The platform is built, validated with real users, and in active use while testing continues.</p>
       <p class="section-text">Already in place: a three-tier design system, dev-integrated MCP pipeline, two-phase UX strategy, two rounds of stakeholder validation, and a Figma-to-code workflow producing components 1:1 with the design system.</p>
     </section>
 
     <!-- 08 — REFLECTION -->
     <section id="section-10" class="case-section reveal">
-      <h2 class="section-heading"><span class="section-num">10</span> Reflection</h2>
-      <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
-        <div class="reflection-col">
-          <p class="reflection-title">What I'd do differently</p>
-          <p class="reflection-text">Involve data governance stakeholders earlier in the process. Their requirements only became clear mid-project, which meant reworking parts of the access request flow that were already in motion.</p>
-        </div>
-        <div class="reflection-col">
-          <p class="reflection-title">What this project taught me</p>
-          <p class="reflection-text">Leading a project end-to-end as the only designer taught me seniority isn't about headcount &mdash; it's about owning decisions across the whole stack. AI in design isn't magic, it's leverage: it speeds up what you already understand and is useless for what you don't. The best outcomes came when I knew exactly what I wanted before asking.</p>
-        </div>
-        <div class="reflection-col">
-          <p class="reflection-title">What I'm taking forward</p>
-          <p class="reflection-text">The Figma + MCP pipeline is going into every project from here. Once you've shipped components 1:1 with the design system on the first pass, traditional hand-off feels broken.</p>
-        </div>
-      </div>
+      <h2 class="section-heading">Reflection</h2>
+      <p class="section-text">I&rsquo;d involve data governance stakeholders earlier. Their requirements only became clear mid-project, which meant reworking parts of the access request flow that were already in motion.</p>
+      <p class="section-text">Leading end-to-end as the only designer taught me seniority isn&rsquo;t about headcount &mdash; it&rsquo;s about owning decisions across the whole stack. AI is leverage, not magic: it speeds up what you already understand and is useless for what you don&rsquo;t. The Figma and MCP pipeline goes into every project from here &mdash; once you&rsquo;ve shipped components 1:1 with the design system on the first pass, traditional hand-off feels broken.</p>
     </section>
 
     <!-- NEXT CASE -->

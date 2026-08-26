@@ -93,7 +93,6 @@
        announces "01Roadmap" as a single word — so the margin carries only
        the remainder: 0.18em + the space measures the same 15.2px at 38px
        and 12.8px at 32px that the bare 0.4em margin did. */
-    .section-num { margin-right: 0.18em; color: #6B6B6B; }
     .section-heading {
       font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
       line-height: 1.2; margin-bottom: 24px;
@@ -106,19 +105,6 @@
        that the gutter is 24px and the number would fall off the page, so it
        stays inline. The leading space in the markup is trimmed at the start of
        the line, which is what keeps the name flush. */
-    /* 1260 is where the gutter is wide enough: the page column is 1100 centred
-       inside a 24px inset, so the room on each side is (vw - 1100) / 2 + 24 —
-       104px at 1260, and the ordinal column is 65 (the widest number, 04 at
-       48.9, plus the 15.2 gap). Below that the number would fall off the page,
-       so it stays inline. */
-    @media (min-width: 1260px) {
-      .section-heading { position: relative; }
-      .section-num {
-        position: absolute;
-        right: 100%;
-        margin-right: 0.4em;
-      }
-    }
     /* one level under .section-heading, above body text — same component the
        Halliburton case uses, at this page's lighter weight. The big top margin
        is what keeps a long section from reading as one pile. */
@@ -149,9 +135,6 @@
     .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
 
     /* ——— REFLECTION ——— */
-    .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 24px; }
-    .reflection-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-    .reflection-text { font-size: 14px; color: #6B6B6B; line-height: 1.6; }
 
     /* ——— NEXT CASE ——— */
     .next-case {
@@ -489,11 +472,6 @@
       .rb-shot { width: calc(100% + 200px); margin-left: -100px; }
     }
 
-    .rb-stats-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 24px; }
-    .rb-stat-item { display: flex; flex-direction: column; gap: 4px; min-width: 128px; }
-    .rb-stat-item-value { font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: #1A1A1A; }
-    .rb-stat-item-label { font-size: 13px; color: #6B6B6B; }
-
     /* ═══ RB TABS — visual match for the site's .phase-toggle, but its own
        rb- namespace + its own scoped handler. Each .rb-tabgroup owns its
        strip and its panels, so two groups on one page never clash. ═══ */
@@ -724,7 +702,6 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
       .case-section { padding: 64px 0 0; }
-      .reflection-grid { grid-template-columns: 1fr; }
       .rb-groups { grid-template-columns: 1fr; }
       .rb-tests { grid-template-columns: 1fr; }
       .rb-store > .phone-figure { flex: 0 0 62%; }
@@ -794,8 +771,7 @@
        flow changes. */
     @media (max-width: 600px) {
       .rb-groups,
-      .rb-tests,
-      .reflection-grid {
+      .rb-tests {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -810,17 +786,13 @@
         scroll-snap-type: x proximity;
       }
       .rb-groups::-webkit-scrollbar,
-      .rb-tests::-webkit-scrollbar,
-      .reflection-grid::-webkit-scrollbar { display: none; }
+      .rb-tests::-webkit-scrollbar { display: none; }
       .rb-groups:focus-visible,
-      .rb-tests:focus-visible,
-      .reflection-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+      .rb-tests:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
       .rb-groups > .rb-group,
-      .rb-tests > .rb-test,
-      .reflection-grid > div { scroll-snap-align: start; }
+      .rb-tests > .rb-test { scroll-snap-align: start; }
       .rb-groups > .rb-group { flex: 0 0 82%; }
       .rb-tests > .rb-test { flex: 0 0 82%; }
-      .reflection-grid > div { flex: 0 0 80%; }
     }
 
 
@@ -889,13 +861,13 @@
 
     <!-- 01 — PROBLEM & CONTEXT -->
     <section id="section-01" class="case-section">
-      <h2 class="section-heading"><span class="section-num">01</span> Problem &amp; Context</h2>
+      <h2 class="section-heading">Problem &amp; Context</h2>
       <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
     </section>
 
     <!-- 02 — ROADMAP -->
     <section id="section-02" class="case-section">
-      <h2 class="section-heading"><span class="section-num">02</span> Roadmap</h2>
+      <h2 class="section-heading">Roadmap</h2>
       <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; built with Claude Code.</p>
 
       <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Design process in five stages, from research to post-launch">
@@ -936,7 +908,7 @@
 
     <!-- 03 — RESEARCH -->
     <section id="section-03" class="case-section">
-      <h2 class="section-heading"><span class="section-num">03</span> Research</h2>
+      <h2 class="section-heading">Research</h2>
       <p class="section-text">Three questions came first: whether anything already did this, who keeps running into it, and how few decisions each path could take.</p>
 
       <h3 class="subsection-heading">Market analysis</h3>
@@ -1451,7 +1423,7 @@
 
     <!-- 04 — PROTOTYPE -->
     <section id="section-04" class="case-section">
-      <h2 class="section-heading"><span class="section-num">04</span> Prototype</h2>
+      <h2 class="section-heading">Prototype</h2>
       <p class="section-text">There was no Figma stage. The prototype ran on a phone from the start, which is why the screens and the system behind them were decided together.</p>
 
       <h3 class="subsection-heading">Screens</h3>
@@ -1508,7 +1480,7 @@
 
     <!-- 05 — TESTING -->
     <section id="section-05" class="case-section">
-      <h2 class="section-heading"><span class="section-num">05</span> Testing</h2>
+      <h2 class="section-heading">Testing</h2>
       <p class="section-text">Two rounds through TestFlight, on other people's phones. Each flow gave up one thing I had assumed, and each one changed the build.</p>
       <div class="rb-tests" tabindex="0" role="group" aria-label="Usability test findings — scrollable">
         <div class="rb-test">
@@ -1536,7 +1508,7 @@
 
     <!-- 06 — PUBLISH ON THE APP STORE -->
     <section id="section-06" class="case-section">
-      <h2 class="section-heading"><span class="section-num">06</span> Publish on the App Store</h2>
+      <h2 class="section-heading">Publish on the App Store</h2>
 
       <p class="section-text">The listing had to sell the same idea in every storefront, so the cards lead with the pair &mdash; not the feature list.</p>
       <div class="rb-store" tabindex="0" role="group" aria-label="App Store listing cards — scrollable">
@@ -1634,7 +1606,7 @@
 
     <!-- 07 — ANALYTICS AND POST-LAUNCH RESEARCH -->
     <section id="section-07" class="case-section">
-      <h2 class="section-heading"><span class="section-num">07</span> Analytics and post-launch research</h2>
+      <h2 class="section-heading">Analytics and post-launch research</h2>
       <p class="section-text">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether a first alert leads to a second &mdash; the signal that it has entered someone's routine.</p>
       <div class="rb-pending">
         <span class="rb-pending-label">First questions</span>
@@ -1648,7 +1620,7 @@
 
     <!-- 08 — OUTCOME -->
     <section id="section-08" class="case-section">
-      <h2 class="section-heading"><span class="section-num">08</span> Outcome</h2>
+      <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend and delivery in the same loop. What it settles into in people's routines is the next thing to measure.</p>
       <p class="section-text">The interface ships in 31 languages, so the audience was never scoped to one market.</p>
 
@@ -1656,37 +1628,13 @@
         <img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle &ldquo;Create your own pairs&rdquo;, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1824" height="970">
         <span class="rb-shot-placeholder" style="display:none">App Store listing &mdash; image coming soon</span>
       </figure>
-      <p class="rb-shot-caption">The product page as it stands in the store &mdash; the same pair-first pitch, from the subtitle down to the cards.</p>
-
-      <div class="rb-stats-row">
-        <div class="rb-stat-item">
-          <span class="rb-stat-item-value">Live</span>
-          <span class="rb-stat-item-label">on the App Store</span>
-        </div>
-        <div class="rb-stat-item">
-          <span class="rb-stat-item-value">31</span>
-          <span class="rb-stat-item-label">languages in the app</span>
-        </div>
-        <div class="rb-stat-item">
-          <span class="rb-stat-item-value">Solo</span>
-          <span class="rb-stat-item-label">concept &rarr; App Store</span>
-        </div>
-      </div>
-    </section>
+      <p class="rb-shot-caption">The product page as it stands in the store &mdash; the same pair-first pitch, from the subtitle down to the cards.</p>    </section>
 
     <!-- 09 — REFLECTION -->
     <section id="section-09" class="case-section">
-      <h2 class="section-heading"><span class="section-num">09</span> Reflection</h2>
-      <div class="reflection-grid" tabindex="0" role="group" aria-label="Reflections — scrollable">
-        <div>
-          <p class="reflection-title">What I'd do differently</p>
-          <p class="reflection-text">The backend turned out bigger than I scoped it. Next time I'd size the invisible parts first, before a line of interface exists.</p>
-        </div>
-        <div>
-          <p class="reflection-title">What I learned</p>
-          <p class="reflection-text">The line between designer and developer is thinner than it used to be. With AI I shipped something end-to-end that would normally take a team &mdash; but AI accelerates the parts you understand and is useless for the parts you don't.</p>
-        </div>
-      </div>
+      <h2 class="section-heading">Reflection</h2>
+      <p class="section-text">The backend turned out bigger than I scoped it. Next time I&rsquo;d size the invisible parts first, before a line of interface exists.</p>
+      <p class="section-text">The line between designer and developer is thinner than it used to be. With AI I shipped something end-to-end that would normally take a team &mdash; but AI accelerates the parts you understand and is useless for the parts you don&rsquo;t.</p>
     </section>
 
     <!-- NEXT CASE -->
