@@ -178,7 +178,33 @@
        box (450/920, the mockup's own ratio) that reserves the slot while the
        image loads, so nothing reflows when it arrives. The image keeps its
        alpha, so the rounded corners outside the device stay transparent. */
-    .phone-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 24px; margin-top: 32px; justify-items: center; max-width: 560px; }
+    /* The four screens used to be three layouts behind two breakpoints — a
+       2x2 grid, a bleeding row, then a snap scroller. This is one row at every
+       width, drifting on its own, the same component the Halliburton case uses
+       for its mockups. The drift moves scrollLeft rather than a transform, so
+       the row stays a real scroller: swipe, trackpad, shift-wheel and Tab all
+       work, and the edge fade finds it like every other row on the site. */
+    .phone-strip {
+      margin-top: 32px;
+      /* the row is draggable with a mouse, so it says so */
+      cursor: grab;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    .phone-strip.is-dragging { cursor: grabbing; user-select: none; }
+    .phone-strip.is-dragging img { pointer-events: none; }
+    .phone-strip::-webkit-scrollbar { display: none; }
+    .phone-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    .phone-track { display: flex; align-items: flex-start; gap: 24px; width: max-content; }
+    /* an absolute basis, never a percentage: the track is width: max-content,
+       so a percentage basis has nothing definite to resolve against and the
+       items stop being a row at all */
+    .phone-track > .phone-figure { flex: 0 0 min(300px, 66vw); }
+    .phone-track .phone-frame,
+    .phone-track .phone-caption { max-width: none; width: 100%; }
     .phone-figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
     .phone-frame { position: relative; width: 100%; max-width: 208px; aspect-ratio: 450 / 920; }
     .phone-shot { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -197,35 +223,13 @@
        smaller than the grid they replaced. Mockup width is capped at 213px
        because the source art is 450px and would upscale past that. */
     @media (min-width: 1080px) {
-      .phone-grid {
-        display: flex; flex-direction: row; align-items: flex-start;
-        max-width: none; gap: 20px;
-        width: calc(100% + 200px); margin-left: -100px; margin-bottom: 30px;
-      }
-      .phone-grid > .phone-figure { flex: 1 1 0; min-width: 0; }
-      /* the caption carries its own max-width and would otherwise cap the
-         mockup through the shrink-to-fit cell — both move together */
-      .phone-grid > .phone-figure .phone-frame,
-      .phone-grid > .phone-figure .phone-caption { max-width: 213px; }
-      /* every other one dropped, so the row reads with a beat rather than as a
-         straight edge. transform, so it costs nothing in layout height */
-      .phone-grid > .phone-figure:nth-child(even) { transform: translateY(30px); }
+      .phone-strip { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
     }
 
     /* Phase 3 — mobile: phone row → contained horizontal scroll with peek
        (same mechanism as Halliburton's card rows; scrolls internally, never
        widens the page). Container is tabindex=0 role=group for keyboard use. */
     @media (max-width: 600px) {
-      .phone-grid {
-        display: flex; flex-direction: row; flex-wrap: nowrap; align-items: flex-start;
-        max-width: 100%; min-width: 0; gap: 16px;
-        overflow-x: auto; overflow-y: hidden;
-        scrollbar-width: none; -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain; scroll-snap-type: x proximity;
-      }
-      .phone-grid::-webkit-scrollbar { display: none; }
-      .phone-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-      .phone-grid > .phone-figure { flex: 0 0 62%; scroll-snap-align: start; }
     }
 
     /* ═══ RB TEXT-BREAKUP ACCENTS (unique rb- prefix — no existing class reused) ═══ */
@@ -1392,7 +1396,8 @@
 
       <h3 class="subsection-heading">Screens</h3>
       <p class="section-text">Four screens from the shipped app. The flows behind them are in the section above; this is what came out.</p>
-      <div class="phone-grid" tabindex="0" role="group" aria-label="App screenshots — scrollable">
+      <div class="phone-strip" tabindex="0" role="group" aria-label="App screenshots, four screens — drag or scroll">
+        <div class="phone-track">
         <div class="phone-figure">
           <div class="phone-frame">
             <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-pairs-watchlist.webp" alt="Rebalancer watchlist: an expanded SOL/XRP pair with its ratio chart, above a list of other tracked pairs" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="450" height="920">
@@ -1420,6 +1425,7 @@
             <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
           </div>
           <p class="phone-caption">Pair screen &mdash; both holdings restated in the coin on the other side</p>
+        </div>
         </div>
       </div>
     
@@ -1725,6 +1731,103 @@
 
   
   
+    // ——— SCREENS: a drifting row ———
+    // Ported from the Halliburton case's mockup gallery. The position is
+    // carried in a variable rather than read back off the element: 22px/s is
+    // 0.35px a frame and scrollLeft rounds to integers, so reading it back
+    // rounded every step to zero and the row never moved.
+    (function () {
+      var strip = document.querySelector('.phone-strip');
+      var track = strip && strip.querySelector('.phone-track');
+      if (!strip || !track) return;
+
+      // A second copy of the row makes the wrap seamless: when the scroll
+      // passes the halfway mark we subtract it, and the pixels under the
+      // pointer do not change. The copies are decorative.
+      [].slice.call(track.children).forEach(function (node) {
+        var copy = node.cloneNode(true);
+        copy.setAttribute('aria-hidden', 'true');
+        [].forEach.call(copy.querySelectorAll('img'), function (im) { im.setAttribute('loading', 'lazy'); });
+        track.appendChild(copy);
+      });
+
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var SPEED = 22;              // px per second — a drift, not a carousel
+      var half = 0, paused = false, userUntil = 0, mine = -1, last = 0, pos = 0;
+      function measure() { half = track.scrollWidth / 2; }
+      measure();
+      window.addEventListener('resize', measure);
+      if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
+
+      var dragging = false, startX = 0, startScroll = 0;
+      strip.addEventListener('pointerenter', function () { paused = true; });
+      strip.addEventListener('pointerleave', function () { if (!dragging) paused = false; });
+
+      // ——— DRAG TO SCROLL ———
+      // Mouse only. Touch already pans the row natively with momentum, and
+      // taking that over would replace a good gesture with a worse one.
+      strip.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        dragging = true;
+        startX = e.clientX;
+        startScroll = strip.scrollLeft;
+        strip.classList.add('is-dragging');
+        strip.setPointerCapture(e.pointerId);
+        e.preventDefault();               // no ghost image, no text selection
+      });
+      strip.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var next = startScroll - (e.clientX - startX);
+        // the track is two copies, so the drag can wrap and keep going
+        if (half > 0) {
+          if (next < 0) { next += half; startScroll += half; }
+          else if (next >= half) { next -= half; startScroll -= half; }
+        }
+        strip.scrollLeft = next;
+        pos = next;
+        mine = strip.scrollLeft;
+      });
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        strip.classList.remove('is-dragging');
+        if (e && e.pointerId != null && strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
+        userUntil = performance.now() + 1500;
+      }
+      strip.addEventListener('pointerup', endDrag);
+      strip.addEventListener('pointercancel', endDrag);
+      strip.addEventListener('focusin',  function () { paused = true; });
+      strip.addEventListener('focusout', function () { paused = false; });
+      // Our own writes fire scroll too — only a value we did not set is the user.
+      strip.addEventListener('scroll', function () {
+        if (Math.abs(strip.scrollLeft - mine) > 1.5) {
+          userUntil = performance.now() + 1500;
+          pos = strip.scrollLeft;          // hand the position over to the user
+        }
+      }, { passive: true });
+
+      function step(now) {
+        var dt = last ? Math.min(now - last, 50) : 16;
+        last = now;
+        if (half > 0) {
+          if (dragging) { /* the pointer owns the position */ }
+          else if (!paused && now > userUntil) {
+            pos += SPEED * dt / 1000;
+            if (pos >= half) pos -= half;
+            strip.scrollLeft = pos;
+            mine = strip.scrollLeft;
+          } else if (strip.scrollLeft >= half) {
+            pos = strip.scrollLeft - half;
+            strip.scrollLeft = pos;
+            mine = strip.scrollLeft;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    })();
+
     // ——— EDGE FADE ———
     // Finds the containers that actually scroll sideways and marks which side
     // still has content. No selector list to keep in sync: it asks the layout,
