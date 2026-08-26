@@ -345,7 +345,7 @@
 
     /* ——— MOCKUP GALLERY ——— */
     .mockup-gallery { display: flex; flex-direction: column; gap: 16px; width: calc(100% + 160px); margin-left: -80px; }
-    .mg-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .mg-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; }
     .mg-toolbar .ds-theme-toggle { flex-shrink: 0; }
     .mockup-gallery .phase-toggle::-webkit-scrollbar { display: none; }
     /* Bleed collapse thresholds are set by the geometry, not by a round
@@ -406,12 +406,16 @@
        row stays a real scroller: a swipe, a trackpad, a shift-wheel and a Tab
        all work, and the edge fade finds it like every other row on the site. */
     .mg-strip {
+      /* the row is draggable with a mouse, so it says so */
+      cursor: grab;
       overflow-x: auto;
       overflow-y: hidden;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-x: contain;
     }
+    .mg-strip.is-dragging { cursor: grabbing; user-select: none; }
+    .mg-strip.is-dragging img { pointer-events: none; }
     .mg-strip::-webkit-scrollbar { display: none; }
     .mg-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
     .mg-track { display: flex; gap: 20px; width: max-content; }
@@ -422,10 +426,6 @@
     .mg-item { flex: 0 0 min(560px, 78vw); margin: 0; display: flex; flex-direction: column; gap: 10px; }
     .mg-cap { font-size: 13px; color: #6B6B6B; line-height: 1.5; margin: 0; padding: 0 2px; }
     .mg-cap b { color: #1A1A1A; font-weight: 500; }
-    .mg-hint { font-size: 13px; color: #6B6B6B; line-height: 1.6; margin: 0; }
-    @media (max-width: 700px) {
-      .mg-hint { display: none; }
-    }
     @media (max-width: 640px) {
       .mockup-gallery .ds-theme-bar { justify-content: flex-start; }
     }
@@ -2104,7 +2104,6 @@
     <div class="mockup-gallery">
 
               <div class="mg-toolbar">
-                <p class="mg-hint">Five screens, drifting &mdash; scroll the row to take over.</p>
                 <div class="ds-theme-toggle" id="mg-theme-toggle">
                   <button class="ds-theme-btn active" data-mg-theme="light" aria-pressed="true">Light</button>
                   <button class="ds-theme-btn" data-mg-theme="dark" aria-pressed="false">Dark</button>
@@ -2949,7 +2948,42 @@
       if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
 
       strip.addEventListener('pointerenter', function () { paused = true; });
-      strip.addEventListener('pointerleave', function () { paused = false; });
+      strip.addEventListener('pointerleave', function () { if (!dragging) paused = false; });
+
+      // ——— DRAG TO SCROLL ———
+      // Mouse only. Touch already pans the row natively with momentum, and
+      // taking that over would replace a good gesture with a worse one.
+      var dragging = false, startX = 0, startScroll = 0;
+      strip.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        dragging = true;
+        startX = e.clientX;
+        startScroll = strip.scrollLeft;
+        strip.classList.add('is-dragging');
+        strip.setPointerCapture(e.pointerId);
+        e.preventDefault();               // no ghost image, no text selection
+      });
+      strip.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var next = startScroll - (e.clientX - startX);
+        // the track is two copies, so the drag can wrap and keep going
+        if (half > 0) {
+          if (next < 0) { next += half; startScroll += half; }
+          else if (next >= half) { next -= half; startScroll -= half; }
+        }
+        strip.scrollLeft = next;
+        pos = next;
+        mine = strip.scrollLeft;
+      });
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        strip.classList.remove('is-dragging');
+        if (e && e.pointerId != null && strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
+        userUntil = performance.now() + 1500;
+      }
+      strip.addEventListener('pointerup', endDrag);
+      strip.addEventListener('pointercancel', endDrag);
       strip.addEventListener('focusin',  function () { paused = true; });
       strip.addEventListener('focusout', function () { paused = false; });
       // Our own writes fire scroll too — only a value we did not set is the user.
@@ -2964,7 +2998,8 @@
         var dt = last ? Math.min(now - last, 50) : 16;
         last = now;
         if (half > 0) {
-          if (!paused && now > userUntil) {
+          if (dragging) { /* the pointer owns the position */ }
+          else if (!paused && now > userUntil) {
             pos += SPEED * dt / 1000;
             if (pos >= half) pos -= half;
             strip.scrollLeft = pos;
