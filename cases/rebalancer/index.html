@@ -106,7 +106,12 @@
        that the gutter is 24px and the number would fall off the page, so it
        stays inline. The leading space in the markup is trimmed at the start of
        the line, which is what keeps the name flush. */
-    @media (min-width: 1200px) {
+    /* 1260 is where the gutter is wide enough: the page column is 1100 centred
+       inside a 24px inset, so the room on each side is (vw - 1100) / 2 + 24 —
+       104px at 1260, and the ordinal column is 65 (the widest number, 04 at
+       48.9, plus the 15.2 gap). Below that the number would fall off the page,
+       so it stays inline. */
+    @media (min-width: 1260px) {
       .section-heading { position: relative; }
       .section-num {
         position: absolute;
