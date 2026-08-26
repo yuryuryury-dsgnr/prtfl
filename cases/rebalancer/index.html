@@ -56,7 +56,6 @@
     .case-hero-meta { font-size: 14px; color: #6B6B6B; margin-bottom: 8px; }
     .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
     .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
-    .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
 
     .case-hero-image {
       width: calc(100% + 160px);
@@ -69,6 +68,16 @@
       margin-top: 48px;
       position: relative;
       overflow: hidden;
+    }
+
+    /* Wide screens: the hero grows past the text column in two steps. The cap
+       is 200px a side because 1280px leaves 284px outside the column and the
+       frame must not reach the viewport edge. */
+    @media (min-width: 1025px) {
+      .case-hero-image { width: calc(100% + 240px); margin-left: -120px; }
+    }
+    @media (min-width: 1280px) {
+      .case-hero-image { width: calc(100% + 400px); margin-left: -200px; }
     }
     .case-hero-image img {
       width: 100%;
@@ -161,45 +170,7 @@
 
     /* ═══ PHASE 3 ADDITIONS ═══ */
 
-    /* Stage/pipeline flow — §07 AI→Gemini graphic.
-       Nodes + arrows, horizontal on desktop; on mobile it stacks with the
-       arrow rotated into a downward connector. Adapts Halliburton's
-       .pipeline-flow to this page's Inter + card styling. */
-    .flow { display: flex; align-items: stretch; gap: 8px; margin-top: 24px; }
-    .flow-node {
-      flex: 1; min-width: 0;
-      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 20px;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .flow-node-title { font-size: 16px; font-weight: 500; color: #1A1A1A; }
-    .flow-node-line { font-size: 13px; color: #6B6B6B; line-height: 1.5; }
-    .flow-arrow {
-      color: #6B6B6B; font-size: 18px; line-height: 1;
-      display: flex; align-items: center; flex-shrink: 0;
-    }
-    .flow--compact { max-width: 440px; }
-    .flow--compact .flow-node { padding: 14px 16px; }
-    .flow--compact .flow-node-title { font-size: 14px; }
 
-    /* Localization (§07) — focal stat + native-script language pills */
-    .loc-stat { display: flex; align-items: baseline; gap: 12px; margin-top: 24px; }
-    .loc-stat-number { font-size: 64px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; color: #1A1A1A; }
-    .loc-stat-label { font-size: 16px; color: #6B6B6B; }
-    .loc-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; max-width: 640px; }
-    .loc-rule { font-size: 12px; color: #6B6B6B; line-height: 1.6; margin-top: 16px; max-width: 640px; }
-    /* a country code rather than a flag emoji: Windows renders regional
-       indicators as the bare letter pair anyway, so this is what a good
-       share of readers would have seen — set deliberately instead */
-    .loc-code {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
-      color: #6B6B6B; margin-right: 7px;
-    }
-    .loc-pill {
-      font-size: 13px; color: #1A1A1A; white-space: nowrap;
-      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 100px; padding: 5px 12px; line-height: 1.4;
-    }
 
     /* iPhone mockups (§05). The screenshots already carry the device frame —
        bezel, side buttons and Dynamic Island are part of the image — so the
@@ -241,12 +212,6 @@
       .phone-grid > .phone-figure:nth-child(even) { transform: translateY(30px); }
     }
 
-    /* Phase 3 — mobile: flow stacks with a downward connector */
-    @media (max-width: 640px) {
-      .flow { flex-direction: column; gap: 6px; }
-      .flow-arrow { transform: rotate(90deg); align-self: center; padding: 2px 0; }
-      .flow--compact { max-width: 100%; }
-    }
     /* Phase 3 — mobile: phone row → contained horizontal scroll with peek
        (same mechanism as Halliburton's card rows; scrolls internally, never
        widens the page). Container is tabindex=0 role=group for keyboard use. */
@@ -285,12 +250,15 @@
     }
     .rb-road-scroll::-webkit-scrollbar { display: none; }
     .rb-road-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    /* Wide screens: let the rail run 80px past the text column on each side
-       (the hero-image trick). 920px holds all six steps at 152px, so the
-       roadmap is seen whole instead of scrolled. max-width has to be released
-       or the base `max-width: 100%` clamps the bleed straight back to 712. */
+    /* Wide screens: the rail runs past the text column on the RIGHT only, so
+       phase 01 starts on the same vertical as every heading and paragraph on
+       the page. 712 + 160 = 872 still holds all five steps at 152px, so the
+       roadmap is seen whole instead of scrolled. The bleed is capped at 160
+       because 1080px leaves 184px outside the column and the rail must not
+       reach the viewport edge. max-width has to be released or the base
+       `max-width: 100%` clamps the bleed straight back to 712. */
     @media (min-width: 1080px) {
-      .rb-road-scroll { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
+      .rb-road-scroll { width: calc(100% + 160px); max-width: none; margin-left: 0; }
     }
     /* §03 — market analysis: a comparison grid rather than prose, because the
        point is the shape of the gap. Rows carry their own labels, hidden while
@@ -393,15 +361,17 @@
     .rb-pending-item::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #6B6B6B; }
 
     /* §03 — audience groups. Same shape as the Halliburton case's persona
-       cards (badge, name, Who / Pain) but in this page's vocabulary: the
-       pastel node fills instead of white cards, one hue per group, so a
-       group reads like the diagrams rather than like a separate component.
-       No names, faces, ages or invented quotes — these are groups, not people. */
+       cards (badge, name, Who / Pain). The hue used to fill the whole card;
+       it now lives only in the badge, so three tinted panels stop competing
+       with the flow diagrams below, which need the pastel fills to mean
+       something. No names, faces, ages or invented quotes — groups, not people. */
     .rb-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
-    .rb-group { border: 1px solid; border-radius: 12px; padding: 24px; }
-    .rb-group--investor  { background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
-    .rb-group--rebalancer { background: var(--rb-action-bg); border-color: var(--rb-action-bd); }
-    .rb-group--trader { background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
+    /* the card is neutral like every other card on the site; the badge is the
+       only place the group colour lives, which is enough to tell three apart */
+    .rb-group {
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 24px;
+    }
     .rb-group-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .rb-group-eyebrow { display: flex; align-items: center; gap: 8px; }
     .rb-group-badge {
@@ -614,12 +584,7 @@
     .rb-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #6B6B6B; }
     .rb-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
     .rb-step-line { font-size: 12px; color: #6B6B6B; line-height: 1.45; }
-    /* screen: a title-bar hint across the top */
-    .rb-step--screen { padding-top: 16px; background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
-    .rb-step--screen::before {
-      content: ''; position: absolute; left: 13px; right: 13px; top: 7px;
-      height: 2px; background: rgba(0,0,0,0.30); border-radius: 2px;
-    }
+    .rb-step--screen { background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
     .rb-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--rb-action-bg); border-color: var(--rb-action-bd); }
     .rb-step--system { border-style: dotted; background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
     .rb-step--sheet, .rb-step--outside { border-style: dashed; border-color: var(--rb-neutral-bd); background: transparent; }
@@ -852,7 +817,6 @@
       <div class="cta-row">
         <a href="https://apps.apple.com/app/id6767200669" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>View on the App Store &#8599;</a>
       </div>
-      <hr class="case-hero-divider" style="margin-top:32px;">
       <div class="case-hero-image">
         <img src="../../assets/images/rebalancer/rebalancer-hero.webp" alt="Rebalancer — crypto portfolio rebalancing app" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1440" height="900" fetchpriority="high">
         <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
@@ -876,31 +840,31 @@
             <p class="timeline-number">01</p>
             <p class="timeline-title">Research</p>
             <p class="timeline-desc">Competitor analysis, reviews on the App Store and YouTube, Telegram channels, interviews with the crypto community. Nobody treated an ALT/ALT pair as something you could keep and watch.</p>
-            <span class="timeline-tag">No direct competitor</span>
+            <span class="timeline-tag">Interviews and competitor review</span>
           </div>
           <div class="timeline-step">
             <p class="timeline-number">02</p>
             <p class="timeline-title">Prototype</p>
             <p class="timeline-desc">Several concepts ran side by side. I committed to one &mdash; the pair as the only object the app asks you to create &mdash; and cut the rest instead of keeping options open.</p>
-            <span class="timeline-tag">One direction chosen</span>
+            <span class="timeline-tag">Concepts cut to one</span>
           </div>
           <div class="timeline-step">
             <p class="timeline-number">03</p>
             <p class="timeline-title">Testing and iteration</p>
             <p class="timeline-desc">Two rounds through TestFlight, then reworking what testers actually stumbled on rather than what looked worth polishing.</p>
-            <span class="timeline-tag">Four flows &middot; four changes</span>
+            <span class="timeline-tag">Two TestFlight rounds</span>
           </div>
           <div class="timeline-step">
             <p class="timeline-number">04</p>
             <p class="timeline-title">Publish on the App Store</p>
             <p class="timeline-desc">Shipping was a design decision too: what to leave out so the first version could stand on its own, and what the listing should promise.</p>
-            <span class="timeline-tag">Live</span>
+            <span class="timeline-tag">Shipped to the App Store</span>
           </div>
           <div class="timeline-step">
             <p class="timeline-number">05</p>
             <p class="timeline-title">Analytics and post-launch research</p>
             <p class="timeline-desc">Analytics went in to replace opinion with behaviour, and the reading of reviews and channels carried on after release rather than stopping at launch.</p>
-            <span class="timeline-tag">Instrumented</span>
+            <span class="timeline-tag">Analytics wired in</span>
           </div>
         </div>
       </div>
@@ -1549,59 +1513,6 @@
         </div>
       </div>
 
-      <h3 class="subsection-heading">Localization</h3>
-      <p class="section-text">The audience for an ALT/ALT tool isn't in one country, so English-only would have narrowed the position from the start. The work was absorbing each market's requirements without growing a settings screen per market &mdash; that, not the word count, is what took the time.</p>
-
-      <div class="loc-stat">
-        <span class="loc-stat-number">31</span>
-        <span class="loc-stat-label">languages in the app</span>
-      </div>
-      <p class="loc-rule">A country code where the language belongs to one market. English, Espa&ntilde;ol, Fran&ccedil;ais, Русский and both Chinese scripts are spoken across several, so those carry the name alone.</p>
-      <div class="loc-pills">
-        <span class="loc-pill loc-pill--wide">English</span>
-        <span class="loc-pill loc-pill--wide">Espa&ntilde;ol</span>
-        <span class="loc-pill loc-pill--wide">Fran&ccedil;ais</span>
-        <span class="loc-pill" lang="de"><span class="loc-code" aria-hidden="true">DE</span>Deutsch</span>
-        <span class="loc-pill" lang="it"><span class="loc-code" aria-hidden="true">IT</span>Italiano</span>
-        <span class="loc-pill" lang="nl"><span class="loc-code" aria-hidden="true">NL</span>Nederlands</span>
-        <span class="loc-pill" lang="pt-BR"><span class="loc-code" aria-hidden="true">BR</span>Portugu&ecirc;s (BR)</span>
-        <span class="loc-pill" lang="pt-PT"><span class="loc-code" aria-hidden="true">PT</span>Portugu&ecirc;s (PT)</span>
-        <span class="loc-pill loc-pill--wide">Русский</span>
-        <span class="loc-pill" lang="uk"><span class="loc-code" aria-hidden="true">UA</span>Українська</span>
-        <span class="loc-pill" lang="pl"><span class="loc-code" aria-hidden="true">PL</span>Polski</span>
-        <span class="loc-pill" lang="cs"><span class="loc-code" aria-hidden="true">CZ</span>Čeština</span>
-        <span class="loc-pill" lang="sk"><span class="loc-code" aria-hidden="true">SK</span>Slovenčina</span>
-        <span class="loc-pill" lang="hr"><span class="loc-code" aria-hidden="true">HR</span>Hrvatski</span>
-        <span class="loc-pill" lang="hu"><span class="loc-code" aria-hidden="true">HU</span>Magyar</span>
-        <span class="loc-pill" lang="ro"><span class="loc-code" aria-hidden="true">RO</span>Rom&acirc;n&#259;</span>
-        <span class="loc-pill" lang="bg"><span class="loc-code" aria-hidden="true">BG</span>Български</span>
-        <span class="loc-pill" lang="el"><span class="loc-code" aria-hidden="true">GR</span>Ελληνικά</span>
-        <span class="loc-pill" lang="tr"><span class="loc-code" aria-hidden="true">TR</span>T&uuml;rk&ccedil;e</span>
-        <span class="loc-pill" lang="fi"><span class="loc-code" aria-hidden="true">FI</span>Suomi</span>
-        <span class="loc-pill" lang="sv"><span class="loc-code" aria-hidden="true">SE</span>Svenska</span>
-        <span class="loc-pill" lang="nb"><span class="loc-code" aria-hidden="true">NO</span>Norsk</span>
-        <span class="loc-pill" lang="da"><span class="loc-code" aria-hidden="true">DK</span>Dansk</span>
-        <span class="loc-pill loc-pill--wide">简体中文</span>
-        <span class="loc-pill loc-pill--wide">繁體中文</span>
-        <span class="loc-pill" lang="ja"><span class="loc-code" aria-hidden="true">JP</span>日本語</span>
-        <span class="loc-pill" lang="ko"><span class="loc-code" aria-hidden="true">KR</span>한국어</span>
-        <span class="loc-pill" lang="hi"><span class="loc-code" aria-hidden="true">IN</span>हिन्दी</span>
-        <span class="loc-pill" lang="th"><span class="loc-code" aria-hidden="true">TH</span>ไทย</span>
-        <span class="loc-pill" lang="id"><span class="loc-code" aria-hidden="true">ID</span>Bahasa Indonesia</span>
-        <span class="loc-pill" lang="vi"><span class="loc-code" aria-hidden="true">VN</span>Tiếng Việt</span>
-      </div>
-      <div class="flow flow--compact" style="margin-top:28px;" role="group" aria-label="Translation pipeline: AI translation, then Gemini quality pass">
-        <div class="flow-node">
-          <p class="flow-node-title">AI translation</p>
-          <p class="flow-node-line">Generate all 31 languages</p>
-        </div>
-        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
-        <div class="flow-node">
-          <p class="flow-node-title">Gemini pass</p>
-          <p class="flow-node-line">Second-pass quality review</p>
-        </div>
-      </div>
-    
     </section>
 
     <!-- 07 — ANALYTICS AND POST-LAUNCH RESEARCH -->
@@ -1622,7 +1533,7 @@
     <section id="section-08" class="case-section">
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend, delivery.</p>
-      <p class="section-text">It ships in 31 languages. What it settles into in daily use is the next thing to measure.</p>
+      <p class="section-text">What it settles into in daily use is the next thing to measure.</p>
 
       <figure class="rb-shot">
         <img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle &ldquo;Create your own pairs&rdquo;, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1824" height="970">

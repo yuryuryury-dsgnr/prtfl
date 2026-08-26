@@ -56,7 +56,6 @@
     .case-hero-meta { font-size: 14px; color: #6B6B6B; margin-bottom: 8px; }
     .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
     .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
-    .case-hero-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
 
     .case-hero-image {
       width: calc(100% + 160px);
@@ -69,6 +68,16 @@
       margin-top: 48px;
       position: relative;
       overflow: hidden;
+    }
+
+    /* Wide screens: the hero grows past the text column in two steps. The cap
+       is 200px a side because 1280px leaves 284px outside the column and the
+       frame must not reach the viewport edge. */
+    @media (min-width: 1025px) {
+      .case-hero-image { width: calc(100% + 240px); margin-left: -120px; }
+    }
+    @media (min-width: 1280px) {
+      .case-hero-image { width: calc(100% + 400px); margin-left: -200px; }
     }
     .case-hero-image img {
       width: 100%;
@@ -163,7 +172,7 @@
     .wireframe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
     .wireframe-item {}
     .wireframe-placeholder {
-      background: #E8E8E8; border-radius: 8px; aspect-ratio: 4/3;
+      background: #EDEDED; border-radius: 8px; aspect-ratio: 4/3;
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; color: #6B6B6B; font-weight: 500;
     }
@@ -432,7 +441,6 @@
       <p class="case-hero-meta">Web platform · 2020</p>
       <p class="case-hero-role">Lead UX — research, flows, prototyping</p>
       <p class="case-hero-result">Designed from zero — platform launched and generating revenue</p>
-      <hr class="case-hero-divider">
       <div class="case-hero-image">
         <img src="../../assets/images/dopas/dopas-cover-v2.webp" alt="dopas.dp.ua project overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1740" height="1106" fetchpriority="high">
         <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
