@@ -211,8 +211,13 @@
     .case-card {
       background: #FFFFFF;
       border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      padding: 0;
+      /* One inset for everything: the thumb and the copy both sit 20px in, so
+         the left edge of the image and the left edge of the title are the same
+         line. The copy came in from 28 and the image went out from 12 to meet
+         there. The card's radius follows from it — 20 + the thumb's canonical
+         12 — which is what keeps the two curves concentric. */
+      border-radius: 32px;
+      padding: 20px;
       transition: transform 200ms ease, border-color 200ms ease;
       display: flex;
       flex-direction: column;
@@ -223,6 +228,7 @@
     .case-thumb {
       width: 100%;
       aspect-ratio: 16 / 10;
+      border-radius: 12px;
       background: #E3EFFA;
       position: relative;
       overflow: hidden;
@@ -247,7 +253,8 @@
     }
 
     .case-body {
-      padding: 24px 28px 28px;
+      /* the card already carries the 20px inset on every side */
+      padding: 24px 0 4px;
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -561,7 +568,7 @@
         <!-- Card 4: dopas.dp.ua -->
         <a href="cases/dopas/" class="case-card">
           <div class="case-thumb">
-            <img src="assets/images/dopas/dopas-cover.webp" alt="dopas.dp.ua" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1004" height="638">
+            <img src="assets/images/dopas/dopas-cover.webp" alt="dopas.dp.ua" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1740" height="1106">
             <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
           </div>
           <div class="case-body">
