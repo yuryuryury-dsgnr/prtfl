@@ -23,13 +23,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F4F9FD; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F8F8; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 100;
-      background: #F4F9FD;
+      background: #F8F8F8;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -58,7 +58,7 @@
       /* a white mat, 6px, with the inner radius at 24 minus the mat so
          the two curves stay concentric */
       padding: 6px;
-      background: #FFFFFF;
+      background: #FCFCFC;
       border-radius: 24px;
       margin-top: 48px;
       position: relative;
@@ -76,7 +76,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #B0C6D8;
+      color: #C3C3C3;
       font-size: 14px;
     }
 
@@ -108,17 +108,17 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F4F9FD;
+      background: #1A1A1A; border: 3px solid #F8F8F8;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
-    .timeline-tag { display: inline-block; font-size: 11px; color: #6B6B6B; background: #E4F1FA; padding: 3px 8px; border-radius: 4px; }
+    .timeline-tag { display: inline-block; font-size: 11px; color: #6B6B6B; background: #EFEFEF; padding: 3px 8px; border-radius: 4px; }
 
     /* ——— CARD GRIDS ——— */
     .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
     
-    .card { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; }
+    .card { background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; }
     /* Card type scale, shared site-wide with the persona cards on the
        Data Marketplace case: label 11/500 uppercase · title 15/500/1.3 ·
        body 13/1.6 · tag 11/500. */
@@ -126,7 +126,7 @@
     .card-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 8px; }
     .card-desc { font-size: 13px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
     .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .card-tag { font-size: 11px; font-weight: 500; color: #6B6B6B; background: #E4F1FA; padding: 3px 8px; border-radius: 4px; }
+    .card-tag { font-size: 11px; font-weight: 500; color: #6B6B6B; background: #EFEFEF; padding: 3px 8px; border-radius: 4px; }
 
     /* ——— TABLE ——— */
     .strategy-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
@@ -138,7 +138,7 @@
     .strategy-table td:last-child { color: #6B6B6B; }
 
     /* ——— USABILITY ROUNDS ——— */
-    .usability-round { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; margin-top: 24px; }
+    .usability-round { background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; margin-top: 24px; }
     .round-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 20px; }
     .round-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
     .round-col-title { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B; margin-bottom: 12px; }
@@ -154,7 +154,7 @@
 
     /* ——— WIREFRAMES ——— */
     .wireframe-placeholder {
-      background: #D9EAF7; border-radius: 8px; aspect-ratio: 4/3;
+      background: #E8E8E8; border-radius: 8px; aspect-ratio: 4/3;
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; color: #6B6B6B; font-weight: 500;
     }
@@ -219,7 +219,7 @@
     .phone-screen {
       border-radius: 28px;
       overflow: hidden;
-      background: #FFFFFF;
+      background: #FCFCFC;
       position: relative;
     }
     .phone-screen img {
@@ -267,7 +267,7 @@
       padding: 10px 24px; border: 1.5px solid #1A1A1A;
       border-radius: 100px; transition: all 200ms ease;
     }
-    .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
+    .cta-pill:hover { background: #1A1A1A; color: #FCFCFC; }
 
     /* ——— REFLECTION ——— */
 
@@ -384,7 +384,7 @@
        through the header on every page to reach the case. */
     .skip-link {
       position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F4F9FD; font-size: 14px; font-weight: 500;
+      background: #1A1A1A; color: #F8F8F8; font-size: 14px; font-weight: 500;
       padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
     }
     .skip-link:focus { top: 12px; }
@@ -638,7 +638,7 @@
           <line x1="80" y1="80" x2="160" y2="80" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arr)"/>
 
           <!-- Central hub -->
-          <rect x="160" y="60" width="100" height="40" rx="8" stroke="#1A1A1A" stroke-width="1.5" fill="#FFFFFF"/>
+          <rect x="160" y="60" width="100" height="40" rx="8" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
           <text x="210" y="84" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Home</text>
 
           <!-- 5 paths branching right -->
@@ -902,8 +902,8 @@
     <!-- 07 — OUTCOME -->
     <section id="section-09" class="case-section">
       <h2 class="section-heading">Outcome</h2>
-      <p class="outcome-text">Launched late 2020. Time-to-booking dropped 40% in usability tests; digital prescriptions and visit summaries drew the most praise.</p>
-      <p class="outcome-text">Live on both platforms today.</p>
+      <p class="outcome-text">Launched late 2020. Time-to-booking dropped 40% in usability tests.</p>
+      <p class="outcome-text">Digital prescriptions and visit summaries drew the most praise. Live on both platforms today.</p>
       <div class="cta-row">
         <a href="https://apps.apple.com/app/id1483029353" target="_blank" rel="noopener" class="cta-pill">App Store →</a>
         <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" target="_blank" rel="noopener" class="cta-pill">Google Play →</a>
@@ -913,8 +913,8 @@
     <!-- 08 — REFLECTION -->
     <section id="section-10" class="case-section">
       <h2 class="section-heading">Reflection</h2>
-      <p class="section-text">I&rsquo;d start with a design system on day one &mdash; component drift slowed the hi-fi phase and cost cleanup before handoff.</p>
-      <p class="section-text">Two rounds of testing caught different things: lo-fi found structural problems, hi-fi found trust ones. In healthcare you need both.</p>
+      <p class="section-text">I&rsquo;d start with a design system on day one &mdash; component drift cost cleanup before handoff.</p>
+      <p class="section-text">Two rounds of testing found different things: lo-fi structural, hi-fi trust. Healthcare needs both.</p>
     </section>
 
     <!-- NEXT CASE -->

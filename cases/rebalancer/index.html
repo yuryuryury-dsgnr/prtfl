@@ -23,13 +23,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F4F9FD; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F8F8; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 100;
-      background: #F4F9FD;
+      background: #F8F8F8;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -64,7 +64,7 @@
       /* a white mat, 6px, with the inner radius at 24 minus the mat so
          the two curves stay concentric */
       padding: 6px;
-      background: #FFFFFF;
+      background: #FCFCFC;
       border-radius: 24px;
       margin-top: 48px;
       position: relative;
@@ -82,7 +82,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #B0C6D8;
+      color: #C3C3C3;
       font-size: 14px;
     }
 
@@ -132,7 +132,7 @@
       width: auto; height: 16px; flex: 0 0 auto;
       position: relative; top: -1px;   /* optical: the mark reads high against the cap line */
     }
-    .cta-pill:hover { background: #1A1A1A; color: #FFFFFF; }
+    .cta-pill:hover { background: #1A1A1A; color: #FCFCFC; }
 
     /* ——— REFLECTION ——— */
 
@@ -168,7 +168,7 @@
     .flow { display: flex; align-items: stretch; gap: 8px; margin-top: 24px; }
     .flow-node {
       flex: 1; min-width: 0;
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px; padding: 20px;
       display: flex; flex-direction: column; gap: 6px;
     }
@@ -197,7 +197,7 @@
     }
     .loc-pill {
       font-size: 13px; color: #1A1A1A; white-space: nowrap;
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
       border-radius: 100px; padding: 5px 12px; line-height: 1.4;
     }
 
@@ -215,7 +215,7 @@
        asset still reads as a screen rather than collapsing the grid */
     .phone-placeholder {
       position: absolute; inset: 0; align-items: center; justify-content: center;
-      background: #E3EFFA; border-radius: 26px;
+      background: #EDEDED; border-radius: 26px;
       font-size: 12px; color: #6B6B6B; text-align: center; padding: 0 12px;
     }
     .phone-caption { font-size: 13px; color: #6B6B6B; text-align: center; line-height: 1.5; max-width: 208px; }
@@ -311,12 +311,12 @@
     .rb-cmp-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
     .rb-cmp {
       min-width: 640px;
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px; overflow: hidden;
     }
     .rb-cmp-row { display: grid; grid-template-columns: 1.75fr repeat(5, 1fr); }
     .rb-cmp-row + .rb-cmp-row { border-top: 1px solid rgba(0,0,0,0.07); }
-    .rb-cmp-row--head { background: #EEF6FC; }
+    .rb-cmp-row--head { background: #F5F5F5; }
     /* the one row with no gaps in it — tinted so the shape of the column reads
        before any of the labels do */
     .rb-cmp-row--self { background: var(--rb-screen-bg); }
@@ -366,7 +366,7 @@
        problem and a change never look alike. */
     .rb-tests { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
     .rb-test {
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px; padding: 24px;
     }
     .rb-test-flow { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 12px; }
@@ -407,7 +407,7 @@
     .rb-group-badge {
       flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 500; color: #FFFFFF; background: #1A1A1A;
+      font-size: 10px; font-weight: 500; color: #FCFCFC; background: #1A1A1A;
     }
     .rb-group--investor  .rb-group-badge { background: #5E7590; }
     .rb-group--rebalancer .rb-group-badge { background: #5B7563; }
@@ -443,13 +443,13 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F4F9FD;
+      background: #1A1A1A; border: 3px solid #F8F8F8;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #E4F1FA;
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #EFEFEF;
       padding: 3px 8px; border-radius: 4px;
     }
     /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
@@ -459,7 +459,7 @@
        image loads so the stats below never jump. */
     .rb-shot {
       margin-top: 28px; border-radius: 12px; overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.08); background: #E3EFFA;
+      border: 1px solid rgba(0,0,0,0.08); background: #EDEDED;
       position: relative; aspect-ratio: 3360 / 1786;
     }
     .rb-shot img { width: 100%; height: 100%; display: block; object-fit: cover; }
@@ -490,14 +490,14 @@
     .rb-tab:hover { background: rgba(0,0,0,0.02); }
     /* selected, not pressed — a step down the page's own blue ramp instead
        of solid ink, matching the toggles on the other cases */
-    .rb-tab.is-active { background: #CBE2F6; color: #1A1A1A; }
+    .rb-tab.is-active { background: #DFDFDF; color: #1A1A1A; }
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
     /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §03 and §04.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
-       every flow). Muted on purpose: these sit on a warm #F4F9FD page.
+       every flow). Muted on purpose: these sit on a warm #F8F8F8 page.
        Shape + stroke style still carry the type on their own — colour is a
        second, redundant channel, so nothing depends on seeing it. ═══ */
     :root {
@@ -506,7 +506,7 @@
       --rb-system-bg:   #EFECF5;  --rb-system-bd:   #C5BED5;   /* system  — lilac */
       --rb-decision-bg: #F2EBDF;  --rb-decision-bd: #D6C7AF;   /* decision— sand  */
       --rb-end-bg:      #F7EBE9;  --rb-end-bd:      #D7BCB7;   /* end     — clay  */
-      --rb-stage-bg:    #E3EFFA;                               /* flow area        */
+      --rb-stage-bg:    #EDEDED;                               /* flow area        */
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
@@ -608,7 +608,7 @@
     .rb-step {
       display: inline-flex; flex-direction: column; gap: 3px;
       flex: 0 0 196px; width: 196px; padding: 11px 15px;
-      background: #FFFFFF; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
       position: relative;
     }
     .rb-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #6B6B6B; }
@@ -649,7 +649,7 @@
        widening the page. */
     .rb-tech-challenge { font-size: 14px; color: #6B6B6B; line-height: 1.7; max-width: 640px; }
     .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-    .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #E4F1FA; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
+    .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #EFEFEF; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
 
     /* ——— FLOATING TOC PILL ———
        The halliburton case's pill, shown at every width here: it names the
@@ -745,7 +745,7 @@
        through the header on every page to reach the case. */
     .skip-link {
       position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F4F9FD; font-size: 14px; font-weight: 500;
+      background: #1A1A1A; color: #F8F8F8; font-size: 14px; font-weight: 500;
       padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
     }
     .skip-link:focus { top: 12px; }
@@ -1621,8 +1621,8 @@
     <!-- 08 — OUTCOME -->
     <section id="section-08" class="case-section">
       <h2 class="section-heading">Outcome</h2>
-      <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend and delivery in one loop.</p>
-      <p class="section-text">It ships in 31 languages. What it settles into in people's routines is the next thing to measure.</p>
+      <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend, delivery.</p>
+      <p class="section-text">It ships in 31 languages. What it settles into in daily use is the next thing to measure.</p>
 
       <figure class="rb-shot">
         <img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle &ldquo;Create your own pairs&rdquo;, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1824" height="970">
@@ -1634,7 +1634,7 @@
     <section id="section-09" class="case-section">
       <h2 class="section-heading">Reflection</h2>
       <p class="section-text">The backend was bigger than I scoped. Next time I&rsquo;d size the invisible parts first.</p>
-      <p class="section-text">With AI I shipped end-to-end what would normally take a team &mdash; but it accelerates only the parts you already understand.</p>
+      <p class="section-text">With AI I shipped end-to-end what would take a team &mdash; but only the parts I understood.</p>
     </section>
 
     <!-- NEXT CASE -->

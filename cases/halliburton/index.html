@@ -24,13 +24,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F4F9FD; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F8F8; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 100;
-      background: #F4F9FD;
+      background: #F8F8F8;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -107,7 +107,7 @@
          it is an aside, and a full-width bar reads as a section banner */
       width: fit-content;
       max-width: 100%;
-      background: #E1EFFA;
+      background: #EDEDED;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       padding: 16px 20px;
@@ -135,7 +135,7 @@
       /* a white mat, 6px, with the inner radius at 24 minus the mat so
          the two curves stay concentric */
       padding: 6px;
-      background: #FFFFFF;
+      background: #FCFCFC;
       border-radius: 24px;
       margin-top: 48px;
       position: relative;
@@ -160,7 +160,7 @@
       margin-top: 32px;
     }
     .problem-card {
-      background: #FFFFFF;
+      background: #FCFCFC;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       padding: 24px;
@@ -198,7 +198,7 @@
       margin-top: 32px;
     }
     .persona-detail-card {
-      background: #FFFFFF;
+      background: #FCFCFC;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       padding: 24px;
@@ -221,7 +221,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background: #C0DAEF;
+      background: #D6D6D6;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -308,13 +308,13 @@
     /* ——— TOKEN GRAPH ——— */
     .ds-token-intro { font-size: 14px; color: #6B6B6B; line-height: 1.6; margin-bottom: 24px; }
     .ds-theme-bar { display: flex; justify-content: flex-end; margin-bottom: 16px; }
-    .ds-theme-toggle { display: inline-flex; background: #E1EFFA; border-radius: 20px; padding: 3px; }
+    .ds-theme-toggle { display: inline-flex; background: #EDEDED; border-radius: 20px; padding: 3px; }
     .ds-theme-btn { padding: 5px 14px; border-radius: 16px; border: none; cursor: pointer; font-size: 12px; font-weight: 500; color: #6B6B6B; background: transparent; transition: all 0.15s; }
-    .ds-theme-btn.active { background: #CBE2F6; color: #1A1A1A; }
+    .ds-theme-btn.active { background: #DFDFDF; color: #1A1A1A; }
     .tg-graph { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
     .tg-col-header { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6B6B; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid rgba(0,0,0,0.07); }
     .tg-cards { display: flex; flex-direction: column; gap: 6px; }
-    .tg-card { padding: 10px 12px; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; cursor: default; transition: opacity 0.15s, border-color 0.15s, background 0.15s; background: #FFFFFF; }
+    .tg-card { padding: 10px 12px; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; cursor: default; transition: opacity 0.15s, border-color 0.15s, background 0.15s; background: #FCFCFC; }
     .tg-card.tg-faded { opacity: 0.18; }
     .tg-card.tg-highlighted { border-color: rgba(0,0,0,0.22); background: rgba(0,0,0,0.015); }
     .tg-card.tg-hovered { border-color: rgba(0,0,0,0.35); background: rgba(0,0,0,0.025); }
@@ -358,7 +358,7 @@
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: 10px;
       overflow: hidden;
-      background: #EEF6FC;
+      background: #F5F5F5;
       transition: background 200ms ease, border-color 200ms ease;
     }
     .mg-browser[data-mg-theme="dark"] {
@@ -368,7 +368,7 @@
     .mg-chrome {
       display: flex; align-items: center; gap: 12px;
       height: 32px; padding: 0 12px;
-      background: #E1EFFA;
+      background: #EDEDED;
       border-bottom: 1px solid rgba(0,0,0,0.08);
       transition: background 200ms ease, border-color 200ms ease;
     }
@@ -427,7 +427,7 @@
     
     
     .pipeline-flow { display: flex; align-items: flex-start; gap: 8px; margin: 4px 0 32px; }
-    .pipeline-node { flex: 1; padding: 14px 16px; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .pipeline-node { flex: 1; padding: 14px 16px; background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; display: flex; flex-direction: column; gap: 4px; }
     .pipeline-node-title { font-family: 'Menlo','Monaco','Courier New',monospace; font-size: 11px; font-weight: 600; color: #1A1A1A; line-height: 1.4; }
     .pipeline-node-caption { font-size: 11px; color: #6B6B6B; line-height: 1.5; }
     .pipeline-arrow { color: #6B6B6B; font-size: 18px; padding-top: 17px; flex-shrink: 0; line-height: 1; }
@@ -516,7 +516,7 @@
        rather than as "you are here" — a step down the page's own blue ramp
        says the same thing without shouting, and keeps 12:1 on the label */
     .phase-toggle-btn.active {
-      background: #CBE2F6;
+      background: #DFDFDF;
       color: #1A1A1A;
     }
     .phase-panel { display: none; }
@@ -569,7 +569,7 @@
       margin-top: 24px;
       max-width: 100%;
       min-width: 0;
-      background: #FFFFFF;
+      background: #FCFCFC;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       overflow-x: auto;
@@ -725,10 +725,13 @@
     .journey-map th,
     .journey-map td {
       position: relative;
-      /* content-sized cards centred in the band, the way they sit on a board —
-         a card stretched to the tallest cell in its row would read as an empty
-         box rather than as a short answer */
-      vertical-align: middle;
+      /* every card fills its band, so a row reads as one line of equal blocks.
+         height:1px is the standard nudge: a percentage height on a child of a
+         table cell only resolves once the cell itself has a definite one, and
+         with table-layout: fixed the 1px acts as a minimum, so the row still
+         grows to its tallest content. */
+      vertical-align: top;
+      height: 1px;
       text-align: left;
       font-weight: 400;
       padding: 8px var(--jm-gut);
@@ -742,7 +745,8 @@
     .jm-card {
       position: relative;
       z-index: 1;
-      background: #FFFFFF;
+      height: 100%;
+      background: #FCFCFC;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       padding: var(--jm-pad);
@@ -790,7 +794,7 @@
       position: sticky;
       left: 0;
       z-index: 3;
-      background: #F4F9FD;
+      background: #F8F8F8;
       padding-left: 0;
     }
     .jm-stage,
@@ -858,22 +862,16 @@
       font-weight: 700;
     }
 
-    /* the board grades emotion with a face; five dots carry the same reading
-       without importing an emoji into a page that has none */
-    .jm-scale { display: flex; gap: 5px; margin: 2px 0 9px; }
-    .jm-scale i {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.14);
-    }
-    .jm-scale i.on { background: #1A1A1A; }
+    /* the board's own five faces, drawn once as symbols and referenced — the
+       word under each still carries the meaning, so the face is decorative */
+    .jm-face-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .jm-face { display: block; width: 28px; height: 28px; margin: 0 0 9px; }
 
     /* the last row is what the design answered, not what the user reported —
        the board fills those cards; here they take the chip colour the rest of
        the site uses for a filled surface */
     .jm-row-answer .jm-card {
-      background: #E4F1FA;
+      background: #EFEFEF;
       border-color: rgba(0,0,0,0.05);
       color: #1A1A1A;
     }
@@ -913,7 +911,7 @@
       align-items: stretch;
     }
     .validation-card {
-      background: #FFFFFF;
+      background: #FCFCFC;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       padding: 24px;
@@ -968,13 +966,13 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F4F9FD;
+      background: #1A1A1A; border: 3px solid #F8F8F8;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #E4F1FA;
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #EFEFEF;
       padding: 3px 8px; border-radius: 4px; margin-top: auto; align-self: flex-start;
     }
 
@@ -1303,7 +1301,7 @@
        through the header on every page to reach the case. */
     .skip-link {
       position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F4F9FD; font-size: 14px; font-weight: 500;
+      background: #1A1A1A; color: #F8F8F8; font-size: 14px; font-weight: 500;
       padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
     }
     .skip-link:focus { top: 12px; }
@@ -1358,6 +1356,25 @@
   </style>
 </head>
 <body>
+<svg class="jm-face-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="jm-face-1" viewBox="0 0 56 56"><path d="M56 28C56 43.4638 43.4638 56 28 56C12.5378 56 0 43.4638 0 28C0 12.5378 12.5378 0 28 0C43.4638 0 56 12.5378 56 28Z" fill="#FFCC4D"/>
+<path d="M39.6431 46.478C39.5731 46.1996 37.8263 39.6662 27.9998 39.6662C18.1718 39.6662 16.4265 46.1996 16.3565 46.478C16.3156 46.6422 16.3295 46.8153 16.396 46.9708C16.4626 47.1264 16.5782 47.256 16.7251 47.3398C16.8729 47.4228 17.0435 47.4559 17.2116 47.4343C17.3797 47.4128 17.5364 47.3376 17.6585 47.22C17.688 47.1905 20.698 44.3329 27.9998 44.3329C35.3016 44.3329 38.3131 47.1905 38.3411 47.2185C38.4616 47.3375 38.6174 47.4141 38.7852 47.4368C38.953 47.4596 39.1236 47.4271 39.2714 47.3445C39.4197 47.2607 39.5363 47.1305 39.6035 46.974C39.6707 46.8175 39.6846 46.6432 39.6431 46.478V46.478ZM24.4329 26.8998C19.3696 21.8365 11.2325 21.7773 10.8887 21.7773C10.4882 21.7951 10.1099 21.9666 9.83266 22.2562C9.55543 22.5458 9.40059 22.9312 9.40039 23.3322C9.40019 23.7331 9.55464 24.1186 9.83159 24.4085C10.1085 24.6984 10.4866 24.8703 10.8871 24.8885C10.9323 24.8885 13.8816 24.9227 17.0829 26.0349C16.1605 27.0305 15.5554 28.5767 15.5554 30.3329C15.5554 33.3413 17.296 35.7773 19.4443 35.7773C21.5925 35.7773 23.3331 33.3413 23.3331 30.3329C23.3331 30.0622 23.3036 29.804 23.2756 29.5442C23.2958 29.5442 23.3145 29.5551 23.3331 29.5551C23.6411 29.5558 23.9423 29.465 24.1985 29.2942C24.4548 29.1234 24.6545 28.8803 24.7723 28.5958C24.8901 28.3113 24.9208 27.9982 24.8604 27.6962C24.7999 27.3942 24.6512 27.117 24.4329 26.8998V26.8998ZM45.1109 21.7773C44.7671 21.7773 36.6316 21.8365 31.5667 26.8998C31.3485 27.117 31.1997 27.3942 31.1393 27.6962C31.0788 27.9982 31.1095 28.3113 31.2273 28.5958C31.3452 28.8803 31.5449 29.1234 31.8011 29.2942C32.0573 29.465 32.3585 29.5558 32.6665 29.5551C32.6867 29.5551 32.7038 29.5442 32.7225 29.5442C32.6976 29.804 32.6665 30.0622 32.6665 30.3329C32.6665 33.3413 34.4071 35.7773 36.5554 35.7773C38.7036 35.7773 40.4443 33.3413 40.4443 30.3329C40.4443 28.5767 39.8391 27.0305 38.9167 26.0349C40.9156 25.3527 43.0034 24.9665 45.114 24.8885C45.3183 24.8883 45.5205 24.8478 45.7092 24.7695C45.8979 24.6911 46.0692 24.5763 46.2135 24.4317C46.3578 24.2872 46.4722 24.1156 46.5502 23.9267C46.6282 23.7379 46.6682 23.5356 46.668 23.3313C46.6678 23.1271 46.6274 22.9248 46.549 22.7362C46.4707 22.5475 46.3559 22.3762 46.2113 22.2319C46.0667 22.0876 45.8951 21.9731 45.7063 21.8952C45.5175 21.8172 45.3152 21.7771 45.1109 21.7773V21.7773Z" fill="black"/></symbol>
+    <symbol id="jm-face-2" viewBox="0 0 56 56"><path d="M28 56C43.464 56 56 43.464 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 43.464 12.536 56 28 56Z" fill="#FFCC4D"/>
+<path d="M39.6432 42.5891C39.5732 42.3107 37.8263 35.7773 27.9998 35.7773C18.1718 35.7773 16.4265 42.3107 16.3565 42.5891C16.3156 42.7533 16.3295 42.9264 16.3961 43.0819C16.4626 43.2375 16.5782 43.3671 16.7252 43.4509C16.8728 43.5344 17.0435 43.5678 17.2117 43.5462C17.38 43.5246 17.5367 43.4492 17.6585 43.3311C17.688 43.3016 20.698 40.444 27.9998 40.444C35.3016 40.444 38.3132 43.3016 38.3412 43.3296C38.4616 43.4486 38.6174 43.5252 38.7852 43.5479C38.953 43.5707 39.1236 43.5383 39.2714 43.4556C39.4197 43.3718 39.5364 43.2416 39.6035 43.0851C39.6707 42.9286 39.6846 42.7543 39.6432 42.5891V42.5891Z" fill="black"/>
+<path d="M18.6667 26.4436C20.8145 26.4436 22.5556 24.006 22.5556 20.9991C22.5556 17.9922 20.8145 15.5547 18.6667 15.5547C16.5189 15.5547 14.7778 17.9922 14.7778 20.9991C14.7778 24.006 16.5189 26.4436 18.6667 26.4436Z" fill="black"/>
+<path d="M37.3332 26.4436C39.481 26.4436 41.2221 24.006 41.2221 20.9991C41.2221 17.9922 39.481 15.5547 37.3332 15.5547C35.1855 15.5547 33.4443 17.9922 33.4443 20.9991C33.4443 24.006 35.1855 26.4436 37.3332 26.4436Z" fill="black"/></symbol>
+    <symbol id="jm-face-3" viewBox="0 0 56 56"><path d="M56 28C56 43.4638 43.4638 56 28 56C12.5378 56 0 43.4638 0 28C0 12.5378 12.5378 0 28 0C43.4638 0 56 12.5378 56 28Z" fill="#FFCC4D"/>
+<path d="M17.8889 31.1115C20.0367 31.1115 21.7778 28.674 21.7778 25.6671C21.7778 22.6602 20.0367 20.2227 17.8889 20.2227C15.7411 20.2227 14 22.6602 14 25.6671C14 28.674 15.7411 31.1115 17.8889 31.1115Z" fill="black"/>
+<path d="M38.1111 31.1115C40.2588 31.1115 41.9999 28.674 41.9999 25.6671C41.9999 22.6602 40.2588 20.2227 38.1111 20.2227C35.9633 20.2227 34.2222 22.6602 34.2222 25.6671C34.2222 28.674 35.9633 31.1115 38.1111 31.1115Z" fill="black"/>
+<path d="M38.889 40.4451H17.1112C16.6987 40.4451 16.303 40.2812 16.0113 39.9895C15.7196 39.6978 15.5557 39.3021 15.5557 38.8895C15.5557 38.477 15.7196 38.0813 16.0113 37.7896C16.303 37.4979 16.6987 37.334 17.1112 37.334H38.889C39.3016 37.334 39.6972 37.4979 39.9889 37.7896C40.2807 38.0813 40.4446 38.477 40.4446 38.8895C40.4446 39.3021 40.2807 39.6978 39.9889 39.9895C39.6972 40.2812 39.3016 40.4451 38.889 40.4451Z" fill="black"/></symbol>
+    <symbol id="jm-face-4" viewBox="0 0 56 56"><path d="M28 56C43.464 56 56 43.464 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 43.464 12.536 56 28 56Z" fill="#FFCC4D"/>
+<path d="M16.3569 36.7432C16.4269 37.0217 18.1738 43.555 28.0002 43.555C37.8282 43.555 39.5736 37.0217 39.6436 36.7432C39.6844 36.579 39.6705 36.406 39.604 36.2504C39.5374 36.0948 39.4219 35.9653 39.2749 35.8815C39.1272 35.798 38.9565 35.7645 38.7883 35.7861C38.6201 35.8077 38.4633 35.8832 38.3416 36.0012C38.312 36.0308 35.302 38.8883 28.0002 38.8883C20.6984 38.8883 17.6869 36.0308 17.6589 36.0028C17.5384 35.8838 17.3826 35.8071 17.2148 35.7844C17.047 35.7617 16.8764 35.7941 16.7287 35.8768C16.5804 35.9606 16.4637 36.0907 16.3965 36.2473C16.3294 36.4038 16.3154 36.578 16.3569 36.7432V36.7432Z" fill="black"/>
+<path d="M18.6667 26.4436C20.8145 26.4436 22.5556 24.006 22.5556 20.9991C22.5556 17.9922 20.8145 15.5547 18.6667 15.5547C16.5189 15.5547 14.7778 17.9922 14.7778 20.9991C14.7778 24.006 16.5189 26.4436 18.6667 26.4436Z" fill="black"/>
+<path d="M37.3332 26.4436C39.481 26.4436 41.2221 24.006 41.2221 20.9991C41.2221 17.9922 39.481 15.5547 37.3332 15.5547C35.1855 15.5547 33.4443 17.9922 33.4443 20.9991C33.4443 24.006 35.1855 26.4436 37.3332 26.4436Z" fill="black"/></symbol>
+  </defs>
+</svg>
+
 
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -1784,12 +1801,12 @@
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Uncertainty</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Frustration</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Cautious optimism</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Irritation</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Focus</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Calm or stress</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-3"/></svg><p>Uncertainty</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-2"/></svg><p>Frustration</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Cautious optimism</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-2"/></svg><p>Irritation</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Focus</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-3"/></svg><p>Calm or stress</p></div></td>
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
@@ -1874,10 +1891,10 @@
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Confusion</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></span><p>Cognitive overload</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Productive</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Confidence or uncertainty</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-2"/></svg><p>Confusion</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-1"/></svg><p>Cognitive overload</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Productive</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-3"/></svg><p>Confidence or uncertainty</p></div></td>
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
@@ -1954,10 +1971,10 @@
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Cautious</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i></span><p>Responsibility</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Confident</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Calm productivity</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-3"/></svg><p>Cautious</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-3"/></svg><p>Responsibility</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Confident</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Calm productivity</p></div></td>
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
@@ -2041,11 +2058,11 @@
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Emotion</p></th>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Curiosity</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i><i></i></span><p>Neutral, to frustration on manual work</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Confident</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></span><p>Stress</p></div></td>
-                <td class="jm-cell"><div class="jm-card"><span class="jm-scale" aria-hidden="true"><i></i><i></i><i></i><i class="on"></i><i></i></span><p>Satisfaction</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Curiosity</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-2"/></svg><p>Neutral, to frustration on manual work</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Confident</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-1"/></svg><p>Stress</p></div></td>
+                <td class="jm-cell"><div class="jm-card"><svg class="jm-face" aria-hidden="true"><use href="#jm-face-4"/></svg><p>Satisfaction</p></div></td>
               </tr>
               <tr>
                 <th scope="row" class="jm-lane"><p class="jm-lane-name">Pain point</p></th>
@@ -2584,15 +2601,15 @@
     <!-- 09 — OUTCOME -->
     <section id="section-09" class="case-section reveal">
       <h2 class="section-heading">Outcome</h2>
-      <p class="section-text">Built, validated with real users, and in active use while testing continues.</p>
-      <p class="section-text">In place: a three-tier design system, an MCP pipeline wired into dev, and a Figma-to-code workflow that ships components 1:1 with the system.</p>
+      <p class="section-text">Built, validated with real users, in active use while testing continues.</p>
+      <p class="section-text">In place: a three-tier design system, an MCP pipeline wired into dev, and Figma-to-code hand-off.</p>
     </section>
 
     <!-- 08 — REFLECTION -->
     <section id="section-10" class="case-section reveal">
       <h2 class="section-heading">Reflection</h2>
-      <p class="section-text">I&rsquo;d bring data governance in earlier. Their requirements landed mid-project and sent the access request flow back for rework.</p>
-      <p class="section-text">Leading alone taught me seniority is about owning decisions, not headcount. AI is leverage, not magic &mdash; it speeds up what you already understand. The Figma-to-MCP pipeline goes into every project from here.</p>
+      <p class="section-text">I&rsquo;d bring data governance in earlier &mdash; their requirements landed mid-project and sent the access flow back for rework.</p>
+      <p class="section-text">Leading alone taught me seniority is owning decisions, not headcount. AI speeds up only what you already understand.</p>
     </section>
 
     <!-- NEXT CASE -->

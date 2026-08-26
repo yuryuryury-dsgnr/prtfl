@@ -47,7 +47,7 @@
       font-weight: 400;
       line-height: 1.7;
       color: #1A1A1A;
-      background-color: #F4F9FD;
+      background-color: #F8F8F8;
     }
 
     .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
@@ -74,7 +74,7 @@
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 14px; font-weight: 500;
       padding: 11px 18px; border-radius: 100px;
-      background: #1A1A1A; color: #FFFFFF;
+      background: #1A1A1A; color: #FCFCFC;
       transition: background 200ms ease;
     }
     .cv-btn:hover { background: #3A3A3A; }
@@ -125,7 +125,7 @@
       height: 297mm;
       margin: 0 auto;
       padding: var(--pad-y) var(--pad-x);
-      background: #FFFFFF;
+      background: #FCFCFC;
       color: var(--ink);
       font-size: var(--fs-body);
       /* 1.32 is the step measured off the current PDF (≈9.1 pt at 7 pt type).
@@ -154,7 +154,7 @@
     .cv-card {
       border: var(--border-w) solid var(--border-c);
       border-radius: var(--radius);
-      background: #FFFFFF;
+      background: #FCFCFC;
       padding: var(--card-pad);
       min-width: 0;
     }
@@ -345,7 +345,7 @@
     @page { size: A4; margin: 0; }
     @media print {
       .topnav, .cv-intro, .footer { display: none !important; }
-      html, body { background: #FFFFFF; }
+      html, body { background: #FCFCFC; }
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       /* The sheet is the page: nothing above it may add width or offset, so the
          shared .container is neutralised rather than worked around. */
@@ -360,7 +360,7 @@
        through the header on every page to reach the case. */
     .skip-link {
       position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F4F9FD; font-size: 14px; font-weight: 500;
+      background: #1A1A1A; color: #F8F8F8; font-size: 14px; font-weight: 500;
       padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
     }
     .skip-link:focus { top: 12px; }
