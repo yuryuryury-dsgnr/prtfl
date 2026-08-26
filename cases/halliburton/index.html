@@ -65,7 +65,9 @@
     /* ——— STICKY TOC ——— */
 
     /* ——— HERO ——— */
-    .case-hero { padding: 80px 0 48px; }
+    /* 80px under the bar is right on a wide screen and far too much under a
+       57px bar on a phone — it scales with the viewport instead */
+    .case-hero { padding: clamp(32px, 8vw, 80px) 0 48px; }
     .case-hero h1 {
       font-size: 48px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px;
     }
@@ -151,7 +153,9 @@
     /* ——— PROBLEM CARDS ——— */
     .problem-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      /* auto-fit rather than a fixed three: the section holds two cards now,
+         and a fixed track count left them on two thirds of the row */
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
       gap: 16px;
       margin-top: 32px;
     }
@@ -193,15 +197,6 @@
       gap: 16px;
       margin-top: 32px;
     }
-    .persona-section-label {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #6B6B6B;
-      margin-bottom: 16px;
-      grid-column: 1 / -1;
-    }
     .persona-detail-card {
       background: #FFFFFF;
       border: 1px solid rgba(0,0,0,0.08);
@@ -209,13 +204,11 @@
       padding: 24px;
     }
     /* §04 personas: cards are wrapped in .persona-scroller for the mobile row.
-       On tablet/desktop the wrapper dissolves (display:contents) and order re-interleaves
-       the two labels between the card pairs so the layout stays identical to before. */
+       On tablet/desktop the wrapper dissolves (display:contents) so the cards
+       become grid items in their own right. */
     .persona-scroller { display: contents; }
-    .persona-section-grid > .persona-section-label:nth-of-type(1) { order: 1; }
     .persona-scroller > .persona-detail-card:nth-child(1) { order: 2; }
     .persona-scroller > .persona-detail-card:nth-child(2) { order: 3; }
-    .persona-section-grid > .persona-section-label:nth-of-type(2) { order: 4; }
     .persona-scroller > .persona-detail-card:nth-child(3) { order: 5; }
     .persona-scroller > .persona-detail-card:nth-child(4) { order: 6; }
     .persona-detail-header {
@@ -423,7 +416,7 @@
        so a percentage basis has nothing definite to resolve against and the
        items stopped being a row at all — at 390 the page went from 9537px to
        23073px because all ten had stacked */
-    .mg-item { flex: 0 0 min(560px, 78vw); margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .mg-item { flex: 0 0 min(780px, 78vw); margin: 0; display: flex; flex-direction: column; gap: 10px; }
     .mg-cap { font-size: 13px; color: #6B6B6B; line-height: 1.5; margin: 0; padding: 0 2px; }
     .mg-cap b { color: #1A1A1A; font-weight: 500; }
     @media (max-width: 640px) {
@@ -1659,8 +1652,6 @@
       <h3 class="subsection-heading">Personas &mdash; 4 groups</h3>
 
       <div class="persona-section-grid">
-        <p class="persona-section-label">Users</p>
-        <p class="persona-section-label" style="margin-top:8px;">Creators &amp; Approvers</p>
         <div class="persona-scroller" tabindex="0" role="group" aria-label="Personas, scrollable">
         <div class="persona-detail-card">
           <div class="persona-detail-header">
@@ -1712,7 +1703,6 @@
       </div>
 
       <h3 class="subsection-heading">User journey maps &mdash; 4 groups</h3>
-      <p class="section-text" style="margin-top:16px;">One map per group, each on its own stages, all five lanes the same: what they do, what they ask themselves, how it feels, what gets in the way, and what the design answered.</p>
 
       <div class="phase-toggle jm-tabs" role="tablist" aria-label="Persona group">
         <button class="phase-toggle-btn active" type="button" role="tab" data-jm="jm-g1" id="jm-g1-tab" aria-controls="jm-g1" aria-selected="true" tabindex="0">Data scientist</button>
@@ -2091,7 +2081,7 @@
   </div><!-- end .page-layout (top grid) -->
 
   <!-- HOISTED FULL-WIDTH: Final mockups -->
-  <div class="page-layout" style="padding-top:80px;padding-bottom:0;display:block;max-width:1100px;">
+  <div class="page-layout" style="padding-top:clamp(24px, 6vw, 80px);padding-bottom:0;display:block;max-width:1100px;">
     <div class="mockup-gallery">
 
               <div class="mg-toolbar">
@@ -2594,15 +2584,15 @@
     <!-- 09 — OUTCOME -->
     <section id="section-09" class="case-section reveal">
       <h2 class="section-heading">Outcome</h2>
-      <p class="section-text">The platform is built, validated with real users, and in active use while testing continues.</p>
-      <p class="section-text">Already in place: a three-tier design system, dev-integrated MCP pipeline, two-phase UX strategy, two rounds of stakeholder validation, and a Figma-to-code workflow producing components 1:1 with the design system.</p>
+      <p class="section-text">Built, validated with real users, and in active use while testing continues.</p>
+      <p class="section-text">In place: a three-tier design system, an MCP pipeline wired into dev, and a Figma-to-code workflow that ships components 1:1 with the system.</p>
     </section>
 
     <!-- 08 — REFLECTION -->
     <section id="section-10" class="case-section reveal">
       <h2 class="section-heading">Reflection</h2>
-      <p class="section-text">I&rsquo;d involve data governance stakeholders earlier. Their requirements only became clear mid-project, which meant reworking parts of the access request flow that were already in motion.</p>
-      <p class="section-text">Leading end-to-end as the only designer taught me seniority isn&rsquo;t about headcount &mdash; it&rsquo;s about owning decisions across the whole stack. AI is leverage, not magic: it speeds up what you already understand and is useless for what you don&rsquo;t. The Figma and MCP pipeline goes into every project from here &mdash; once you&rsquo;ve shipped components 1:1 with the design system on the first pass, traditional hand-off feels broken.</p>
+      <p class="section-text">I&rsquo;d bring data governance in earlier. Their requirements landed mid-project and sent the access request flow back for rework.</p>
+      <p class="section-text">Leading alone taught me seniority is about owning decisions, not headcount. AI is leverage, not magic &mdash; it speeds up what you already understand. The Figma-to-MCP pipeline goes into every project from here.</p>
     </section>
 
     <!-- NEXT CASE -->
