@@ -417,6 +417,12 @@
 
     /* ——— RESPONSIVE ——— */
     @media (max-width: 768px) {
+      /* 20px is right when the card is 500px wide; on a 342px card it eats a
+         tenth of the width on each side. 12 here, and the radius follows the
+         same rule it does on desktop — the inset plus the thumb's 12 — so the
+         curves stay concentric at 24 instead of 32. */
+      .case-card { padding: 12px; border-radius: 24px; }
+
       /* the pill supplies its own vertical air, so the nav no longer needs
          24px of it on top of that */
       .topnav { padding: 16px 0; }
