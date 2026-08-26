@@ -98,6 +98,22 @@
       font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
       line-height: 1.2; margin-bottom: 24px;
     }
+
+    /* ——— THE HANGING ORDINAL ———
+       Above 1200 the page gutter is wide enough to hold the number outside the
+       column, so the heading's own name starts on the same vertical line as
+       every paragraph under it and only the ordinal sits further left. Below
+       that the gutter is 24px and the number would fall off the page, so it
+       stays inline. The leading space in the markup is trimmed at the start of
+       the line, which is what keeps the name flush. */
+    @media (min-width: 1200px) {
+      .section-heading { position: relative; }
+      .section-num {
+        position: absolute;
+        right: 100%;
+        margin-right: 0.4em;
+      }
+    }
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
 
     /* ——— TIMELINE ——— */

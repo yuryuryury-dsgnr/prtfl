@@ -469,6 +469,22 @@
       font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
       line-height: 1.2; margin-bottom: 24px;
     }
+
+    /* ——— THE HANGING ORDINAL ———
+       Above 1200 the page gutter is wide enough to hold the number outside the
+       column, so the heading's own name starts on the same vertical line as
+       every paragraph under it and only the ordinal sits further left. Below
+       that the gutter is 24px and the number would fall off the page, so it
+       stays inline. The leading space in the markup is trimmed at the start of
+       the line, which is what keeps the name flush. */
+    @media (min-width: 1200px) {
+      .section-heading { position: relative; }
+      .section-num {
+        position: absolute;
+        right: 100%;
+        margin-right: 0.4em;
+      }
+    }
     .subsection-heading {
       font-size: 28px; font-weight: 600; letter-spacing: -0.015em;
       color: #1A1A1A;
@@ -952,7 +968,24 @@
     }
 
     /* ——— TIMELINE ——— */
-    .timeline { display: flex; gap: 0; margin-top: 32px; position: relative; }
+    /* The roadmap gets a surface of its own. It bleeds outward by exactly its
+       own padding, so the first step's text still starts on the same vertical
+       line as the heading above it and as the body copy elsewhere — the box
+       grows into the page gutter instead of pushing the content inward. 24 is
+       the page's own gutter, so at 768 and below the box reaches the viewport
+       edge and there is never anything to overflow. */
+    .timeline-box {
+      background: #E1EFFA;
+      border-radius: 24px;
+      /* the horizontal padding and the negative margin are the same number, so
+         the heading inside starts on exactly the vertical line it started on
+         when it sat outside — the panel grows into the page gutter rather than
+         pushing its own contents inward */
+      padding: 32px 24px;
+      margin: 40px -24px 0;
+    }
+    .timeline-box .section-heading { margin-bottom: 8px; }
+    .timeline { display: flex; gap: 0; position: relative; }
     .timeline::before {
       content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
     }
@@ -968,13 +1001,17 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F4F9FD;
+      /* the ring punches the dot out of the rail, so it wears the surface
+         it sits on — the panel now, not the page */
+      background: #1A1A1A; border: 3px solid #E1EFFA;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
+    /* white on the tinted panel: the chip used to be #E4F1FA, which is a
+       neighbour of the panel and would have all but vanished on it */
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #E4F1FA;
+      display: inline-block; font-size: 11px; color: #6B6B6B; background: #FFFFFF;
       padding: 3px 8px; border-radius: 4px; margin-top: auto; align-self: flex-start;
     }
 
@@ -1437,6 +1474,7 @@
 
     <!-- 02 — PROCESS -->
     <section id="section-02" class="case-section reveal">
+      <div class="timeline-box">
       <h2 class="section-heading"><span class="section-num">02</span> Roadmap</h2>
       <div class="timeline" tabindex="0" role="group" aria-label="Roadmap, six phases — scrollable">
         <div class="timeline-step">
@@ -1475,6 +1513,7 @@
           <p class="timeline-desc">Tracked adoption, task success, and friction points after launch. The platform keeps evolving based on real usage data.</p>
           <span class="timeline-tag">Analytics &middot; iteration</span>
         </div>
+      </div>
       </div>
     </section>
 
