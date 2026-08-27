@@ -454,6 +454,14 @@
     .uf-key-mark--end { background: var(--uf-end-bg); border: 1px solid var(--uf-end-bd); border-radius: 100px; }
     .uf-key-mark--outside { background: transparent; border: 1px dashed var(--uf-neutral-bd); }
 
+    .uf-panel { display: none; }
+    .uf-panel.active { display: block; }
+    .uf-tabs { margin-top: 20px; }
+    .uf-who {
+      margin: 18px 0 0; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;
+    }
+
     .uf-stage {
       margin-top: 14px; padding: 4px 0 10px;
       background: var(--uf-stage-bg); border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
@@ -925,6 +933,11 @@
       z-index: 3;
       background: #F8F8F8;
       padding-left: 0;
+      /* the lane name reads against the middle of its band, not its top edge:
+         the cells beside it are cards, and a label hanging off the top of a
+         three-line card looks unattached to it. Same specificity note as
+         above — .journey-map th sets vertical-align: top and would win. */
+      vertical-align: middle;
     }
     .jm-stage,
     .jm-cell { width: var(--jm-cell); }
@@ -1843,7 +1856,7 @@
       </div>
 
       <h3 class="subsection-heading">User flows &mdash; 5 flows</h3>
-      <p class="section-text">Five flows cover the platform. This is the first one &mdash; a data scientist going from signed out to holding access. The other four stay under NDA.</p>
+      <p class="section-text">Five flows cover the platform. Three are here: the two sides of getting access, and the one that puts a product on the shelf in the first place. The other two stay under NDA.</p>
 
       <div class="uf-vars">
         <div class="uf-key" aria-hidden="true">
@@ -1855,9 +1868,16 @@
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--outside"></span>Off-flow</span>
         </div>
 
-        <div class="uf-stage">
-          <div class="uf-flow" tabindex="0" role="group" aria-label="Find and get access to a data product, read left to right &mdash; scrollable">
-            <div class="uf-track">
+        <div class="phase-toggle uf-tabs" role="tablist" aria-label="User flows">
+          <button class="phase-toggle-btn active" type="button" role="tab" data-uf="uf-1" id="uf-1-tab" aria-controls="uf-1" aria-selected="true" tabindex="0">Find and get access</button>
+          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-2" id="uf-2-tab" aria-controls="uf-2" aria-selected="false" tabindex="-1">Publish a product</button>
+          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-3" id="uf-3-tab" aria-controls="uf-3" aria-selected="false" tabindex="-1">Decide on a request</button>
+        </div>
+        <div class="uf-panel active" id="uf-1" role="tabpanel" aria-labelledby="uf-1-tab">
+          <p class="uf-who">Group 1 &middot; Data scientist / engineer</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="Find and get access to a data product, read left to right &mdash; scrollable">
+              <div class="uf-track">
                 <div class="uf-step uf-step--end">
                   <span class="uf-step-kind">Start</span>
                   <span class="uf-step-title">Opens the web app</span>
@@ -1968,9 +1988,171 @@
                     </div>
                   </div>
                 </div>
+              </div>
             </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
           </div>
-          <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+        </div>
+        <div class="uf-panel" id="uf-2" role="tabpanel" aria-labelledby="uf-2-tab" hidden>
+          <p class="uf-who">Group 3 &middot; Data product owner</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="Publish a data product, read left to right &mdash; scrollable">
+              <div class="uf-track">
+                <div class="uf-step uf-step--end">
+                  <span class="uf-step-kind">Start</span>
+                  <span class="uf-step-title">Clicks &ldquo;Add data product&rdquo;</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--screen">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Add data product</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Pick the source product</span>
+                  <span class="uf-step-line">the selector lists only what belongs to this owner</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Pull everything from Databricks</span>
+                  <span class="uf-step-line">title, type, PSL, domain, tags, schema, lineage, usage</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-dec"><div class="uf-dec-in">
+                    <span class="uf-step-kind">Decision</span>
+                    <span class="uf-step-title">Anything to fix first?</span>
+                    <span class="uf-step-line">preview before publishing, or save as a draft</span>
+                </div></div>
+                <div class="uf-branches">
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Changes needed</span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Edit fields and access groups</span>
+                  <span class="uf-step-line">edits go back to Databricks; four AD groups, viewers and editors, per sensitivity</span>
+                </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Looks right</span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Preview, or save as a draft</span>
+                </div>
+                  </div>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Publish to the marketplace</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Live on the catalogue</span>
+                </div>
+              </div>
+            </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+          </div>
+        </div>
+        <div class="uf-panel" id="uf-3" role="tabpanel" aria-labelledby="uf-3-tab" hidden>
+          <p class="uf-who">Group 3 &middot; Data product owner, answering Group 1</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="Decide on an access request, read left to right &mdash; scrollable">
+              <div class="uf-track">
+                <div class="uf-step uf-step--end">
+                  <span class="uf-step-kind">Start</span>
+                  <span class="uf-step-title">Engineer requests access</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Is the product sensitive?</span>
+                  <span class="uf-step-line">the fork the whole flow turns on</span>
+                </div>
+                <div class="uf-branches">
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Not sensitive</span>
+                    <div class="uf-step uf-step--action">
+                      <span class="uf-step-kind">Action</span>
+                      <span class="uf-step-title">Access granted for 7 days</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-step uf-step--system">
+                      <span class="uf-step-kind">System</span>
+                      <span class="uf-step-title">Owner notified, expiry set</span>
+                      <span class="uf-step-line">the product lands on the requester&rsquo;s My data access</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-step uf-step--action">
+                      <span class="uf-step-kind">Action</span>
+                      <span class="uf-step-title">Owner reviews</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-branches">
+                      <div class="uf-branch">
+                        <span class="uf-branch-label">Extend</span>
+                      <div class="uf-step uf-step--action">
+                        <span class="uf-step-kind">Action</span>
+                        <span class="uf-step-title">Extends and sets permissions</span>
+                      </div>
+                      </div>
+                      <div class="uf-branch">
+                        <span class="uf-branch-label">Let it lapse</span>
+                      <div class="uf-step uf-step--action">
+                        <span class="uf-step-kind">Action</span>
+                        <span class="uf-step-title">Access ends after 7 days</span>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Sensitive</span>
+                    <div class="uf-step uf-step--action">
+                      <span class="uf-step-kind">Action</span>
+                      <span class="uf-step-title">Request goes to the owner</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-step uf-step--system">
+                      <span class="uf-step-kind">System</span>
+                      <span class="uf-step-title">Owner notified, request queued</span>
+                      <span class="uf-step-line">it appears on the Requests page</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-dec"><div class="uf-dec-in">
+                        <span class="uf-step-kind">Decision</span>
+                        <span class="uf-step-title">Owner&rsquo;s call</span>
+                    </div></div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-branches">
+                      <div class="uf-branch">
+                        <span class="uf-branch-label">Approve</span>
+                      <div class="uf-step uf-step--action">
+                        <span class="uf-step-kind">Action</span>
+                        <span class="uf-step-title">Approves and sets an expiry</span>
+                      </div>
+                      </div>
+                      <div class="uf-branch">
+                        <span class="uf-branch-label">Reject</span>
+                      <div class="uf-step uf-step--action">
+                        <span class="uf-step-kind">Action</span>
+                        <span class="uf-step-title">Rejects the request</span>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Requester told the outcome</span>
+                </div>
+              </div>
+            </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+          </div>
         </div>
 
       </div>
@@ -3258,6 +3440,42 @@
     })();
   
   
+    // ——— USER FLOW TABS ———
+    // Same tablist behaviour as the journey map above: arrows, Home and End
+    // move between flows, and only the open panel is exposed.
+    (function () {
+      var tablist = document.querySelector('.uf-tabs');
+      if (!tablist) return;
+      var tabs = [].slice.call(tablist.querySelectorAll('.phase-toggle-btn[data-uf]'));
+
+      function select(btn, focus) {
+        tabs.forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+          b.setAttribute('tabindex', on ? '0' : '-1');
+          var panel = document.getElementById(b.dataset.uf);
+          if (!panel) return;
+          panel.classList.toggle('active', on);
+          if (on) panel.removeAttribute('hidden');
+          else panel.setAttribute('hidden', '');
+        });
+        if (focus) btn.focus();
+        // a hidden panel measures as zero, so its rail has to redraw once shown
+        window.dispatchEvent(new Event('resize'));
+      }
+
+      tabs.forEach(function (btn, i) {
+        btn.addEventListener('click', function () { select(btn); });
+        btn.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (d) { e.preventDefault(); select(tabs[(i + d + tabs.length) % tabs.length], true); }
+          else if (e.key === 'Home') { e.preventDefault(); select(tabs[0], true); }
+          else if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+        });
+      });
+    })();
+
     // ——— USER FLOW: the drawn scrollbar ———
     // Ported with the component from the Rebalancer case. macOS overlay
     // scrollbars reserve no space and fade when idle, so the affordance this
