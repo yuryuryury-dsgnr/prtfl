@@ -509,10 +509,20 @@
       color: #6B6B6B; line-height: 1.35;
     }
 
-    /* a step boundary — a lane crossing the track, named above it */
-    .uf-bound { position: relative; flex: 0 0 1px; align-self: stretch; margin: 0 32px; border-left: 1px dashed rgba(0,0,0,0.34); }
+    /* The step marker is an arrow like every other connector, with the step
+       named above it. It used to be a dashed lane crossing the track, which
+       drew a wall across a path that does not actually stop there — the flow
+       runs straight through a step change. */
+    /* wide enough for the longest step name to sit over it without the
+       label's background painting across the nodes on either side */
+    .uf-bound { position: relative; flex: 0 0 208px; height: 1px; margin: 0 10px; background: rgba(0,0,0,0.22); }
+    .uf-bound::after {
+      content: ''; position: absolute; right: 0; top: 50%;
+      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
+    }
     .uf-bound-label {
-      position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%);
+      position: absolute; left: 50%; bottom: 11px; transform: translateX(-50%);
       white-space: nowrap; background: var(--uf-stage-bg); padding: 0 8px;
       font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6B6B;
     }
@@ -541,9 +551,6 @@
     .uf-dec, .uf-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
     .uf-dec-in { background: var(--uf-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; width: 190px; }
 
-    .uf-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
-    .uf-note + .uf-note { margin-top: 12px; }
-    .uf-note b { color: #1A1A1A; font-weight: 500; }
 
     /* ——— HANDOFF ——— */
     
@@ -1844,13 +1851,17 @@
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--action"></span>Action</span>
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--system"></span>System</span>
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--decision"></span>Decision</span>
-          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--end"></span>End</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--end"></span>Start / End</span>
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--outside"></span>Off-flow</span>
         </div>
 
         <div class="uf-stage">
           <div class="uf-flow" tabindex="0" role="group" aria-label="Find and get access to a data product, read left to right &mdash; scrollable">
             <div class="uf-track">
+                <div class="uf-step uf-step--end">
+                  <span class="uf-step-kind">Start</span>
+                  <span class="uf-step-title">Opens the web app</span>
+                </div>
                 <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 1 &middot; Sign in</span></div>
                 <div class="uf-step">
                   <span class="uf-step-kind">Screen</span>
@@ -1962,8 +1973,6 @@
           <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
         </div>
 
-        <p class="uf-note">Three back-edges are named here rather than drawn, because a line returning three columns to the left reads as a knot. <b>Search and filters return to the catalogue</b> when nothing fits; <b>a product that fails the trust check returns there too</b>.</p>
-        <p class="uf-note">A request the system can settle on its own &mdash; low sensitivity, permissions already in place &mdash; <b>skips step 4 entirely</b> and lands straight on access granted. Step 4 exists for the requests that need a human owner.</p>
       </div>
 
       <h3 class="subsection-heading">User journey maps &mdash; 4 groups</h3>
