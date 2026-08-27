@@ -423,6 +423,128 @@
       .mockup-gallery .ds-theme-bar { justify-content: flex-start; }
     }
 
+    /* ——— USER FLOW (§04) ———
+       Ported from the Rebalancer case, which already had this component; the
+       prefix is uf- rather than rb- because on this page rb- would name the
+       wrong project. Node types are told apart by shape and stroke as well as
+       fill, so the diagram survives being read without colour.
+
+       The board this came from is 7035px wide across four steps. Drawn
+       left→right on one track, the steps become lanes separated by a labelled
+       boundary, and the two places the path genuinely splits become forks.
+       The back-edges — search that finds nothing, a product that doesn't fit —
+       are carried by the note under the diagram rather than drawn, because a
+       line returning three columns to the left reads as a knot, not a path. */
+    .uf-vars {
+      --uf-screen-bg:   #E8EDF3;  --uf-screen-bd:   #BDCBDC;
+      --uf-action-bg:   #E7EEE8;  --uf-action-bd:   #BECFC1;
+      --uf-system-bg:   #EFECF5;  --uf-system-bd:   #C5BED5;
+      --uf-decision-bg: #F2EBDF;  --uf-decision-bd: #D6C7AF;
+      --uf-end-bg:      #F7EBE9;  --uf-end-bd:      #D7BCB7;
+      --uf-neutral-bd:  rgba(0,0,0,0.28);
+      --uf-stage-bg:    #EDEDED;
+    }
+    .uf-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; }
+    .uf-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #6B6B6B; }
+    .uf-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .uf-key-mark--screen { background: var(--uf-screen-bg); border: 1px solid var(--uf-screen-bd); }
+    .uf-key-mark--action { background: var(--uf-action-bg); border: 1px solid var(--uf-action-bd); border-radius: 100px; }
+    .uf-key-mark--system { background: var(--uf-system-bg); border: 1px dotted var(--uf-system-bd); }
+    .uf-key-mark--decision { background: var(--uf-decision-bd); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
+    .uf-key-mark--end { background: var(--uf-end-bg); border: 1px solid var(--uf-end-bd); border-radius: 100px; }
+    .uf-key-mark--outside { background: transparent; border: 1px dashed var(--uf-neutral-bd); }
+
+    .uf-stage {
+      margin-top: 14px; padding: 4px 0 10px;
+      background: var(--uf-stage-bg); border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
+    }
+    /* A drawn scrollbar rather than the native one: macOS resolves scrollbars
+       to overlays that reserve no space and fade when idle, so the one
+       affordance this area exists to give would be invisible exactly when it
+       is needed. This one is always on, and draggable. */
+    .uf-stage-bar {
+      position: relative; height: 6px; margin: 2px 14px 4px;
+      border-radius: 100px; background: rgba(0,0,0,0.09);
+      cursor: grab; touch-action: none; overflow: hidden;
+    }
+    .uf-stage-bar[hidden] { display: none; }
+    .uf-stage-bar:active { cursor: grabbing; }
+    .uf-stage-bar-thumb {
+      position: absolute; top: 0; left: 0; height: 100%; min-width: 28px;
+      border-radius: 100px; background: rgba(0,0,0,0.30);
+      transition: background 150ms ease;
+    }
+    .uf-stage-bar:hover .uf-stage-bar-thumb { background: rgba(0,0,0,0.44); }
+
+    .uf-flow {
+      margin-top: 0; padding: 0 14px 10px; max-width: 100%; min-width: 0;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    .uf-flow::-webkit-scrollbar { display: none; }
+    .uf-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    /* 20 top clears the boundary label that hangs above the lane */
+    .uf-track { display: flex; align-items: center; width: max-content; padding: 20px 20px 14px 2px; }
+
+    .uf-link { flex: 0 0 30px; position: relative; height: 1px; background: rgba(0,0,0,0.22); }
+    .uf-link::after {
+      content: ''; position: absolute; right: 0; top: 50%;
+      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
+    }
+
+    .uf-branches { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 48px; flex: 0 0 auto; }
+    .uf-branches::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.24); }
+    .uf-branches::after { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    .uf-branch { position: relative; display: flex; align-items: center; }
+    .uf-branch::before { content: ''; position: absolute; left: -24px; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    /* these trim the spine above the first branch and below the last by
+       painting over it, so they match what is behind the rail — the stage */
+    .uf-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
+    .uf-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
+    .uf-branch-label {
+      flex: 0 0 auto; max-width: 118px; margin-right: 12px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
+      color: #6B6B6B; line-height: 1.35;
+    }
+
+    /* a step boundary — a lane crossing the track, named above it */
+    .uf-bound { position: relative; flex: 0 0 1px; align-self: stretch; margin: 0 32px; border-left: 1px dashed rgba(0,0,0,0.34); }
+    .uf-bound-label {
+      position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%);
+      white-space: nowrap; background: var(--uf-stage-bg); padding: 0 8px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6B6B;
+    }
+
+    .uf-step {
+      display: inline-flex; flex-direction: column; gap: 3px;
+      flex: 0 0 196px; width: 196px; padding: 11px 15px;
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
+      position: relative;
+    }
+    .uf-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #6B6B6B; }
+    .uf-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
+    .uf-step-line { font-size: 12px; color: #6B6B6B; line-height: 1.45; }
+    .uf-step--screen { background: var(--uf-screen-bg); border-color: var(--uf-screen-bd); }
+    .uf-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--uf-action-bg); border-color: var(--uf-action-bd); }
+    .uf-step--system { border-style: dotted; background: var(--uf-system-bg); border-color: var(--uf-system-bd); }
+    .uf-step--outside { border-style: dashed; border-color: var(--uf-neutral-bd); background: transparent; }
+    .uf-step--outside .uf-step-title { color: #6B6B6B; }
+    .uf-step--end {
+      background: var(--uf-end-bg); border-color: var(--uf-end-bd);
+      border-radius: 100px; padding-left: 19px; padding-right: 19px;
+    }
+    /* decision: a hexagon built from two clipped layers, so the outer one
+       shows through as a 1px outline and the shape reads as stroked */
+    .uf-dec { display: inline-block; padding: 1px; background: var(--uf-decision-bd); flex: 0 0 auto; }
+    .uf-dec, .uf-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
+    .uf-dec-in { background: var(--uf-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; width: 190px; }
+
+    .uf-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
+    .uf-note + .uf-note { margin-top: 12px; }
+    .uf-note b { color: #1A1A1A; font-weight: 500; }
+
     /* ——— HANDOFF ——— */
     
     
@@ -1714,9 +1836,134 @@
       </div>
 
       <h3 class="subsection-heading">User flows &mdash; 5 flows</h3>
-      <div class="subsection-nda">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span>Protected under NDA</span>
+      <p class="section-text">Five flows cover the platform. This is the first one &mdash; a data scientist going from signed out to holding access. The other four stay under NDA.</p>
+
+      <div class="uf-vars">
+        <div class="uf-key" aria-hidden="true">
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--screen"></span>Screen</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--action"></span>Action</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--system"></span>System</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--decision"></span>Decision</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--end"></span>End</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--outside"></span>Off-flow</span>
+        </div>
+
+        <div class="uf-stage">
+          <div class="uf-flow" tabindex="0" role="group" aria-label="Find and get access to a data product, read left to right &mdash; scrollable">
+            <div class="uf-track">
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 1 &middot; Sign in</span></div>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Login page</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Enter credentials, pick a role</span>
+                  <span class="uf-step-line">the role is asked once, on first sign-in</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Validate and sign in</span>
+                </div>
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 2 &middot; Find the data</span></div>
+                <div class="uf-step uf-step--screen">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">All data products</span>
+                  <span class="uf-step-line">the whole catalogue, unfiltered</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-dec"><div class="uf-dec-in">
+                    <span class="uf-step-kind">Decision</span>
+                    <span class="uf-step-title">Three ways in</span>
+                </div></div>
+                <div class="uf-branches">
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Search</span>
+                    <div class="uf-step uf-step--action">
+                      <span class="uf-step-kind">Action</span>
+                      <span class="uf-step-title">Search by name or question</span>
+                    </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Filter</span>
+                    <div class="uf-step uf-step--action">
+                      <span class="uf-step-kind">Action</span>
+                      <span class="uf-step-title">Filter down</span>
+                      <span class="uf-step-line">domain, owner, certification</span>
+                    </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Browse</span>
+                    <div class="uf-step uf-step--action">
+                      <span class="uf-step-kind">Action</span>
+                      <span class="uf-step-title">Drill into the catalogue</span>
+                    </div>
+                  </div>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-dec"><div class="uf-dec-in">
+                    <span class="uf-step-kind">Decision</span>
+                    <span class="uf-step-title">Anything that fits?</span>
+                </div></div>
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 3 &middot; Judge and request</span></div>
+                <div class="uf-step uf-step--screen">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Data product page</span>
+                  <span class="uf-step-line">schema, lineage, quality, owner</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-dec"><div class="uf-dec-in">
+                    <span class="uf-step-kind">Decision</span>
+                    <span class="uf-step-title">Certified and trusted?</span>
+                    <span class="uf-step-line">the question the whole page has to answer</span>
+                </div></div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Request access</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Check sensitivity and permissions</span>
+                </div>
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 4 &middot; Track the request</span></div>
+                <div class="uf-step uf-step--screen">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Track access requests</span>
+                  <span class="uf-step-line">every request and where it stands</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Email on the owner&rsquo;s decision</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-branches">
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Approved</span>
+                    <div class="uf-step uf-step--end">
+                      <span class="uf-step-kind">End</span>
+                      <span class="uf-step-title">Access granted</span>
+                    </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Rejected</span>
+                    <div class="uf-step uf-step--outside">
+                      <span class="uf-step-kind">Off-flow</span>
+                      <span class="uf-step-title">Reason shown, back to the catalogue</span>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+        </div>
+
+        <p class="uf-note">Three back-edges are named here rather than drawn, because a line returning three columns to the left reads as a knot. <b>Search and filters return to the catalogue</b> when nothing fits; <b>a product that fails the trust check returns there too</b>.</p>
+        <p class="uf-note">A request the system can settle on its own &mdash; low sensitivity, permissions already in place &mdash; <b>skips step 4 entirely</b> and lands straight on access granted. Step 4 exists for the requests that need a human owner.</p>
       </div>
 
       <h3 class="subsection-heading">User journey maps &mdash; 4 groups</h3>
@@ -3002,6 +3249,56 @@
     })();
   
   
+    // ——— USER FLOW: the drawn scrollbar ———
+    // Ported with the component from the Rebalancer case. macOS overlay
+    // scrollbars reserve no space and fade when idle, so the affordance this
+    // wide diagram most needs would be invisible exactly when it is needed.
+    // This rail is always on, mirrors the flow's position, and is draggable.
+    (function () {
+      var bars = [].slice.call(document.querySelectorAll('.uf-stage-bar'));
+      if (!bars.length) return;
+      bars.forEach(function (bar) {
+        var flow = bar.previousElementSibling;
+        if (!flow || !flow.classList.contains('uf-flow')) return;
+        var thumb = bar.querySelector('.uf-stage-bar-thumb');
+
+        function draw() {
+          var max = flow.scrollWidth - flow.clientWidth;
+          if (max <= 4) { bar.hidden = true; return; }
+          bar.hidden = false;
+          var ratio = flow.clientWidth / flow.scrollWidth;
+          var w = Math.min(bar.clientWidth, Math.max(28, bar.clientWidth * ratio));
+          thumb.style.width = w + 'px';
+          thumb.style.transform =
+            'translateX(' + (flow.scrollLeft / max) * (bar.clientWidth - w) + 'px)';
+        }
+
+        function scrollTo(clientX) {
+          var r = bar.getBoundingClientRect();
+          var w = thumb.offsetWidth;
+          var travel = r.width - w;
+          if (travel <= 0) return;
+          var x = Math.min(Math.max(clientX - r.left - w / 2, 0), travel);
+          flow.scrollLeft = (x / travel) * (flow.scrollWidth - flow.clientWidth);
+        }
+
+        var dragging = false;
+        bar.addEventListener('pointerdown', function (e) {
+          dragging = true;
+          bar.setPointerCapture(e.pointerId);
+          scrollTo(e.clientX);
+          e.preventDefault();
+        });
+        bar.addEventListener('pointermove', function (e) { if (dragging) scrollTo(e.clientX); });
+        bar.addEventListener('pointerup', function () { dragging = false; });
+        bar.addEventListener('pointercancel', function () { dragging = false; });
+
+        flow.addEventListener('scroll', draw, { passive: true });
+        window.addEventListener('resize', draw);
+        draw();
+      });
+    })();
+
     // ——— EDGE FADE ———
     // Finds the containers that actually scroll sideways and marks which side
     // still has content. No selector list to keep in sync: it asks the layout,
