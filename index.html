@@ -277,12 +277,6 @@
       margin-bottom: 10px;
     }
 
-    .case-role {
-      font-size: 14px;
-      color: #6B6B6B;
-      margin-bottom: 4px;
-    }
-
     .case-result {
       font-size: 14px;
       color: #6B6B6B;
@@ -533,7 +527,6 @@
           </div>
           <div class="case-body">
             <h3 class="case-name">Data Marketplace · Halliburton</h3>
-            <p class="case-role">Lead UX — enterprise data platform</p>
             <p class="case-result">Cut data search from weeks to minutes</p>
             <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
@@ -548,7 +541,6 @@
           </div>
           <div class="case-body">
             <h3 class="case-name">Rebalancer</h3>
-            <p class="case-role">Solo Lead UX + AI</p>
             <p class="case-result">Built solo, shipped to App Store</p>
             <div class="case-links-row">
               <a href="cases/rebalancer/" class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></a>
@@ -565,7 +557,6 @@
           </div>
           <div class="case-body">
             <h3 class="case-name">DobroDoc+</h3>
-            <p class="case-role">Product Designer — mobile redesign</p>
             <p class="case-result">Cut booking time 40% in usability tests</p>
             <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
@@ -579,7 +570,6 @@
           </div>
           <div class="case-body">
             <h3 class="case-name">dopas.dp.ua</h3>
-            <p class="case-role">Product Designer — end-to-end</p>
             <p class="case-result">Launched from zero, now generating revenue</p>
             <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
           </div>
@@ -654,7 +644,7 @@
         });
 
         // Text cursor for paragraphs and headings
-        // a case card is an <a> wrapping an h3 and two <p>s, so without this the
+        // a case card is an <a> wrapping an h3 and a <p>, so without this the
         // text caret wins over the link ring on the page's only clickable element
         var textEls = Array.prototype.filter.call(
           document.querySelectorAll('p, h1, h2, h3'),
