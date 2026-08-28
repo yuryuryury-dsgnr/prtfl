@@ -79,6 +79,37 @@
     .topnav-link--secondary { color: #6B6B6B; }
     .topnav-link--secondary:hover { color: #1A1A1A; }
 
+    /* ——— MOBILE MENU ———
+       Two bars rather than three: with only two links behind it, three would
+       promise a menu that isn't there. Closed they are parallel; open they
+       cross, each rotating from its own end so the X draws itself rather than
+       snapping into place. The 40ms offset between them is what makes it read
+       as a movement instead of a state change.
+
+       One set of links in the DOM: on desktop .topnav-links is the inline row
+       it always was, and under 768 the same element becomes the sheet. Nothing
+       is duplicated, so nothing can drift. */
+    .navburger {
+      display: none;
+      width: 44px; height: 44px; margin-right: -10px;
+      align-items: center; justify-content: center;
+      background: none; border: 0; padding: 0; cursor: pointer;
+      color: #1A1A1A;
+    }
+    .navburger-box { position: relative; display: block; width: 22px; height: 12px; }
+    .navburger-box i {
+      position: absolute; left: 0; width: 100%; height: 1.5px;
+      background: currentColor; border-radius: 2px;
+      transition: transform 380ms cubic-bezier(.2,.9,.3,1.25),
+                  width 380ms cubic-bezier(.2,.9,.3,1.25);
+      transform-origin: 50% 50%;
+    }
+    .navburger-box i:nth-child(1) { top: 0; }
+    .navburger-box i:nth-child(2) { bottom: 0; transition-delay: 40ms; }
+    .topnav.is-open .navburger-box i:nth-child(1) { transform: translateY(5.25px) rotate(45deg); }
+    .topnav.is-open .navburger-box i:nth-child(2) { transform: translateY(-5.25px) rotate(-45deg); }
+    .navburger:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 2px; border-radius: 6px; }
+
     /* ——— CUSTOM CURSOR ——— */
     .cursor-dot {
       position: fixed;
@@ -420,14 +451,38 @@
       /* the pill supplies its own vertical air, so the nav no longer needs
          24px of it on top of that */
       .topnav { padding: 16px 0; }
-      .topnav-inner { flex-wrap: wrap; gap: 16px; }
-      .topnav-links { gap: 12px; }
+      /* the row stays one line now; the links move into the sheet below it */
+      .navburger { display: inline-flex; }
+      .topnav { position: relative; }
+      .topnav-inner { flex-wrap: nowrap; gap: 16px; }
+      .topnav-links {
+        position: absolute; left: 0; right: 0; top: 100%;
+        z-index: 40;
+        flex-direction: column; align-items: stretch; gap: 4px;
+        background: #FCFCFC;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        padding: 6px 24px 18px;
+        /* clip-path rather than height: the sheet has no fixed height to
+           animate to, and clipping never reflows the links inside it */
+        clip-path: inset(0 0 100% 0);
+        transition: clip-path 420ms cubic-bezier(.16,1,.3,1);
+        pointer-events: none;
+      }
+      .topnav.is-open .topnav-links { clip-path: inset(0 0 -20% 0); pointer-events: auto; }
+      .topnav-links .topnav-link {
+        opacity: 0; transform: translateY(10px);
+        transition: opacity 260ms ease, transform 260ms cubic-bezier(.16,1,.3,1);
+      }
+      .topnav.is-open .topnav-links .topnav-link { opacity: 1; transform: none; }
+      .topnav.is-open .topnav-links .topnav-link:nth-child(1) { transition-delay: 90ms; }
+      .topnav.is-open .topnav-links .topnav-link:nth-child(2) { transition-delay: 150ms; }
+      /* the sheet stacks, so the pill no longer needs to jump the queue */
+      .topnav-link--primary { order: 0; padding: 0 16px; }
 
       /* The row is left-aligned here, so the prominent slot is the first one —
          the opposite of the right-aligned desktop row. Bare text lines are also
          too small to hit with a thumb, hence the 44px floor. */
       .topnav-link { min-height: 44px; display: inline-flex; align-items: center; }
-      .topnav-link--primary { order: -1; padding: 0 16px; }
       .topnav-link--primary:active {
         border-color: rgba(0,0,0,0.36);
         background: rgba(0,0,0,0.025);
@@ -491,7 +546,11 @@
   <nav class="topnav">
     <div class="container topnav-inner">
       <a href="/" class="topnav-logo">Portfolio — Yurii Fokin</a>
-      <div class="topnav-links">
+      <button class="navburger" type="button" id="navburger" aria-expanded="false" aria-controls="topnavLinks">
+        <span class="visually-hidden">Menu</span>
+        <span class="navburger-box" aria-hidden="true"><i></i><i></i></span>
+      </button>
+      <div class="topnav-links" id="topnavLinks">
         <a href="assets/CV_Yurii_Fokin.pdf" download class="topnav-link topnav-link--secondary">Download CV ↓</a>
         <a href="mailto:yuryuryury@icloud.com" class="topnav-link topnav-link--primary">Get in touch →</a>
       </div>
@@ -601,6 +660,48 @@
   <div class="cursor-ring"></div>
 
   <script>
+    // ——— MOBILE MENU ———
+    // The sheet is the same .topnav-links element the desktop row uses, so
+    // there is nothing to keep in sync. Everything below is state and exits.
+    (function () {
+      var nav = document.querySelector('.topnav');
+      var btn = document.getElementById('navburger');
+      var sheet = document.getElementById('topnavLinks');
+      if (!nav || !btn || !sheet) return;
+
+      function setOpen(on) {
+        nav.classList.toggle('is-open', on);
+        btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+      }
+      var isOpen = function () { return nav.classList.contains('is-open'); };
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setOpen(!isOpen());
+      });
+
+      // tapping a link is a decision, so the sheet gets out of the way
+      sheet.addEventListener('click', function (e) {
+        if (e.target.closest('a')) setOpen(false);
+      });
+
+      document.addEventListener('click', function (e) {
+        if (isOpen() && !nav.contains(e.target)) setOpen(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isOpen()) { setOpen(false); btn.focus(); }
+      });
+
+      // crossing back to the desktop row with the sheet open would leave
+      // is-open set on a layout that has no sheet. resize rather than a
+      // matchMedia listener: it fires under every path that can change the
+      // layout, including an orientation change on a tablet.
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 768 && isOpen()) setOpen(false);
+      });
+    })();
+
     // ——— CUSTOM CURSOR ———
     (function() {
       if (window.matchMedia('(pointer: coarse)').matches) return;

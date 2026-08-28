@@ -169,25 +169,8 @@
     .flow-caption { font-size: 13px; color: #6B6B6B; margin-top: 16px; text-align: center; }
 
     /* ——— WIREFRAMES / MOCKUPS GRID ——— */
-    .wireframe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
-    .wireframe-item {}
-    .wireframe-placeholder {
-      background: #E8E8E8; border-radius: 8px; aspect-ratio: 4/3;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; color: #6B6B6B; font-weight: 500;
-    }
-    .wireframe-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
-    .wireframe-full { grid-column: 1 / -1; max-width: 400px; margin: 0 auto; width: 100%; }
 
     /* ——— BEFORE / AFTER ——— */
-    .ba-pair { margin-bottom: 40px; }
-    .ba-pair-title { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
-    .ba-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .ba-label {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-      color: #6B6B6B; margin-bottom: 8px;
-    }
-    .ba-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
 
     /* ——— OUTCOME ——— */
     .outcome-text { color: #6B6B6B; margin-bottom: 24px; max-width: 640px; }
@@ -278,8 +261,6 @@
       .section-heading { font-size: 32px; }
       .card-grid-3 { grid-template-columns: 1fr; }
       .card-grid-2 { grid-template-columns: 1fr; }
-      .wireframe-grid { grid-template-columns: 1fr; }
-      .ba-columns { grid-template-columns: 1fr; }
       /* Mobile: the process stays a horizontal rail and scrolls, instead of
          unrolling into a tall vertical list. The container rail can't be used
          here — an absolutely positioned ::before on a scroll container stops
@@ -317,7 +298,6 @@
       .next-case { flex-direction: column; gap: 8px; text-align: center; }
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
-      .wireframe-full { max-width: 100%; }
       .case-section { padding: 64px 0 0; }
     }
       /* Visible only when focused: a keyboard user should not have to tab
@@ -367,32 +347,14 @@
     @media (max-width: 600px) {
       .card-grid-3,
       .card-grid-2,
-      .wireframe-grid {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: stretch;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scroll-snap-type: x proximity;
-      }
       .card-grid-3::-webkit-scrollbar,
       .card-grid-2::-webkit-scrollbar,
-      .wireframe-grid::-webkit-scrollbar { display: none; }
       .card-grid-3:focus-visible,
       .card-grid-2:focus-visible,
-      .wireframe-grid:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
       .card-grid-3 > .card,
       .card-grid-2 > .card,
-      .wireframe-grid > .wireframe-item { scroll-snap-align: start; }
       .card-grid-3 > .card { flex: 0 0 80%; }
       .card-grid-2 > .card { flex: 0 0 80%; }
-      .wireframe-grid > .wireframe-item { flex: 0 0 78%; }
     }
 
 
@@ -661,121 +623,7 @@
       </div>
     </section>
 
-    <!-- 06 — WIREFRAMES -->
-    <section id="section-06" class="case-section">
-      <h2 class="section-heading">Wireframes</h2>
-      <p class="section-text">Lo-fi wireframes defined the core structure before any visual design decisions were made.</p>
-      <div class="wireframe-grid" tabindex="0" role="group" aria-label="Wireframes — scrollable">
-        <div class="wireframe-item">
-          <div class="wireframe-placeholder">Homepage</div>
-          <p class="wireframe-caption">Entry point. Search widget front and centre — destination, date, passenger count.</p>
-        </div>
-        <div class="wireframe-item">
-          <div class="wireframe-placeholder">Search results</div>
-          <p class="wireframe-caption">Filterable list. Price, duration, and departure time visible without opening the ticket.</p>
-        </div>
-        <div class="wireframe-item">
-          <div class="wireframe-placeholder">Seat selection</div>
-          <p class="wireframe-caption">Interactive bus map. Colour-coded by availability. One tap to select.</p>
-        </div>
-        <div class="wireframe-item">
-          <div class="wireframe-placeholder">Passenger info</div>
-          <p class="wireframe-caption">Minimal form — only required fields. Luggage toggle added after usability study.</p>
-        </div>
-        <div class="wireframe-item wireframe-full">
-          <div class="wireframe-placeholder">Checkout</div>
-          <p class="wireframe-caption">Full price breakdown and cancellation policy visible before payment.</p>
-        </div>
-      </div>
-    </section>
 
-    <!-- 07 — MOCKUPS: BEFORE / AFTER -->
-    <section id="section-07" class="case-section">
-      <h2 class="section-heading">Before / After</h2>
-      <p class="section-text">High-fidelity screens reflecting changes made after two rounds of usability testing.</p>
-
-      <div style="margin-top: 32px;">
-        <div class="ba-pair">
-          <p class="ba-pair-title">01 — Homepage</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Search buried below fold, no round-trip option</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Search front and centre, round-trip toggle added</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">02 — Search results</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Price shown without fees, no filters</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Full price on card, filters by time and price</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">03 — Seat selection</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Appeared after passenger info form</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Moved before passenger info — matches mental model</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">04 — Passenger info</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">8 fields, optional and required mixed</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">5 required fields, luggage toggle inline</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">05 — Checkout</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">First time user sees total with fees</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Full breakdown + cancellation policy upfront</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- 08 — OUTCOME -->
     <section id="section-08" class="case-section">
@@ -805,10 +653,8 @@
       <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> Market</a>
       <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> User flows</a>
       <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Usability</a>
-      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Wireframes</a>
-      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Before / After</a>
-      <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Outcome</a>
-      <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Reflection</a>
+      <a href="#section-08" data-section="section-08"><span class="pill-num">06</span> Outcome</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">07</span> Reflection</a>
     </nav>
     <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
       <span class="toc-pill-num" id="tocPillNum">01</span>
