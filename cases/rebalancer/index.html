@@ -96,7 +96,7 @@
     }
 
     /* ——— SECTIONS ——— */
-    .case-section { padding: 104px 0 0; scroll-margin-top: 76px; }
+    .case-section { padding: 104px 0 0; }
     /* the number rides on the heading line now, at the heading's own size.
        The space before the title is a real one — without it a screen reader
        announces "01Roadmap" as a single word — so the margin carries only
@@ -1637,11 +1637,10 @@
         a.addEventListener('click', function (ev) {
           var el = document.getElementById(a.dataset.section);
           if (el) {
-            // scroll here rather than leaning on the hash: scroll-margin-top
-            // keeps the section head clear of the sticky header, and the URL is
-            // updated without a second jump. scrollTo rather than
-            // scrollIntoView, so the header offset is explicit and the section
-            // kicker is never hidden under the sticky bar.
+            // scroll here rather than leaning on the hash: the offset is
+            // explicit, and the URL updates without a second jump. The section's
+            // own 104px of top padding already clears the 57px sticky header,
+            // which is why no scroll-margin is needed on any of the cases.
             ev.preventDefault();
             window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET, behavior: 'smooth' });
             if (history.replaceState) history.replaceState(null, '', '#' + a.dataset.section);
