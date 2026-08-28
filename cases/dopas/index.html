@@ -28,7 +28,7 @@
 
     /* ——— STICKY HEADER ——— */
     .case-header {
-      position: sticky; top: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 130;
       background: #F8F8F8;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
@@ -219,7 +219,9 @@
        Shared component across the case pages: a fixed pill naming the section
        you are in, opening the full list on click. Shown at every width — it is
        the table of contents, not a mobile stand-in for a sidebar. */
-    .toc-pill { display: flex; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; }
+    /* the section pill belongs to the page, not to the menu on top of it */
+    body.nav-open .toc-pill { opacity: 0; pointer-events: none; }
+    .toc-pill { display: flex; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; transition: opacity 240ms ease; }
     .toc-pill-trigger {
       display: flex; align-items: center; gap: 8px;
       background: rgba(26,26,26,0.92);
@@ -388,6 +390,103 @@
       -webkit-mask-image: none;
               mask-image: none;
     }
+    /* ——— FULL-SCREEN MENU ———
+       Two bars rather than three: with three links behind it, three bars would
+       just repeat the count. Closed they are parallel; open each rotates from
+       its own centre into the X, the second 40ms behind the first — that
+       offset is what makes it read as a movement rather than a state change.
+
+       The panel is a curtain: clip-path from the top edge, on a symmetric
+       expo curve so it leaves and arrives decisively instead of easing out
+       into nothing. The links do not fade in behind it — each one sits in its
+       own overflow box and rises out of it, which is why they read as arriving
+       rather than appearing. 80ms apart, and the first waits for the curtain
+       to be most of the way down. */
+    .navburger {
+      display: inline-flex; position: relative; z-index: 120;
+      /* a flex sibling will squeeze this below the 44px touch floor */
+      flex: 0 0 44px;
+      width: 44px; height: 44px; margin-right: -10px;
+      align-items: center; justify-content: center;
+      background: none; border: 0; padding: 0; cursor: pointer;
+      color: #1A1A1A;
+    }
+    .navburger-box { position: relative; display: block; width: 22px; height: 12px; }
+    .navburger-box i {
+      position: absolute; left: 0; width: 100%; height: 1.5px;
+      background: currentColor; border-radius: 2px;
+      transform-origin: 50% 50%;
+      transition: transform 420ms cubic-bezier(.2,.9,.3,1.25);
+    }
+    .navburger-box i:nth-child(1) { top: 0; }
+    .navburger-box i:nth-child(2) { bottom: 0; transition-delay: 40ms; }
+    body.nav-open .navburger-box i:nth-child(1) { transform: translateY(5.25px) rotate(45deg); }
+    body.nav-open .navburger-box i:nth-child(2) { transform: translateY(-5.25px) rotate(-45deg); }
+    .navburger:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 2px; border-radius: 6px; }
+
+    .navoverlay {
+      position: fixed; inset: 0; z-index: 110;
+      background: #F8F8F8;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 104px 24px 28px;
+      clip-path: inset(0 0 100% 0);
+      visibility: hidden;
+      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 640ms;
+    }
+    body.nav-open .navoverlay {
+      clip-path: inset(0 0 0 0);
+      visibility: visible;
+      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 0s;
+    }
+    body.nav-open { overflow: hidden; }
+
+    .navoverlay-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
+    .navitem {
+      display: flex; align-items: baseline; gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      color: #1A1A1A;
+    }
+    .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
+    .navitem-num {
+      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #6B6B6B;
+      font-variant-numeric: tabular-nums;
+    }
+    /* the box the line rises out of */
+    .navitem-mask { display: block; overflow: hidden; padding-bottom: 2px; }
+    .navitem-text {
+      display: block;
+      font-size: clamp(32px, 9vw, 52px); font-weight: 600;
+      line-height: 1.06; letter-spacing: -0.035em;
+      transform: translateY(112%);
+      transition: transform 640ms cubic-bezier(.76,0,.24,1);
+    }
+    body.nav-open .navitem-text { transform: translateY(0); }
+    body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
+    body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
+    body.nav-open .navitem:nth-child(3) .navitem-text { transition-delay: 340ms; }
+    .navitem:hover .navitem-text { color: #6B6B6B; }
+    .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
+
+    .navoverlay-foot {
+      width: 100%; max-width: 1100px; margin: 40px auto 0;
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 13px; color: #6B6B6B;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
+    }
+    body.nav-open .navoverlay-foot { opacity: 1; transform: none; }
+    .navoverlay-foot a:hover { color: #1A1A1A; }
+
+    @media (min-width: 769px) {
+      .navburger, .navoverlay { display: none; }
+    }
+
+    /* Present for screen readers and the document outline, not on screen. */
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
   </style>
 </head>
 <body>
@@ -399,8 +498,24 @@
     <div class="case-header-inner">
       <a href="../../" class="case-header-back">← Back</a>
       <span class="case-header-name">dopas.dp.ua</span>
+      <button class="navburger" type="button" id="navburger" aria-expanded="false" aria-controls="navOverlay">
+        <span class="visually-hidden">Menu</span>
+        <span class="navburger-box" aria-hidden="true"><i></i><i></i></span>
+      </button>
     </div>
   </header>
+
+  <div class="navoverlay" id="navOverlay" aria-hidden="true">
+      <nav class="navoverlay-inner" aria-label="Menu">
+        <a class="navitem" href="../../"><span class="navitem-num">01</span><span class="navitem-mask"><span class="navitem-text">All work</span></span></a>
+        <a class="navitem" href="../../assets/CV_Yurii_Fokin.pdf" download><span class="navitem-num">02</span><span class="navitem-mask"><span class="navitem-text">Download CV</span></span></a>
+        <a class="navitem" href="mailto:yuryuryury@icloud.com"><span class="navitem-num">03</span><span class="navitem-mask"><span class="navitem-text">Get in touch</span></span></a>
+      </nav>
+      <div class="navoverlay-foot">
+        <span>Batumi, Georgia</span>
+        <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn &#8599;</a>
+      </div>
+  </div>
 
   <main id="main">
 
@@ -678,6 +793,52 @@
   </footer>
 
   <script>
+    // ——— FULL-SCREEN MENU ———
+    // State lives on <body> so the burger, the curtain and the lines can all
+    // key off one class. The panel stays in the DOM (a curtain cannot animate
+    // out of display:none) and is taken out of the a11y tree instead.
+    (function () {
+      var btn = document.getElementById('navburger');
+      var overlay = document.getElementById('navOverlay');
+      if (!btn || !overlay) return;
+      var lastFocus = null;
+
+      function setOpen(on) {
+        document.body.classList.toggle('nav-open', on);
+        btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+        overlay.setAttribute('aria-hidden', on ? 'false' : 'true');
+        if (on) {
+          lastFocus = document.activeElement;
+          var first = overlay.querySelector('a');
+          if (first) setTimeout(function () { first.focus(); }, 360);
+        } else if (lastFocus) {
+          lastFocus.focus();
+        }
+      }
+      var isOpen = function () { return document.body.classList.contains('nav-open'); };
+
+      btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!isOpen()); });
+      overlay.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+
+      document.addEventListener('keydown', function (e) {
+        if (!isOpen()) return;
+        if (e.key === 'Escape') { setOpen(false); return; }
+        // a full-screen panel that lets Tab wander behind it is a trap of its
+        // own kind — the loop keeps focus on what is actually on screen
+        if (e.key !== 'Tab') return;
+        var items = [btn].concat([].slice.call(overlay.querySelectorAll('a')));
+        var i = items.indexOf(document.activeElement);
+        if (i === -1) return;
+        var next = e.shiftKey ? (i - 1 + items.length) % items.length : (i + 1) % items.length;
+        e.preventDefault();
+        items[next].focus();
+      });
+
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 768 && isOpen()) setOpen(false);
+      });
+    })();
+
     // ——— TOC PILL: scroll spy + toggle ———
     // Labels are read from the menu links, so renaming a section is one edit.
     (function () {
