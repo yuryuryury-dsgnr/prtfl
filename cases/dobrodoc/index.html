@@ -167,83 +167,31 @@
     
 
     /* ——— iPHONE 16 FRAME ——— */
-    .phone-pair {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin: 40px 0;
+    @media (min-width: 1080px) {
+      .phone-strip { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
     }
-    .phone-frame {
-      width: 220px;
-      flex-shrink: 0;
-      position: relative;
+
+    /* The exports carry their own device frame, so the page draws no chrome of
+       its own — the same call the Rebalancer case makes. One drifting row at
+       every width, the component ported from there: the drift moves scrollLeft
+       rather than a transform, so the row stays a real scroller. */
+    .phone-strip {
+      margin-top: 32px;
+      cursor: grab;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
     }
-    .phone-bezel {
-      background: #1A1A1A;
-      border-radius: 36px;
-      padding: 8px;
-      position: relative;
-      box-shadow:
-        0 12px 48px rgba(0,0,0,0.15),
-        0 2px 8px rgba(0,0,0,0.08),
-        inset 0 0 0 1px rgba(255,255,255,0.1);
-    }
-    /* Side buttons */
-    .phone-bezel::before {
-      content: '';
-      position: absolute;
-      right: -3px;
-      top: 120px;
-      width: 3px;
-      height: 48px;
-      background: #2a2a2a;
-      border-radius: 0 2px 2px 0;
-    }
-    .phone-bezel::after {
-      content: '';
-      position: absolute;
-      left: -3px;
-      top: 110px;
-      width: 3px;
-      height: 28px;
-      background: #2a2a2a;
-      border-radius: 2px 0 0 2px;
-      box-shadow: 0 40px 0 #2a2a2a;
-    }
-    /* Dynamic Island */
-    .phone-island {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 48px;
-      height: 14px;
-      background: #000000;
-      border-radius: 8px;
-      z-index: 3;
-    }
-    .phone-screen {
-      border-radius: 28px;
-      overflow: hidden;
-      background: #FCFCFC;
-      position: relative;
-    }
-    .phone-screen img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .phone-home-bar {
-      position: absolute;
-      bottom: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: rgba(0,0,0,0.18);
-      border-radius: 100px;
-      z-index: 3;
-    }
+    .phone-strip.is-dragging { cursor: grabbing; user-select: none; }
+    .phone-strip.is-dragging img { pointer-events: none; }
+    .phone-strip::-webkit-scrollbar { display: none; }
+    .phone-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    .phone-track { display: flex; align-items: flex-start; gap: 24px; width: max-content; }
+    /* an absolute basis, never a percentage: the track is width: max-content,
+       so a percentage has nothing definite to resolve against and the items
+       stop being a row at all */
+    .phone-track > .phone-figure { flex: 0 0 min(300px, 66vw); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .phone-shot { display: block; width: 100%; height: auto; border-radius: 4px; }
     .phone-caption {
       font-size: 13px;
       color: #6B6B6B;
@@ -254,8 +202,6 @@
     
 
     @media (max-width: 520px) {
-      .phone-pair { flex-direction: column; align-items: center; gap: 32px; }
-      .phone-frame { width: 200px; }
     }
 
     /* ——— BEFORE / AFTER ——— */
@@ -622,7 +568,7 @@
         <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" class="cta-pill" target="_blank" rel="noopener" aria-label="Google Play (opens in new tab)"><svg viewBox="0 0 512 566" fill="currentColor" aria-hidden="true"><path d="M13 9C5 18 0 31 0 49v468c0 18 5 31 13 40l2 2 262-262v-6L15 7l-2 2z"/><path d="M365 385l-87-88v-6l87-88 2 1 104 59c30 17 30 45 0 62l-104 59-2 1z"/><path d="M367 384l-89-89L15 558c10 10 26 12 44 1l308-175"/><path d="M367 182L59 7C41-4 25-2 15 8l263 263 89-89z"/></svg>Google Play &#8599;</a>
       </div>
       <div class="case-hero-image">
-        <img src="../../assets/images/dobrodoc/dobrodoc-cover-v2.webp" alt="DobroDoc+ project overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="808" height="632" fetchpriority="high">
+        <img src="../../assets/images/dobrodoc/dobrodoc-cover-v3.webp" alt="DobroDoc+ — onboarding screens" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1920" height="1080" fetchpriority="high">
         <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
       </div>
     </section>
@@ -836,53 +782,54 @@
     <!-- 04 — MOCKUPS -->
     <section id="section-06" class="case-section">
       <h2 class="section-heading">Mockups</h2>
-      <p class="section-text">Final hi-fi mockups covering the core booking flow — from onboarding to appointment confirmation.</p>
+      <p class="section-text">Eleven screens from the shipped app &mdash; onboarding, the med card, picking a specialist, and the consultation itself in chat, video and voice.</p>
 
-      <!-- Pair 1: Onboarding + Home -->
-      <div class="phone-pair">
-        <div class="phone-frame">
-          <div class="phone-bezel">
-            <div class="phone-island"></div>
-            <div class="phone-screen">
-              <img src="../../assets/images/dobrodoc/mockup-onboarding-v2.webp" alt="Onboarding screen" loading="lazy" onerror="this.outerHTML='<div style=&quot;aspect-ratio:375/812; background:#EBF4FB; display:flex; align-items:center; justify-content:center; font-size:12px; color:#6B6B6B;&quot;>Onboarding</div>';" width="912" height="1976">
-            </div>
-            <div class="phone-home-bar"></div>
-          </div>
-          <p class="phone-caption">Onboarding — create a medical card for yourself and your family</p>
+      <div class="phone-strip" tabindex="0" role="group" aria-label="App screens, eleven &mdash; drag or scroll">
+        <div class="phone-track">
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-record.webp" alt="Onboarding — a medical record for you and your family" loading="lazy" width="700" height="1210">
+          <p class="phone-caption">Onboarding &mdash; a medical record for you and your family</p>
         </div>
-        <div class="phone-frame">
-          <div class="phone-bezel">
-            <div class="phone-island"></div>
-            <div class="phone-screen">
-              <img src="../../assets/images/dobrodoc/mockup-home-v2.webp" alt="Home screen" loading="lazy" onerror="this.outerHTML='<div style=&quot;aspect-ratio:375/812; background:#EBF4FB; display:flex; align-items:center; justify-content:center; font-size:12px; color:#6B6B6B;&quot;>Home</div>';" width="912" height="1976">
-            </div>
-            <div class="phone-home-bar"></div>
-          </div>
-          <p class="phone-caption">Home — clinic dashboard with doctor categories and quick actions</p>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-appointment.webp" alt="Onboarding — book the way that suits you" loading="lazy" width="700" height="1210">
+          <p class="phone-caption">Onboarding &mdash; book the way that suits you</p>
         </div>
-      </div>
-
-      <!-- Pair 2: Doctor selection + Confirmation -->
-      <div class="phone-pair">
-        <div class="phone-frame">
-          <div class="phone-bezel">
-            <div class="phone-island"></div>
-            <div class="phone-screen">
-              <img src="../../assets/images/dobrodoc/mockup-doctor-v2.webp" alt="Doctor selection" loading="lazy" onerror="this.outerHTML='<div style=&quot;aspect-ratio:375/812; background:#EBF4FB; display:flex; align-items:center; justify-content:center; font-size:12px; color:#6B6B6B;&quot;>Doctor selection</div>';" width="375" height="810">
-            </div>
-            <div class="phone-home-bar"></div>
-          </div>
-          <p class="phone-caption">Specialist — choose med card, consultation type (online, in clinic, at home)</p>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-results.webp" alt="Onboarding — conclusion and prescription after the visit" loading="lazy" width="700" height="1210">
+          <p class="phone-caption">Onboarding &mdash; conclusion and prescription after the visit</p>
         </div>
-        <div class="phone-frame">
-          <div class="phone-bezel">
-            <div class="phone-island"></div>
-            <div class="phone-screen">
-              <img src="../../assets/images/dobrodoc/mockup-checkout-v2.webp" alt="Booking confirmation" loading="lazy" onerror="this.outerHTML='<div style=&quot;aspect-ratio:375/812; background:#EBF4FB; display:flex; align-items:center; justify-content:center; font-size:12px; color:#6B6B6B;&quot;>Confirmation</div>';" width="375" height="812">
-            </div>
-            <div class="phone-home-bar"></div>
-          </div>
-          <p class="phone-caption">Confirmation — summary with med card, specialty, consultation type, date &amp; time</p>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-home.webp" alt="Home — ask a doctor, or open the med card" loading="lazy" width="700" height="1210">
+          <p class="phone-caption">Home &mdash; ask a doctor, or open the med card</p>
+        </div>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-medical-cards.webp" alt="Medical cards — one per family member" loading="lazy" width="700" height="1210">
+          <p class="phone-caption">Medical cards &mdash; one per family member</p>
+        </div>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-specialist.webp" alt="Specialist — consultation type, what they treat, the price" loading="lazy" width="700" height="1219">
+          <p class="phone-caption">Specialist &mdash; consultation type, what they treat, the price</p>
+        </div>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-chat.webp" alt="Chat — the consultation itself" loading="lazy" width="700" height="1219">
+          <p class="phone-caption">Chat &mdash; the consultation itself</p>
+        </div>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-video-call.webp" alt="Video consultation" loading="lazy" width="700" height="1219">
+          <p class="phone-caption">Video consultation</p>
+        </div>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-audio-call.webp" alt="Audio call" loading="lazy" width="700" height="1219">
+          <p class="phone-caption">Audio call</p>
+        </div>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-notifications.webp" alt="Notifications — the visit starts in five minutes" loading="lazy" width="700" height="1219">
+          <p class="phone-caption">Notifications &mdash; the visit starts in five minutes</p>
+        </div>
+        <div class="phone-figure">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-account.webp" alt="Account" loading="lazy" width="700" height="1219">
+          <p class="phone-caption">Account</p>
+        </div>
         </div>
       </div>
     </section>
@@ -1094,6 +1041,92 @@
 
   
   
+    // ——— SCREENS: a drifting row ———
+    // Ported from the Rebalancer case. The position is carried in a variable
+    // rather than read back off the element: 22px/s is 0.35px a frame and
+    // scrollLeft rounds to integers, so reading it back rounded every step to
+    // zero and the row never moved.
+    (function () {
+      var strip = document.querySelector('.phone-strip');
+      var track = strip && strip.querySelector('.phone-track');
+      if (!strip || !track) return;
+
+      // A second copy makes the wrap seamless: past the halfway mark we
+      // subtract it and the pixels under the pointer do not change.
+      [].slice.call(track.children).forEach(function (node) {
+        var copy = node.cloneNode(true);
+        copy.setAttribute('aria-hidden', 'true');
+        [].forEach.call(copy.querySelectorAll('img'), function (im) { im.setAttribute('loading', 'lazy'); });
+        track.appendChild(copy);
+      });
+
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var SPEED = 22;
+      var half = 0, paused = false, userUntil = 0, mine = -1, last = 0, pos = 0;
+      function measure() { half = track.scrollWidth / 2; }
+      measure();
+      window.addEventListener('resize', measure);
+      if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
+
+      var dragging = false, startX = 0, startScroll = 0;
+      strip.addEventListener('pointerenter', function () { paused = true; });
+      strip.addEventListener('pointerleave', function () { if (!dragging) paused = false; });
+
+      // Mouse only: touch already pans the row with momentum.
+      strip.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        dragging = true; startX = e.clientX; startScroll = strip.scrollLeft;
+        strip.classList.add('is-dragging');
+        strip.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+      strip.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var next = startScroll - (e.clientX - startX);
+        if (half > 0) {
+          if (next < 0) { next += half; startScroll += half; }
+          else if (next >= half) { next -= half; startScroll -= half; }
+        }
+        strip.scrollLeft = next; pos = next; mine = strip.scrollLeft;
+      });
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        strip.classList.remove('is-dragging');
+        if (e && e.pointerId != null && strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
+        userUntil = performance.now() + 1500;
+      }
+      strip.addEventListener('pointerup', endDrag);
+      strip.addEventListener('pointercancel', endDrag);
+      strip.addEventListener('focusin',  function () { paused = true; });
+      strip.addEventListener('focusout', function () { paused = false; });
+      strip.addEventListener('scroll', function () {
+        if (Math.abs(strip.scrollLeft - mine) > 1.5) {
+          userUntil = performance.now() + 1500;
+          pos = strip.scrollLeft;
+        }
+      }, { passive: true });
+
+      function step(now) {
+        var dt = last ? Math.min(now - last, 50) : 16;
+        last = now;
+        if (half > 0) {
+          if (dragging) { /* the pointer owns the position */ }
+          else if (!paused && now > userUntil) {
+            pos += SPEED * dt / 1000;
+            if (pos >= half) pos -= half;
+            strip.scrollLeft = pos; mine = strip.scrollLeft;
+          } else if (strip.scrollLeft >= half) {
+            pos = strip.scrollLeft - half;
+            strip.scrollLeft = pos; mine = strip.scrollLeft;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    })();
+
     // ——— EDGE FADE ———
     // Finds the containers that actually scroll sideways and marks which side
     // still has content. No selector list to keep in sync: it asks the layout,
