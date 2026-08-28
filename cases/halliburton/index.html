@@ -128,6 +128,11 @@
       font-weight: 500;
     }
 
+    /* The image comes first now: a case is a thing you look at before you read
+       who was on the team. Everything factual — role, team, dates, the NDA
+       line — sits under it. */
+    .case-hero-detail { margin-top: 36px; }
+    .case-hero-detail > *:first-child { margin-top: 0; }
     .case-hero-image {
       width: calc(100% + 160px);
       margin-left: -80px;
@@ -1114,6 +1119,15 @@
       line-height: 1.6;
     }
     @media (max-width: 768px) {
+      /* edge to edge on a phone: the container's 24px of padding costs the
+         image 48px of width, which on a 390 screen is 12% of it */
+      .case-hero-image {
+        width: calc(100% + 48px);
+        margin-left: -24px;
+        border-radius: 16px;
+      }
+      .case-hero-image img { border-radius: 10px; }
+      .case-hero-detail { margin-top: 28px; }
       .validation-grid { grid-template-columns: 1fr; }
     }
 
@@ -1657,23 +1671,23 @@
     <section class="case-hero">
       <h1>Data Marketplace</h1>
       <p class="case-hero-hook">Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.</p>
-
-      <dl class="case-hero-meta-grid">
-        <dt>Role</dt><dd>Lead UX, sole designer</dd>
-        <dt>Core team</dt><dd>3 engineers, PO, AI lead, Technology Director</dd>
-        <dt>Research</dt><dd>10 participants across 4 roles</dd>
-        <dt>Timeline</dt><dd>2025&ndash;2026</dd>
-        <dt>Status</dt><dd>In active use + testing</dd>
-      </dl>
-
-      <div class="case-hero-nda-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span><strong>Sensitive data and metadata are under NDA.</strong> All values are placeholders; process and design are shown in full.</span>
-      </div>
-
       <div class="case-hero-image">
         <img src="../../assets/images/halliburton/halliburton-hero.webp" alt="Data Marketplace — project overview" width="2425" height="1364" fetchpriority="high">
       </div>
+      <div class="case-hero-detail">
+        <dl class="case-hero-meta-grid">
+          <dt>Role</dt><dd>Lead UX, sole designer</dd>
+          <dt>Core team</dt><dd>3 engineers, PO, AI lead, Technology Director</dd>
+          <dt>Research</dt><dd>10 participants across 4 roles</dd>
+          <dt>Timeline</dt><dd>2025&ndash;2026</dd>
+          <dt>Status</dt><dd>In active use + testing</dd>
+        </dl>
+        <div class="case-hero-nda-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span><strong>Sensitive data and metadata are under NDA.</strong> All values are placeholders; process and design are shown in full.</span>
+        </div>
+      </div>
+    
     </section>
   </div>
 

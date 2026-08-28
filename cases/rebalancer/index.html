@@ -59,6 +59,11 @@
     .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
     .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
 
+    /* The image comes first now: a case is a thing you look at before you read
+       who was on the team. Everything factual — role, team, dates, the NDA
+       line — sits under it. */
+    .case-hero-detail { margin-top: 36px; }
+    .case-hero-detail > *:first-child { margin-top: 0; }
     .case-hero-image {
       width: calc(100% + 160px);
       margin-left: -80px;
@@ -689,6 +694,15 @@
       .case-hero-image { width: 100%; margin-left: 0; }
     }
     @media (max-width: 768px) {
+      /* edge to edge on a phone: the container's 24px of padding costs the
+         image 48px of width, which on a 390 screen is 12% of it */
+      .case-hero-image {
+        width: calc(100% + 48px);
+        margin-left: -24px;
+        border-radius: 16px;
+      }
+      .case-hero-image img { border-radius: 10px; }
+      .case-hero-detail { margin-top: 28px; }
       .case-hero h1 { font-size: 36px; }
       /* section names track the hero down; subheads keep one step below */
       .section-heading { font-size: 32px; }
@@ -953,15 +967,18 @@
     <section class="case-hero">
       <h1>Rebalancer</h1>
       <p class="case-hero-meta">Crypto Rebalancing &middot; Mobile app &middot; iOS</p>
-      <p class="case-hero-role">Solo Lead UX + AI &mdash; design and build with Claude Code</p>
-      <p class="case-hero-result">Designed and built solo, from concept to App Store</p>
-      <div class="cta-row">
-        <a href="https://apps.apple.com/app/id6767200669" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>View on the App Store &#8599;</a>
-      </div>
       <div class="case-hero-image">
         <img src="../../assets/images/rebalancer/rebalancer-hero.webp" alt="Rebalancer — crypto portfolio rebalancing app" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1440" height="900" fetchpriority="high">
         <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
       </div>
+      <div class="case-hero-detail">
+        <p class="case-hero-role">Solo Lead UX + AI &mdash; design and build with Claude Code</p>
+        <p class="case-hero-result">Designed and built solo, from concept to App Store</p>
+        <div class="cta-row">
+          <a href="https://apps.apple.com/app/id6767200669" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>View on the App Store &#8599;</a>
+        </div>
+      </div>
+    
     </section>
 
     <!-- 01 — PROBLEM & CONTEXT -->

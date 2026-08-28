@@ -59,6 +59,11 @@
     .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
     .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
 
+    /* The image comes first now: a case is a thing you look at before you read
+       who was on the team. Everything factual — role, team, dates, the NDA
+       line — sits under it. */
+    .case-hero-detail { margin-top: 36px; }
+    .case-hero-detail > *:first-child { margin-top: 0; }
     .case-hero-image {
       width: calc(100% + 160px);
       margin-left: -80px;
@@ -283,6 +288,15 @@
       .case-hero-image { width: 100%; margin-left: 0; }
     }
     @media (max-width: 768px) {
+      /* edge to edge on a phone: the container's 24px of padding costs the
+         image 48px of width, which on a 390 screen is 12% of it */
+      .case-hero-image {
+        width: calc(100% + 48px);
+        margin-left: -24px;
+        border-radius: 16px;
+      }
+      .case-hero-image img { border-radius: 10px; }
+      .case-hero-detail { margin-top: 28px; }
       .case-hero h1 { font-size: 36px; }
       .section-heading { font-size: 32px; }
       .card-grid-3 { grid-template-columns: 1fr; }
@@ -546,15 +560,18 @@
     <section class="case-hero">
       <h1>dopas.dp.ua</h1>
       <p class="case-hero-meta">Web platform · 2020</p>
-      <p class="case-hero-role">Product Designer — research, flows, prototyping</p>
-      <p class="case-hero-result">Designed from zero — platform launched and generating revenue</p>
-      <div class="cta-row">
-        <a href="https://www.dopas.dp.ua/" class="cta-pill" target="_blank" rel="noopener" aria-label="dopas.dp.ua (opens in new tab)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/></svg>See it live &#8599;</a>
-      </div>
       <div class="case-hero-image">
         <img src="../../assets/images/dopas/dopas-cover-v2.webp" alt="dopas.dp.ua project overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1740" height="1106" fetchpriority="high">
         <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
       </div>
+      <div class="case-hero-detail">
+        <p class="case-hero-role">Product Designer — research, flows, prototyping</p>
+        <p class="case-hero-result">Designed from zero — platform launched and generating revenue</p>
+        <div class="cta-row">
+          <a href="https://www.dopas.dp.ua/" class="cta-pill" target="_blank" rel="noopener" aria-label="dopas.dp.ua (opens in new tab)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/></svg>See it live &#8599;</a>
+        </div>
+      </div>
+    
     </section>
 
     <!-- 01 — PROBLEM & CONTEXT -->
