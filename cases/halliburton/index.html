@@ -127,6 +127,26 @@
       font-weight: 500;
     }
 
+    /* The markup runs title, line, image, details — which is the phone order.
+       On a desktop the details go back above the image, so the order is a
+       layout decision rather than two different documents. Flex ordering
+       rather than duplicated markup: one DOM, one reading order for a screen
+       reader, and the visual order set per breakpoint. */
+    .case-hero { display: flex; flex-direction: column; }
+    .case-hero h1 { order: 1; }
+    .case-hero-hook, .case-hero-meta { order: 2; }
+    .case-hero-image { order: 3; }
+    .case-hero-detail { order: 4; }
+    @media (min-width: 769px) {
+      .case-hero-detail { order: 3; }
+      .case-hero-image { order: 4; }
+    }
+
+    /* flex does not collapse margins, so each gap is set on one side only */
+    .case-hero-hook, .case-hero-meta { margin-top: 0; margin-bottom: 0; }
+    .case-hero-image { margin-top: 48px; }
+    .case-hero-detail { margin-top: 36px; }
+
     /* The image comes first now: a case is a thing you look at before you read
        who was on the team. Everything factual — role, team, dates, the NDA
        line — sits under it. */
