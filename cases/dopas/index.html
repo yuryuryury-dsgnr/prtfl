@@ -70,6 +70,28 @@
       margin-top: 48px;
       position: relative;
       overflow: hidden;
+      /* Two shadows, not one: a tight contact shadow so the mat sits on the
+         page rather than floating, and a wide soft one underneath it for the
+         actual lift. The lift is offset down, the contact shadow barely at
+         all — which is what makes it read as height instead of a blur. */
+      box-shadow:
+        0 1px 2px rgba(20,22,28,0.05),
+        0 16px 36px -14px rgba(20,22,28,0.16);
+      /* the tilt happens here, so nothing above it has to know about 3D */
+      transform: perspective(1400px);
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 500ms cubic-bezier(.2,.8,.3,1),
+                  box-shadow 500ms cubic-bezier(.2,.8,.3,1);
+    }
+    /* while the pointer is on it the transform must track, not lag */
+    .case-hero-image.is-tilting {
+      transition: box-shadow 300ms ease;
+    }
+    .case-hero-image.is-tilting {
+      box-shadow:
+        0 2px 4px rgba(20,22,28,0.06),
+        0 30px 60px -18px rgba(20,22,28,0.22);
     }
 
     /* Wide screens: the hero grows past the text column in two steps. The cap
@@ -895,6 +917,52 @@
 
   
   
+    // ——— HERO TILT ———
+    // The mat turns toward the pointer: at the top edge the top recedes and
+    // the bottom comes forward, and the same on the other axis. Five degrees
+    // is the whole range — enough to read as depth, small enough that the
+    // image never stops being a flat thing you are looking at.
+    //
+    // The transform lives on the element and nothing else moves, so the bleed,
+    // the margins and the page width are all untouched by it.
+    (function () {
+      var el = document.querySelector('.case-hero-image');
+      if (!el) return;
+      // a finger has no hover, and a coarse pointer would fire this on tap
+      if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var MAX = 5;            // degrees, per axis
+      var LIFT = 6;           // px toward the viewer at the centre
+      var frame = null, tx = 0, ty = 0;
+
+      function draw() {
+        frame = null;
+        el.style.transform =
+          'perspective(1400px) rotateX(' + tx.toFixed(2) + 'deg) rotateY(' + ty.toFixed(2) + 'deg) translateZ(' + LIFT + 'px)';
+      }
+
+      el.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        var r = el.getBoundingClientRect();
+        // -1 at the left/top edge, +1 at the right/bottom
+        var x = (e.clientX - r.left) / r.width * 2 - 1;
+        var y = (e.clientY - r.top) / r.height * 2 - 1;
+        // pointer at the top -> top away, bottom forward; pointer at the left
+        // -> left away, right forward
+        tx = -y * MAX;
+        ty = x * MAX;
+        el.classList.add('is-tilting');
+        if (!frame) frame = requestAnimationFrame(draw);
+      });
+
+      el.addEventListener('pointerleave', function () {
+        if (frame) { cancelAnimationFrame(frame); frame = null; }
+        el.classList.remove('is-tilting');
+        el.style.transform = 'perspective(1400px)';
+      });
+    })();
+
     // ——— EDGE FADE ———
     // Finds the containers that actually scroll sideways and marks which side
     // still has content. No selector list to keep in sync: it asks the layout,
