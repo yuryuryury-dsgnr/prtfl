@@ -818,7 +818,7 @@
 
        border-collapse: separate is what lets the lane rail stay sticky. */
     .journey-sheet {
-      --jm-lane: 132px;
+      --jm-lane: 152px;
       --jm-cell: 316px;
       --jm-gut: 12px;
       --jm-pad: 20px;
@@ -942,20 +942,26 @@
     .jm-stage,
     .jm-cell { width: var(--jm-cell); }
     .jm-stage { scroll-snap-align: start; }
+    /* The lane name is a heading, not a field label: at 11px uppercase it sat
+       on the same rung as the small caps inside the cards and the map read as
+       one flat plane. Sentence case at 17/600 puts it a clear step above the
+       card text it names, which is what the row structure actually is. */
     .jm-lane-name {
       margin: 0;
-      font-size: 11px;
-      font-weight: 500;
-      line-height: 1.6;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
       color: #1A1A1A;
     }
+    /* the stage heads carry the same weight as the lane names — they are the
+       other axis of the same table, so they read at the same rung */
     .jm-title {
       margin: 0;
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 17px;
+      font-weight: 600;
       line-height: 1.3;
+      letter-spacing: -0.01em;
       color: #1A1A1A;
     }
 
@@ -1021,7 +1027,7 @@
     @media (max-width: 600px) {
       /* the rail has to stay narrow enough to leave a card readable */
       .journey-sheet {
-        --jm-lane: 104px;
+        --jm-lane: 122px;
         --jm-cell: 252px;
         --jm-gut: 8px;
         --jm-pad: 16px;
