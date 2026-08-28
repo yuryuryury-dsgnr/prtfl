@@ -158,7 +158,6 @@
     body.nav-open .navitem-text { transform: translateY(0); }
     body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
     body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    body.nav-open .navitem:nth-child(3) .navitem-text { transition-delay: 340ms; }
     .navitem:hover .navitem-text { color: #6B6B6B; }
     .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
 
@@ -172,8 +171,14 @@
     body.nav-open .navoverlay-foot { opacity: 1; transform: none; }
     .navoverlay-foot a:hover { color: #1A1A1A; }
 
+    /* The two live side by side: the inline row is the desktop nav, the burger
+       and its panel are the mobile one. Each has to hide where the other
+       serves — stripping the old sheet rules left both on screen at once. */
     @media (min-width: 769px) {
       .navburger, .navoverlay { display: none; }
+    }
+    @media (max-width: 768px) {
+      .topnav-links { display: none; }
     }
 
     /* ——— CUSTOM CURSOR ——— */
@@ -528,6 +533,10 @@
         background: rgba(0,0,0,0.025);
       }
 
+      /* 56px of nothing above the name and 96px between the meta list and the
+         first card are desktop measurements standing on a phone screen */
+      .hero { padding: 32px 0 28px; }
+      .hero-meta { margin-bottom: 24px; }
       .hero-name {
         font-size: 26px;
       }
@@ -599,9 +608,8 @@
 
   <div class="navoverlay" id="navOverlay" aria-hidden="true">
       <nav class="navoverlay-inner" aria-label="Menu">
-        <a class="navitem" href="#work"><span class="navitem-num">01</span><span class="navitem-mask"><span class="navitem-text">Work</span></span></a>
-        <a class="navitem" href="assets/CV_Yurii_Fokin.pdf" download><span class="navitem-num">02</span><span class="navitem-mask"><span class="navitem-text">Download CV</span></span></a>
-        <a class="navitem" href="mailto:yuryuryury@icloud.com"><span class="navitem-num">03</span><span class="navitem-mask"><span class="navitem-text">Get in touch</span></span></a>
+        <a class="navitem" href="assets/CV_Yurii_Fokin.pdf" download><span class="navitem-num">01</span><span class="navitem-mask"><span class="navitem-text">Download CV &#8595;</span></span></a>
+        <a class="navitem" href="mailto:yuryuryury@icloud.com"><span class="navitem-num">02</span><span class="navitem-mask"><span class="navitem-text">Get in touch &#8594;</span></span></a>
       </nav>
       <div class="navoverlay-foot">
         <span>Batumi, Georgia</span>
