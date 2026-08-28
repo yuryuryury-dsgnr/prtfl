@@ -61,17 +61,23 @@
     .case-hero { display: flex; flex-direction: column; }
     .case-hero h1 { order: 1; }
     .case-hero-hook, .case-hero-meta { order: 2; }
-    .case-hero-image { order: 3; }
-    .case-hero-detail { order: 4; }
+    /* on a phone the store links belong above the cover: they are the one
+       thing on the page you can act on, and under the image they fell below
+       the fold. On desktop they stay where they read, after the facts. */
+    .case-hero .cta-row { order: 3; }
+    .case-hero-image { order: 4; }
+    .case-hero-detail { order: 5; }
     @media (min-width: 769px) {
       .case-hero-detail { order: 3; }
-      .case-hero-image { order: 4; }
+      .case-hero .cta-row { order: 4; }
+      .case-hero-image { order: 5; }
     }
 
     /* flex does not collapse margins, so each gap is set on one side only */
     .case-hero-hook, .case-hero-meta { margin-top: 0; margin-bottom: 0; }
     .case-hero-image { margin-top: 48px; }
     .case-hero-detail { margin-top: 36px; }
+    .case-hero .cta-row { margin-top: 24px; }
 
     /* The image comes first now: a case is a thing you look at before you read
        who was on the team. Everything factual — role, team, dates, the NDA
@@ -346,10 +352,12 @@
       /* the hero's own bottom padding and the next section's top padding
          were stacking to 96px between the last hero line and the first
          heading; the section supplies that gap on its own */
-      .case-hero { padding-bottom: 0; }
-      .case-hero-image { margin-top: 32px; }
-      .case-hero-detail { margin-top: 32px; }
-      .case-hero h1 { font-size: 36px; }
+      /* one step tighter than desktop the whole way down the hero */
+      .case-hero { padding-top: 24px; padding-bottom: 0; }
+      .case-hero .cta-row { margin-top: 24px; }
+      .case-hero-image { margin-top: 24px; }
+      .case-hero-detail { margin-top: 24px; }
+      .case-hero h1 { font-size: 36px; margin-bottom: 12px; }
       .section-heading { font-size: 32px; }
       .card-grid-3 { grid-template-columns: 1fr; }
       
@@ -628,10 +636,10 @@
       <div class="case-hero-detail">
         <p class="case-hero-role">Product Designer — user interviews, IA, mobile prototyping</p>
         <p class="case-hero-result">Redesign cut time-to-booking by 40% in usability tests</p>
-        <div class="cta-row">
-          <a href="https://apps.apple.com/app/id1483029353" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>App Store &#8599;</a>
-          <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" class="cta-pill" target="_blank" rel="noopener" aria-label="Google Play (opens in new tab)"><svg viewBox="0 0 512 566" fill="currentColor" aria-hidden="true"><path d="M13 9C5 18 0 31 0 49v468c0 18 5 31 13 40l2 2 262-262v-6L15 7l-2 2z"/><path d="M365 385l-87-88v-6l87-88 2 1 104 59c30 17 30 45 0 62l-104 59-2 1z"/><path d="M367 384l-89-89L15 558c10 10 26 12 44 1l308-175"/><path d="M367 182L59 7C41-4 25-2 15 8l263 263 89-89z"/></svg>Google Play &#8599;</a>
-        </div>
+      </div>
+      <div class="cta-row">
+        <a href="https://apps.apple.com/app/id1483029353" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>App Store &#8599;</a>
+        <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" class="cta-pill" target="_blank" rel="noopener" aria-label="Google Play (opens in new tab)"><svg viewBox="0 0 512 566" fill="currentColor" aria-hidden="true"><path d="M13 9C5 18 0 31 0 49v468c0 18 5 31 13 40l2 2 262-262v-6L15 7l-2 2z"/><path d="M365 385l-87-88v-6l87-88 2 1 104 59c30 17 30 45 0 62l-104 59-2 1z"/><path d="M367 384l-89-89L15 558c10 10 26 12 44 1l308-175"/><path d="M367 182L59 7C41-4 25-2 15 8l263 263 89-89z"/></svg>Google Play &#8599;</a>
       </div>
     
     </section>

@@ -545,8 +545,10 @@
 
       /* 56px of nothing above the name and 96px between the meta list and the
          first card are desktop measurements standing on a phone screen */
-      .hero { padding: 32px 0 28px; }
-      .hero-meta { margin-bottom: 24px; }
+      /* the band under the nav and the band under the meta table read as a
+         pair; 24 (meta) + 28 (hero) + 16 (.cases) made the lower one 68 */
+      .hero { padding: 32px 0 16px; }
+      .hero-meta { margin-bottom: 0; }
       .hero-name {
         font-size: 26px;
       }
