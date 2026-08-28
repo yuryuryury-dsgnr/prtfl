@@ -162,11 +162,6 @@
     .flow-caption { font-size: 13px; color: #6B6B6B; margin-top: 16px; text-align: center; }
 
     /* ——— WIREFRAMES ——— */
-    .wireframe-placeholder {
-      background: #E8E8E8; border-radius: 8px; aspect-ratio: 4/3;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; color: #6B6B6B; font-weight: 500;
-    }
     
 
     /* ——— iPHONE 16 FRAME ——— */
@@ -262,11 +257,6 @@
     }
 
     /* ——— BEFORE / AFTER ——— */
-    .ba-pair { margin-bottom: 40px; }
-    .ba-pair-title { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
-    .ba-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .ba-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #6B6B6B; margin-bottom: 8px; }
-    .ba-caption { font-size: 13px; color: #6B6B6B; margin-top: 8px; line-height: 1.5; }
 
     /* ——— OUTCOME ——— */
     .outcome-text { color: #6B6B6B; margin-bottom: 24px; max-width: 640px; }
@@ -355,7 +345,6 @@
       .card-grid-3 { grid-template-columns: 1fr; }
       
       
-      .ba-columns { grid-template-columns: 1fr; }
       .round-columns { grid-template-columns: 1fr; }
       /* Mobile: the process stays a horizontal rail and scrolls, instead of
          unrolling into a tall vertical list. The container rail can't be used
@@ -832,92 +821,6 @@
       </div>
     </section>
 
-    <!-- 06 — MOCKUPS: BEFORE / AFTER -->
-    <section id="section-08" class="case-section">
-      <h2 class="section-heading">Before / After</h2>
-
-      <div style="margin-top: 32px;">
-        <div class="ba-pair">
-          <p class="ba-pair-title">01 — Doctor card</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Name and specialisation only</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Availability indicator — green dot + next free slot on card</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">02 — Symptom checker</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Plain input form, no context</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Medical disclaimer + emergency warning, AI match with doctor recommendation</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">03 — Family switcher</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Buried in profile settings</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Persistent switcher at top of every screen</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">04 — Pre-call screen</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Direct join button only</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Connection quality check + test call option</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="ba-pair">
-          <p class="ba-pair-title">05 — Post-consultation</p>
-          <div class="ba-columns">
-            <div>
-              <p class="ba-label">Before</p>
-              <div class="wireframe-placeholder">Before</div>
-              <p class="ba-caption">Session ends, nothing sent</p>
-            </div>
-            <div>
-              <p class="ba-label">After</p>
-              <div class="wireframe-placeholder">After</div>
-              <p class="ba-caption">Summary card in-app + auto email with diagnosis and prescription PDF</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- 07 — OUTCOME -->
     <section id="section-09" class="case-section">
@@ -949,9 +852,8 @@
       <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> User flows</a>
       <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Mockups</a>
       <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Usability</a>
-      <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Before / After</a>
-      <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Outcome</a>
-      <a href="#section-10" data-section="section-10"><span class="pill-num">10</span> Reflection</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">08</span> Outcome</a>
+      <a href="#section-10" data-section="section-10"><span class="pill-num">09</span> Reflection</a>
     </nav>
     <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
       <span class="toc-pill-num" id="tocPillNum">01</span>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<script>document.documentElement.className += " js";</script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1104,12 +1103,7 @@
     }
     .timeline-step {
       flex: 1; position: relative; padding-top: 48px; padding-right: 16px;
-      opacity: 0; transform: translateY(12px);
-      transition: opacity 500ms ease, transform 500ms ease;
       display: flex; flex-direction: column;
-    }
-    .timeline-step.visible {
-      opacity: 1; transform: translateY(0);
     }
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
@@ -1177,15 +1171,6 @@
     /* Hidden only once the script has confirmed it is running: the class comes
        off <html> in the head, so with JS off the content is simply visible
        rather than a page of blank sections. */
-    html.js .reveal {
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 600ms ease, transform 600ms ease;
-    }
-    html.js .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
 
     /* ——— RESPONSIVE ——— */
     @media (max-width: 768px) {
@@ -1437,11 +1422,8 @@
       
     }
   
-    /* Printing a long case study is a normal way to read it later — nothing
-       may depend on the scroll observer having fired. */
+    /* Printing a long case study is a normal way to read it later. */
     @media print {
-      html.js .reveal, html.js .reveal.visible,
-      .timeline-step { opacity: 1 !important; transform: none !important; }
       .toc-pill, .case-header-back { display: none !important; }
       a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 10px; color: #6B6B6B; }
     }
@@ -1454,8 +1436,8 @@
     }
     .skip-link:focus { top: 12px; }
   
-    /* Honour the system setting: the site animates a cursor loop, reveal-on-
-       scroll, a staggered timeline and smooth scrolling. */
+    /* Honour the system setting: the site animates a cursor loop and scrolls
+       smoothly. */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1463,7 +1445,6 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      html.js .reveal, .timeline-step { opacity: 1 !important; transform: none !important; }
       
     }
       /* One list rhythm across the cases: 14px at 1.7, the same as the
@@ -1566,7 +1547,7 @@
     <div class="page-main">
 
     <!-- 01 — PROBLEM & CONTEXT -->
-    <section id="section-01" class="case-section reveal">
+    <section id="section-01" class="case-section">
       <h2 class="section-heading">Problem &amp; Context</h2>
 
       <div class="problem-grid" style="margin-top:48px;" tabindex="0" role="group" aria-label="Problem and goal — scrollable">
@@ -1585,7 +1566,7 @@
     </section>
 
     <!-- 02 — PROCESS -->
-    <section id="section-02" class="case-section reveal">
+    <section id="section-02" class="case-section">
       <h2 class="section-heading">Roadmap</h2>
       <div class="timeline" tabindex="0" role="group" aria-label="Roadmap, six phases — scrollable">
         <div class="timeline-step">
@@ -1628,7 +1609,7 @@
     </section>
 
     <!-- 03 — UX STRATEGY (Phase 1 + Phase 2 toggle) -->
-    <section id="section-03" class="case-section reveal">
+    <section id="section-03" class="case-section">
       <h2 class="section-heading">UX Strategy</h2>
 
       <div class="phase-toggle">
@@ -1809,7 +1790,7 @@
     </section>
 
     <!-- 04 — RESEARCH -->
-    <section id="section-04" class="case-section reveal">
+    <section id="section-04" class="case-section">
       <h2 class="section-heading">Research</h2>
       <p class="section-text">4 persona groups, user flows, and end-to-end journey maps shaped every design decision.</p>
 
@@ -2531,7 +2512,7 @@
     </section>
 
     <!-- 05 — PROTOTYPE & DESIGN SYSTEM -->
-    <section id="section-05" class="case-section reveal">
+    <section id="section-05" class="case-section">
       <h2 class="section-heading">Prototype &amp; Design System</h2>
       <p class="section-text">Instead of pixel-perfect mockups, I started with an AI prototype to test concepts and layouts before investing in high-fidelity design.</p>
       <p class="section-text">Once the structure was proven, I built a scalable design system &mdash; reusable components, tokens, and patterns &mdash; then the final mockups for the dev team.</p>
@@ -2943,7 +2924,7 @@
             <p class="ds-caption" style="margin-top:20px;">~158 primitive &middot; ~45 semantic &middot; ~459 component tokens across 2 themes.</p>
 
     <!-- 06 — VALIDATION / FEEDBACK SESSIONS -->
-    <section id="section-06" class="case-section reveal">
+    <section id="section-06" class="case-section">
       <h2 class="section-heading">Usability testing</h2>
       <p class="section-text">Before moving to development, I ran two structured feedback sessions with the primary user groups &mdash; validating designs, aligning on roles and workflows, and catching blind spots early.</p>
 
@@ -2978,7 +2959,7 @@
     </section>
 
     <!-- 07 — HAND-OFF TO DEV -->
-    <section id="section-07" class="case-section reveal">
+    <section id="section-07" class="case-section">
       <h2 class="section-heading">Hand-off to Dev</h2>
       <p class="section-text">Traditional hand-off means screenshots, redlines, and a PDF that's outdated the moment you save it. Instead, I connected developers directly to the Figma design system through MCP (Model Context Protocol) &mdash; they pulled specs, tokens, and interaction states straight into their IDE in real time.</p>
 
@@ -3007,7 +2988,7 @@
     </section>
 
     <!-- 08 — POST-LAUNCH RESEARCH -->
-    <section id="section-08" class="case-section reveal">
+    <section id="section-08" class="case-section">
       <h2 class="section-heading">Post-launch Research</h2>
       <p class="section-text">The platform is in active use while testing continues. Rather than waiting to measure success, I designed the post-launch research program upfront &mdash; combining analytics, AI-powered tools, and continuous user feedback.</p>
 
@@ -3043,14 +3024,14 @@
     </section>
 
     <!-- 09 — OUTCOME -->
-    <section id="section-09" class="case-section reveal">
+    <section id="section-09" class="case-section">
       <h2 class="section-heading">Outcome</h2>
       <p class="section-text">Built, validated with real users, in active use while testing continues.</p>
       <p class="section-text">In place: a three-tier design system, an MCP pipeline wired into dev, and Figma-to-code hand-off.</p>
     </section>
 
     <!-- 08 — REFLECTION -->
-    <section id="section-10" class="case-section reveal">
+    <section id="section-10" class="case-section">
       <h2 class="section-heading">Reflection</h2>
       <p class="section-text">I&rsquo;d bring data governance in earlier &mdash; their requirements landed mid-project and sent the access flow back for rework.</p>
       <p class="section-text">Leading alone taught me seniority is owning decisions, not headcount. AI speeds up only what you already understand.</p>
@@ -3102,33 +3083,6 @@
   </footer>
 
   <script>
-    // Scroll reveal for sections
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Timeline steps stagger animation
-    const timelineObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const steps = entry.target.querySelectorAll('.timeline-step');
-          steps.forEach((step, i) => {
-            setTimeout(() => step.classList.add('visible'), i * 100);
-          });
-          timelineObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    document.querySelectorAll('.timeline').forEach(el => timelineObserver.observe(el));
-
     // Phase toggle — only the §03 tabs (those with data-phase) drive the phase panels.
     // The §04 and §05 tab groups have no data-phase and are handled elsewhere.
     document.querySelectorAll('.phase-toggle-btn[data-phase]').forEach(btn => {
