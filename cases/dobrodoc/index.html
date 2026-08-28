@@ -23,13 +23,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F8F8; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F2F2F2; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 130;
-      background: #F8F8F8;
+      background: #F2F2F2;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -38,8 +38,8 @@
       display: flex; justify-content: space-between; align-items: center;
     }
     .case-header-back { font-size: 14px; font-weight: 500; color: #1A1A1A; }
-    .case-header-back:hover { color: #6B6B6B; }
-    .case-header-name { font-size: 14px; color: #6B6B6B; }
+    .case-header-back:hover { color: #666666; }
+    .case-header-name { font-size: 14px; color: #666666; }
 
     /* ——— CONTAINER ——— */
     .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
@@ -49,9 +49,9 @@
        a small screen before a word is read. Same curve as the other cases. */
     .case-hero { padding: clamp(32px, 8vw, 80px) 0 48px; }
     .case-hero h1 { font-size: 48px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
-    .case-hero-meta { font-size: 14px; color: #6B6B6B; margin-bottom: 8px; }
-    .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
-    .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
+    .case-hero-meta { font-size: 14px; color: #666666; margin-bottom: 8px; }
+    .case-hero-role { font-size: 14px; color: #666666; margin-bottom: 4px; }
+    .case-hero-result { font-size: 14px; color: #666666; font-style: italic; margin-bottom: 32px; }
 
     /* The markup runs title, line, image, details — which is the phone order.
        On a desktop the details go back above the image, so the order is a
@@ -139,7 +139,11 @@
     }
 
     /* ——— SECTIONS ——— */
-    .case-section { padding: 104px 0 0; }
+    .case-section { padding: 88px 0 0; }
+    /* Whatever a section ends on, the space to the next one is the section
+       rhythm and nothing else: a trailing bottom margin escapes the section
+       box and silently adds itself to the gap. */
+    .case-section > *:last-child { margin-bottom: 0; }
     /* the number rides on the heading line now, at the heading's own size.
        The space before the title is a real one — without it a screen reader
        announces "01Roadmap" as a single word — so the margin carries only
@@ -157,7 +161,7 @@
        that the gutter is 24px and the number would fall off the page, so it
        stays inline. The leading space in the markup is trimmed at the start of
        the line, which is what keeps the name flush. */
-    .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
+    .section-text { color: #666666; margin-bottom: 16px; max-width: 640px; }
 
     /* ——— TIMELINE ——— */
     .timeline { display: flex; gap: 0; margin-top: 24px; position: relative; }
@@ -166,12 +170,12 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F8F8F8;
+      background: #1A1A1A; border: 3px solid #F2F2F2;
     }
-    .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
+    .timeline-number { font-size: 12px; font-weight: 500; color: #666666; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
-    .timeline-tag { display: inline-block; font-size: 11px; color: #6B6B6B; background: #EFEFEF; padding: 3px 8px; border-radius: 4px; }
+    .timeline-desc { font-size: 12px; color: #666666; line-height: 1.5; margin-bottom: 8px; }
+    .timeline-tag { display: inline-block; font-size: 11px; color: #666666; background: #E9E9E9; padding: 3px 8px; border-radius: 4px; }
 
     /* ——— CARD GRIDS ——— */
     .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
@@ -180,11 +184,11 @@
     /* Card type scale, shared site-wide with the persona cards on the
        Data Marketplace case: label 11/500 uppercase · title 15/500/1.3 ·
        body 13/1.6 · tag 11/500. */
-    .card-number { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B; margin-bottom: 8px; }
+    .card-number { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #666666; margin-bottom: 8px; }
     .card-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 8px; }
-    .card-desc { font-size: 13px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
+    .card-desc { font-size: 13px; color: #666666; line-height: 1.6; margin-bottom: 12px; }
     .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .card-tag { font-size: 11px; font-weight: 500; color: #6B6B6B; background: #EFEFEF; padding: 3px 8px; border-radius: 4px; }
+    .card-tag { font-size: 11px; font-weight: 500; color: #666666; background: #EFEFEF; padding: 3px 8px; border-radius: 4px; }
 
     /* ——— TABLE ——— */
     .strategy-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
@@ -193,22 +197,22 @@
       font-size: 14px; vertical-align: top; line-height: 1.6;
     }
     .strategy-table td:first-child { font-weight: 500; width: 160px; padding-right: 24px; }
-    .strategy-table td:last-child { color: #6B6B6B; }
+    .strategy-table td:last-child { color: #666666; }
 
     /* ——— USABILITY ROUNDS ——— */
     .usability-round { background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; margin-top: 24px; }
     .round-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 20px; }
     .round-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-    .round-col-title { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B; margin-bottom: 12px; }
+    .round-col-title { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #666666; margin-bottom: 12px; }
     .round-list { list-style: none; }
-    .round-list li { font-size: 13px; color: #6B6B6B; line-height: 1.6; padding: 6px 0; padding-left: 16px; position: relative; }
+    .round-list li { font-size: 13px; color: #666666; line-height: 1.6; padding: 6px 0; padding-left: 16px; position: relative; }
     .round-list li::before { content: ''; position: absolute; left: 0; top: 13px; width: 6px; height: 6px; border-radius: 50%; }
     .round-list.findings li::before { background: #dc2626; }
     .round-list.changes li::before { background: #16a34a; }
 
     /* ——— FLOW SVG ——— */
     .flow-container { margin-top: 24px; text-align: center; }
-    .flow-caption { font-size: 13px; color: #6B6B6B; margin-top: 16px; text-align: center; }
+    .flow-caption { font-size: 13px; color: #666666; margin-top: 16px; text-align: center; }
 
     /* ——— WIREFRAMES ——— */
     
@@ -241,7 +245,7 @@
     .phone-shot { display: block; width: 100%; height: auto; border-radius: 4px; }
     .phone-caption {
       font-size: 13px;
-      color: #6B6B6B;
+      color: #666666;
       text-align: center;
       margin-top: 16px;
       line-height: 1.5;
@@ -254,7 +258,7 @@
     /* ——— BEFORE / AFTER ——— */
 
     /* ——— OUTCOME ——— */
-    .outcome-text { color: #6B6B6B; margin-bottom: 24px; max-width: 640px; }
+    .outcome-text { color: #666666; margin-bottom: 24px; max-width: 640px; }
     /* the live product is the proof, so it sits in the hero rather than at the
        foot of the page — same place the Rebalancer case puts its store link */
     .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
@@ -279,18 +283,18 @@
       border-top: 1px solid rgba(0,0,0,0.08);
       display: flex; justify-content: space-between; align-items: center;
     }
-    .next-case-label { font-size: 14px; color: #6B6B6B; }
+    .next-case-label { font-size: 14px; color: #666666; }
     .next-case-name { font-size: 14px; font-weight: 500; }
-    .next-case-name:hover { color: #6B6B6B; }
+    .next-case-name:hover { color: #666666; }
 
     /* ——— FOOTER ——— */
     .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
     .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
     .footer-name { font-weight: 500; }
-    .footer-role { color: #6B6B6B; }
-    .footer-right { display: flex; gap: 24px; color: #6B6B6B; }
+    .footer-role { color: #666666; }
+    .footer-right { display: flex; gap: 24px; color: #666666; }
     .footer-right a { position: relative; }
-    .footer-right a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #6B6B6B; transition: width 200ms ease; }
+    .footer-right a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #666666; transition: width 200ms ease; }
     .footer-right a:hover::after { width: 100%; }
 
     /* ——— FLOATING TOC PILL ———
@@ -389,7 +393,7 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
       /* 64px between sections is a desktop measure standing on a phone */
-      .case-section { padding: 48px 0 0; }
+      .case-section { padding: 40px 0 0; }
       .strategy-table td:first-child { width: 120px; }
     }
       /* Visible only when focused: a keyboard user should not have to tab
@@ -521,7 +525,7 @@
 
     .navoverlay {
       position: fixed; inset: 0; z-index: 110;
-      background: #F8F8F8;
+      background: #F2F2F2;
       display: flex; flex-direction: column; justify-content: center;
       padding: 104px 24px 28px;
       clip-path: inset(0 0 100% 0);
@@ -544,7 +548,7 @@
     }
     .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
     .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #6B6B6B;
+      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
       font-variant-numeric: tabular-nums;
     }
     /* the box the line rises out of */
@@ -559,13 +563,13 @@
     body.nav-open .navitem-text { transform: translateY(0); }
     body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
     body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #6B6B6B; }
+    .navitem:hover .navitem-text { color: #666666; }
     .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
 
     .navoverlay-foot {
       width: 100%; max-width: 1100px; margin: 40px auto 0;
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #6B6B6B;
+      font-size: 13px; color: #666666;
       opacity: 0; transform: translateY(8px);
       transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
     }
@@ -812,21 +816,21 @@
           <text x="410" y="224" text-anchor="middle" font-size="10" font-family="Inter" fill="#ea580c">Consultation history</text>
 
           <!-- Path 5: Certificates (gray) -->
-          <line x1="260" y1="95" x2="340" y2="280" stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="340" y="262" width="140" height="36" rx="6" stroke="#6B6B6B" stroke-width="1.5" fill="#f9f9f9"/>
-          <text x="410" y="284" text-anchor="middle" font-size="10" font-family="Inter" fill="#6B6B6B">Medical certificates</text>
+          <line x1="260" y1="95" x2="340" y2="280" stroke="#666666" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="340" y="262" width="140" height="36" rx="6" stroke="#666666" stroke-width="1.5" fill="#f9f9f9"/>
+          <text x="410" y="284" text-anchor="middle" font-size="10" font-family="Inter" fill="#666666">Medical certificates</text>
 
           <!-- Legend -->
           <rect x="40" y="340" width="20" height="3" rx="1" fill="#0d9488"/>
-          <text x="68" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Symptom checker</text>
+          <text x="68" y="344" font-size="10" font-family="Inter" fill="#666666">Symptom checker</text>
           <rect x="180" y="340" width="20" height="3" rx="1" fill="#3B82F6"/>
-          <text x="208" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Booking</text>
+          <text x="208" y="344" font-size="10" font-family="Inter" fill="#666666">Booking</text>
           <rect x="280" y="340" width="20" height="3" rx="1" fill="#7c3aed"/>
-          <text x="308" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Consultation</text>
+          <text x="308" y="344" font-size="10" font-family="Inter" fill="#666666">Consultation</text>
           <rect x="410" y="340" width="20" height="3" rx="1" fill="#ea580c"/>
-          <text x="438" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">History</text>
-          <rect x="500" y="340" width="20" height="3" rx="1" fill="#6B6B6B"/>
-          <text x="528" y="344" font-size="10" font-family="Inter" fill="#6B6B6B">Certificates</text>
+          <text x="438" y="344" font-size="10" font-family="Inter" fill="#666666">History</text>
+          <rect x="500" y="340" width="20" height="3" rx="1" fill="#666666"/>
+          <text x="528" y="344" font-size="10" font-family="Inter" fill="#666666">Certificates</text>
 
           <defs>
             <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
@@ -846,47 +850,47 @@
       <div class="phone-strip" tabindex="0" role="group" aria-label="App screens, eleven &mdash; drag or scroll">
         <div class="phone-track">
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-record.webp" alt="Onboarding — a medical record for you and your family" loading="lazy" width="700" height="1210">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-record-v2.webp" alt="Onboarding — a medical record for you and your family" loading="lazy" width="700" height="1210">
           <p class="phone-caption">Onboarding &mdash; a medical record for you and your family</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-home.webp" alt="Home — ask a doctor, or open the med card" loading="lazy" width="700" height="1210">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-home-v2.webp" alt="Home — ask a doctor, or open the med card" loading="lazy" width="700" height="1210">
           <p class="phone-caption">Home &mdash; ask a doctor, or open the med card</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-medical-cards.webp" alt="Medical cards — one per family member" loading="lazy" width="700" height="1210">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-medical-cards-v2.webp" alt="Medical cards — one per family member" loading="lazy" width="700" height="1210">
           <p class="phone-caption">Medical cards &mdash; one per family member</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-appointment.webp" alt="Onboarding — book the way that suits you" loading="lazy" width="700" height="1210">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-appointment-v2.webp" alt="Onboarding — book the way that suits you" loading="lazy" width="700" height="1210">
           <p class="phone-caption">Onboarding &mdash; book the way that suits you</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-specialist.webp" alt="Specialist — consultation type, what they treat, the price" loading="lazy" width="700" height="1219">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-specialist-v2.webp" alt="Specialist — consultation type, what they treat, the price" loading="lazy" width="700" height="1219">
           <p class="phone-caption">Specialist &mdash; consultation type, what they treat, the price</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-chat.webp" alt="Chat — the consultation itself" loading="lazy" width="700" height="1219">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-chat-v2.webp" alt="Chat — the consultation itself" loading="lazy" width="700" height="1219">
           <p class="phone-caption">Chat &mdash; the consultation itself</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-results.webp" alt="Onboarding — conclusion and prescription after the visit" loading="lazy" width="700" height="1210">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-results-v2.webp" alt="Onboarding — conclusion and prescription after the visit" loading="lazy" width="700" height="1210">
           <p class="phone-caption">Onboarding &mdash; conclusion and prescription after the visit</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-video-call.webp" alt="Video consultation" loading="lazy" width="700" height="1219">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-video-call-v2.webp" alt="Video consultation" loading="lazy" width="700" height="1219">
           <p class="phone-caption">Video consultation</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-audio-call.webp" alt="Audio call" loading="lazy" width="700" height="1219">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-audio-call-v2.webp" alt="Audio call" loading="lazy" width="700" height="1219">
           <p class="phone-caption">Audio call</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-notifications.webp" alt="Notifications — the visit starts in five minutes" loading="lazy" width="700" height="1219">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-notifications-v2.webp" alt="Notifications — the visit starts in five minutes" loading="lazy" width="700" height="1219">
           <p class="phone-caption">Notifications &mdash; the visit starts in five minutes</p>
         </div>
         <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-account.webp" alt="Account" loading="lazy" width="700" height="1219">
+          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-account-v2.webp" alt="Account" loading="lazy" width="700" height="1219">
           <p class="phone-caption">Account</p>
         </div>
         </div>

@@ -47,7 +47,7 @@
       font-weight: 400;
       line-height: 1.7;
       color: #1A1A1A;
-      background-color: #F8F8F8;
+      background-color: #F2F2F2;
     }
 
     .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
@@ -59,7 +59,7 @@
        its own stacking context, so a z-index on the button alone was trapped
        underneath the curtain and the X could not be reached. */
     .topnav { padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.08);
-              position: relative; z-index: 130; background: #F8F8F8; }
+              position: relative; z-index: 130; background: #F2F2F2; }
     /* Present for screen readers and the document outline, not on screen. */
     .visually-hidden {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -69,7 +69,7 @@
     .topnav-logo { font-size: 15px; font-weight: 500; color: #1A1A1A; letter-spacing: -0.01em; }
     .topnav-links { display: flex; gap: 24px; align-items: center; }
     .topnav-link { font-size: 14px; font-weight: 500; color: #1A1A1A; }
-    .topnav-link:hover { color: #6B6B6B; }
+    .topnav-link:hover { color: #666666; }
 
     /* ——— PAGE HEAD ——— */
     .cv-intro { padding: 56px 0 32px; }
@@ -77,7 +77,7 @@
       font-size: 48px; font-weight: 600; letter-spacing: -0.02em;
       line-height: 1.15; margin-bottom: 16px;
     }
-    .cv-intro p { font-size: 17px; color: #6B6B6B; max-width: 620px; }
+    .cv-intro p { font-size: 17px; color: #666666; max-width: 620px; }
 
     .cv-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 28px; }
     .cv-btn {
@@ -93,10 +93,10 @@
       border: 1px solid rgba(0,0,0,0.14);
     }
     .cv-btn--ghost:hover { background: rgba(0,0,0,0.04); }
-    .cv-actions-note { font-size: 13px; color: #6B6B6B; }
+    .cv-actions-note { font-size: 13px; color: #666666; }
     .cv-actions-note code {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 12px; color: #6B6B6B;
+      font-size: 12px; color: #666666;
       /* 0.04 over the old warm ground held 4.51; the blue ground is darker,
          so the same tint fell to 4.41 — 0.025 puts it back at 4.56 */
       background: rgba(0,0,0,0.025); border-radius: 4px; padding: 2px 5px;
@@ -264,7 +264,7 @@
         --border-c: rgba(0,0,0,0.08);
         --border-w: 1px;
         --ink: #1A1A1A;
-        --ink-soft: #6B6B6B;
+        --ink-soft: #666666;
         --photo: 88px;
 
         --fs-name: 28px;
@@ -286,7 +286,7 @@
       body[data-view="site"] .cv-side > .cv-card { flex: 0 0 auto; }
       body[data-view="site"] .cv-card h2 { margin-bottom: 20px; }
       body[data-view="site"] .cv-name { font-weight: 600; letter-spacing: -0.02em; }
-      body[data-view="site"] .cv-role { color: #6B6B6B; margin-bottom: 24px; }
+      body[data-view="site"] .cv-role { color: #666666; margin-bottom: 24px; }
       body[data-view="site"] .cv-role strong { color: #1A1A1A; }
       body[data-view="site"] .cv-head-inner { gap: 24px; }
       body[data-view="site"] .cv-contacts { gap: 16px 40px; }
@@ -294,14 +294,14 @@
       body[data-view="site"] .cv-job-head { margin-bottom: 10px; }
       body[data-view="site"] .cv-list li { padding-left: 16px; margin-bottom: 4px; }
       body[data-view="site"] .cv-list li::before,
-      body[data-view="site"] .cv-sublist li::before { color: #6B6B6B; }
+      body[data-view="site"] .cv-sublist li::before { color: #666666; }
       body[data-view="site"] .cv-sublist { margin: 4px 0 10px 16px; }
       body[data-view="site"] .cv-sublist li { padding-left: 16px; }
       body[data-view="site"] .cv-langs li + li { margin-top: 12px; }
       body[data-view="site"] .cv-certs li { margin-bottom: 12px; }
-      body[data-view="site"] .cv-edu-dates { color: #6B6B6B; margin-top: 6px; }
-      body[data-view="site"] .cv-job-dates { color: #6B6B6B; }
-      body[data-view="site"] .cv-certs-note { margin-top: 16px; color: #6B6B6B; }
+      body[data-view="site"] .cv-edu-dates { color: #666666; margin-top: 6px; }
+      body[data-view="site"] .cv-job-dates { color: #666666; }
+      body[data-view="site"] .cv-certs-note { margin-top: 16px; color: #666666; }
 
       /* --- variant 2: the sheet itself, scaled to fit the viewport ---
          A geometric scale, not a re-layout, so what you see is literally what
@@ -347,8 +347,8 @@
     .footer-inner { display: flex; justify-content: space-between; align-items: center; }
     .footer-left { font-size: 14px; }
     .footer-name { font-weight: 500; }
-    .footer-role { color: #6B6B6B; }
-    .footer-right { display: flex; gap: 24px; font-size: 14px; color: #6B6B6B; }
+    .footer-role { color: #666666; }
+    .footer-right { display: flex; gap: 24px; font-size: 14px; color: #666666; }
 
     /* ——— PRINT ———————————————————————————————————————————————————
        No geometry here on purpose: the .cv-sheet defaults already are the A4
@@ -423,7 +423,7 @@
 
     .navoverlay {
       position: fixed; inset: 0; z-index: 110;
-      background: #F8F8F8;
+      background: #F2F2F2;
       display: flex; flex-direction: column; justify-content: center;
       padding: 104px 24px 28px;
       clip-path: inset(0 0 100% 0);
@@ -446,7 +446,7 @@
     }
     .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
     .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #6B6B6B;
+      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
       font-variant-numeric: tabular-nums;
     }
     /* the box the line rises out of */
@@ -461,13 +461,13 @@
     body.nav-open .navitem-text { transform: translateY(0); }
     body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
     body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #6B6B6B; }
+    .navitem:hover .navitem-text { color: #666666; }
     .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
 
     .navoverlay-foot {
       width: 100%; max-width: 1100px; margin: 40px auto 0;
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #6B6B6B;
+      font-size: 13px; color: #666666;
       opacity: 0; transform: translateY(8px);
       transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
     }

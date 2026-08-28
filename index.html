@@ -41,7 +41,7 @@
       font-weight: 400;
       line-height: 1.7;
       color: #1A1A1A;
-      background-color: #F8F8F8;
+      background-color: #F2F2F2;
     }
 
     .container {
@@ -61,12 +61,12 @@
        its own stacking context, so a z-index on the button alone was trapped
        underneath the curtain and the X could not be reached. */
     .topnav { padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.08);
-              position: relative; z-index: 130; background: #F8F8F8; }
+              position: relative; z-index: 130; background: #F2F2F2; }
     .topnav-inner { display: flex; justify-content: space-between; align-items: center; }
     .topnav-logo { font-size: 15px; font-weight: 500; color: #1A1A1A; letter-spacing: -0.01em; }
     .topnav-links { display: flex; gap: 24px; align-items: center; }
     .topnav-link { font-size: 14px; font-weight: 500; color: #1A1A1A; }
-    .topnav-link:hover { color: #6B6B6B; }
+    .topnav-link:hover { color: #666666; }
     /* Contact is the primary action, so it carries the same button treatment as
        .hero-link--primary; the CV link steps back to grey. On desktop the pill
        stays last, where a right-aligned row puts its most prominent item. */
@@ -81,7 +81,7 @@
       border-color: rgba(0,0,0,0.36);
       background: rgba(0,0,0,0.025);
     }
-    .topnav-link--secondary { color: #6B6B6B; }
+    .topnav-link--secondary { color: #666666; }
     .topnav-link--secondary:hover { color: #1A1A1A; }
 
     /* ——— FULL-SCREEN MENU ———
@@ -120,7 +120,7 @@
 
     .navoverlay {
       position: fixed; inset: 0; z-index: 110;
-      background: #F8F8F8;
+      background: #F2F2F2;
       display: flex; flex-direction: column; justify-content: center;
       padding: 104px 24px 28px;
       clip-path: inset(0 0 100% 0);
@@ -143,7 +143,7 @@
     }
     .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
     .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #6B6B6B;
+      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
       font-variant-numeric: tabular-nums;
     }
     /* the box the line rises out of */
@@ -158,13 +158,13 @@
     body.nav-open .navitem-text { transform: translateY(0); }
     body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
     body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #6B6B6B; }
+    .navitem:hover .navitem-text { color: #666666; }
     .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
 
     .navoverlay-foot {
       width: 100%; max-width: 1100px; margin: 40px auto 0;
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #6B6B6B;
+      font-size: 13px; color: #666666;
       opacity: 0; transform: translateY(8px);
       transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
     }
@@ -263,7 +263,7 @@
        32 keeps a small copy edit from orphaning its last word again */
     .hero-bio-hook {
       font-size: 16px;
-      color: #6B6B6B;
+      color: #666666;
       max-width: 520px;
       margin-bottom: 32px;
     }
@@ -281,7 +281,7 @@
       max-width: 520px;
     }
 
-    .hero-meta dt { color: #6B6B6B; font-weight: 400; }
+    .hero-meta dt { color: #666666; font-weight: 400; }
     .hero-meta dd { color: #1A1A1A; margin: 0; }
 
     
@@ -391,7 +391,7 @@
 
     .case-result {
       font-size: 14px;
-      color: #6B6B6B;
+      color: #666666;
       margin-bottom: 16px;
     }
 
@@ -452,7 +452,7 @@
       z-index: 2;               /* above the stretch so it stays independently clickable */
       font-size: 14px;
       font-weight: 500;
-      color: #6B6B6B;
+      color: #666666;
     }
     .case-store-link::after {
       content: '';
@@ -492,14 +492,14 @@
     }
 
     .footer-role {
-      color: #6B6B6B;
+      color: #666666;
     }
 
     .footer-right {
       display: flex;
       gap: 24px;
       font-size: 14px;
-      color: #6B6B6B;
+      color: #666666;
     }
 
     .footer-right a {
@@ -513,7 +513,7 @@
       left: 0;
       width: 0;
       height: 1px;
-      background: #6B6B6B;
+      background: #666666;
       transition: width 200ms ease;
     }
 

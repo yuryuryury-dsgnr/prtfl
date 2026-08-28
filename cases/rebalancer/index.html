@@ -23,13 +23,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F8F8; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F2F2F2; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 130;
-      background: #F8F8F8;
+      background: #F2F2F2;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -40,9 +40,9 @@
     .case-header-back {
       font-size: 14px; font-weight: 500; color: #1A1A1A;
     }
-    .case-header-back:hover { color: #6B6B6B; }
+    .case-header-back:hover { color: #666666; }
     .case-header-name {
-      font-size: 14px; color: #6B6B6B;
+      font-size: 14px; color: #666666;
     }
 
     /* ——— CONTAINER ——— */
@@ -55,9 +55,9 @@
     .case-hero h1 {
       font-size: 48px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px;
     }
-    .case-hero-meta { font-size: 14px; color: #6B6B6B; margin-bottom: 8px; }
-    .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
-    .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
+    .case-hero-meta { font-size: 14px; color: #666666; margin-bottom: 8px; }
+    .case-hero-role { font-size: 14px; color: #666666; margin-bottom: 4px; }
+    .case-hero-result { font-size: 14px; color: #666666; font-style: italic; margin-bottom: 32px; }
 
     /* The markup runs title, line, image, details — which is the phone order.
        On a desktop the details go back above the image, so the order is a
@@ -145,7 +145,7 @@
     }
 
     /* ——— SECTIONS ——— */
-    .case-section { padding: 104px 0 0; }
+    .case-section { padding: 88px 0 0; }
     /* the number rides on the heading line now, at the heading's own size.
        The space before the title is a real one — without it a screen reader
        announces "01Roadmap" as a single word — so the margin carries only
@@ -171,10 +171,13 @@
       line-height: 1.3; margin: 56px 0 14px;
     }
     .subsection-heading:first-of-type { margin-top: 32px; }
-    .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
+    .section-text { color: #666666; margin-bottom: 16px; max-width: 640px; }
     /* a section that ends on prose (§01) would otherwise add its paragraph's
        16px to the next section's 80px top padding and sit 96px apart */
-    .case-section > .section-text:last-child { margin-bottom: 0; }
+    /* Whatever a section ends on, the space to the next one is the section
+       rhythm and nothing else: a trailing bottom margin escapes the section
+       box and silently adds itself to the gap. */
+    .case-section > *:last-child { margin-bottom: 0; }
     
 
     /* ——— CTA PILL ——— */
@@ -200,20 +203,20 @@
       border-top: 1px solid rgba(0,0,0,0.08);
       display: flex; justify-content: space-between; align-items: center;
     }
-    .next-case-label { font-size: 14px; color: #6B6B6B; }
+    .next-case-label { font-size: 14px; color: #666666; }
     .next-case-name { font-size: 14px; font-weight: 500; }
-    .next-case-name:hover { color: #6B6B6B; }
+    .next-case-name:hover { color: #666666; }
 
     /* ——— FOOTER ——— */
     .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
     .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
     .footer-name { font-weight: 500; }
-    .footer-role { color: #6B6B6B; }
-    .footer-right { display: flex; gap: 24px; color: #6B6B6B; }
+    .footer-role { color: #666666; }
+    .footer-right { display: flex; gap: 24px; color: #666666; }
     .footer-right a { position: relative; }
     .footer-right a::after {
       content: ''; position: absolute; bottom: -2px; left: 0;
-      width: 0; height: 1px; background: #6B6B6B; transition: width 200ms ease;
+      width: 0; height: 1px; background: #666666; transition: width 200ms ease;
     }
     .footer-right a:hover::after { width: 100%; }
 
@@ -261,10 +264,10 @@
        asset still reads as a screen rather than collapsing the grid */
     .phone-placeholder {
       position: absolute; inset: 0; align-items: center; justify-content: center;
-      background: #EDEDED; border-radius: 26px;
-      font-size: 12px; color: #6B6B6B; text-align: center; padding: 0 12px;
+      background: #E7E7E7; border-radius: 26px;
+      font-size: 12px; color: #666666; text-align: center; padding: 0 12px;
     }
-    .phone-caption { font-size: 13px; color: #6B6B6B; text-align: center; line-height: 1.5; max-width: 208px; }
+    .phone-caption { font-size: 13px; color: #666666; text-align: center; line-height: 1.5; max-width: 208px; }
 
     /* Four mockups as one stepped row. It needs ~912px to hold them at a useful
        size, which only exists from 1080px where the roadmap's bleed applies —
@@ -351,7 +354,7 @@
     }
     .rb-cmp-row--head .rb-cmp-c {
       font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #6B6B6B; line-height: 1.4;
+      text-transform: uppercase; color: #666666; line-height: 1.4;
     }
     .rb-cmp-mark { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
     .rb-cmp-mark--yes { background: var(--rb-action-bd); }
@@ -361,7 +364,7 @@
     }
     .rb-cmp-mark--no { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
     /* only ever attached to a partial: says what the half-mark is standing for */
-    .rb-cmp-note { font-size: 10px; line-height: 1.35; color: #6B6B6B; }
+    .rb-cmp-note { font-size: 10px; line-height: 1.35; color: #666666; }
 
     /* §06 — App Store listing cards. Same components as the §04 screenshots
        (frame box, .phone-shot, onerror placeholder, caption) with the store
@@ -391,14 +394,14 @@
       border-radius: 12px; padding: 24px;
     }
     .rb-test-flow { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 12px; }
-    .rb-test-num { color: #6B6B6B; font-weight: 500; margin-right: 7px; }
-    .rb-test-line { font-size: 13px; color: #6B6B6B; line-height: 1.6; padding-left: 12px; border-left: 2px solid; }
+    .rb-test-num { color: #666666; font-weight: 500; margin-right: 7px; }
+    .rb-test-line { font-size: 13px; color: #666666; line-height: 1.6; padding-left: 12px; border-left: 2px solid; }
     .rb-test-line + .rb-test-line { margin-top: 10px; }
     .rb-test-line--found { border-left-color: var(--rb-decision-bd); }
     .rb-test-line--fixed { border-left-color: var(--rb-action-bd); }
     .rb-test-key {
       display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #6B6B6B;
+      text-transform: uppercase; color: #666666;
     }
 
     /* §07 — the slot post-launch numbers land in. Dashed on purpose: it reads
@@ -408,10 +411,10 @@
       margin-top: 22px; border: 1px dashed var(--rb-neutral-bd); border-radius: 12px;
       padding: 24px; display: flex; flex-direction: column; gap: 8px; max-width: 640px;
     }
-    .rb-pending-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B; }
+    .rb-pending-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #666666; }
     .rb-pending-list { display: flex; flex-direction: column; gap: 5px; }
-    .rb-pending-item { font-size: 13px; color: #6B6B6B; line-height: 1.6; padding-left: 14px; position: relative; }
-    .rb-pending-item::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #6B6B6B; }
+    .rb-pending-item { font-size: 13px; color: #666666; line-height: 1.6; padding-left: 14px; position: relative; }
+    .rb-pending-item::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #666666; }
 
     /* §03 — audience groups. Same shape as the Halliburton case's persona
        cards (badge, name, Who / Pain). The hue used to fill the whole card;
@@ -441,14 +444,14 @@
        name 15/500/1.3, line 13/1.6); only the fills stay local to this page */
     .rb-group-num {
       font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #6B6B6B; line-height: 1.3;
+      text-transform: uppercase; color: #666666; line-height: 1.3;
     }
     .rb-group-name { font-size: 15px; font-weight: 500; line-height: 1.3; }
-    .rb-group-line { font-size: 13px; color: #6B6B6B; line-height: 1.6; margin-bottom: 8px; }
+    .rb-group-line { font-size: 13px; color: #666666; line-height: 1.6; margin-bottom: 8px; }
     .rb-group-line:last-child { margin-bottom: 0; }
     .rb-group-key {
       display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #6B6B6B;
+      text-transform: uppercase; color: #666666;
     }
 
     /* Research ran alongside the build all spring, so it lives inside the
@@ -466,13 +469,13 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F8F8F8;
+      background: #1A1A1A; border: 3px solid #F2F2F2;
     }
-    .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
+    .timeline-number { font-size: 12px; font-weight: 500; color: #666666; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
+    .timeline-desc { font-size: 12px; color: #666666; line-height: 1.5; margin-bottom: 8px; }
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #EFEFEF;
+      display: inline-block; font-size: 11px; color: #666666; background: #E9E9E9;
       padding: 3px 8px; border-radius: 4px;
     }
     /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
@@ -482,15 +485,15 @@
        image loads so the stats below never jump. */
     .rb-shot {
       margin-top: 28px; border-radius: 12px; overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.08); background: #EDEDED;
+      border: 1px solid rgba(0,0,0,0.08); background: #E7E7E7;
       position: relative; aspect-ratio: 3360 / 1786;
     }
     .rb-shot img { width: 100%; height: 100%; display: block; object-fit: cover; }
     .rb-shot-placeholder {
       position: absolute; inset: 0; align-items: center; justify-content: center;
-      color: #6B6B6B; font-size: 13px; text-align: center; padding: 0 16px;
+      color: #666666; font-size: 13px; text-align: center; padding: 0 16px;
     }
-    .rb-shot-caption { font-size: 13px; color: #6B6B6B; line-height: 1.5; margin-top: 12px; max-width: 640px; }
+    .rb-shot-caption { font-size: 13px; color: #666666; line-height: 1.5; margin-top: 12px; max-width: 640px; }
     @media (min-width: 1080px) {
       .rb-shot { width: calc(100% + 200px); margin-left: -100px; }
     }
@@ -505,7 +508,7 @@
     }
     .rb-tab {
       padding: 10px 20px; font-size: 14px; font-weight: 500; font-family: inherit;
-      border: none; background: transparent; color: #6B6B6B; cursor: pointer;
+      border: none; background: transparent; color: #666666; cursor: pointer;
       border-right: 1px solid rgba(0,0,0,0.1); white-space: nowrap;
       transition: background 150ms ease, color 150ms ease;
     }
@@ -513,14 +516,14 @@
     .rb-tab:hover { background: rgba(0,0,0,0.02); }
     /* selected, not pressed — a step down the page's own blue ramp instead
        of solid ink, matching the toggles on the other cases */
-    .rb-tab.is-active { background: #DFDFDF; color: #1A1A1A; }
+    .rb-tab.is-active { background: #D9D9D9; color: #1A1A1A; }
     .rb-tabpanel { display: none; }
     .rb-tabpanel.is-active { display: block; }
 
     /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §03 and §04.
        Colour encodes the node TYPE and nothing else, so the same meaning is
        the same hue in both diagrams (a screen is blue in the IA tree and in
-       every flow). Muted on purpose: these sit on a warm #F8F8F8 page.
+       every flow). Muted on purpose: these sit on a warm #F2F2F2 page.
        Shape + stroke style still carry the type on their own — colour is a
        second, redundant channel, so nothing depends on seeing it. ═══ */
     :root {
@@ -529,18 +532,18 @@
       --rb-system-bg:   #EFECF5;  --rb-system-bd:   #C5BED5;   /* system  — lilac */
       --rb-decision-bg: #F2EBDF;  --rb-decision-bd: #D6C7AF;   /* decision— sand  */
       --rb-end-bg:      #F7EBE9;  --rb-end-bd:      #D7BCB7;   /* end     — clay  */
-      --rb-stage-bg:    #EDEDED;                               /* flow area        */
+      --rb-stage-bg:    #E7E7E7;                               /* flow area        */
       --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
     }
 
     /* Shared commentary line under a diagram (§03, §04) */
-    .rb-note { font-size: 14px; color: #6B6B6B; line-height: 1.7; margin-top: 22px; max-width: 640px; }
+    .rb-note { font-size: 14px; color: #666666; line-height: 1.7; margin-top: 22px; max-width: 640px; }
     .rb-note + .rb-note { margin-top: 12px; }
 
     /* Diagram legend — the thing that makes a schematic read as an artefact.
        Node types are told apart by fill / stroke style only, never colour. */
     .rb-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; }
-    .rb-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #6B6B6B; }
+    .rb-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #666666; }
     .rb-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
     /* ——— Discovery only: a defined area with a real scrollbar ————————
@@ -617,7 +620,7 @@
     .rb-branch-label {
       flex: 0 0 auto; max-width: 118px; margin-right: 12px;
       font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
-      color: #6B6B6B; line-height: 1.35;
+      color: #666666; line-height: 1.35;
     }
 
     /* the app boundary — a lane crossing the track; everything right of it is off-app */
@@ -625,7 +628,7 @@
     .rb-bound-label {
       position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%);
       white-space: nowrap; background: var(--rb-stage-bg); padding: 0 8px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6B6B;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;
     }
 
     .rb-step {
@@ -634,14 +637,14 @@
       background: #FCFCFC; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
       position: relative;
     }
-    .rb-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #6B6B6B; }
+    .rb-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #666666; }
     .rb-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
-    .rb-step-line { font-size: 12px; color: #6B6B6B; line-height: 1.45; }
+    .rb-step-line { font-size: 12px; color: #666666; line-height: 1.45; }
     .rb-step--screen { background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
     .rb-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--rb-action-bg); border-color: var(--rb-action-bd); }
     .rb-step--system { border-style: dotted; background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
     .rb-step--sheet, .rb-step--outside { border-style: dashed; border-color: var(--rb-neutral-bd); background: transparent; }
-    .rb-step--outside .rb-step-title { color: #6B6B6B; }
+    .rb-step--outside .rb-step-title { color: #666666; }
     /* the pill shape already marks a terminal node, so the fill only has to be
        calm — black made an ordinary node the loudest thing in the diagram */
     .rb-step--end {
@@ -665,9 +668,9 @@
     /* §04 — what the screens run on: one paragraph naming the hard part, and a
        flat row of chips. Chip/flex based, so the row wraps instead of ever
        widening the page. */
-    .rb-tech-challenge { font-size: 14px; color: #6B6B6B; line-height: 1.7; max-width: 640px; }
+    .rb-tech-challenge { font-size: 14px; color: #666666; line-height: 1.7; max-width: 640px; }
     .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-    .rb-tech-chip { font-size: 12px; color: #6B6B6B; background: #EFEFEF; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
+    .rb-tech-chip { font-size: 12px; color: #666666; background: #E9E9E9; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
 
     /* ——— FLOATING TOC PILL ———
        The halliburton case's pill, shown at every width here: it names the
@@ -730,7 +733,7 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
       /* 64px between sections is a desktop measure standing on a phone */
-      .case-section { padding: 48px 0 0; }
+      .case-section { padding: 40px 0 0; }
       .rb-groups { grid-template-columns: 1fr; }
       .rb-tests { grid-template-columns: 1fr; }
       .rb-store > .phone-figure { flex: 0 0 62%; }
@@ -891,7 +894,7 @@
 
     .navoverlay {
       position: fixed; inset: 0; z-index: 110;
-      background: #F8F8F8;
+      background: #F2F2F2;
       display: flex; flex-direction: column; justify-content: center;
       padding: 104px 24px 28px;
       clip-path: inset(0 0 100% 0);
@@ -914,7 +917,7 @@
     }
     .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
     .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #6B6B6B;
+      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
       font-variant-numeric: tabular-nums;
     }
     /* the box the line rises out of */
@@ -929,13 +932,13 @@
     body.nav-open .navitem-text { transform: translateY(0); }
     body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
     body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #6B6B6B; }
+    .navitem:hover .navitem-text { color: #666666; }
     .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
 
     .navoverlay-foot {
       width: 100%; max-width: 1100px; margin: 40px auto 0;
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #6B6B6B;
+      font-size: 13px; color: #666666;
       opacity: 0; transform: translateY(8px);
       transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
     }

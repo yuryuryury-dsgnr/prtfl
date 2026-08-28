@@ -23,13 +23,13 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F8F8F8; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F2F2F2; }
     a { color: inherit; text-decoration: none; }
 
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 130;
-      background: #F8F8F8;
+      background: #F2F2F2;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -40,9 +40,9 @@
     .case-header-back {
       font-size: 14px; font-weight: 500; color: #1A1A1A;
     }
-    .case-header-back:hover { color: #6B6B6B; }
+    .case-header-back:hover { color: #666666; }
     .case-header-name {
-      font-size: 14px; color: #6B6B6B;
+      font-size: 14px; color: #666666;
     }
 
     /* ——— CONTAINER ——— */
@@ -55,9 +55,9 @@
     .case-hero h1 {
       font-size: 48px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px;
     }
-    .case-hero-meta { font-size: 14px; color: #6B6B6B; margin-bottom: 8px; }
-    .case-hero-role { font-size: 14px; color: #6B6B6B; margin-bottom: 4px; }
-    .case-hero-result { font-size: 14px; color: #6B6B6B; font-style: italic; margin-bottom: 32px; }
+    .case-hero-meta { font-size: 14px; color: #666666; margin-bottom: 8px; }
+    .case-hero-role { font-size: 14px; color: #666666; margin-bottom: 4px; }
+    .case-hero-result { font-size: 14px; color: #666666; font-style: italic; margin-bottom: 32px; }
 
     /* The markup runs title, line, image, details — which is the phone order.
        On a desktop the details go back above the image, so the order is a
@@ -145,7 +145,11 @@
     }
 
     /* ——— SECTIONS ——— */
-    .case-section { padding: 104px 0 0; }
+    .case-section { padding: 88px 0 0; }
+    /* Whatever a section ends on, the space to the next one is the section
+       rhythm and nothing else: a trailing bottom margin escapes the section
+       box and silently adds itself to the gap. */
+    .case-section > *:last-child { margin-bottom: 0; }
     /* the number rides on the heading line now, at the heading's own size.
        The space before the title is a real one — without it a screen reader
        announces "01Roadmap" as a single word — so the margin carries only
@@ -163,7 +167,7 @@
        that the gutter is 24px and the number would fall off the page, so it
        stays inline. The leading space in the markup is trimmed at the start of
        the line, which is what keeps the name flush. */
-    .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
+    .section-text { color: #666666; margin-bottom: 16px; max-width: 640px; }
 
     /* ——— TIMELINE ——— */
     .timeline { display: flex; gap: 0; margin-top: 24px; position: relative; }
@@ -176,13 +180,13 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F8F8F8;
+      background: #1A1A1A; border: 3px solid #F2F2F2;
     }
-    .timeline-number { font-size: 12px; font-weight: 500; color: #6B6B6B; margin-bottom: 4px; }
+    .timeline-number { font-size: 12px; font-weight: 500; color: #666666; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .timeline-desc { font-size: 12px; color: #6B6B6B; line-height: 1.5; margin-bottom: 8px; }
+    .timeline-desc { font-size: 12px; color: #666666; line-height: 1.5; margin-bottom: 8px; }
     .timeline-tag {
-      display: inline-block; font-size: 11px; color: #6B6B6B; background: #EFEFEF;
+      display: inline-block; font-size: 11px; color: #666666; background: #E9E9E9;
       padding: 3px 8px; border-radius: 4px;
     }
 
@@ -196,12 +200,12 @@
     /* Card type scale, shared site-wide with the persona cards on the
        Data Marketplace case: label 11/500 uppercase · title 15/500/1.3 ·
        body 13/1.6 · tag 11/500. */
-    .card-number { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B; margin-bottom: 8px; }
+    .card-number { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #666666; margin-bottom: 8px; }
     .card-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 8px; }
-    .card-desc { font-size: 13px; color: #6B6B6B; line-height: 1.6; margin-bottom: 12px; }
+    .card-desc { font-size: 13px; color: #666666; line-height: 1.6; margin-bottom: 12px; }
     .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .card-tag {
-      font-size: 11px; font-weight: 500; color: #6B6B6B; background: #EFEFEF;
+      font-size: 11px; font-weight: 500; color: #666666; background: #EFEFEF;
       padding: 3px 8px; border-radius: 4px;
     }
 
@@ -215,14 +219,14 @@
 
     /* ——— FLOW SVG CONTAINER ——— */
     .flow-container { margin-top: 24px; text-align: center; }
-    .flow-caption { font-size: 13px; color: #6B6B6B; margin-top: 16px; text-align: center; }
+    .flow-caption { font-size: 13px; color: #666666; margin-top: 16px; text-align: center; }
 
     /* ——— WIREFRAMES / MOCKUPS GRID ——— */
 
     /* ——— BEFORE / AFTER ——— */
 
     /* ——— OUTCOME ——— */
-    .outcome-text { color: #6B6B6B; margin-bottom: 24px; max-width: 640px; }
+    .outcome-text { color: #666666; margin-bottom: 24px; max-width: 640px; }
     /* the live product is the proof, so it sits in the hero rather than at the
        foot of the page — same place the Rebalancer case puts its store link */
     .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
@@ -247,20 +251,20 @@
       border-top: 1px solid rgba(0,0,0,0.08);
       display: flex; justify-content: space-between; align-items: center;
     }
-    .next-case-label { font-size: 14px; color: #6B6B6B; }
+    .next-case-label { font-size: 14px; color: #666666; }
     .next-case-name { font-size: 14px; font-weight: 500; }
-    .next-case-name:hover { color: #6B6B6B; }
+    .next-case-name:hover { color: #666666; }
 
     /* ——— FOOTER ——— */
     .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
     .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
     .footer-name { font-weight: 500; }
-    .footer-role { color: #6B6B6B; }
-    .footer-right { display: flex; gap: 24px; color: #6B6B6B; }
+    .footer-role { color: #666666; }
+    .footer-right { display: flex; gap: 24px; color: #666666; }
     .footer-right a { position: relative; }
     .footer-right a::after {
       content: ''; position: absolute; bottom: -2px; left: 0;
-      width: 0; height: 1px; background: #6B6B6B; transition: width 200ms ease;
+      width: 0; height: 1px; background: #666666; transition: width 200ms ease;
     }
     .footer-right a:hover::after { width: 100%; }
 
@@ -358,7 +362,7 @@
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
       /* 64px between sections is a desktop measure standing on a phone */
-      .case-section { padding: 48px 0 0; }
+      .case-section { padding: 40px 0 0; }
     }
       /* Visible only when focused: a keyboard user should not have to tab
        through the header on every page to reach the case. */
@@ -484,7 +488,7 @@
 
     .navoverlay {
       position: fixed; inset: 0; z-index: 110;
-      background: #F8F8F8;
+      background: #F2F2F2;
       display: flex; flex-direction: column; justify-content: center;
       padding: 104px 24px 28px;
       clip-path: inset(0 0 100% 0);
@@ -507,7 +511,7 @@
     }
     .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
     .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #6B6B6B;
+      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
       font-variant-numeric: tabular-nums;
     }
     /* the box the line rises out of */
@@ -522,13 +526,13 @@
     body.nav-open .navitem-text { transform: translateY(0); }
     body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
     body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #6B6B6B; }
+    .navitem:hover .navitem-text { color: #666666; }
     .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
 
     .navoverlay-foot {
       width: 100%; max-width: 1100px; margin: 40px auto 0;
       display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #6B6B6B;
+      font-size: 13px; color: #666666;
       opacity: 0; transform: translateY(8px);
       transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
     }
@@ -718,8 +722,8 @@
           <!-- No path (dashed) -->
           <line x1="660" y1="100" x2="660" y2="140" stroke="#1A1A1A" stroke-width="1.5" stroke-dasharray="4 4"/>
           <text x="675" y="125" font-size="9" font-family="Inter" fill="#B91C1C">No</text>
-          <rect x="605" y="140" width="110" height="36" rx="6" stroke="#6B6B6B" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
-          <text x="660" y="162" text-anchor="middle" font-size="9" font-family="Inter" fill="#6B6B6B">Return to search</text>
+          <rect x="605" y="140" width="110" height="36" rx="6" stroke="#666666" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
+          <text x="660" y="162" text-anchor="middle" font-size="9" font-family="Inter" fill="#666666">Return to search</text>
 
           <!-- Row 2 -->
           <line x1="820" y1="80" x2="820" y2="120" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
@@ -746,11 +750,11 @@
 
           <!-- Legend -->
           <rect x="30" y="220" width="40" height="1.5" fill="#1A1A1A"/>
-          <text x="80" y="224" font-size="10" font-family="Inter" fill="#6B6B6B">Main flow</text>
-          <line x1="30" y1="248" x2="70" y2="248" stroke="#6B6B6B" stroke-width="1.5" stroke-dasharray="4 4"/>
-          <text x="80" y="252" font-size="10" font-family="Inter" fill="#6B6B6B">Return path</text>
+          <text x="80" y="224" font-size="10" font-family="Inter" fill="#666666">Main flow</text>
+          <line x1="30" y1="248" x2="70" y2="248" stroke="#666666" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="80" y="252" font-size="10" font-family="Inter" fill="#666666">Return path</text>
           <polygon points="45,275 55,270 55,280" fill="#1A1A1A"/>
-          <text x="80" y="278" font-size="10" font-family="Inter" fill="#6B6B6B">Direction</text>
+          <text x="80" y="278" font-size="10" font-family="Inter" fill="#666666">Direction</text>
 
           <!-- Arrow markers -->
           <defs>
