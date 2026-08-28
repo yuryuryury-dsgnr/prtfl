@@ -146,7 +146,7 @@
     .section-text { color: #6B6B6B; margin-bottom: 16px; max-width: 640px; }
 
     /* ——— TIMELINE ——— */
-    .timeline { display: flex; gap: 0; margin-top: 32px; position: relative; }
+    .timeline { display: flex; gap: 0; margin-top: 24px; position: relative; }
     .timeline::before {
       content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
     }
@@ -288,15 +288,22 @@
       .case-hero-image { width: 100%; margin-left: 0; }
     }
     @media (max-width: 768px) {
-      /* edge to edge on a phone: the container's 24px of padding costs the
-         image 48px of width, which on a 390 screen is 12% of it */
+      /* one gap under the header and the same one before the image, so the
+         hero reads as three even steps rather than a small one and a big one */
+      /* the hero's own bottom padding and the next section's top padding
+         were stacking to 96px between the last hero line and the first
+         heading; the section supplies that gap on its own */
+      .case-hero { padding-bottom: 0; }
+      .case-hero-image { margin-top: 32px; }
+      .case-hero-detail { margin-top: 32px; }
+      /* the mat stays on a phone too; it just runs to the container's edge
+         rather than sitting inside the 24px of page padding */
       .case-hero-image {
         width: calc(100% + 48px);
         margin-left: -24px;
         border-radius: 16px;
       }
       .case-hero-image img { border-radius: 10px; }
-      .case-hero-detail { margin-top: 28px; }
       .case-hero h1 { font-size: 36px; }
       .section-heading { font-size: 32px; }
       .card-grid-3 { grid-template-columns: 1fr; }
@@ -338,7 +345,8 @@
       .next-case { flex-direction: column; gap: 8px; text-align: center; }
       .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
       .footer-right { flex-wrap: wrap; justify-content: center; }
-      .case-section { padding: 64px 0 0; }
+      /* 64px between sections is a desktop measure standing on a phone */
+      .case-section { padding: 48px 0 0; }
     }
       /* Visible only when focused: a keyboard user should not have to tab
        through the header on every page to reach the case. */
