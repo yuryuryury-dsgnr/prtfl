@@ -548,7 +548,7 @@
 
     /* Diagram legend — the thing that makes a schematic read as an artefact.
        Node types are told apart by fill / stroke style only, never colour. */
-    .rb-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 20px; }
+    .rb-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
     .rb-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #666666; }
     .rb-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
@@ -728,6 +728,9 @@
       /* the hero's own bottom padding and the next section's top padding
          were stacking to 96px between the last hero line and the first
          heading; the section supplies that gap on its own */
+      /* body copy runs one step down on a phone; 1.7 leading is kept, so
+         the line box goes 27.2 -> 23.8 */
+      .section-text { font-size: 14px; }
       /* one step tighter than desktop the whole way down the hero */
       .case-hero { padding-top: 24px; padding-bottom: 0; }
       .case-hero .cta-row { margin-top: 24px; }
@@ -1065,7 +1068,6 @@
       <p class="section-text">Three questions came first: whether anything already did this, who keeps running into it, and how few decisions each path could take.</p>
 
       <h3 class="subsection-heading">Market analysis</h3>
-      <p class="section-text">I went looking for the app I wanted to buy. What exists are four workarounds, each stopping in a different place.</p>
       <div class="rb-cmp-scroll" tabindex="0" role="group" aria-label="Comparison grid — scrollable">
         <div class="rb-cmp">
           <div class="rb-cmp-row rb-cmp-row--head">
@@ -1181,7 +1183,7 @@
       </div>
 
       <h3 class="subsection-heading">User personas</h3>
-      <p class="section-text">Three groups came out of the conversations and the reading. I belong to the first one myself, which is where the product started; the interviews put the other two beside it.</p>
+      <p class="section-text">Three groups came out of the conversations and the reading.</p>
       <div class="rb-groups" tabindex="0" role="group" aria-label="Audience groups — scrollable">
         <div class="rb-group rb-group--investor">
           <div class="rb-group-head">
@@ -1230,15 +1232,6 @@
           <button class="rb-tab" data-rb-tab="sim" role="tab" aria-selected="false">Simulate</button>
           <button class="rb-tab" data-rb-tab="hold" role="tab" aria-selected="false">Holdings</button>
           <button class="rb-tab" data-rb-tab="moment" role="tab" aria-selected="false">Alert fires</button>
-        </div>
-
-        <div class="rb-key" aria-hidden="true">
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--screen"></span>Screen</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--action"></span>Action</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--system"></span>System</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--decision"></span>Decision</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--end"></span>End</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--outside"></span>Sheet / off-app</span>
         </div>
 
         <div class="rb-tabpanel is-active" data-rb-panel="discovery" role="tabpanel">
@@ -1570,6 +1563,15 @@
           </div>
           <p class="rb-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature &mdash; a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
         </div>
+
+        <div class="rb-key" aria-hidden="true">
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--screen"></span>Screen</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--action"></span>Action</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--system"></span>System</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--decision"></span>Decision</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--end"></span>End</span>
+          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--outside"></span>Sheet / off-app</span>
+        </div>
       </div>
     
     </section>
@@ -1577,10 +1579,9 @@
     <!-- 04 — PROTOTYPE -->
     <section id="section-04" class="case-section">
       <h2 class="section-heading">Prototype</h2>
-      <p class="section-text">There was no Figma stage. The prototype ran on a phone from the start, which is why the screens and the system behind them were decided together.</p>
+      <p class="section-text">There was no Figma stage. I built the prototype with Claude Code, iterating on a real phone &mdash; screens and system decided together.</p>
 
       <h3 class="subsection-heading">Screens</h3>
-      <p class="section-text">Four screens from the shipped app. The flows behind them are in the section above; this is what came out.</p>
       <div class="phone-strip" tabindex="0" role="group" aria-label="App screenshots, four screens — drag or scroll">
         <div class="phone-track">
         <div class="phone-figure">

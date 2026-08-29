@@ -352,6 +352,9 @@
       /* the hero's own bottom padding and the next section's top padding
          were stacking to 96px between the last hero line and the first
          heading; the section supplies that gap on its own */
+      /* body copy runs one step down on a phone; 1.7 leading is kept, so
+         the line box goes 27.2 -> 23.8 */
+      .section-text, .outcome-text { font-size: 14px; }
       /* one step tighter than desktop the whole way down the hero */
       .case-hero { padding-top: 24px; padding-bottom: 0; }
       .case-hero .cta-row { margin-top: 24px; }
