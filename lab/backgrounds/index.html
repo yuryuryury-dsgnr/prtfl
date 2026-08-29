@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Background studies — Yurii Fokin</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px; line-height: 1.7; color: #1A1A1A;
+      background: #F2F2F2;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══ page chrome ═══════════════════════════════════════════════════ */
+
+    .bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 14px 24px;
+      background: rgba(242,242,242,0.82);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .bar.on-dark {
+      background: rgba(14,14,16,0.72);
+      border-bottom-color: rgba(255,255,255,0.08);
+      color: #EDEDED;
+    }
+    .bar-title { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+    .bar-back { font-size: 14px; color: inherit; opacity: 0.62; text-decoration: none; }
+    .bar-back:hover { opacity: 1; }
+    .bar, .bar * { transition: background 500ms ease, color 500ms ease, border-color 500ms ease, opacity 200ms ease; }
+
+    /* the rail is the table of contents; it inverts with the section under it */
+    .rail {
+      position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+      z-index: 60; display: flex; flex-direction: column; gap: 12px;
+    }
+    .rail a {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
+      color: rgba(0,0,0,0.42); text-decoration: none;
+      border: 1px solid transparent;
+      transition: color 300ms ease, border-color 300ms ease, background 300ms ease;
+    }
+    .rail a:hover { color: #1A1A1A; border-color: rgba(0,0,0,0.18); }
+    .rail a.active { color: #1A1A1A; border-color: rgba(0,0,0,0.32); background: rgba(255,255,255,0.5); }
+    .rail.on-dark a { color: rgba(255,255,255,0.42); }
+    .rail.on-dark a:hover { color: #fff; border-color: rgba(255,255,255,0.28); }
+    .rail.on-dark a.active { color: #fff; border-color: rgba(255,255,255,0.44); background: rgba(255,255,255,0.08); }
+
+    /* ═══ a study ═══════════════════════════════════════════════════════ */
+
+    .study {
+      position: relative;
+      min-height: 100svh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 96px 24px 40px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .layer { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+    .layer canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+    .inner { width: 100%; max-width: 1100px; margin: 0 auto; }
+
+    .tag {
+      display: inline-flex; align-items: baseline; gap: 10px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      color: #666666; margin-bottom: 28px;
+    }
+    .tag b { font-size: 11px; font-weight: 600; color: #1A1A1A; letter-spacing: 0.08em; }
+    .study--dark .tag { color: rgba(255,255,255,0.5); }
+    .study--dark .tag b { color: rgba(255,255,255,0.92); }
+
+    /* the real hero copy, so each background is judged in context rather than
+       as a swatch */
+    .h {
+      font-size: clamp(34px, 6.2vw, 60px);
+      font-weight: 600; letter-spacing: -0.03em; line-height: 1.05;
+      margin: 0 0 14px;
+    }
+    .sub {
+      font-size: clamp(16px, 2vw, 20px); color: #666666;
+      margin: 0; max-width: 30ch;
+    }
+    .sub strong { font-weight: 500; color: #1A1A1A; }
+    .study--dark .h { color: #F4F4F5; }
+    .study--dark .sub { color: rgba(255,255,255,0.56); }
+    .study--dark .sub strong { color: rgba(255,255,255,0.92); }
+
+    .note {
+      margin-top: 40px; max-width: 60ch;
+      font-size: 13px; line-height: 1.65; color: #666666;
+      border-top: 1px solid rgba(0,0,0,0.1); padding-top: 14px;
+    }
+    .note b { color: #1A1A1A; font-weight: 500; }
+    .study--dark .note { color: rgba(255,255,255,0.5); border-top-color: rgba(255,255,255,0.12); }
+    .study--dark .note b { color: rgba(255,255,255,0.86); }
+    .cost { display: inline-block; margin-right: 14px; white-space: nowrap; }
+
+    /* ═══ 01 — static wash ══════════════════════════════════════════════
+       Three soft radials on the page ground. No motion, no script, nothing
+       to go wrong. This is the one that could ship today.                  */
+    .bg-wash {
+      background:
+        radial-gradient(58% 46% at 12% 8%,  rgba(150,178,226,0.30), transparent 62%),
+        radial-gradient(52% 44% at 88% 14%, rgba(206,168,222,0.26), transparent 60%),
+        radial-gradient(64% 50% at 62% 96%, rgba(246,206,196,0.28), transparent 64%),
+        #F2F2F2;
+    }
+
+    /* ═══ 02 — slow drift ═══════════════════════════════════════════════
+       The same wash, but each blob is its own element so it can move. Only
+       transform and opacity animate, so it stays on the compositor.        */
+    .bg-drift { background: #F2F2F2; }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px);
+      will-change: transform;
+    }
+    .blob--a { width: 60vw; height: 60vw; left: -14vw; top: -18vw;  background: rgba(150,178,226,0.52); animation: driftA 34s ease-in-out infinite alternate; }
+    .blob--b { width: 54vw; height: 54vw; right: -12vw; top: -10vw; background: rgba(206,168,222,0.46); animation: driftB 41s ease-in-out infinite alternate; }
+    .blob--c { width: 66vw; height: 66vw; left: 26vw; bottom: -26vw; background: rgba(246,206,196,0.50); animation: driftC 47s ease-in-out infinite alternate; }
+    @keyframes driftA { to { transform: translate3d(16vw, 10vh, 0) scale(1.16); } }
+    @keyframes driftB { to { transform: translate3d(-14vw, 14vh, 0) scale(0.88); } }
+    @keyframes driftC { to { transform: translate3d(-18vw, -12vh, 0) scale(1.12); } }
+
+    /* ═══ 03 — aurora ═══════════════════════════════════════════════════
+       One wide conic gradient turning behind a heavy blur. A single element
+       rotating — the cheapest possible way to get a shifting sheen.        */
+    .bg-aurora { background: #F2F2F2; }
+    .aurora {
+      position: absolute; left: 50%; top: 50%;
+      width: 160vmax; height: 160vmax; margin: -80vmax 0 0 -80vmax;
+      background: conic-gradient(from 0deg,
+        rgba(150,178,226,0.42), rgba(206,168,222,0.34), rgba(246,206,196,0.40),
+        rgba(168,214,206,0.30), rgba(150,178,226,0.42));
+      filter: blur(110px);
+      will-change: transform;
+      animation: turn 60s linear infinite;
+    }
+    @keyframes turn { to { transform: rotate(360deg); } }
+    /* a soft vignette keeps the edges from reading as a visible disc */
+    .aurora-veil {
+      position: absolute; inset: 0;
+      background: radial-gradient(72% 62% at 50% 45%, transparent 40%, #F2F2F2 100%);
+    }
+
+    /* ═══ 04 — wash + grain ═════════════════════════════════════════════
+       The static wash with film grain over it. Costs one inline SVG and no
+       motion at all; it is what stops a large gradient looking like plastic. */
+    .bg-grain {
+      background:
+        radial-gradient(58% 46% at 14% 10%, rgba(150,178,226,0.32), transparent 62%),
+        radial-gradient(54% 44% at 86% 12%, rgba(206,168,222,0.28), transparent 60%),
+        radial-gradient(64% 50% at 58% 98%, rgba(246,206,196,0.30), transparent 64%),
+        #F2F2F2;
+    }
+    .grain {
+      position: absolute; inset: -50%;
+      opacity: 0.42;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* ═══ 05 — embers ═══════════════════════════════════════════════════ */
+    .bg-embers { background: radial-gradient(120% 90% at 50% 108%, #1B1512 0%, #0E0E10 58%, #0B0B0C 100%); }
+
+    /* ═══ 06 — stars ════════════════════════════════════════════════════ */
+    .bg-stars { background: radial-gradient(110% 80% at 50% 0%, #14161F 0%, #0C0D12 55%, #08090C 100%); }
+
+    /* ═══ reduced motion ════════════════════════════════════════════════
+       Everything that moves has a still state that still reads. The two
+       canvases stop drawing entirely — the JS checks the same query.       */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .blob, .aurora { animation: none; }
+      .blob--a { transform: translate3d(6vw, 4vh, 0); }
+      .blob--c { transform: translate3d(-8vw, -5vh, 0); }
+    }
+
+    @media (max-width: 768px) {
+      .study { padding: 84px 20px 32px; }
+      .rail { right: 10px; gap: 8px; }
+      .rail a { width: 22px; height: 22px; font-size: 9px; }
+      .bar { padding: 12px 20px; }
+      .bar-title { font-size: 13px; }
+      .note { margin-top: 28px; }
+      .blob { filter: blur(64px); }
+      .aurora { filter: blur(76px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bar" id="bar">
+    <span class="bar-title">Background studies</span>
+    <a class="bar-back" href="../../">← Back to the portfolio</a>
+  </div>
+
+  <nav class="rail" id="rail" aria-label="Studies">
+    <a href="#s1" data-s="s1">01</a>
+    <a href="#s2" data-s="s2">02</a>
+    <a href="#s3" data-s="s3">03</a>
+    <a href="#s4" data-s="s4">04</a>
+    <a href="#s5" data-s="s5">05</a>
+    <a href="#s6" data-s="s6">06</a>
+  </nav>
+
+  <!-- 01 -->
+  <section class="study" id="s1">
+    <div class="layer bg-wash"></div>
+    <div class="inner">
+      <p class="tag"><b>01</b> Static wash · light</p>
+      <h1 class="h">Leading product design.</h1>
+      <p class="sub">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <p class="note">
+        <span class="cost"><b>Cost:</b> 4 lines of CSS</span>
+        <span class="cost"><b>Motion:</b> none</span>
+        <span class="cost"><b>Risk:</b> none</span><br>
+        Three soft radials over the page ground. Nothing animates, nothing loads,
+        nothing can drop a frame. It reads as colour rather than as an effect —
+        which is usually what you want behind hiring-manager reading.
+      </p>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="study" id="s2">
+    <div class="layer bg-drift">
+      <span class="blob blob--a"></span>
+      <span class="blob blob--b"></span>
+      <span class="blob blob--c"></span>
+    </div>
+    <div class="inner">
+      <p class="tag"><b>02</b> Slow drift · light</p>
+      <h1 class="h">Leading product design.</h1>
+      <p class="sub">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <p class="note">
+        <span class="cost"><b>Cost:</b> 3 elements, CSS only</span>
+        <span class="cost"><b>Motion:</b> 34–47s loops</span>
+        <span class="cost"><b>Risk:</b> low</span><br>
+        The same wash with each blob on its own slow loop. Only transform and
+        opacity animate, so it stays on the compositor and never touches layout.
+        Deliberately slower than you notice: you register that it moved, not that
+        it is moving.
+      </p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="study" id="s3">
+    <div class="layer bg-aurora">
+      <span class="aurora"></span>
+      <span class="aurora-veil"></span>
+    </div>
+    <div class="inner">
+      <p class="tag"><b>03</b> Aurora · light</p>
+      <h1 class="h">Leading product design.</h1>
+      <p class="sub">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <p class="note">
+        <span class="cost"><b>Cost:</b> 1 element</span>
+        <span class="cost"><b>Motion:</b> 60s rotation</span>
+        <span class="cost"><b>Risk:</b> blur is heavy on low-end phones</span><br>
+        One conic gradient turning behind a 110px blur, with a vignette so its
+        edge never shows. The iridescence you asked about, at the lowest possible
+        price — but a blur that large is the one thing here that can cost frames
+        on an old device.
+      </p>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="study" id="s4">
+    <div class="layer bg-grain">
+      <span class="grain"></span>
+    </div>
+    <div class="inner">
+      <p class="tag"><b>04</b> Wash + grain · light</p>
+      <h1 class="h">Leading product design.</h1>
+      <p class="sub">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <p class="note">
+        <span class="cost"><b>Cost:</b> one inline SVG, ~0.4 KB</span>
+        <span class="cost"><b>Motion:</b> none</span>
+        <span class="cost"><b>Risk:</b> none</span><br>
+        Study 01 with film grain multiplied over it. Grain is what keeps a large
+        gradient from looking like plastic, and it costs nothing — no request, no
+        motion. If you ship one thing from this page, this is my pick.
+      </p>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="study study--dark" id="s5">
+    <div class="layer bg-embers"><canvas data-fx="embers"></canvas></div>
+    <div class="inner">
+      <p class="tag"><b>05</b> Embers · dark</p>
+      <h1 class="h">Leading product design.</h1>
+      <p class="sub">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <p class="note">
+        <span class="cost"><b>Cost:</b> canvas, ~70 lines</span>
+        <span class="cost"><b>Motion:</b> 26 particles</span>
+        <span class="cost"><b>Risk:</b> needs a full dark mode</span><br>
+        Twenty-six embers, not two hundred — sparse enough to read as restraint
+        rather than as a screensaver. It is the best-looking thing on this page
+        and the most expensive: see the note at the end.
+      </p>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="study study--dark" id="s6">
+    <div class="layer bg-stars"><canvas data-fx="stars"></canvas></div>
+    <div class="inner">
+      <p class="tag"><b>06</b> Starfield · dark</p>
+      <h1 class="h">Leading product design.</h1>
+      <p class="sub">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <p class="note">
+        <span class="cost"><b>Cost:</b> canvas, ~60 lines</span>
+        <span class="cost"><b>Motion:</b> twinkle + pointer parallax</span>
+        <span class="cost"><b>Risk:</b> needs a full dark mode</span><br>
+        Move the pointer: the field shifts against itself in three depths. Quieter
+        than the embers and easier to live with behind text, but it is the more
+        generic of the two — a starfield reads as a template more readily than
+        ash does.
+      </p>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    'use strict';
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ─── the bar and the rail invert over the dark studies ─────────────
+       Keyed to whatever sits under the bar, not to a scroll threshold, so
+       it stays right no matter how the sections are reordered.           */
+    var bar = document.getElementById('bar');
+    var rail = document.getElementById('rail');
+    var studies = [].slice.call(document.querySelectorAll('.study'));
+    var links = [].slice.call(rail.querySelectorAll('a'));
+
+    function paint() {
+      var probe = 90;                       // just under the bar
+      var here = studies[0];
+      for (var i = 0; i < studies.length; i++) {
+        var r = studies[i].getBoundingClientRect();
+        if (r.top <= probe && r.bottom > probe) { here = studies[i]; break; }
+        if (r.top > probe) break;
+        here = studies[i];
+      }
+      var dark = here.classList.contains('study--dark');
+      bar.classList.toggle('on-dark', dark);
+      rail.classList.toggle('on-dark', dark);
+
+      // the rail marks whichever study owns the middle of the screen
+      var mid = window.innerHeight / 2, active = studies[0];
+      studies.forEach(function (s) {
+        var r = s.getBoundingClientRect();
+        if (r.top <= mid && r.bottom > mid) active = s;
+      });
+      links.forEach(function (a) { a.classList.toggle('active', a.dataset.s === active.id); });
+    }
+    window.addEventListener('scroll', paint, { passive: true });
+    window.addEventListener('resize', paint);
+    paint();
+
+    /* ─── canvas studies ───────────────────────────────────────────────
+       Each canvas only runs while its own section is on screen: two
+       animation loops competing off-screen is wasted battery for a page
+       nobody is looking at.                                              */
+    function setup(canvas, draw, init) {
+      var ctx = canvas.getContext('2d');
+      var w = 0, h = 0, dpr = 1, state = null, raf = 0, live = false;
+
+      function size() {
+        var r = canvas.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = Math.max(1, Math.round(r.width));
+        h = Math.max(1, Math.round(r.height));
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        state = init(w, h);
+      }
+
+      function frame(t) {
+        draw(ctx, w, h, state, t);
+        if (live) raf = requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (live) return;
+        live = true;
+        if (reduce) { draw(ctx, w, h, state, 0); live = false; return; }
+        raf = requestAnimationFrame(frame);
+      }
+      function stop() { live = false; cancelAnimationFrame(raf); }
+
+      size();
+      window.addEventListener('resize', function () { size(); if (reduce) draw(ctx, w, h, state, 0); });
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+      }, { rootMargin: '10% 0px' }).observe(canvas);
+      return { pointer: function (x, y) { if (state) { state.px = x; state.py = y; } } };
+    }
+
+    /* embers — few, warm, rising, each fading out near the top of its life */
+    var emberCanvas = document.querySelector('[data-fx="embers"]');
+    if (emberCanvas) setup(emberCanvas,
+      function (ctx, w, h, s, t) {
+        ctx.clearRect(0, 0, w, h);
+        ctx.globalCompositeOperation = 'lighter';
+        for (var i = 0; i < s.p.length; i++) {
+          var p = s.p[i];
+          p.y -= p.v;
+          p.x += Math.sin((t || 0) / 1400 + p.seed) * p.sway;
+          p.life -= p.decay;
+          if (p.life <= 0 || p.y < -20) {
+            p.x = Math.random() * w; p.y = h + 10;
+            p.life = 1; p.v = 0.16 + Math.random() * 0.42;
+            p.r = 0.7 + Math.random() * 1.5;
+          }
+          // brightest in the middle of its rise, gone at both ends
+          var a = Math.sin(p.life * Math.PI) * 0.85;
+          var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
+          g.addColorStop(0, 'rgba(255,186,110,' + (a * 0.9).toFixed(3) + ')');
+          g.addColorStop(0.35, 'rgba(232,120,58,' + (a * 0.34).toFixed(3) + ')');
+          g.addColorStop(1, 'rgba(232,120,58,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 5, 0, 6.284); ctx.fill();
+        }
+        ctx.globalCompositeOperation = 'source-over';
+      },
+      function (w, h) {
+        var p = [];
+        // sparse on purpose — 26 reads as restraint, 200 reads as a screensaver
+        for (var i = 0; i < 26; i++) p.push({
+          x: Math.random() * w, y: Math.random() * h,
+          r: 0.7 + Math.random() * 1.5,
+          v: 0.16 + Math.random() * 0.42,
+          sway: 0.10 + Math.random() * 0.22,
+          seed: Math.random() * 6.28,
+          life: Math.random(), decay: 0.0016 + Math.random() * 0.0022
+        });
+        return { p: p };
+      });
+
+    /* stars — three depths, twinkling, the whole field parallaxing on pointer */
+    var starCanvas = document.querySelector('[data-fx="stars"]');
+    if (starCanvas) {
+      var api = setup(starCanvas,
+        function (ctx, w, h, s, t) {
+          ctx.clearRect(0, 0, w, h);
+          var ox = (s.px - 0.5) * 26, oy = (s.py - 0.5) * 16;
+          for (var i = 0; i < s.p.length; i++) {
+            var p = s.p[i];
+            var tw = 0.55 + 0.45 * Math.sin((t || 0) / 900 * p.rate + p.seed);
+            var a = p.base * tw;
+            var x = p.x * w + ox * p.depth, y = p.y * h + oy * p.depth;
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(' + p.tint + ',' + a.toFixed(3) + ')';
+            ctx.arc(x, y, p.r, 0, 6.284);
+            ctx.fill();
+          }
+        },
+        function () {
+          var p = [];
+          for (var i = 0; i < 130; i++) {
+            var d = Math.random();
+            p.push({
+              x: Math.random(), y: Math.random(),
+              depth: 0.35 + d,                       // far stars move least
+              r: 0.4 + d * 1.1,
+              base: 0.20 + d * 0.55,
+              rate: 0.6 + Math.random() * 1.5,
+              seed: Math.random() * 6.28,
+              tint: Math.random() < 0.16 ? '198,214,255' : (Math.random() < 0.14 ? '255,226,198' : '255,255,255')
+            });
+          }
+          return { p: p, px: 0.5, py: 0.5 };
+        });
+      window.addEventListener('pointermove', function (e) {
+        api.pointer(e.clientX / window.innerWidth, e.clientY / window.innerHeight);
+      }, { passive: true });
+    }
+  })();
+  </script>
+</body>
+</html>
