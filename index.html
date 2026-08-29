@@ -365,8 +365,11 @@
     }
 
     .case-body {
-      /* the card already carries the 20px inset on every side */
-      padding: 24px 0 4px;
+      /* The card's own 20px inset is the reference: the band above the image,
+         the band between image and title, and the band under the last line
+         are all that same number. The 4px tail here used to make the bottom
+         band read 25 against the top's 20. */
+      padding: 20px 0 0;
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -386,13 +389,13 @@
       /* every other heading on the site is 1.1-1.3; without this it inherited
          the body's 1.7 and a wrapped card title read as loose body text */
       line-height: 1.3;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .case-result {
       font-size: 14px;
       color: #666666;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .case-link {
@@ -531,6 +534,9 @@
          same rule it does on desktop — the inset plus the thumb's 12 — so the
          curves stay concentric at 24 instead of 32. */
       .case-card { padding: 12px; border-radius: 24px; }
+      /* the bands track the smaller inset */
+      .case-body { padding-top: 12px; }
+      .case-result { margin-bottom: 12px; }
 
       /* the pill supplies its own vertical air, so the nav no longer needs
          24px of it on top of that */
