@@ -197,13 +197,6 @@
     .card-tag { font-size: 11px; font-weight: 500; color: #666666; background: #EFEFEF; padding: 3px 8px; border-radius: 4px; }
 
     /* ——— TABLE ——— */
-    .strategy-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-    .strategy-table td {
-      padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
-      font-size: 14px; vertical-align: top; line-height: 1.6;
-    }
-    .strategy-table td:first-child { font-weight: 500; width: 160px; padding-right: 24px; }
-    .strategy-table td:last-child { color: #666666; }
 
     /* ——— USABILITY ROUNDS ——— */
     .usability-round { background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; margin-top: 24px; }
@@ -405,7 +398,6 @@
       .footer-right { flex-wrap: wrap; justify-content: center; }
       /* 64px between sections is a desktop measure standing on a phone */
       .case-section { padding: 40px 0 0; }
-      .strategy-table td:first-child { width: 120px; }
     }
       /* Visible only when focused: a keyboard user should not have to tab
        through the header on every page to reach the case. */
@@ -704,38 +696,7 @@
       </div>
     </section>
 
-    <!-- 03A — UX STRATEGY TABLE -->
-    <section id="section-03" class="case-section">
-      <h2 class="section-heading">UX Strategy</h2>
-      <table class="strategy-table">
-        <tr>
-          <td>Vision</td>
-          <td>Accessible telemedicine platform for everyone, regardless of location or schedule</td>
-        </tr>
-        <tr>
-          <td>Project stage</td>
-          <td>Full product development and launch</td>
-        </tr>
-        <tr>
-          <td>Business goals</td>
-          <td>1. Reduce clinic overcrowding by 30%<br>2. 50,000 users within first 6 months<br>3. 90%+ patient satisfaction<br>4. Subscription + per-consultation revenue</td>
-        </tr>
-        <tr>
-          <td>User goals</td>
-          <td>1. Book without calling during business hours<br>2. Consult online for minor concerns<br>3. Access medical history in one place<br>4. Manage family appointments</td>
-        </tr>
-        <tr>
-          <td>Design principles</td>
-          <td>Trust & Security · Simplicity · Empathy · Reliability · Accessibility</td>
-        </tr>
-        <tr>
-          <td>Success metrics</td>
-          <td>Booking completion > 85%<br>Video success rate > 95%<br>NPS > 70<br>Avg booking time < 3 min</td>
-        </tr>
-      </table>
-    </section>
-
-    <!-- 03B — RESEARCH & DISCOVERY -->
+    <!-- 03 — RESEARCH & DISCOVERY -->
     <section id="section-04" class="case-section">
       <h2 class="section-heading">Research</h2>
       <div class="card-grid-3" tabindex="0" role="group" aria-label="Research activities — scrollable">
@@ -983,13 +944,12 @@
     <nav class="toc-pill-menu" id="tocPillMenu" aria-label="Sections">
       <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
       <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Roadmap</a>
-      <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> UX Strategy</a>
-      <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Research</a>
-      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> User flows</a>
-      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Mockups</a>
-      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Usability</a>
-      <a href="#section-09" data-section="section-09"><span class="pill-num">08</span> Outcome</a>
-      <a href="#section-10" data-section="section-10"><span class="pill-num">09</span> Reflection</a>
+      <a href="#section-04" data-section="section-04"><span class="pill-num">03</span> Research</a>
+      <a href="#section-05" data-section="section-05"><span class="pill-num">04</span> User flows</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">05</span> Mockups</a>
+      <a href="#section-07" data-section="section-07"><span class="pill-num">06</span> Usability</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">07</span> Outcome</a>
+      <a href="#section-10" data-section="section-10"><span class="pill-num">08</span> Reflection</a>
     </nav>
     <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
       <span class="toc-pill-num" id="tocPillNum">01</span>
@@ -1083,6 +1043,11 @@
       function sync() {
         var y = window.scrollY + 120, active = entries[0];
         entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
+        // A short last section starts below the furthest the page will ever
+        // scroll, so its own top never crosses the line and it could never
+        // become active. Once the reader is at the bottom, it is the one.
+        if (window.scrollY >= document.documentElement.scrollHeight - window.innerHeight - 2)
+          active = entries[entries.length - 1];
         entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
         num.textContent = active.num;
         label.textContent = active.text;

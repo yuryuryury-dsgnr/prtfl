@@ -3391,6 +3391,11 @@
       function sync() {
         var y = window.scrollY + 120, active = entries[0];
         entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
+        // A short last section starts below the furthest the page will ever
+        // scroll, so its own top never crosses the line and it could never
+        // become active. Once the reader is at the bottom, it is the one.
+        if (window.scrollY >= document.documentElement.scrollHeight - window.innerHeight - 2)
+          active = entries[entries.length - 1];
         entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
         num.textContent = active.num;
         label.textContent = active.text;
