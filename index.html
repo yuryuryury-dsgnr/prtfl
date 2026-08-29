@@ -44,6 +44,50 @@
       background-color: #F2F2F2;
     }
 
+    /* ——— PAGE WASH ———
+       Three soft radials over the ground, plus film grain — study 04. It sits
+       in its own fixed layer, not on <body>: a background on the body scrolls
+       away with the page, and background-attachment: fixed is the thing that
+       stutters on iOS. Nothing animates, nothing loads.
+       The case pages deliberately do not get this. The eleven DobroDoc phone
+       exports are flattened onto flat #F2F2F2, so a gradient behind them would
+       show each one as a light rectangle. */
+    .pagewash {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      /* The colour is weighted to the right and the bottom-right, away from the
+         two places text actually sits on this layer — the hero, which is
+         left-aligned, and the footer. The cards never see it: they paint their
+         own #FCFCFC. Measured against the painted pixels, not the CSS. */
+      background:
+        radial-gradient(56% 46% at 84% 10%, rgba(150,178,226,0.30), transparent 62%),
+        radial-gradient(52% 46% at 99% 58%, rgba(206,168,222,0.26), transparent 60%),
+        radial-gradient(60% 48% at 68% 96%, rgba(246,206,196,0.28), transparent 64%),
+        #F2F2F2;
+      /* The two bands of the screen that carry text on this layer are the very
+         top (the nav, before it scrolls away) and the very bottom (the footer).
+         Fading the layer out at both edges leaves those on flat ground, which
+         lets the middle keep the strength the study had. Measured on the
+         painted pixels: the nav sits at 3-8% of the screen and the footer link
+         at 94%, so the layer is fully out by 92% and fully in by 14%. Chasing
+         the same result by thinning the whole gradient cost it its colour and
+         still left the footer link 0.02 short. */
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
+              mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
+    }
+    /* grain is what stops a gradient this large reading as plastic; one inline
+       SVG, no request, no motion */
+    .pagewash::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.42;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    }
+
     .container {
       max-width: 1080px;
       margin: 0 auto;
@@ -60,8 +104,10 @@
        carries the X sits at 130 above it. .case-header is sticky and therefore
        its own stacking context, so a z-index on the button alone was trapped
        underneath the curtain and the X could not be reached. */
+    /* transparent, so the wash runs under it instead of being cut by a flat
+       band; the full-screen menu curtain paints its own ground */
     .topnav { padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.08);
-              position: relative; z-index: 130; background: #F2F2F2; }
+              position: relative; z-index: 130; }
     .topnav-inner { display: flex; justify-content: space-between; align-items: center; }
     .topnav-logo { font-size: 15px; font-weight: 500; color: #1A1A1A; letter-spacing: -0.01em; }
     .topnav-links { display: flex; gap: 24px; align-items: center; }
@@ -616,6 +662,8 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- TOP NAV -->
+  <div class="pagewash" aria-hidden="true"></div>
+
   <nav class="topnav">
     <div class="container topnav-inner">
       <a href="/" class="topnav-logo">Portfolio — Yurii Fokin</a>
