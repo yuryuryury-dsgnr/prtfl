@@ -430,7 +430,9 @@
       width: 100%;
     }
 
-    /* ——— Rebalancer card: two independent links (isolated, not shared) ——— */
+    /* ——— Cards that carry a live link beside "View case": the tile link is
+       stretched under the body so the outbound links stay independently
+       clickable, rather than nested inside one anchor ——— */
     .case-card-stretch {
       position: absolute;
       inset: 0;
@@ -440,7 +442,8 @@
       margin-top: auto;
       display: flex;
       align-items: center;
-      gap: 16px;
+      flex-wrap: wrap;      /* DobroDoc carries three; they wrap rather than overflow */
+      gap: 8px 16px;
     }
     .case-links-row .case-link {
       margin-top: 0;
@@ -681,7 +684,8 @@
         </div>
 
         <!-- Card 3: DobroDoc+ -->
-        <a href="cases/dobrodoc/" class="case-card">
+        <div class="case-card">
+          <a href="cases/dobrodoc/" class="case-card-stretch" aria-label="View DobroDoc+ case"></a>
           <div class="case-thumb">
             <img src="assets/images/dobrodoc/dobrodoc-cover-v3.webp" alt="DobroDoc+" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1920" height="1080">
             <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
@@ -689,12 +693,17 @@
           <div class="case-body">
             <h3 class="case-name">DobroDoc+</h3>
             <p class="case-result">Cut booking time 40% in usability tests</p>
-            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
+            <div class="case-links-row">
+              <a href="cases/dobrodoc/" class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></a>
+              <a href="https://apps.apple.com/app/id1483029353" class="case-store-link" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)">App Store ↗</a>
+              <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" class="case-store-link" target="_blank" rel="noopener" aria-label="Google Play (opens in new tab)">Google Play ↗</a>
+            </div>
           </div>
-        </a>
+        </div>
 
         <!-- Card 4: dopas.dp.ua -->
-        <a href="cases/dopas/" class="case-card">
+        <div class="case-card">
+          <a href="cases/dopas/" class="case-card-stretch" aria-label="View dopas.dp.ua case"></a>
           <div class="case-thumb">
             <img src="assets/images/dopas/dopas-cover-v2.webp" alt="dopas.dp.ua" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1740" height="1106">
             <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
@@ -702,9 +711,12 @@
           <div class="case-body">
             <h3 class="case-name">dopas.dp.ua</h3>
             <p class="case-result">Launched from zero, now generating revenue</p>
-            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
+            <div class="case-links-row">
+              <a href="cases/dopas/" class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></a>
+              <a href="https://www.dopas.dp.ua/" class="case-store-link" target="_blank" rel="noopener" aria-label="dopas.dp.ua (opens in new tab)">Website ↗</a>
+            </div>
           </div>
-        </a>
+        </div>
 
       </div>
     </div>
