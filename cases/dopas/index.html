@@ -23,13 +23,55 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F2F2F2; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F0F1F7; }
     a { color: inherit; text-decoration: none; }
 
+    /* ——— PAGE WASH ———
+       The same three colours as every other page, in deck placement D
+       — blue bottom-left, warm above. Moving the blobs is what keeps the cases related without
+       repeating one another. A fixed layer rather than a body background,
+       which would scroll away with the page, and rather than
+       background-attachment: fixed, which stutters on iOS. */
+    .pagewash {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(130% 120% at 14% 100%, #FDFDFF 0%, rgba(253,253,255,0) 58%),
+        radial-gradient(110% 110% at 90% 2%,   #FEFDFB 0%, rgba(254,253,251,0) 54%),
+        radial-gradient(76% 76% at 100% 56%,   #FEFDFB 0%, rgba(254,253,251,0) 46%),
+        #F0F1F7;
+      /* the two bands that carry text on this layer are the very top, before
+         the header scrolls away, and the very bottom */
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
+              mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
+    }
+    .pagewash::before {
+      content: '';
+      position: absolute;
+      inset: -25%;
+      background: radial-gradient(46% 44% at 34% 64%, rgba(253,253,255,0.9), transparent 62%);
+    }
+    /* grain is what stops a gradient this large reading as plastic */
+    .pagewash::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.42;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    }
     /* ——— STICKY HEADER ——— */
     .case-header {
       position: sticky; top: 0; z-index: 130;
-      background: #F2F2F2;
+      /* It stays put while the page scrolls under it, so it cannot be
+         transparent — the copy would sit on whatever passes beneath. A
+         translucent ground with a blur keeps the wash readable through it and
+         the header legible over anything. */
+      background: rgba(240,241,247,0.93);
+      -webkit-backdrop-filter: blur(12px);
+              backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(0,0,0,0.06);
       padding: 16px 24px;
     }
@@ -325,7 +367,7 @@
     .timeline-step::before {
       content: ''; position: absolute; top: 18px; left: 0;
       width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F2F2F2;
+      background: #1A1A1A; border: 3px solid #F0F1F7;
     }
     .timeline-number { font-size: 12px; font-weight: 500; color: #666666; margin-bottom: 4px; }
     .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
@@ -638,7 +680,7 @@
 
     .navoverlay {
       position: fixed; inset: 0; z-index: 110;
-      background: #F2F2F2;
+      background: #F0F1F7;
       display: flex; flex-direction: column; justify-content: center;
       padding: 104px 24px 28px;
       clip-path: inset(0 0 100% 0);
@@ -705,6 +747,8 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- HEADER -->
+  <div class="pagewash" aria-hidden="true"></div>
+
   <header class="case-header">
     <div class="case-header-inner">
       <a href="../../" class="case-header-back">← Back</a>
