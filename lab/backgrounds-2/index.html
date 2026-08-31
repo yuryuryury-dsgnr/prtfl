@@ -122,7 +122,7 @@
   <aside class="rail">
     <div class="rail-head">
       <p class="rail-title">Background studies II</p>
-      <p class="rail-sub">Twenty-five washes on the live home page &mdash; the stage is the real site, with only its background layer swapped. Switch pages above to see a wash on a case.
+      <p class="rail-sub">Twenty-seven washes on the live home page &mdash; the stage is the real site, with only its background layer swapped. Switch pages above to see a wash on a case.
         The last three also swap the ink: <b>#474D5E</b> instead of #666666, which is what lets the
         ground go deep without taking the copy under 4.5.</p>
     </div>
@@ -621,6 +621,41 @@
               radial-gradient(100% 100% at 92% 12%, #FDF8F3 0%, rgba(253,248,243,0) 48%),
               #EEF0F8 !important;
           }`
+      },
+      {
+        id: 'warely-veil', name: 'Warely veil', num: '26', group: 'Warely',
+        sw: ['#FAFBFE', '#FDFBF6', '#FEFBF7'], motion: 'none', contrast: '5.00',
+        note: 'A step past 25 — colour down 88%, blobs at grey 251. The palette is barely a direction now.',
+        css: `
+          body { background-color: #EEF0F8 !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 24% 20%, #FAFBFE 0%, rgba(250,251,254,0) 56%),
+              radial-gradient(120% 120% at 84% 86%, #FDFBF6 0%, rgba(253,251,246,0) 58%),
+              radial-gradient(100% 100% at 92% 12%, #FEFBF7 0%, rgba(254,251,247,0) 48%),
+              #EEF0F8 !important;
+          }`
+      },
+      {
+        id: 'warely-trace', name: 'Warely trace', num: '27', group: 'Warely',
+        sw: ['#FDFDFF', '#FEFDFB', '#F0F1F7'], motion: 'drift 62s', contrast: '5.09',
+        note: 'The last step — colour down 94% and the base pulled toward neutral. Almost nothing, and it drifts.',
+        css: `
+          body { background-color: #F0F1F7 !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 24% 20%, #FDFDFF 0%, rgba(253,253,255,0) 56%),
+              radial-gradient(120% 120% at 84% 86%, #FEFDFB 0%, rgba(254,253,251,0) 58%),
+              radial-gradient(100% 100% at 92% 12%, #FEFDFB 0%, rgba(254,253,251,0) 48%),
+              #F0F1F7 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -25%;
+            background: radial-gradient(46% 44% at 54% 48%, rgba(253,253,255,0.9), transparent 62%);
+            will-change: transform;
+            animation: warTrace 62s ease-in-out infinite alternate;
+          }
+          @keyframes warTrace { to { transform: translate3d(-7%, 5%, 0) scale(1.10); } }`
       }
     ];
 
