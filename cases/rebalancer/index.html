@@ -420,17 +420,6 @@
        them never fit a 760px column legibly, so the row scrolls at every width
        with a clipped next card as the cue — the mechanism the flows and the
        phone row already use. */
-    .rb-store {
-      display: flex; flex-direction: row; align-items: flex-start; gap: 16px;
-      margin-top: 24px; max-width: 100%; min-width: 0;
-      overflow-x: auto; overflow-y: hidden;
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain; scroll-snap-type: x proximity;
-    }
-    .rb-store::-webkit-scrollbar { display: none; }
-    .rb-store:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .rb-store > .phone-figure { flex: 0 0 30%; scroll-snap-align: start; }
-    .phone-frame--store { aspect-ratio: 1290 / 2796; }
 
     /* §05 — testing: one card per flow, each carrying what the round found
        and what changed because of it. Colour does the labelling — sand for the
@@ -789,7 +778,6 @@
       .case-section { padding: 40px 0 0; }
       .rb-groups { grid-template-columns: 1fr; }
       .rb-tests { grid-template-columns: 1fr; }
-      .rb-store > .phone-figure { flex: 0 0 62%; }
       /* the grid keeps its shape and scrolls inside itself — stacking it into
          blocks would destroy the one thing it is for, which is the column of
          gaps read top to bottom */
@@ -1711,44 +1699,11 @@
       <h2 class="section-heading">Publish on the App Store</h2>
 
       <p class="section-text">The listing had to sell the same idea in every storefront, so the cards lead with the pair &mdash; not the feature list.</p>
-      <div class="rb-store" tabindex="0" role="group" aria-label="App Store listing cards — scrollable">
-        <div class="phone-figure">
-          <div class="phone-frame phone-frame--store">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-01-pairs.webp" alt="Listing card: “Create custom pairs — that exchanges don't show”, over the watchlist screen" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="645" height="1398">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">Create custom pairs</p>
-        </div>
-        <div class="phone-figure">
-          <div class="phone-frame phone-frame--store">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-02-convert.webp" alt="Listing card: “See tracked coins convert”, over the holdings screen" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="645" height="1398">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">See tracked coins convert</p>
-        </div>
-        <div class="phone-figure">
-          <div class="phone-frame phone-frame--store">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-03-alerts.webp" alt="Listing card: “Get alerted on your custom pairs”, over a lock screen of delivered alerts" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="645" height="1398">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">Get alerted on your pairs</p>
-        </div>
-        <div class="phone-figure">
-          <div class="phone-frame phone-frame--store">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-04-simulator.webp" alt="Listing card: “Plan the rebalance, step by step”, over the simulator" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="645" height="1398">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">Plan the rebalance</p>
-        </div>
-        <div class="phone-figure">
-          <div class="phone-frame phone-frame--store">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-store-05-privacy.webp" alt="Listing card: the app collects no personal data — on-device, no accounts, no wallets, tracker only" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="645" height="1398">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">No accounts, no wallets</p>
-        </div>
-      </div>
-
+      <figure class="rb-shot">
+        <img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle &ldquo;Create your own pairs&rdquo;, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1824" height="970">
+        <span class="rb-shot-placeholder" style="display:none">App Store listing &mdash; image coming soon</span>
+      </figure>
+      <p class="rb-shot-caption">The product page as it stands in the store &mdash; the same pair-first pitch, from the subtitle down to the cards.</p>
     </section>
 
     <!-- 07 — ANALYTICS AND POST-LAUNCH RESEARCH -->
@@ -1771,11 +1726,7 @@
       <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend, delivery.</p>
       <p class="section-text">What it settles into in daily use is the next thing to measure.</p>
 
-      <figure class="rb-shot">
-        <img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle &ldquo;Create your own pairs&rdquo;, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1824" height="970">
-        <span class="rb-shot-placeholder" style="display:none">App Store listing &mdash; image coming soon</span>
-      </figure>
-      <p class="rb-shot-caption">The product page as it stands in the store &mdash; the same pair-first pitch, from the subtitle down to the cards.</p>    </section>
+    </section>
 
     <!-- 09 — REFLECTION -->
     <section id="section-09" class="case-section">
