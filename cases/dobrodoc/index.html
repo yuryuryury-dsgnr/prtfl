@@ -26,6 +26,162 @@
     body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F0F1F7; }
     a { color: inherit; text-decoration: none; }
 
+    .uf-vars {
+      --uf-screen-bg:   #E8EDF3;  --uf-screen-bd:   #BDCBDC;
+      --uf-action-bg:   #E7EEE8;  --uf-action-bd:   #BECFC1;
+      --uf-system-bg:   #EFECF5;  --uf-system-bd:   #C5BED5;
+      --uf-decision-bg: #F2EBDF;  --uf-decision-bd: #D6C7AF;
+      --uf-end-bg:      #F7EBE9;  --uf-end-bd:      #D7BCB7;
+      --uf-neutral-bd:  rgba(0,0,0,0.28);
+      --uf-stage-bg:    #E7E7E7;
+    }
+    .uf-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+    .uf-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #666666; }
+    .uf-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .uf-key-mark--screen { background: var(--uf-screen-bg); border: 1px solid var(--uf-screen-bd); }
+    .uf-key-mark--action { background: var(--uf-action-bg); border: 1px solid var(--uf-action-bd); border-radius: 100px; }
+    .uf-key-mark--system { background: var(--uf-system-bg); border: 1px dotted var(--uf-system-bd); }
+    .uf-key-mark--decision { background: var(--uf-decision-bd); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
+    .uf-key-mark--end { background: var(--uf-end-bg); border: 1px solid var(--uf-end-bd); border-radius: 100px; }
+    .uf-key-mark--outside { background: transparent; border: 1px dashed var(--uf-neutral-bd); }
+
+    .phase-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      width: fit-content;
+    }
+    .phase-toggle-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      border: none;
+      background: transparent;
+      color: #666666;
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      white-space: nowrap;
+    }
+    .phase-toggle-btn:last-child { border-right: none; }
+    .phase-toggle-btn:hover { background: rgba(0,0,0,0.02); }
+    /* the selected tab used to be solid ink, which read as a pressed button
+       rather than as "you are here" — a step down the page's own blue ramp
+       says the same thing without shouting, and keeps 12:1 on the label */
+    .phase-toggle-btn.active {
+      background: #D9D9D9;
+      color: #1A1A1A;
+    }
+    .phase-panel { display: none; }
+    .uf-panel { display: none; }
+    .uf-panel.active { display: block; }
+    .uf-tabs { margin-top: 24px; }
+    .uf-who {
+      margin: 18px 0 0; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; color: #666666;
+    }
+
+    .uf-stage {
+      margin-top: 14px; padding: 4px 0 10px;
+      background: var(--uf-stage-bg); border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
+    }
+    /* A drawn scrollbar rather than the native one: macOS resolves scrollbars
+       to overlays that reserve no space and fade when idle, so the one
+       affordance this area exists to give would be invisible exactly when it
+       is needed. This one is always on, and draggable. */
+    .uf-stage-bar {
+      position: relative; height: 6px; margin: 2px 14px 4px;
+      border-radius: 100px; background: rgba(0,0,0,0.09);
+      cursor: grab; touch-action: none; overflow: hidden;
+    }
+    .uf-stage-bar[hidden] { display: none; }
+    .uf-stage-bar:active { cursor: grabbing; }
+    .uf-stage-bar-thumb {
+      position: absolute; top: 0; left: 0; height: 100%; min-width: 28px;
+      border-radius: 100px; background: rgba(0,0,0,0.30);
+      transition: background 150ms ease;
+    }
+    .uf-stage-bar:hover .uf-stage-bar-thumb { background: rgba(0,0,0,0.44); }
+
+    .uf-flow {
+      margin-top: 0; padding: 0 14px 10px; max-width: 100%; min-width: 0;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    .uf-flow::-webkit-scrollbar { display: none; }
+    .uf-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    /* 20 top clears the boundary label that hangs above the lane */
+    .uf-track { display: flex; align-items: center; width: max-content; padding: 20px 20px 14px 2px; }
+
+    .uf-link { flex: 0 0 30px; position: relative; height: 1px; background: rgba(0,0,0,0.22); }
+    .uf-link::after {
+      content: ''; position: absolute; right: 0; top: 50%;
+      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
+    }
+
+    .uf-branches { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 48px; flex: 0 0 auto; }
+    .uf-branches::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.24); }
+    .uf-branches::after { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    .uf-branch { position: relative; display: flex; align-items: center; }
+    .uf-branch::before { content: ''; position: absolute; left: -24px; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    /* these trim the spine above the first branch and below the last by
+       painting over it, so they match what is behind the rail — the stage */
+    .uf-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
+    .uf-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
+    .uf-branch-label {
+      flex: 0 0 auto; max-width: 118px; margin-right: 12px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
+      color: #666666; line-height: 1.35;
+    }
+
+    /* The step marker is an arrow like every other connector, with the step
+       named above it. It used to be a dashed lane crossing the track, which
+       drew a wall across a path that does not actually stop there — the flow
+       runs straight through a step change. */
+    /* wide enough for the longest step name to sit over it without the
+       label's background painting across the nodes on either side */
+    .uf-bound { position: relative; flex: 0 0 208px; height: 1px; margin: 0 10px; background: rgba(0,0,0,0.22); }
+    .uf-bound::after {
+      content: ''; position: absolute; right: 0; top: 50%;
+      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
+    }
+    .uf-bound-label {
+      position: absolute; left: 50%; bottom: 11px; transform: translateX(-50%);
+      white-space: nowrap; background: var(--uf-stage-bg); padding: 0 8px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;
+    }
+
+    .uf-step {
+      display: inline-flex; flex-direction: column; gap: 3px;
+      flex: 0 0 196px; width: 196px; padding: 11px 15px;
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
+      position: relative;
+    }
+    .uf-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #666666; }
+    .uf-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
+    .uf-step-line { font-size: 12px; color: #666666; line-height: 1.45; }
+    .uf-step--screen { background: var(--uf-screen-bg); border-color: var(--uf-screen-bd); }
+    .uf-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--uf-action-bg); border-color: var(--uf-action-bd); }
+    .uf-step--system { border-style: dotted; background: var(--uf-system-bg); border-color: var(--uf-system-bd); }
+    .uf-step--outside { border-style: dashed; border-color: var(--uf-neutral-bd); background: transparent; }
+    .uf-step--outside .uf-step-title { color: #666666; }
+    .uf-step--end {
+      background: var(--uf-end-bg); border-color: var(--uf-end-bd);
+      border-radius: 100px; padding-left: 19px; padding-right: 19px;
+    }
+    /* decision: a hexagon built from two clipped layers, so the outer one
+       shows through as a 1px outline and the shape reads as stroked */
+    .uf-dec { display: inline-block; padding: 1px; background: var(--uf-decision-bd); flex: 0 0 auto; }
+    .uf-dec, .uf-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
+    .uf-dec-in { background: var(--uf-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; width: 190px; }
+
     /* ——— PAGE WASH ———
        The same three colours as every other page, in deck placement C
        — blue right of centre. Moving the blobs is what keeps the cases related without
@@ -382,6 +538,17 @@
       .case-hero-image { width: 100%; margin-left: 0; }
     }
     @media (max-width: 768px) {
+      /* the tab bar scrolls sideways rather than wrapping, so the row stays a row */
+      .phase-toggle {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .phase-toggle::-webkit-scrollbar { display: none; }
       /* one gap under the header and the same one before the image, so the
          hero reads as three even steps rather than a small one and a big one */
       /* the hero's own bottom padding and the next section's top padding
@@ -777,85 +944,151 @@
     <!-- 03C — USER FLOW -->
     <section id="section-05" class="case-section">
       <h2 class="section-heading">User flows</h2>
-      <div class="flow-container" tabindex="0" role="group" aria-label="User flow diagram, scrollable">
-        <svg viewBox="0 0 900 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;" role="img" aria-label="Booking flow: from opening the app to a confirmed appointment, showing the multi-scenario paths">
-          <!-- Entry -->
-          <circle cx="60" cy="80" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>
-          <text x="60" y="84" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Start</text>
+      <div class="uf-vars">
+        <div class="phase-toggle uf-tabs" role="tablist" aria-label="User flows">
+          <button class="phase-toggle-btn active" type="button" role="tab" data-uf="uf-symptom" id="uf-symptom-tab" aria-controls="uf-symptom" aria-selected="true" tabindex="0">Symptom checker</button>
+          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-booking" id="uf-booking-tab" aria-controls="uf-booking" aria-selected="false" tabindex="-1">Booking</button>
+          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-consultation" id="uf-consultation-tab" aria-controls="uf-consultation" aria-selected="false" tabindex="-1">Consultation</button>
+          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-history" id="uf-history-tab" aria-controls="uf-history" aria-selected="false" tabindex="-1">History</button>
+          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-certificates" id="uf-certificates-tab" aria-controls="uf-certificates" aria-selected="false" tabindex="-1">Certificates</button>
+        </div>
+        <div class="uf-panel active" id="uf-symptom" role="tabpanel" aria-labelledby="uf-symptom-tab">
+          <p class="uf-who">Describe what hurts and get pointed at the right speciality</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="Symptom checker flow &mdash; scrollable">
+              <div class="uf-track">
+                <div class="uf-step uf-step--end">
+                  <span class="uf-step-kind">Start</span>
+                  <span class="uf-step-title">Opens the app</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Home</span>
+                  <span class="uf-step-line">Ask a doctor, or open the med card</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Symptom checker</span>
+                  <span class="uf-step-line">What worries you</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Doctor match</span>
+                  <span class="uf-step-line">The speciality that fits the answers</span>
+                </div>
+              </div>
+            </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+          </div>
+        </div>
+        <div class="uf-panel" id="uf-booking" role="tabpanel" aria-labelledby="uf-booking-tab" hidden>
+          <p class="uf-who">From picking a doctor to a confirmed appointment</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="Booking flow &mdash; scrollable">
+              <div class="uf-track">
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Home</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Search doctor</span>
+                  <span class="uf-step-line">By speciality, then by who is free</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Select slot</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Confirm</span>
+                  <span class="uf-step-line">The appointment, before it is booked</span>
+                </div>
+              </div>
+            </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+          </div>
+        </div>
+        <div class="uf-panel" id="uf-consultation" role="tabpanel" aria-labelledby="uf-consultation-tab" hidden>
+          <p class="uf-who">The call itself, and what it leaves behind</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="Consultation flow &mdash; scrollable">
+              <div class="uf-track">
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Pre-call check</span>
+                  <span class="uf-step-line">Camera, microphone, connection</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Video call</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Summary + prescription</span>
+                  <span class="uf-step-line">Written up and filed to the med card</span>
+                </div>
+              </div>
+            </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+          </div>
+        </div>
+        <div class="uf-panel" id="uf-history" role="tabpanel" aria-labelledby="uf-history-tab" hidden>
+          <p class="uf-who">Everything that has already happened, in one place</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="History flow &mdash; scrollable">
+              <div class="uf-track">
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Home</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Consultation history</span>
+                  <span class="uf-step-line">Past calls, with their summaries</span>
+                </div>
+              </div>
+            </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+          </div>
+        </div>
+        <div class="uf-panel" id="uf-certificates" role="tabpanel" aria-labelledby="uf-certificates-tab" hidden>
+          <p class="uf-who">The document at the end of it</p>
+          <div class="uf-stage">
+            <div class="uf-flow" tabindex="0" role="group" aria-label="Certificates flow &mdash; scrollable">
+              <div class="uf-track">
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Home</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Medical certificates</span>
+                  <span class="uf-step-line">Issued after a consultation, kept in the card</span>
+                </div>
+              </div>
+            </div>
+            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+          </div>
+        </div>
 
-          <!-- Branch out -->
-          <line x1="80" y1="80" x2="160" y2="80" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arr)"/>
-
-          <!-- Central hub -->
-          <rect x="160" y="60" width="100" height="40" rx="8" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="210" y="84" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Home</text>
-
-          <!-- 5 paths branching right -->
-          <!-- Path 1: Symptom checker (teal) -->
-          <line x1="260" y1="68" x2="340" y2="30" stroke="#0d9488" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="340" y="10" width="120" height="36" rx="6" stroke="#0d9488" stroke-width="1.5" fill="#f0fdfa"/>
-          <text x="400" y="32" text-anchor="middle" font-size="10" font-family="Inter" fill="#0d9488">Symptom checker</text>
-          <line x1="460" y1="28" x2="520" y2="28" stroke="#0d9488" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="520" y="10" width="120" height="36" rx="6" stroke="#0d9488" stroke-width="1.5" fill="#f0fdfa"/>
-          <text x="580" y="32" text-anchor="middle" font-size="10" font-family="Inter" fill="#0d9488">Doctor match</text>
-
-          <!-- Path 2: Booking (blue) -->
-          <line x1="260" y1="75" x2="340" y2="90" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="340" y="70" width="120" height="36" rx="6" stroke="#3B82F6" stroke-width="1.5" fill="#eff6ff"/>
-          <text x="400" y="92" text-anchor="middle" font-size="10" font-family="Inter" fill="#3B82F6">Search doctor</text>
-          <line x1="460" y1="88" x2="520" y2="88" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="520" y="70" width="120" height="36" rx="6" stroke="#3B82F6" stroke-width="1.5" fill="#eff6ff"/>
-          <text x="580" y="92" text-anchor="middle" font-size="10" font-family="Inter" fill="#3B82F6">Select slot</text>
-          <line x1="640" y1="88" x2="700" y2="88" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="700" y="70" width="100" height="36" rx="6" stroke="#3B82F6" stroke-width="1.5" fill="#eff6ff"/>
-          <text x="750" y="92" text-anchor="middle" font-size="10" font-family="Inter" fill="#3B82F6">Confirm</text>
-
-          <!-- Connect symptom to booking -->
-          <line x1="640" y1="28" x2="700" y2="28" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4 4"/>
-          <line x1="700" y1="28" x2="700" y2="70" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arr)"/>
-
-          <!-- Path 3: Video consultation (purple) -->
-          <line x1="260" y1="85" x2="340" y2="155" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="340" y="137" width="120" height="36" rx="6" stroke="#7c3aed" stroke-width="1.5" fill="#f5f3ff"/>
-          <text x="400" y="159" text-anchor="middle" font-size="10" font-family="Inter" fill="#7c3aed">Pre-call check</text>
-          <line x1="460" y1="155" x2="520" y2="155" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="520" y="137" width="120" height="36" rx="6" stroke="#7c3aed" stroke-width="1.5" fill="#f5f3ff"/>
-          <text x="580" y="159" text-anchor="middle" font-size="10" font-family="Inter" fill="#7c3aed">Video call</text>
-          <line x1="640" y1="155" x2="700" y2="155" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="700" y="137" width="120" height="36" rx="6" stroke="#7c3aed" stroke-width="1.5" fill="#f5f3ff"/>
-          <text x="760" y="153" text-anchor="middle" font-size="9" font-family="Inter" fill="#7c3aed">Summary +</text>
-          <text x="760" y="165" text-anchor="middle" font-size="9" font-family="Inter" fill="#7c3aed">prescription</text>
-
-          <!-- Path 4: History (orange) -->
-          <line x1="260" y1="90" x2="340" y2="220" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="340" y="202" width="140" height="36" rx="6" stroke="#ea580c" stroke-width="1.5" fill="#fff7ed"/>
-          <text x="410" y="224" text-anchor="middle" font-size="10" font-family="Inter" fill="#ea580c">Consultation history</text>
-
-          <!-- Path 5: Certificates (gray) -->
-          <line x1="260" y1="95" x2="340" y2="280" stroke="#666666" stroke-width="1.5" marker-end="url(#arr)"/>
-          <rect x="340" y="262" width="140" height="36" rx="6" stroke="#666666" stroke-width="1.5" fill="#f9f9f9"/>
-          <text x="410" y="284" text-anchor="middle" font-size="10" font-family="Inter" fill="#666666">Medical certificates</text>
-
-          <!-- Legend -->
-          <rect x="40" y="340" width="20" height="3" rx="1" fill="#0d9488"/>
-          <text x="68" y="344" font-size="10" font-family="Inter" fill="#666666">Symptom checker</text>
-          <rect x="180" y="340" width="20" height="3" rx="1" fill="#3B82F6"/>
-          <text x="208" y="344" font-size="10" font-family="Inter" fill="#666666">Booking</text>
-          <rect x="280" y="340" width="20" height="3" rx="1" fill="#7c3aed"/>
-          <text x="308" y="344" font-size="10" font-family="Inter" fill="#666666">Consultation</text>
-          <rect x="410" y="340" width="20" height="3" rx="1" fill="#ea580c"/>
-          <text x="438" y="344" font-size="10" font-family="Inter" fill="#666666">History</text>
-          <rect x="500" y="340" width="20" height="3" rx="1" fill="#666666"/>
-          <text x="528" y="344" font-size="10" font-family="Inter" fill="#666666">Certificates</text>
-
-          <defs>
-            <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="#1A1A1A"/>
-            </marker>
-          </defs>
-        </svg>
+        <div class="uf-key" aria-hidden="true">
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--screen"></span>Screen</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--action"></span>Action</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--system"></span>System</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--end"></span>Start / End</span>
+        </div>
       </div>
-      <p class="flow-caption">Overview flow covering 5 user scenarios: symptom search, appointment booking, video consultation, consultation history, and medical certificates.</p>
     </section>
 
     <!-- 04 — MOCKUPS -->
@@ -1296,6 +1529,90 @@
       window.addEventListener('resize', later);
       // a panel behind a tab has no width until shown, so re-check after a click
       document.addEventListener('click', later, true);
+    })();
+    // ——— USER FLOW TABS ———
+    // Same tablist behaviour as the journey map above: arrows, Home and End
+    // move between flows, and only the open panel is exposed.
+    (function () {
+      var tablist = document.querySelector('.uf-tabs');
+      if (!tablist) return;
+      var tabs = [].slice.call(tablist.querySelectorAll('.phase-toggle-btn[data-uf]'));
+
+      function select(btn, focus) {
+        tabs.forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+          b.setAttribute('tabindex', on ? '0' : '-1');
+          var panel = document.getElementById(b.dataset.uf);
+          if (!panel) return;
+          panel.classList.toggle('active', on);
+          if (on) panel.removeAttribute('hidden');
+          else panel.setAttribute('hidden', '');
+        });
+        if (focus) btn.focus();
+        // a hidden panel measures as zero, so its rail has to redraw once shown
+        window.dispatchEvent(new Event('resize'));
+      }
+
+      tabs.forEach(function (btn, i) {
+        btn.addEventListener('click', function () { select(btn); });
+        btn.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (d) { e.preventDefault(); select(tabs[(i + d + tabs.length) % tabs.length], true); }
+          else if (e.key === 'Home') { e.preventDefault(); select(tabs[0], true); }
+          else if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+        });
+      });
+    })();
+    // ——— USER FLOW: the drawn scrollbar ———
+    // Ported with the component from the Rebalancer case. macOS overlay
+    // scrollbars reserve no space and fade when idle, so the affordance this
+    // wide diagram most needs would be invisible exactly when it is needed.
+    // This rail is always on, mirrors the flow's position, and is draggable.
+    (function () {
+      var bars = [].slice.call(document.querySelectorAll('.uf-stage-bar'));
+      if (!bars.length) return;
+      bars.forEach(function (bar) {
+        var flow = bar.previousElementSibling;
+        if (!flow || !flow.classList.contains('uf-flow')) return;
+        var thumb = bar.querySelector('.uf-stage-bar-thumb');
+
+        function draw() {
+          var max = flow.scrollWidth - flow.clientWidth;
+          if (max <= 4) { bar.hidden = true; return; }
+          bar.hidden = false;
+          var ratio = flow.clientWidth / flow.scrollWidth;
+          var w = Math.min(bar.clientWidth, Math.max(28, bar.clientWidth * ratio));
+          thumb.style.width = w + 'px';
+          thumb.style.transform =
+            'translateX(' + (flow.scrollLeft / max) * (bar.clientWidth - w) + 'px)';
+        }
+
+        function scrollTo(clientX) {
+          var r = bar.getBoundingClientRect();
+          var w = thumb.offsetWidth;
+          var travel = r.width - w;
+          if (travel <= 0) return;
+          var x = Math.min(Math.max(clientX - r.left - w / 2, 0), travel);
+          flow.scrollLeft = (x / travel) * (flow.scrollWidth - flow.clientWidth);
+        }
+
+        var dragging = false;
+        bar.addEventListener('pointerdown', function (e) {
+          dragging = true;
+          bar.setPointerCapture(e.pointerId);
+          scrollTo(e.clientX);
+          e.preventDefault();
+        });
+        bar.addEventListener('pointermove', function (e) { if (dragging) scrollTo(e.clientX); });
+        bar.addEventListener('pointerup', function () { dragging = false; });
+        bar.addEventListener('pointercancel', function () { dragging = false; });
+
+        flow.addEventListener('scroll', draw, { passive: true });
+        window.addEventListener('resize', draw);
+        draw();
+      });
     })();
   </script>
 </body>

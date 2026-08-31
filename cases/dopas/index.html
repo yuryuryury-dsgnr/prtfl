@@ -26,6 +26,130 @@
     body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F0F1F7; }
     a { color: inherit; text-decoration: none; }
 
+    .uf-vars {
+      --uf-screen-bg:   #E8EDF3;  --uf-screen-bd:   #BDCBDC;
+      --uf-action-bg:   #E7EEE8;  --uf-action-bd:   #BECFC1;
+      --uf-system-bg:   #EFECF5;  --uf-system-bd:   #C5BED5;
+      --uf-decision-bg: #F2EBDF;  --uf-decision-bd: #D6C7AF;
+      --uf-end-bg:      #F7EBE9;  --uf-end-bd:      #D7BCB7;
+      --uf-neutral-bd:  rgba(0,0,0,0.28);
+      --uf-stage-bg:    #E7E7E7;
+    }
+    .uf-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+    .uf-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #666666; }
+    .uf-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .uf-key-mark--screen { background: var(--uf-screen-bg); border: 1px solid var(--uf-screen-bd); }
+    .uf-key-mark--action { background: var(--uf-action-bg); border: 1px solid var(--uf-action-bd); border-radius: 100px; }
+    .uf-key-mark--system { background: var(--uf-system-bg); border: 1px dotted var(--uf-system-bd); }
+    .uf-key-mark--decision { background: var(--uf-decision-bd); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
+    .uf-key-mark--end { background: var(--uf-end-bg); border: 1px solid var(--uf-end-bd); border-radius: 100px; }
+    .uf-key-mark--outside { background: transparent; border: 1px dashed var(--uf-neutral-bd); }
+
+    .uf-panel { display: none; }
+    .uf-panel.active { display: block; }
+    .uf-tabs { margin-top: 24px; }
+    .uf-who {
+      margin: 18px 0 0; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; color: #666666;
+    }
+
+    .uf-stage {
+      margin-top: 14px; padding: 4px 0 10px;
+      background: var(--uf-stage-bg); border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
+    }
+    /* A drawn scrollbar rather than the native one: macOS resolves scrollbars
+       to overlays that reserve no space and fade when idle, so the one
+       affordance this area exists to give would be invisible exactly when it
+       is needed. This one is always on, and draggable. */
+    .uf-stage-bar {
+      position: relative; height: 6px; margin: 2px 14px 4px;
+      border-radius: 100px; background: rgba(0,0,0,0.09);
+      cursor: grab; touch-action: none; overflow: hidden;
+    }
+    .uf-stage-bar[hidden] { display: none; }
+    .uf-stage-bar:active { cursor: grabbing; }
+    .uf-stage-bar-thumb {
+      position: absolute; top: 0; left: 0; height: 100%; min-width: 28px;
+      border-radius: 100px; background: rgba(0,0,0,0.30);
+      transition: background 150ms ease;
+    }
+    .uf-stage-bar:hover .uf-stage-bar-thumb { background: rgba(0,0,0,0.44); }
+
+    .uf-flow {
+      margin-top: 0; padding: 0 14px 10px; max-width: 100%; min-width: 0;
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    .uf-flow::-webkit-scrollbar { display: none; }
+    .uf-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    /* 20 top clears the boundary label that hangs above the lane */
+    .uf-track { display: flex; align-items: center; width: max-content; padding: 20px 20px 14px 2px; }
+
+    .uf-link { flex: 0 0 30px; position: relative; height: 1px; background: rgba(0,0,0,0.22); }
+    .uf-link::after {
+      content: ''; position: absolute; right: 0; top: 50%;
+      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
+    }
+
+    .uf-branches { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 48px; flex: 0 0 auto; }
+    .uf-branches::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.24); }
+    .uf-branches::after { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    .uf-branch { position: relative; display: flex; align-items: center; }
+    .uf-branch::before { content: ''; position: absolute; left: -24px; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
+    /* these trim the spine above the first branch and below the last by
+       painting over it, so they match what is behind the rail — the stage */
+    .uf-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
+    .uf-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
+    .uf-branch-label {
+      flex: 0 0 auto; max-width: 118px; margin-right: 12px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
+      color: #666666; line-height: 1.35;
+    }
+
+    /* The step marker is an arrow like every other connector, with the step
+       named above it. It used to be a dashed lane crossing the track, which
+       drew a wall across a path that does not actually stop there — the flow
+       runs straight through a step change. */
+    /* wide enough for the longest step name to sit over it without the
+       label's background painting across the nodes on either side */
+    .uf-bound { position: relative; flex: 0 0 208px; height: 1px; margin: 0 10px; background: rgba(0,0,0,0.22); }
+    .uf-bound::after {
+      content: ''; position: absolute; right: 0; top: 50%;
+      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
+    }
+    .uf-bound-label {
+      position: absolute; left: 50%; bottom: 11px; transform: translateX(-50%);
+      white-space: nowrap; background: var(--uf-stage-bg); padding: 0 8px;
+      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;
+    }
+
+    .uf-step {
+      display: inline-flex; flex-direction: column; gap: 3px;
+      flex: 0 0 196px; width: 196px; padding: 11px 15px;
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
+      position: relative;
+    }
+    .uf-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #666666; }
+    .uf-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
+    .uf-step-line { font-size: 12px; color: #666666; line-height: 1.45; }
+    .uf-step--screen { background: var(--uf-screen-bg); border-color: var(--uf-screen-bd); }
+    .uf-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--uf-action-bg); border-color: var(--uf-action-bd); }
+    .uf-step--system { border-style: dotted; background: var(--uf-system-bg); border-color: var(--uf-system-bd); }
+    .uf-step--outside { border-style: dashed; border-color: var(--uf-neutral-bd); background: transparent; }
+    .uf-step--outside .uf-step-title { color: #666666; }
+    .uf-step--end {
+      background: var(--uf-end-bg); border-color: var(--uf-end-bd);
+      border-radius: 100px; padding-left: 19px; padding-right: 19px;
+    }
+    /* decision: a hexagon built from two clipped layers, so the outer one
+       shows through as a 1px outline and the shape reads as stroked */
+    .uf-dec { display: inline-block; padding: 1px; background: var(--uf-decision-bd); flex: 0 0 auto; }
+    .uf-dec, .uf-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
+    .uf-dec-in { background: var(--uf-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; width: 190px; }
+
     /* ——— PAGE WASH ———
        The same three colours as every other page, in deck placement D
        — blue bottom-left, warm above. Moving the blobs is what keeps the cases related without
@@ -423,47 +547,13 @@
     }
     .subsection-heading:first-of-type { margin-top: 32px; }
 
-    /* ——— USER FLOW ———
-       The scroll box from the Data Marketplace case: a panel the diagram lives
-       in, and a drawn scrollbar rather than the native one. macOS resolves
-       scrollbars to overlays that reserve no space and fade when idle, so the
-       one affordance a wide diagram needs would be invisible exactly when it
-       is needed. */
-    .flow-stage {
-      margin-top: 24px; padding: 4px 0 10px;
-      background: #E7E7E7; border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
-    }
-    .flow-scroll {
-      padding: 10px 14px; max-width: 100%; min-width: 0;
-      overflow-x: auto; overflow-y: hidden;
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    .flow-scroll::-webkit-scrollbar { display: none; }
-    .flow-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .flow-scroll svg { display: block; width: 900px; max-width: none; height: auto; }
-    .flow-bar {
-      position: relative; height: 6px; margin: 2px 14px 4px;
-      border-radius: 100px; background: rgba(0,0,0,0.09);
-      cursor: grab; touch-action: none; overflow: hidden;
-    }
-    .flow-bar[hidden] { display: none; }
-    .flow-bar:active { cursor: grabbing; }
-    .flow-bar-thumb {
-      position: absolute; top: 0; left: 0; height: 100%; min-width: 28px;
-      border-radius: 100px; background: rgba(0,0,0,0.30);
-      transition: background 150ms ease;
-    }
-    .flow-bar:hover .flow-bar-thumb { background: rgba(0,0,0,0.44); }
-    .flow-caption { font-size: 13px; color: #666666; margin-top: 16px; text-align: center; }
-
     /* ——— WIDE BLOCKS ———
        The reading column is 760px, which is right for prose and far too narrow
        for a screenshot. Once the viewport can hold it, the wide blocks step out
        past the column on both sides. 760 + 2x200 = 1160, so the bleed only
        starts where it fits. */
     @media (min-width: 1200px) {
-      .mg-strip, .ba, .ba-switch, .flow-stage {
+      .mg-strip, .ba, .ba-switch, .uf-stage, .uf-key {
         width: calc(100% + 2 * clamp(100px, 9vw, 200px));
         margin-left: calc(-1 * clamp(100px, 9vw, 200px));
       }
@@ -642,14 +732,6 @@
        3.5 CSS px — the diagram becomes a grey smudge. Let it keep its real
        width and scroll instead, the pattern the Rebalancer flows already use. */
     @media (max-width: 760px) {
-      .flow-scroll {
-        overflow-x: auto; overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-        margin-left: -24px; margin-right: -24px;
-        padding: 0 24px;
-      }
       .flow-container::-webkit-scrollbar { display: none; }
       .flow-container > svg { width: 900px !important; min-width: 900px; max-width: none !important; }
       .flow-container:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
@@ -943,89 +1025,85 @@
     <!-- 04 — USER FLOW -->
     <section id="section-04" class="case-section">
       <h2 class="section-heading">User flows</h2>
-      <div class="flow-stage">
-        <div class="flow-scroll" tabindex="0" role="group" aria-label="User flow diagram &mdash; scrollable">
-        <svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:900px;" role="img" aria-label="Ticket purchase flow: from search to a paid ticket, showing where users dropped out">
-          <!-- Row 1: main flow -->
-          <circle cx="50" cy="60" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>
-          <text x="50" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Start</text>
-          <line x1="70" y1="60" x2="120" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-          <rect x="120" y="40" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="175" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Open website</text>
-          <line x1="230" y1="60" x2="280" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-          <rect x="280" y="40" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="335" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Search route</text>
-          <line x1="390" y1="60" x2="440" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-          <rect x="440" y="40" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="495" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">View results</text>
-          <line x1="550" y1="60" x2="600" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-          <!-- Decision diamond -->
-          <polygon points="660,20 720,60 660,100 600,60" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="660" y="56" text-anchor="middle" font-size="9" font-family="Inter" fill="#1A1A1A">Select</text>
-          <text x="660" y="68" text-anchor="middle" font-size="9" font-family="Inter" fill="#1A1A1A">trip?</text>
-
-          <!-- Yes path -->
-          <line x1="720" y1="60" x2="770" y2="60" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
-          <text x="745" y="52" text-anchor="middle" font-size="9" font-family="Inter" fill="#15803D">Yes</text>
-
-          <rect x="770" y="40" width="100" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="820" y="64" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Select seat</text>
-
-          <!-- No path (dashed) -->
-          <line x1="660" y1="100" x2="660" y2="140" stroke="#1A1A1A" stroke-width="1.5" stroke-dasharray="4 4"/>
-          <text x="675" y="125" font-size="9" font-family="Inter" fill="#B91C1C">No</text>
-          <rect x="605" y="140" width="110" height="36" rx="6" stroke="#666666" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
-          <text x="660" y="162" text-anchor="middle" font-size="9" font-family="Inter" fill="#666666">Return to search</text>
-
-          <!-- Row 2 -->
-          <line x1="820" y1="80" x2="820" y2="120" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-          <rect x="760" y="120" width="120" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="820" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Passenger info</text>
-          <line x1="760" y1="140" x2="700" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
-
-          <rect x="590" y="120" width="110" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="645" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Payment</text>
-          <line x1="590" y1="140" x2="540" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
-
-          <rect x="420" y="120" width="120" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="480" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Confirmation</text>
-          <line x1="420" y1="140" x2="370" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
-
-          <rect x="250" y="120" width="120" height="40" rx="6" stroke="#1A1A1A" stroke-width="1.5" fill="#FCFCFC"/>
-          <text x="310" y="144" text-anchor="middle" font-size="10" font-family="Inter" fill="#1A1A1A">Download ticket</text>
-          <line x1="250" y1="140" x2="200" y2="140" stroke="#1A1A1A" stroke-width="1.5" marker-end="url(#arrowL)"/>
-
-          <circle cx="170" cy="140" r="20" stroke="#1A1A1A" stroke-width="2" fill="none"/>
-          <circle cx="170" cy="140" r="14" stroke="#1A1A1A" stroke-width="2" fill="none"/>
-          <text x="170" y="144" text-anchor="middle" font-size="9" font-family="Inter" fill="#1A1A1A">End</text>
-
-          <!-- Legend -->
-          <rect x="30" y="220" width="40" height="1.5" fill="#1A1A1A"/>
-          <text x="80" y="224" font-size="10" font-family="Inter" fill="#666666">Main flow</text>
-          <line x1="30" y1="248" x2="70" y2="248" stroke="#666666" stroke-width="1.5" stroke-dasharray="4 4"/>
-          <text x="80" y="252" font-size="10" font-family="Inter" fill="#666666">Return path</text>
-          <polygon points="45,275 55,270 55,280" fill="#1A1A1A"/>
-          <text x="80" y="278" font-size="10" font-family="Inter" fill="#666666">Direction</text>
-
-          <!-- Arrow markers -->
-          <defs>
-            <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="#1A1A1A"/>
-            </marker>
-            <marker id="arrowL" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto">
-              <polygon points="8 0, 0 3, 8 6" fill="#1A1A1A"/>
-            </marker>
-          </defs>
-        </svg>
+      <div class="uf-vars">
+        <div class="uf-stage">
+          <div class="uf-flow" tabindex="0" role="group" aria-label="Booking flow &mdash; scrollable">
+            <div class="uf-track">
+                <div class="uf-step uf-step--end">
+                  <span class="uf-step-kind">Start</span>
+                  <span class="uf-step-title">Opens the website</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Search route</span>
+                  <span class="uf-step-line">From, to, date &mdash; nothing else above the fold</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">View results</span>
+                  <span class="uf-step-line">Time, duration, seats left and price per departure</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-dec"><div class="uf-dec-in">
+                  <span class="uf-step-kind">Decision</span>
+                  <span class="uf-step-title">Is this the trip?</span>
+                </div></div>
+                <div class="uf-branches">
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">No</span>
+                    <div class="uf-step uf-step--outside">
+                      <span class="uf-step-kind">Action</span>
+                      <span class="uf-step-title">Back to search</span>
+                      <span class="uf-step-line">The return path the diagram draws dashed</span>
+                    </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Yes</span>
+                    <div class="uf-step">
+                      <span class="uf-step-kind">Screen</span>
+                      <span class="uf-step-title">Select seat</span>
+                      <span class="uf-step-line">The seat map, with the total updating</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-step">
+                      <span class="uf-step-kind">Screen</span>
+                      <span class="uf-step-title">Passenger info</span>
+                      <span class="uf-step-line">One block per seat, so a pair books in one pass</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-step">
+                      <span class="uf-step-kind">Screen</span>
+                      <span class="uf-step-title">Payment</span>
+                      <span class="uf-step-line">The fee is named before the card is</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-step uf-step--system">
+                      <span class="uf-step-kind">System</span>
+                      <span class="uf-step-title">Confirmation</span>
+                      <span class="uf-step-line">The ticket, ready to download</span>
+                    </div>
+                    <span class="uf-link" aria-hidden="true"></span>
+                    <div class="uf-step uf-step--end">
+                      <span class="uf-step-kind">End</span>
+                      <span class="uf-step-title">Ticket in hand</span>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
         </div>
-        <div class="flow-bar"><span class="flow-bar-thumb"></span></div>
+        <div class="uf-key" aria-hidden="true">
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--screen"></span>Screen</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--action"></span>Action</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--system"></span>System</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--decision"></span>Decision</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--end"></span>Start / End</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--outside"></span>Off-flow</span>
+        </div>
       </div>
-      <p class="flow-caption">End-to-end booking flow — from opening the website to downloading a ticket. Dashed line shows the return path when user decides not to purchase.</p>
     </section>
 
     <!-- 05 — SCREENS -->
@@ -1543,51 +1621,57 @@
     })();
 
 
-    /* ——— USER FLOW: the drawn scrollbar ———
-       Ported from the Data Marketplace case. The rail is always on, mirrors
-       the diagram's position and is draggable. */
+
+
+    // ——— USER FLOW: the drawn scrollbar ———
+    // Ported with the component from the Rebalancer case. macOS overlay
+    // scrollbars reserve no space and fade when idle, so the affordance this
+    // wide diagram most needs would be invisible exactly when it is needed.
+    // This rail is always on, mirrors the flow's position, and is draggable.
     (function () {
-      var bar = document.querySelector('.flow-bar');
-      var flow = bar && bar.previousElementSibling;
-      if (!bar || !flow || !flow.classList.contains('flow-scroll')) return;
-      var thumb = bar.querySelector('.flow-bar-thumb');
+      var bars = [].slice.call(document.querySelectorAll('.uf-stage-bar'));
+      if (!bars.length) return;
+      bars.forEach(function (bar) {
+        var flow = bar.previousElementSibling;
+        if (!flow || !flow.classList.contains('uf-flow')) return;
+        var thumb = bar.querySelector('.uf-stage-bar-thumb');
 
-      function draw() {
-        var max = flow.scrollWidth - flow.clientWidth;
-        if (max <= 4) { bar.hidden = true; return; }
-        bar.hidden = false;
-        var ratio = flow.clientWidth / flow.scrollWidth;
-        var w = Math.min(bar.clientWidth, Math.max(28, bar.clientWidth * ratio));
-        thumb.style.width = w + 'px';
-        thumb.style.transform = 'translateX(' + (flow.scrollLeft / max) * (bar.clientWidth - w) + 'px)';
-      }
+        function draw() {
+          var max = flow.scrollWidth - flow.clientWidth;
+          if (max <= 4) { bar.hidden = true; return; }
+          bar.hidden = false;
+          var ratio = flow.clientWidth / flow.scrollWidth;
+          var w = Math.min(bar.clientWidth, Math.max(28, bar.clientWidth * ratio));
+          thumb.style.width = w + 'px';
+          thumb.style.transform =
+            'translateX(' + (flow.scrollLeft / max) * (bar.clientWidth - w) + 'px)';
+        }
 
-      function scrollTo(clientX) {
-        var r = bar.getBoundingClientRect();
-        var w = thumb.offsetWidth;
-        var travel = r.width - w;
-        if (travel <= 0) return;
-        var x = Math.min(Math.max(clientX - r.left - w / 2, 0), travel);
-        flow.scrollLeft = (x / travel) * (flow.scrollWidth - flow.clientWidth);
-      }
+        function scrollTo(clientX) {
+          var r = bar.getBoundingClientRect();
+          var w = thumb.offsetWidth;
+          var travel = r.width - w;
+          if (travel <= 0) return;
+          var x = Math.min(Math.max(clientX - r.left - w / 2, 0), travel);
+          flow.scrollLeft = (x / travel) * (flow.scrollWidth - flow.clientWidth);
+        }
 
-      var dragging = false;
-      bar.addEventListener('pointerdown', function (e) {
-        dragging = true;
-        bar.setPointerCapture(e.pointerId);
-        scrollTo(e.clientX);
-        e.preventDefault();
+        var dragging = false;
+        bar.addEventListener('pointerdown', function (e) {
+          dragging = true;
+          bar.setPointerCapture(e.pointerId);
+          scrollTo(e.clientX);
+          e.preventDefault();
+        });
+        bar.addEventListener('pointermove', function (e) { if (dragging) scrollTo(e.clientX); });
+        bar.addEventListener('pointerup', function () { dragging = false; });
+        bar.addEventListener('pointercancel', function () { dragging = false; });
+
+        flow.addEventListener('scroll', draw, { passive: true });
+        window.addEventListener('resize', draw);
+        draw();
       });
-      bar.addEventListener('pointermove', function (e) { if (dragging) scrollTo(e.clientX); });
-      bar.addEventListener('pointerup', function () { dragging = false; });
-      bar.addEventListener('pointercancel', function () { dragging = false; });
-
-      flow.addEventListener('scroll', draw, { passive: true });
-      window.addEventListener('resize', draw);
-      if (window.ResizeObserver) new ResizeObserver(draw).observe(flow);
-      draw();
     })();
-
   </script>
 </body>
 </html>
