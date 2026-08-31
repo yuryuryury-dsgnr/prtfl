@@ -107,8 +107,10 @@
   <aside class="rail">
     <div class="rail-head">
       <p class="rail-title">Background studies II</p>
-      <p class="rail-sub">Ten washes on the live home page &mdash; the stage is the real
-        <a href="../../" target="_blank" rel="noopener">index.html</a>, with only its background layer swapped.</p>
+      <p class="rail-sub">Nineteen washes on the live home page &mdash; the stage is the real
+        <a href="../../" target="_blank" rel="noopener">index.html</a>, with only its background layer swapped.
+        The last three also swap the ink: <b>#474D5E</b> instead of #666666, which is what lets the
+        ground go deep without taking the copy under 4.5.</p>
     </div>
 
     <div class="list" id="list" role="radiogroup" aria-label="Background"></div>
@@ -317,6 +319,169 @@
             animation: bg2rise 60s ease-in-out infinite alternate;
           }
           @keyframes bg2rise { to { transform: translate3d(0, -12%, 0) scale(1.10); } }`
+      },
+      {
+        id: 'warely', name: 'Warely', num: '11', group: 'Warely',
+        sw: ['#DDE5FF', '#FBEEC7', '#FBE3C7'], motion: 'none', contrast: '4.32',
+        note: 'The icon gradient exactly as specified. Site ink unchanged.',
+        css: `
+          body { background-color: #F2F4FB !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 24% 20%, #DDE5FF 0%, rgba(221,229,255,0) 56%),
+              radial-gradient(120% 120% at 84% 86%, #FBEEC7 0%, rgba(251,238,199,0) 58%),
+              radial-gradient(100% 100% at 92% 12%, #FBE3C7 0%, rgba(251,227,199,0) 48%),
+              #F2F4FB !important;
+          }`
+      },
+      {
+        id: 'warely-a', name: 'Warely · A', num: '12', group: 'Warely',
+        sw: ['#DDE5FF', '#FBEEC7', '#FBE3C7'], motion: 'none', contrast: '4.38',
+        note: 'Deck placement A — blue top-left. Same palette, different weather.',
+        css: `
+          body { background-color: #F2F4FB !important; }
+          .pagewash {
+            background:
+              radial-gradient(120% 130% at 8% 0%, #DDE5FF 0%, rgba(221,229,255,0) 58%),
+              radial-gradient(110% 120% at 94% 100%, #FBEEC7 0%, rgba(251,238,199,0) 54%),
+              radial-gradient(76% 88% at 98% 2%, #FBE3C7 0%, rgba(251,227,199,0) 46%),
+              #F2F4FB !important;
+          }`
+      },
+      {
+        id: 'warely-c', name: 'Warely · C', num: '13', group: 'Warely',
+        sw: ['#DDE5FF', '#FBEEC7', '#FBE3C7'], motion: 'drift 52s', contrast: '4.55',
+        note: 'Deck placement C — blue right of centre, with the field drifting.',
+        css: `
+          body { background-color: #F2F4FB !important; }
+          .pagewash {
+            background:
+              radial-gradient(110% 130% at 100% 40%, #DDE5FF 0%, rgba(221,229,255,0) 56%),
+              radial-gradient(100% 110% at 0% 92%, #FBEEC7 0%, rgba(251,238,199,0) 54%),
+              radial-gradient(80% 80% at 2% 2%, #FBE3C7 0%, rgba(251,227,199,0) 46%),
+              #F2F4FB !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -25%;
+            background: radial-gradient(44% 42% at 60% 44%, rgba(221,229,255,0.55), transparent 62%);
+            will-change: transform;
+            animation: warDrift 52s ease-in-out infinite alternate;
+          }
+          @keyframes warDrift { to { transform: translate3d(-9%, 7%, 0) scale(1.12); } }`
+      },
+      {
+        id: 'warely-muted', name: 'Warely muted', num: '14', group: 'Warely ink',
+        sw: ['#8FA1E0', '#FBEEC7', '#E6EAF3'], motion: 'none', contrast: '5.35',
+        note: 'Periwinkle carries the anchor instead of the pale blue. Needs the Warely ink.',
+        css: `
+          body { background-color: #E6EAF3 !important; }
+          .topnav-link--secondary, .hero-bio-hook, .hero-meta dt, .case-result, .case-store-link, .footer-role, .footer-right { color: #474D5E !important; }
+          h1, h2, h3, .case-name, .topnav-logo, .hero-name { color: #1E2330 !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 22% 16%, rgba(143,161,224,0.34) 0%, rgba(143,161,224,0) 58%),
+              radial-gradient(120% 120% at 86% 88%, rgba(251,238,199,0.72) 0%, rgba(251,238,199,0) 56%),
+              radial-gradient(96% 96% at 94% 10%, rgba(251,227,199,0.62) 0%, rgba(251,227,199,0) 46%),
+              #E6EAF3 !important;
+          }`
+      },
+      {
+        id: 'warely-graphite', name: 'Warely graphite', num: '15', group: 'Warely ink',
+        sw: ['#DDE5FF', '#2A2E36', '#FBE3C7'], motion: 'breathe 36s', contrast: '6.34',
+        note: 'The spec palette with a graphite veil pulling the brightness down.',
+        css: `
+          body { background-color: #EDEFF7 !important; }
+          .topnav-link--secondary, .hero-bio-hook, .hero-meta dt, .case-result, .case-store-link, .footer-role, .footer-right { color: #474D5E !important; }
+          h1, h2, h3, .case-name, .topnav-logo, .hero-name { color: #1E2330 !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 24% 20%, rgba(221,229,255,0.92) 0%, rgba(221,229,255,0) 56%),
+              radial-gradient(120% 120% at 84% 86%, rgba(251,238,199,0.85) 0%, rgba(251,238,199,0) 58%),
+              radial-gradient(96% 96% at 92% 12%, rgba(251,227,199,0.8) 0%, rgba(251,227,199,0) 48%),
+              #EDEFF7 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(96% 90% at 72% 96%, rgba(42,46,54,0.13) 0%, rgba(42,46,54,0) 62%);
+            will-change: transform, opacity;
+            animation: warBreathe 36s ease-in-out infinite alternate;
+          }
+          @keyframes warBreathe {
+            from { transform: scale(0.94); opacity: 0.72; }
+            to   { transform: scale(1.10); opacity: 1; }
+          }`
+      },
+      {
+        id: 'warely-dusk', name: 'Warely dusk', num: '16', group: 'Warely ink',
+        sw: ['#8FA1E0', '#FBE3C7', '#2A2E36'], motion: 'drift 46s', contrast: '5.70',
+        note: 'The deep end: darker ground, periwinkle and peach, a graphite corner.',
+        css: `
+          body { background-color: #D9DFED !important; }
+          .topnav-link--secondary, .hero-bio-hook, .hero-meta dt, .case-result, .case-store-link, .footer-role, .footer-right { color: #474D5E !important; }
+          h1, h2, h3, .case-name, .topnav-logo, .hero-name { color: #1E2330 !important; }
+          .pagewash {
+            background:
+              radial-gradient(126% 120% at 14% 100%, rgba(143,161,224,0.40) 0%, rgba(143,161,224,0) 58%),
+              radial-gradient(110% 110% at 90% 4%, rgba(251,227,199,0.68) 0%, rgba(251,227,199,0) 54%),
+              radial-gradient(84% 84% at 98% 74%, rgba(42,46,54,0.10) 0%, rgba(42,46,54,0) 52%),
+              #D9DFED !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -25%;
+            background: radial-gradient(46% 44% at 40% 62%, rgba(143,161,224,0.24), transparent 62%);
+            will-change: transform;
+            animation: warDusk 46s ease-in-out infinite alternate;
+          }
+          @keyframes warDusk { to { transform: translate3d(10%, -8%, 0) scale(1.14); } }`
+      },
+      {
+        id: 'warely-quiet', name: 'Warely quiet', num: '17', group: 'Warely',
+        sw: ['#E8ECF8', '#F2ECDA', '#F5EBDE'], motion: 'none', contrast: '4.54',
+        note: 'Spec placement. 55% of the chroma gone and every blob lifted to grey 236 — the strongest the site ink allows.',
+        css: `
+          body { background-color: #F2F4FB !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 24% 20%, #E8ECF8 0%, rgba(232,236,248,0) 56%),
+              radial-gradient(120% 120% at 84% 86%, #F2ECDA 0%, rgba(242,236,218,0) 58%),
+              radial-gradient(100% 100% at 92% 12%, #F5EBDE 0%, rgba(245,235,222,0) 48%),
+              #F2F4FB !important;
+          }`
+      },
+      {
+        id: 'warely-hush', name: 'Warely hush', num: '18', group: 'Warely',
+        sw: ['#EBEEF6', '#F2EEE2', '#F4EDE5'], motion: 'drift 54s', contrast: '4.55',
+        note: 'The calmest of the family — 70% of the chroma gone, grey 238, and it drifts.',
+        css: `
+          body { background-color: #F2F4FB !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 24% 20%, #EBEEF6 0%, rgba(235,238,246,0) 56%),
+              radial-gradient(120% 120% at 84% 86%, #F2EEE2 0%, rgba(242,238,226,0) 58%),
+              radial-gradient(100% 100% at 92% 12%, #F4EDE5 0%, rgba(244,237,229,0) 48%),
+              #F2F4FB !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -25%;
+            background: radial-gradient(44% 42% at 58% 46%, rgba(235,238,246,0.7), transparent 62%);
+            will-change: transform;
+            animation: warHush 54s ease-in-out infinite alternate;
+          }
+          @keyframes warHush { to { transform: translate3d(8%, -6%, 0) scale(1.12); } }`
+      },
+      {
+        id: 'warely-a-quiet', name: 'Warely · A quiet', num: '19', group: 'Warely',
+        sw: ['#E8ECF8', '#F2ECDA', '#F5EBDE'], motion: 'none', contrast: '4.57',
+        note: 'Placement A, calmed to the level the site ink allows — the one you were looking at.',
+        css: `
+          body { background-color: #F2F4FB !important; }
+          .pagewash {
+            background:
+              radial-gradient(120% 130% at 8% 0%, #E8ECF8 0%, rgba(232,236,248,0) 58%),
+              radial-gradient(110% 120% at 94% 100%, #F2ECDA 0%, rgba(242,236,218,0) 54%),
+              radial-gradient(76% 88% at 98% 2%, #F5EBDE 0%, rgba(245,235,222,0) 46%),
+              #F2F4FB !important;
+          }`
       }
     ];
 
@@ -346,7 +511,9 @@
         '</span>' +
         '<span class="opt-meta">' +
           '<span class="motion">' + v.motion + '</span>' +
-          '<span data-c>contrast ' + (v.contrast || '—') + '</span>' +
+          // below the 4.5 floor it is called out rather than quietly printed
+          '<span data-c' + (parseFloat(v.contrast) < 4.5 ? ' class="fail"' : '') + '>contrast ' +
+            (v.contrast || '—') + (parseFloat(v.contrast) < 4.5 ? ' ✗' : '') + '</span>' +
         '</span>';
       b.addEventListener('click', function () { pick(v); });
       list.appendChild(b);
