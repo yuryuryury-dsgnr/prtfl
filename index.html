@@ -41,7 +41,7 @@
       font-weight: 400;
       line-height: 1.7;
       color: #1A1A1A;
-      background-color: #F0F2FA;
+      background-color: #F0F1F7;
     }
 
     /* ——— PAGE WASH ———
@@ -61,14 +61,15 @@
          two places text actually sits on this layer — the hero, which is
          left-aligned, and the footer. The cards never see it: they paint their
          own #FCFCFC. Measured against the painted pixels, not the CSS. */
-      /* The Warely palette with the colour taken out and the blobs lifted above
-         the base, so each one reads as a bloom rather than a stain. The hues
-         are the brand's; what is gone is 70% of their chroma. */
+      /* The Warely palette with 94% of its chroma taken out and the base pulled
+         toward neutral — study 27. The blobs sit above the base in lightness,
+         so each reads as a bloom rather than a stain, and what is left of the
+         brand is a direction rather than a colour. */
       background:
-        radial-gradient(115% 115% at 24% 20%, #F3F5FD 0%, rgba(243,245,253,0) 56%),
-        radial-gradient(120% 120% at 84% 86%, #F9F5E9 0%, rgba(249,245,233,0) 58%),
-        radial-gradient(100% 100% at 92% 12%, #FBF4EC 0%, rgba(251,244,236,0) 48%),
-        #F0F2FA;
+        radial-gradient(115% 115% at 24% 20%, #FDFDFF 0%, rgba(253,253,255,0) 56%),
+        radial-gradient(120% 120% at 84% 86%, #FEFDFB 0%, rgba(254,253,251,0) 58%),
+        radial-gradient(100% 100% at 92% 12%, #FEFDFB 0%, rgba(254,253,251,0) 48%),
+        #F0F1F7;
       /* The two bands of the screen that carry text on this layer are the very
          top (the nav, before it scrolls away) and the very bottom (the footer).
          Fading the layer out at both edges leaves those on flat ground, which
@@ -88,11 +89,11 @@
       content: '';
       position: absolute;
       inset: -25%;
-      background: radial-gradient(44% 42% at 56% 46%, rgba(243,245,253,0.85), transparent 62%);
+      background: radial-gradient(46% 44% at 54% 48%, rgba(253,253,255,0.9), transparent 62%);
       will-change: transform;
-      animation: washDrift 58s ease-in-out infinite alternate;
+      animation: washDrift 62s ease-in-out infinite alternate;
     }
-    @keyframes washDrift { to { transform: translate3d(8%, -6%, 0) scale(1.12); } }
+    @keyframes washDrift { to { transform: translate3d(-7%, 5%, 0) scale(1.10); } }
     @media (prefers-reduced-motion: reduce) {
       .pagewash::before { animation: none; }
     }
