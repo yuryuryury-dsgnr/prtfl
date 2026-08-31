@@ -83,19 +83,14 @@
     }
     /* grain is what stops a gradient this large reading as plastic; one inline
        SVG, no request, no motion */
-    /* one slow pass across the field — transform only, so it stays on the
-       compositor and never touches layout */
+    /* A fourth bloom, held still. It used to drift; at 94% of the chroma
+       removed the movement was not readable, so it buys nothing and the
+       layer no longer needs to stay on the compositor. */
     .pagewash::before {
       content: '';
       position: absolute;
       inset: -25%;
       background: radial-gradient(46% 44% at 54% 48%, rgba(253,253,255,0.9), transparent 62%);
-      will-change: transform;
-      animation: washDrift 62s ease-in-out infinite alternate;
-    }
-    @keyframes washDrift { to { transform: translate3d(-7%, 5%, 0) scale(1.10); } }
-    @media (prefers-reduced-motion: reduce) {
-      .pagewash::before { animation: none; }
     }
     .pagewash::after {
       content: '';
