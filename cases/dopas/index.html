@@ -265,11 +265,26 @@
       position: absolute; top: 50%; left: calc(var(--p) * 1%);
       width: 38px; height: 38px; margin: -19px 0 0 -19px;
       border-radius: 50%;
-      background: #FCFCFC;
-      box-shadow: 0 1px 2px rgba(20,22,28,0.16), 0 6px 18px -6px rgba(20,22,28,0.3);
+      background: #1A1A1A;
+      box-shadow: 0 1px 2px rgba(20,22,28,0.20), 0 6px 18px -6px rgba(20,22,28,0.42);
       display: grid; place-items: center;
       pointer-events: none;
-      color: #1A1A1A;
+      color: #FCFCFC;
+    }
+    /* --p has to be a registered number for a keyframe to interpolate it.
+       Without @property the declaration is ignored and the hint simply does
+       not run, which is a fine way to lose it. */
+    @property --p { syntax: "<number>"; inherits: true; initial-value: 50; }
+    /* Played once, when the frame first comes into view: the handle swings
+       both ways so it reads as draggable rather than as a divider. Any touch
+       of the control ends it for good. */
+    .ba.is-hinting { animation: baHint 3.2s cubic-bezier(.45,0,.25,1) 1 both; }
+    @keyframes baHint {
+      0%   { --p: 50; }
+      14%  { --p: 50; }
+      42%  { --p: 68; }
+      72%  { --p: 32; }
+      100% { --p: 50; }
     }
     .ba-grip svg { width: 18px; height: 18px; }
     .ba-range {
@@ -956,23 +971,6 @@
         </div>
       </div>
 
-      <h3 class="subsection-heading">Visual iteration</h3>
-      <p class="section-text">Drag the handle. The first pass was built in greys to settle structure before colour; the shipped version is the same screen once the palette and the card treatment landed.</p>
-      <div class="ba-switch" role="tablist" aria-label="Screen">
-        <button type="button" role="tab" class="is-active" data-ba="choose" aria-selected="true">Choose place</button>
-        <button type="button" role="tab" data-ba="results" aria-selected="false">Search results</button>
-        <button type="button" role="tab" data-ba="passenger" aria-selected="false">Passenger info</button>
-      </div>
-      <div class="ba" id="ba">
-        <img class="ba-before" id="baBefore" src="../../assets/images/dopas/dopas-choose-places-first.webp" alt="Choose place, first pass: grey panels and black controls" loading="lazy" width="1600" height="844">
-        <img class="ba-after"  id="baAfter"  src="../../assets/images/dopas/dopas-choose-places.webp" alt="Choose place as shipped: white cards and the blue accent" loading="lazy" width="1600" height="844">
-        <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" step="0.1" aria-label="Reveal the shipped version">
-        <span class="ba-line" aria-hidden="true"></span>
-        <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 8 6 12 10 16"/><polyline points="14 8 18 12 14 16"/></svg></span>
-        <span class="ba-tag ba-tag--l" aria-hidden="true">First pass</span>
-        <span class="ba-tag ba-tag--r" aria-hidden="true">Shipped</span>
-      </div>
-      <p class="ba-note">These are the two visual passes of the same layout. They are not the four fixes above &mdash; those changed the order of the flow and what each screen asks for, and the pre-test build was never exported.</p>
     </section>
 
     <!-- 05 — USABILITY FINDINGS -->
@@ -1004,6 +1002,23 @@
           <span class="fix-tag">Fix: Round-trip toggle added to homepage search</span>
         </div>
       </div>
+      <h3 class="subsection-heading">Before and after</h3>
+      <p class="section-text">Drag the handle. The first pass was built in greys to settle structure before colour; the shipped version is the same screen once the palette and the card treatment landed.</p>
+      <div class="ba-switch" role="tablist" aria-label="Screen">
+        <button type="button" role="tab" class="is-active" data-ba="choose" aria-selected="true">Choose place</button>
+        <button type="button" role="tab" data-ba="results" aria-selected="false">Search results</button>
+        <button type="button" role="tab" data-ba="passenger" aria-selected="false">Passenger info</button>
+      </div>
+      <div class="ba" id="ba">
+        <img class="ba-before" id="baBefore" src="../../assets/images/dopas/dopas-choose-places-first.webp" alt="Choose place, first pass: grey panels and black controls" loading="lazy" width="1600" height="844">
+        <img class="ba-after"  id="baAfter"  src="../../assets/images/dopas/dopas-choose-places.webp" alt="Choose place as shipped: white cards and the blue accent" loading="lazy" width="1600" height="844">
+        <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" step="0.1" aria-label="Reveal the shipped version">
+        <span class="ba-line" aria-hidden="true"></span>
+        <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 8 6 12 10 16"/><polyline points="14 8 18 12 14 16"/></svg></span>
+        <span class="ba-tag ba-tag--l" aria-hidden="true">First pass</span>
+        <span class="ba-tag ba-tag--r" aria-hidden="true">Shipped</span>
+      </div>
+      <p class="ba-note">What moves here is the visual pass, not the four fixes above: those changed the order of the flow and what each screen asks for, and the build from before the tests was never exported.</p>
     </section>
 
 
@@ -1371,6 +1386,38 @@
       function paint() { box.style.setProperty('--p', range.value); }
       range.addEventListener('input', paint);
       paint();
+
+      /* The hint plays once, the first time the frame is on screen, and any
+         real interaction ends it — including one that interrupts it, so the
+         handle never fights the pointer. */
+      var hinted = false;
+      function stopHint() {
+        if (!box.classList.contains('is-hinting')) return;
+        // freeze where the hint had got to and hand that value to the range,
+        // so grabbing it mid-swing does not snap the handle back to centre
+        var at = parseFloat(getComputedStyle(box).getPropertyValue('--p'));
+        box.classList.remove('is-hinting');
+        if (!isNaN(at)) range.value = String(Math.max(0, Math.min(100, at)));
+        box.style.setProperty('--p', range.value);
+      }
+      ['pointerdown', 'keydown', 'input', 'touchstart'].forEach(function (ev) {
+        box.addEventListener(ev, stopHint, { passive: true });
+      });
+      box.addEventListener('animationend', stopHint);
+
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce && 'IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) {
+            if (!e.isIntersecting || hinted) return;
+            hinted = true;
+            io.disconnect();
+            box.style.removeProperty('--p');   // the inline value would win over the keyframe
+            box.classList.add('is-hinting');
+          });
+        }, { threshold: 0.45 });
+        io.observe(box);
+      }
 
       var tabs = [].slice.call(document.querySelectorAll('.ba-switch button'));
       tabs.forEach(function (b) {
