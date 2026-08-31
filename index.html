@@ -41,7 +41,7 @@
       font-weight: 400;
       line-height: 1.7;
       color: #1A1A1A;
-      background-color: #F2F2F2;
+      background-color: #F0F2FA;
     }
 
     /* ——— PAGE WASH ———
@@ -61,11 +61,14 @@
          two places text actually sits on this layer — the hero, which is
          left-aligned, and the footer. The cards never see it: they paint their
          own #FCFCFC. Measured against the painted pixels, not the CSS. */
+      /* The Warely palette with the colour taken out and the blobs lifted above
+         the base, so each one reads as a bloom rather than a stain. The hues
+         are the brand's; what is gone is 70% of their chroma. */
       background:
-        radial-gradient(58% 46% at 14% 10%, rgba(150,178,226,0.12), transparent 62%),
-        radial-gradient(54% 44% at 86% 12%, rgba(206,168,222,0.28), transparent 60%),
-        radial-gradient(64% 50% at 58% 98%, rgba(246,206,196,0.30), transparent 64%),
-        #F2F2F2;
+        radial-gradient(115% 115% at 24% 20%, #F3F5FD 0%, rgba(243,245,253,0) 56%),
+        radial-gradient(120% 120% at 84% 86%, #F9F5E9 0%, rgba(249,245,233,0) 58%),
+        radial-gradient(100% 100% at 92% 12%, #FBF4EC 0%, rgba(251,244,236,0) 48%),
+        #F0F2FA;
       /* The two bands of the screen that carry text on this layer are the very
          top (the nav, before it scrolls away) and the very bottom (the footer).
          Fading the layer out at both edges leaves those on flat ground, which
@@ -79,6 +82,20 @@
     }
     /* grain is what stops a gradient this large reading as plastic; one inline
        SVG, no request, no motion */
+    /* one slow pass across the field — transform only, so it stays on the
+       compositor and never touches layout */
+    .pagewash::before {
+      content: '';
+      position: absolute;
+      inset: -25%;
+      background: radial-gradient(44% 42% at 56% 46%, rgba(243,245,253,0.85), transparent 62%);
+      will-change: transform;
+      animation: washDrift 58s ease-in-out infinite alternate;
+    }
+    @keyframes washDrift { to { transform: translate3d(8%, -6%, 0) scale(1.12); } }
+    @media (prefers-reduced-motion: reduce) {
+      .pagewash::before { animation: none; }
+    }
     .pagewash::after {
       content: '';
       position: absolute;
