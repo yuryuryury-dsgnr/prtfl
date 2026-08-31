@@ -175,6 +175,130 @@
        the line, which is what keeps the name flush. */
     .section-text { color: #666666; margin-bottom: 16px; max-width: 640px; }
 
+
+    /* ——— SCREENS ———
+       The wide-mockup component from the Data Marketplace case, minus the
+       light/dark toggle: these exports ship in one theme. Six browser frames
+       in a row that drifts on its own and stops the moment you touch it. */
+    .mg-strip {
+      cursor: grab;                 /* the row is draggable with a mouse */
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      margin-top: 24px;
+    }
+    .mg-strip.is-dragging { cursor: grabbing; user-select: none; }
+    .mg-strip.is-dragging img { pointer-events: none; }
+    .mg-strip::-webkit-scrollbar { display: none; }
+    .mg-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+    /* an absolute basis, never a percentage: the track is width: max-content,
+       so a percentage has nothing definite to resolve against and the items
+       stop being a row at all */
+    .mg-track { display: flex; gap: 20px; width: max-content; }
+    .mg-item { flex: 0 0 min(760px, 78vw); margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .mg-browser {
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 10px; overflow: hidden;
+      background: #EFEFEF;
+    }
+    .mg-chrome {
+      display: flex; align-items: center; gap: 12px;
+      height: 32px; padding: 0 12px;
+      background: #E7E7E7;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .mg-dots { display: flex; gap: 6px; }
+    .mg-dots span { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .mg-dots span:nth-child(1) { background: #FF5F57; }
+    .mg-dots span:nth-child(2) { background: #FEBC2E; }
+    .mg-dots span:nth-child(3) { background: #28C840; }
+    .mg-url { flex: 1; text-align: center; font-size: 11px; color: #666666; font-weight: 500; }
+    /* the canvas held 27px until the first mockup decoded and everything below
+       it jumped — reserve the ratio the exports actually have */
+    .mg-canvas { position: relative; width: 100%; aspect-ratio: 2880 / 1520; }
+    .mg-img { width: 100%; height: auto; display: block; }
+    .mg-cap { font-size: 13px; color: #666666; line-height: 1.5; margin: 0; padding: 0 2px; }
+    .mg-cap b { color: #1A1A1A; font-weight: 500; }
+
+
+    /* ——— BEFORE / AFTER ———
+       A real <input type="range"> lies over the frame at zero opacity: it
+       carries the drag, the keyboard and the screen-reader semantics, and the
+       visible handle is just a line that follows it. Nothing to reimplement,
+       and it works on touch without a single touch listener. */
+    .ba-switch { display: flex; gap: 0; margin: 24px 0 14px;
+      border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; width: fit-content; }
+    .ba-switch button {
+      appearance: none; background: transparent; border: 0;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      padding: 10px 18px; font: inherit; font-size: 14px; font-weight: 500;
+      color: #666666; cursor: pointer; white-space: nowrap;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .ba-switch button:last-child { border-right: 0; }
+    .ba-switch button:hover { color: #1A1A1A; }
+    .ba-switch button.is-active { background: #D9D9D9; color: #1A1A1A; }
+    .ba-switch button:focus-visible { outline: 2px solid #1A1A1A; outline-offset: -2px; }
+
+    .ba {
+      position: relative;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #EFEFEF;
+      aspect-ratio: 2880 / 1520;
+      --p: 50;
+      touch-action: pan-y;          /* the page still scrolls over the frame */
+    }
+    .ba img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+    /* the shipped version is revealed from the handle rightwards */
+    .ba-after { clip-path: inset(0 0 0 calc(var(--p) * 1%)); }
+    .ba-line {
+      position: absolute; top: 0; bottom: 0;
+      left: calc(var(--p) * 1%);
+      width: 2px; margin-left: -1px;
+      background: #FCFCFC;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.18);
+      pointer-events: none;
+    }
+    .ba-grip {
+      position: absolute; top: 50%; left: calc(var(--p) * 1%);
+      width: 38px; height: 38px; margin: -19px 0 0 -19px;
+      border-radius: 50%;
+      background: #FCFCFC;
+      box-shadow: 0 1px 2px rgba(20,22,28,0.16), 0 6px 18px -6px rgba(20,22,28,0.3);
+      display: grid; place-items: center;
+      pointer-events: none;
+      color: #1A1A1A;
+    }
+    .ba-grip svg { width: 18px; height: 18px; }
+    .ba-range {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; margin: 0;
+      appearance: none; background: transparent;
+      cursor: ew-resize; opacity: 0;
+    }
+    .ba-range:focus-visible + .ba-line { box-shadow: 0 0 0 2px #1A1A1A; }
+    .ba-range::-webkit-slider-thumb { appearance: none; width: 44px; height: 100%; }
+    .ba-range::-moz-range-thumb { width: 44px; height: 100%; border: 0; background: transparent; }
+    .ba-tag {
+      position: absolute; top: 12px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 5px 10px; border-radius: 100px;
+      background: rgba(252,252,252,0.92); color: #1A1A1A;
+      box-shadow: 0 1px 2px rgba(20,22,28,0.12);
+      pointer-events: none;
+    }
+    .ba-tag--l { left: 12px; }
+    .ba-tag--r { right: 12px; }
+    .ba-note { font-size: 13px; color: #666666; line-height: 1.5; margin: 12px 0 0; }
+    @media (max-width: 640px) {
+      .ba-switch { width: 100%; }
+      .ba-switch button { flex: 1; padding: 10px 8px; font-size: 13px; text-align: center; }
+      .ba-grip { width: 32px; height: 32px; margin: -16px 0 0 -16px; }
+      .ba-tag { font-size: 10px; padding: 4px 8px; }
+    }
+
     /* ——— TIMELINE ——— */
     .timeline { display: flex; gap: 0; margin-top: 24px; position: relative; }
     .timeline::before {
@@ -596,7 +720,7 @@
       <h1>dopas.dp.ua</h1>
       <p class="case-hero-meta">Web platform · 2020</p>
       <div class="case-hero-image">
-        <img src="../../assets/images/dopas/dopas-cover-v2.webp" alt="dopas.dp.ua project overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1740" height="1106" fetchpriority="high">
+        <img src="../../assets/images/dopas/dopas-cover-v3.webp" alt="dopas.dp.ua project overview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="2400" height="1525" fetchpriority="high">
         <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
       </div>
       <div class="case-hero-detail">
@@ -781,6 +905,76 @@
       <p class="flow-caption">End-to-end booking flow — from opening the website to downloading a ticket. Dashed line shows the return path when user decides not to purchase.</p>
     </section>
 
+    <!-- 05 — SCREENS -->
+    <section id="section-06" class="case-section">
+      <h2 class="section-heading">Screens</h2>
+      <p class="section-text">The booking flow as it shipped, in order &mdash; from the search on the landing page to the ticket in your inbox.</p>
+      <div class="mg-strip" tabindex="0" role="group" aria-label="Screens, six of them &mdash; scrollable">
+        <div class="mg-track">
+          <figure class="mg-item">
+            <div class="mg-browser">
+              <div class="mg-chrome"><div class="mg-dots"><span></span><span></span><span></span></div><div class="mg-url">Main</div></div>
+              <div class="mg-canvas"><img class="mg-img" src="../../assets/images/dopas/dopas-main.webp" alt="dopas.dp.ua landing page: a from/to/date search over a photograph of a road" loading="lazy" width="1600" height="844"></div>
+            </div>
+            <figcaption class="mg-cap"><b>Main</b> &mdash; one search field, three inputs, nothing else above the fold</figcaption>
+          </figure>
+          <figure class="mg-item">
+            <div class="mg-browser">
+              <div class="mg-chrome"><div class="mg-dots"><span></span><span></span><span></span></div><div class="mg-url">Search results</div></div>
+              <div class="mg-canvas"><img class="mg-img" src="../../assets/images/dopas/dopas-search-results.webp" alt="Search results: six departures with times, duration, seats left, price and a Choose button" loading="lazy" width="1600" height="844"></div>
+            </div>
+            <figcaption class="mg-cap"><b>Search results</b> &mdash; time, duration, seats left and price on one line per departure</figcaption>
+          </figure>
+          <figure class="mg-item">
+            <div class="mg-browser">
+              <div class="mg-chrome"><div class="mg-dots"><span></span><span></span><span></span></div><div class="mg-url">Choose place</div></div>
+              <div class="mg-canvas"><img class="mg-img" src="../../assets/images/dopas/dopas-choose-places.webp" alt="Seat picker: a numbered seat map with free, occupied and chosen states, and a running total" loading="lazy" width="1600" height="844"></div>
+            </div>
+            <figcaption class="mg-cap"><b>Choose place</b> &mdash; the seat map, with the total updating as seats are picked</figcaption>
+          </figure>
+          <figure class="mg-item">
+            <div class="mg-browser">
+              <div class="mg-chrome"><div class="mg-dots"><span></span><span></span><span></span></div><div class="mg-url">Passenger information</div></div>
+              <div class="mg-canvas"><img class="mg-img" src="../../assets/images/dopas/dopas-passenger-info.webp" alt="Passenger details: name, surname and luggage per seat" loading="lazy" width="1600" height="844"></div>
+            </div>
+            <figcaption class="mg-cap"><b>Passenger information</b> &mdash; one block per seat, so a pair books in one pass</figcaption>
+          </figure>
+          <figure class="mg-item">
+            <div class="mg-browser">
+              <div class="mg-chrome"><div class="mg-dots"><span></span><span></span><span></span></div><div class="mg-url">Payment</div></div>
+              <div class="mg-canvas"><img class="mg-img" src="../../assets/images/dopas/dopas-payment.webp" alt="Payment: total including the service fee, card logos, email and phone, and the two consents" loading="lazy" width="1600" height="844"></div>
+            </div>
+            <figcaption class="mg-cap"><b>Payment</b> &mdash; the fee is named before the card is, not after</figcaption>
+          </figure>
+          <figure class="mg-item">
+            <div class="mg-browser">
+              <div class="mg-chrome"><div class="mg-dots"><span></span><span></span><span></span></div><div class="mg-url">Confirmation</div></div>
+              <div class="mg-canvas"><img class="mg-img" src="../../assets/images/dopas/dopas-confirmation.webp" alt="Confirmation: the ticket to download, and what to carry when travelling abroad" loading="lazy" width="1600" height="844"></div>
+            </div>
+            <figcaption class="mg-cap"><b>Confirmation</b> &mdash; the ticket to download, and the documents to bring</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h3 class="subsection-heading">Visual iteration</h3>
+      <p class="section-text">Drag the handle. The first pass was built in greys to settle structure before colour; the shipped version is the same screen once the palette and the card treatment landed.</p>
+      <div class="ba-switch" role="tablist" aria-label="Screen">
+        <button type="button" role="tab" class="is-active" data-ba="choose" aria-selected="true">Choose place</button>
+        <button type="button" role="tab" data-ba="results" aria-selected="false">Search results</button>
+        <button type="button" role="tab" data-ba="passenger" aria-selected="false">Passenger info</button>
+      </div>
+      <div class="ba" id="ba">
+        <img class="ba-before" id="baBefore" src="../../assets/images/dopas/dopas-choose-places-first.webp" alt="Choose place, first pass: grey panels and black controls" loading="lazy" width="1600" height="844">
+        <img class="ba-after"  id="baAfter"  src="../../assets/images/dopas/dopas-choose-places.webp" alt="Choose place as shipped: white cards and the blue accent" loading="lazy" width="1600" height="844">
+        <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" step="0.1" aria-label="Reveal the shipped version">
+        <span class="ba-line" aria-hidden="true"></span>
+        <span class="ba-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 8 6 12 10 16"/><polyline points="14 8 18 12 14 16"/></svg></span>
+        <span class="ba-tag ba-tag--l" aria-hidden="true">First pass</span>
+        <span class="ba-tag ba-tag--r" aria-hidden="true">Shipped</span>
+      </div>
+      <p class="ba-note">These are the two visual passes of the same layout. They are not the four fixes above &mdash; those changed the order of the flow and what each screen asks for, and the pre-test build was never exported.</p>
+    </section>
+
     <!-- 05 — USABILITY FINDINGS -->
     <section id="section-05" class="case-section">
       <h2 class="section-heading">Usability testing</h2>
@@ -841,9 +1035,10 @@
       <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Roadmap</a>
       <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> Market</a>
       <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> User flows</a>
-      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Usability</a>
-      <a href="#section-08" data-section="section-08"><span class="pill-num">06</span> Outcome</a>
-      <a href="#section-09" data-section="section-09"><span class="pill-num">07</span> Reflection</a>
+      <a href="#section-06" data-section="section-06"><span class="pill-num">05</span> Screens</a>
+      <a href="#section-05" data-section="section-05"><span class="pill-num">06</span> Usability</a>
+      <a href="#section-08" data-section="section-08"><span class="pill-num">07</span> Outcome</a>
+      <a href="#section-09" data-section="section-09"><span class="pill-num">08</span> Reflection</a>
     </nav>
     <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
       <span class="toc-pill-num" id="tocPillNum">01</span>
@@ -1061,6 +1256,137 @@
       // a panel behind a tab has no width until shown, so re-check after a click
       document.addEventListener('click', later, true);
     })();
+
+    /* ——— SCREENS: a drifting strip ———
+       Ported from the Data Marketplace case without its theme toggle. The
+       drift moves scrollLeft rather than a transform, so the row stays a real
+       scroller: a swipe, a trackpad, a shift-wheel and Tab all still work. */
+    (function () {
+      var strip = document.querySelector('.mg-strip');
+      var track = strip && strip.querySelector('.mg-track');
+      if (!strip || !track) return;
+
+      // A second copy of the row makes the wrap seamless: past the halfway
+      // mark we subtract it and the pixels under the pointer do not change.
+      [].slice.call(track.children).forEach(function (node) {
+        var copy = node.cloneNode(true);
+        copy.setAttribute('aria-hidden', 'true');
+        [].forEach.call(copy.querySelectorAll('img'), function (im) { im.setAttribute('loading', 'lazy'); });
+        track.appendChild(copy);
+      });
+
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var SPEED = 22;              // px per second — a drift, not a carousel
+      // The position is carried in a variable rather than read back off the
+      // element: 22px/s is 0.35px a frame and scrollLeft rounds, so reading it
+      // back rounded every step to zero and the row never moved.
+      var half = 0, paused = false, userUntil = 0, mine = -1, last = 0, pos = 0;
+      function measure() { half = track.scrollWidth / 2; }
+      measure();
+      window.addEventListener('resize', measure);
+      if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
+
+      strip.addEventListener('pointerenter', function () { paused = true; });
+      strip.addEventListener('pointerleave', function () { if (!dragging) paused = false; });
+
+      // Mouse only. Touch already pans the row natively with momentum, and
+      // taking that over would replace a good gesture with a worse one.
+      var dragging = false, startX = 0, startScroll = 0;
+      strip.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        dragging = true;
+        startX = e.clientX;
+        startScroll = strip.scrollLeft;
+        strip.classList.add('is-dragging');
+        strip.setPointerCapture(e.pointerId);
+        e.preventDefault();               // no ghost image, no text selection
+      });
+      strip.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var next = startScroll - (e.clientX - startX);
+        if (half > 0) {
+          if (next < 0) { next += half; startScroll += half; }
+          else if (next >= half) { next -= half; startScroll -= half; }
+        }
+        strip.scrollLeft = next;
+        pos = next;
+        mine = strip.scrollLeft;
+      });
+      function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        strip.classList.remove('is-dragging');
+        if (e && e.pointerId != null && strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
+        userUntil = performance.now() + 1500;
+      }
+      strip.addEventListener('pointerup', endDrag);
+      strip.addEventListener('pointercancel', endDrag);
+      strip.addEventListener('focusin',  function () { paused = true; });
+      strip.addEventListener('focusout', function () { paused = false; });
+      // Our own writes fire scroll too — only a value we did not set is the user.
+      strip.addEventListener('scroll', function () {
+        if (Math.abs(strip.scrollLeft - mine) > 1.5) {
+          userUntil = performance.now() + 1500;
+          pos = strip.scrollLeft;
+        }
+      }, { passive: true });
+
+      function step(now) {
+        var dt = last ? Math.min(now - last, 50) : 16;
+        last = now;
+        if (half > 0) {
+          if (dragging) { /* the pointer owns the position */ }
+          else if (!paused && now > userUntil) {
+            pos += SPEED * dt / 1000;
+            if (pos >= half) pos -= half;
+            strip.scrollLeft = pos;
+            mine = strip.scrollLeft;
+          } else if (strip.scrollLeft >= half) {
+            pos = strip.scrollLeft - half;
+            strip.scrollLeft = pos;
+            mine = strip.scrollLeft;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    })();
+
+
+    /* ——— BEFORE / AFTER ——— */
+    (function () {
+      var box = document.getElementById('ba');
+      var range = document.getElementById('baRange');
+      if (!box || !range) return;
+      var before = document.getElementById('baBefore');
+      var after  = document.getElementById('baAfter');
+      var PAIRS = {
+        choose:    ['dopas-choose-places-first.webp',  'dopas-choose-places.webp',  'Choose place'],
+        results:   ['dopas-search-results-first.webp', 'dopas-search-results.webp', 'Search results'],
+        passenger: ['dopas-passenger-info-first.webp', 'dopas-passenger-info.webp', 'Passenger info']
+      };
+      var BASE = '../../assets/images/dopas/';
+
+      function paint() { box.style.setProperty('--p', range.value); }
+      range.addEventListener('input', paint);
+      paint();
+
+      var tabs = [].slice.call(document.querySelectorAll('.ba-switch button'));
+      tabs.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var p = PAIRS[b.dataset.ba];
+          if (!p) return;
+          tabs.forEach(function (o) { o.classList.remove('is-active'); o.setAttribute('aria-selected', 'false'); });
+          b.classList.add('is-active'); b.setAttribute('aria-selected', 'true');
+          before.src = BASE + p[0];
+          before.alt = p[2] + ', first pass: grey panels and black controls';
+          after.src  = BASE + p[1];
+          after.alt  = p[2] + ' as shipped: white cards and the blue accent';
+        });
+      });
+    })();
+
   </script>
 </body>
 </html>

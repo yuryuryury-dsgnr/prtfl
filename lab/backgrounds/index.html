@@ -49,13 +49,13 @@
       width: 26px; height: 26px; border-radius: 50%;
       display: grid; place-items: center;
       font-size: 10px; font-weight: 500; letter-spacing: 0.04em;
-      color: rgba(0,0,0,0.42); text-decoration: none;
+      color: rgba(0,0,0,0.58); text-decoration: none;   /* 0.42 read 2.97 against the washes */
       border: 1px solid transparent;
       transition: color 300ms ease, border-color 300ms ease, background 300ms ease;
     }
     .rail a:hover { color: #1A1A1A; border-color: rgba(0,0,0,0.18); }
     .rail a.active { color: #1A1A1A; border-color: rgba(0,0,0,0.32); background: rgba(255,255,255,0.5); }
-    .rail.on-dark a { color: rgba(255,255,255,0.42); }
+    .rail.on-dark a { color: rgba(255,255,255,0.62); }
     .rail.on-dark a:hover { color: #fff; border-color: rgba(255,255,255,0.28); }
     .rail.on-dark a.active { color: #fff; border-color: rgba(255,255,255,0.44); background: rgba(255,255,255,0.08); }
 
@@ -123,15 +123,17 @@
     /* ═══ 02 — slow drift ═══════════════════════════════════════════════
        The same wash, but each blob is its own element so it can move. Only
        transform and opacity animate, so it stays on the compositor.        */
+    /* measured on the painted pixels, not on the CSS: at the alphas this
+       started with, the eyebrow read 3.72 where the blue blob crossed it */
     .bg-drift { background: #F2F2F2; }
     .blob {
       position: absolute; border-radius: 50%;
       filter: blur(90px);
       will-change: transform;
     }
-    .blob--a { width: 60vw; height: 60vw; left: -14vw; top: -18vw;  background: rgba(150,178,226,0.52); animation: driftA 34s ease-in-out infinite alternate; }
-    .blob--b { width: 54vw; height: 54vw; right: -12vw; top: -10vw; background: rgba(206,168,222,0.46); animation: driftB 41s ease-in-out infinite alternate; }
-    .blob--c { width: 66vw; height: 66vw; left: 26vw; bottom: -26vw; background: rgba(246,206,196,0.50); animation: driftC 47s ease-in-out infinite alternate; }
+    .blob--a { width: 60vw; height: 60vw; left: -14vw; top: -18vw;  background: rgba(150,178,226,0.19); animation: driftA 34s ease-in-out infinite alternate; }
+    .blob--b { width: 54vw; height: 54vw; right: -12vw; top: -10vw; background: rgba(206,168,222,0.16); animation: driftB 41s ease-in-out infinite alternate; }
+    .blob--c { width: 66vw; height: 66vw; left: 26vw; bottom: -26vw; background: rgba(246,206,196,0.18); animation: driftC 47s ease-in-out infinite alternate; }
     @keyframes driftA { to { transform: translate3d(16vw, 10vh, 0) scale(1.16); } }
     @keyframes driftB { to { transform: translate3d(-14vw, 14vh, 0) scale(0.88); } }
     @keyframes driftC { to { transform: translate3d(-18vw, -12vh, 0) scale(1.12); } }

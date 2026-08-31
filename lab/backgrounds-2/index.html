@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Background studies II — Yurii Fokin</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px; line-height: 1.6; color: #1A1A1A;
+      background: #E9E9E9;
+      -webkit-font-smoothing: antialiased;
+      height: 100svh; overflow: hidden;
+      display: grid;
+      grid-template-columns: 296px 1fr;
+    }
+
+    /* ═══ the rail ═══════════════════════════════════════════════════════ */
+    .rail {
+      display: flex; flex-direction: column;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      background: #F2F2F2;
+      overflow: hidden;
+    }
+    .rail-head { padding: 18px 20px 14px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .rail-title { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 4px; }
+    .rail-sub { font-size: 12px; color: #666666; margin: 0; line-height: 1.5; }
+    .rail-sub a { color: #1A1A1A; }
+
+    .list { flex: 1; overflow-y: auto; padding: 10px; }
+
+    .opt {
+      display: block; width: 100%; text-align: left;
+      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px; padding: 11px 12px; margin-bottom: 8px;
+      font: inherit; color: inherit; cursor: pointer;
+      transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+    }
+    .opt:hover { border-color: rgba(0,0,0,0.22); transform: translateY(-1px); }
+    .opt.active { border-color: #1A1A1A; background: #fff; }
+    .opt:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 2px; }
+
+    .opt-top { display: flex; align-items: center; gap: 9px; }
+    .swatches { display: flex; flex-shrink: 0; }
+    .swatches i {
+      width: 15px; height: 15px; border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.10);
+      margin-left: -5px;
+    }
+    .swatches i:first-child { margin-left: 0; }
+    .opt-name { font-size: 13px; font-weight: 500; letter-spacing: -0.005em; }
+    .opt-num { font-size: 10px; font-weight: 500; color: #6E6E6E; letter-spacing: 0.06em; margin-left: auto; }
+    .opt-meta { display: flex; gap: 8px; margin-top: 6px; font-size: 11px; color: #666666; }
+    .opt-meta span { white-space: nowrap; }
+    .opt-meta .motion { color: #1A1A1A; }
+    .opt-meta .fail { color: #A33; font-weight: 500; }
+
+    .rail-foot {
+      border-top: 1px solid rgba(0,0,0,0.08);
+      padding: 12px 20px 16px;
+      font-size: 11px; color: #666666; line-height: 1.55;
+    }
+    .rail-foot b { color: #1A1A1A; font-weight: 500; }
+    .toggle {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px; font-size: 12px; color: #1A1A1A; cursor: pointer;
+    }
+    .toggle input { margin: 0; }
+
+    /* ═══ the stage ══════════════════════════════════════════════════════ */
+    .stage { position: relative; overflow: hidden; background: #E9E9E9; }
+    .stage iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: 0; display: block;
+      background: #F2F2F2;
+    }
+    .badge {
+      position: absolute; left: 16px; bottom: 16px; z-index: 5;
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 14px; border-radius: 100px;
+      background: rgba(20,20,22,0.86);
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      color: #fff; font-size: 12px; font-weight: 500;
+      pointer-events: none;
+    }
+    .badge em { font-style: normal; color: rgba(255,255,255,0.56); }
+
+    @media (max-width: 900px) {
+      body { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+      .rail { border-right: 0; border-top: 1px solid rgba(0,0,0,0.1); order: 2; max-height: 46svh; }
+      .stage { order: 1; }
+      .rail-head { padding: 12px 16px 10px; }
+      .list { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="rail">
+    <div class="rail-head">
+      <p class="rail-title">Background studies II</p>
+      <p class="rail-sub">Ten washes on the live home page &mdash; the stage is the real
+        <a href="../../" target="_blank" rel="noopener">index.html</a>, with only its background layer swapped.</p>
+    </div>
+
+    <div class="list" id="list" role="radiogroup" aria-label="Background"></div>
+
+    <div class="rail-foot">
+      <label class="toggle"><input type="checkbox" id="stopMotion"> Freeze motion</label>
+      <b>Contrast</b> is the worst ratio measured on the painted pixels behind
+      every run of text — 318 samples per variant across two widths, three scroll
+      positions and three points of each animation loop. The floor is 4.5.
+    </div>
+  </aside>
+
+  <main class="stage">
+    <iframe id="stage" src="../../index.html" title="Home page preview"></iframe>
+    <div class="badge" id="badge"><span></span><em></em></div>
+  </main>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* Each variant is pure CSS injected into the live page. The base layer is
+       .pagewash itself; ::before carries a second, moving layer where a variant
+       needs one. ::after is the page's own grain and is left alone, and the
+       page's mask still clips everything — which is what keeps the nav and the
+       footer off the colour. */
+    var V = [
+      {
+        id: 'current', name: 'Current', num: '01',
+        sw: ['#96B2E2', '#CEA8DE', '#F6CEC4'], motion: 'none', contrast: '4.51',
+        css: ''      // whatever is live
+      },
+      {
+        id: 'drift', name: 'Drift', num: '02',
+        sw: ['#96B2E2', '#CEA8DE', '#F6CEC4'], motion: 'drift 48s', contrast: '4.51',
+        note: 'The live palette, with a second layer sliding across it.',
+        css: `
+          .pagewash::before {
+            content: ''; position: absolute; inset: -30%;
+            background:
+              radial-gradient(42% 40% at 62% 30%, rgba(150,178,226,0.10), transparent 62%),
+              radial-gradient(40% 38% at 74% 66%, rgba(246,206,196,0.12), transparent 60%);
+            will-change: transform;
+            animation: bg2drift 48s ease-in-out infinite alternate;
+          }
+          @keyframes bg2drift { to { transform: translate3d(7%, 6%, 0) scale(1.12); } }`
+      },
+      {
+        id: 'aurora', name: 'Aurora', num: '03',
+        sw: ['#A8C6E8', '#A9D8CE', '#C6BCE6'], motion: 'rotate 96s', contrast: '4.57',
+        note: 'One conic gradient turning behind a heavy blur.',
+        css: `
+          .pagewash {
+            background:
+              radial-gradient(60% 50% at 84% 8%, rgba(168,198,232,0.12), transparent 64%),
+              #F2F2F2 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute;
+            left: 50%; top: 50%; width: 150vmax; height: 150vmax;
+            margin: -75vmax 0 0 -75vmax;
+            background: conic-gradient(from 0deg,
+              rgba(168,198,232,0.09), rgba(169,216,206,0.07), rgba(198,188,230,0.08),
+              rgba(246,214,206,0.06), rgba(168,198,232,0.09));
+            filter: blur(100px);
+            will-change: transform;
+            animation: bg2turn 96s linear infinite;
+          }
+          @keyframes bg2turn { to { transform: rotate(360deg); } }`
+      },
+      {
+        id: 'breathe', name: 'Breathe', num: '04',
+        sw: ['#F6C9C0', '#F3D9C4', '#E8D2E4'], motion: 'scale 34s', contrast: '4.60',
+        note: 'Warm rose and cream, the whole field slowly inhaling.',
+        css: `
+          .pagewash {
+            background:
+              radial-gradient(58% 48% at 16% 12%, rgba(246,201,192,0.16), transparent 62%),
+              radial-gradient(52% 44% at 88% 16%, rgba(232,210,228,0.24), transparent 60%),
+              radial-gradient(62% 50% at 56% 98%, rgba(243,217,196,0.22), transparent 64%),
+              #F2F2F2 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -20%;
+            background: radial-gradient(46% 44% at 62% 44%, rgba(246,201,192,0.12), transparent 64%);
+            will-change: transform, opacity;
+            animation: bg2breathe 34s ease-in-out infinite alternate;
+          }
+          @keyframes bg2breathe {
+            from { transform: scale(0.92); opacity: 0.7; }
+            to   { transform: scale(1.12); opacity: 1; }
+          }`
+      },
+      {
+        id: 'crossfade', name: 'Crossfade', num: '05',
+        sw: ['#9FC0E0', '#F0C8B8', '#C9BEE6'], motion: 'fade 26s', contrast: '4.54',
+        note: 'Two palettes trading places — the closest thing here to a shimmer.',
+        css: `
+          .pagewash {
+            background:
+              radial-gradient(58% 46% at 14% 10%, rgba(159,192,224,0.14), transparent 62%),
+              radial-gradient(54% 44% at 86% 12%, rgba(201,190,230,0.26), transparent 60%),
+              radial-gradient(64% 50% at 58% 98%, rgba(240,200,184,0.24), transparent 64%),
+              #F2F2F2 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+              radial-gradient(56% 46% at 80% 16%, rgba(240,200,184,0.26), transparent 62%),
+              radial-gradient(58% 48% at 24% 92%, rgba(159,192,224,0.24), transparent 62%);
+            will-change: opacity;
+            animation: bg2fade 26s ease-in-out infinite alternate;
+          }
+          @keyframes bg2fade { from { opacity: 0; } to { opacity: 1; } }`
+      },
+      {
+        id: 'pan', name: 'Slow pan', num: '06',
+        sw: ['#B9C6D6', '#CBD6E2', '#DCD3E0'], motion: 'pan 70s', contrast: '4.51',
+        note: 'Cool silver. One oversized gradient walking diagonally.',
+        css: `
+          .pagewash {
+            background:
+              linear-gradient(115deg,
+                rgba(185,198,214,0.12) 0%, rgba(203,214,226,0.08) 26%,
+                rgba(242,242,242,0) 46%, rgba(220,211,224,0.10) 72%,
+                rgba(185,198,214,0.11) 100%),
+              #F2F2F2 !important;
+            background-size: 260% 260%, auto !important;
+            will-change: background-position;
+            animation: bg2pan 70s ease-in-out infinite alternate;
+          }
+          @keyframes bg2pan {
+            from { background-position: 0% 20%, 0 0; }
+            to   { background-position: 100% 80%, 0 0; }
+          }`
+      },
+      {
+        id: 'mint', name: 'Sage', num: '07',
+        sw: ['#B6CFC2', '#CFDCCE', '#E2DCC8'], motion: 'drift 56s', contrast: '4.57',
+        note: 'Green-grey. Quieter than the blue and reads as paper.',
+        css: `
+          .pagewash {
+            background:
+              radial-gradient(58% 46% at 14% 10%, rgba(182,207,194,0.16), transparent 62%),
+              radial-gradient(54% 44% at 86% 14%, rgba(207,220,206,0.30), transparent 60%),
+              radial-gradient(62% 50% at 60% 98%, rgba(226,220,200,0.24), transparent 64%),
+              #F2F2F2 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -25%;
+            background: radial-gradient(44% 42% at 64% 40%, rgba(182,207,194,0.12), transparent 62%);
+            will-change: transform;
+            animation: bg2drift2 56s ease-in-out infinite alternate;
+          }
+          @keyframes bg2drift2 { to { transform: translate3d(-8%, 7%, 0) scale(1.12); } }`
+      },
+      {
+        id: 'lavender', name: 'Lavender ice', num: '08',
+        sw: ['#C3BEE8', '#B6D6E4', '#E0D6EC'], motion: 'drift 44s', contrast: '4.57',
+        note: 'Cooler and a touch more saturated than the current one.',
+        css: `
+          .pagewash {
+            background:
+              radial-gradient(58% 46% at 14% 10%, rgba(195,190,232,0.14), transparent 62%),
+              radial-gradient(54% 44% at 88% 14%, rgba(182,214,228,0.30), transparent 60%),
+              radial-gradient(62% 50% at 58% 98%, rgba(224,214,236,0.24), transparent 64%),
+              #F2F2F2 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -25%;
+            background: radial-gradient(46% 44% at 70% 56%, rgba(182,214,228,0.13), transparent 62%);
+            will-change: transform;
+            animation: bg2drift3 44s ease-in-out infinite alternate;
+          }
+          @keyframes bg2drift3 { to { transform: translate3d(-10%, -6%, 0) scale(1.14); } }`
+      },
+      {
+        id: 'sand', name: 'Sand', num: '09',
+        sw: ['#E4D3BE', '#EFE0CE', '#E6D8D0'], motion: 'none', contrast: '4.57',
+        note: 'Warm neutral, no motion. The most conservative of the ten.',
+        css: `
+          .pagewash {
+            background:
+              radial-gradient(58% 46% at 14% 10%, rgba(228,211,190,0.20), transparent 62%),
+              radial-gradient(54% 44% at 86% 14%, rgba(239,224,206,0.34), transparent 60%),
+              radial-gradient(62% 50% at 58% 98%, rgba(230,216,208,0.32), transparent 64%),
+              #F2F2F2 !important;
+          }`
+      },
+      {
+        id: 'dawn', name: 'Dawn', num: '10',
+        sw: ['#F2C9B4', '#E8C6DA', '#CFC4E6'], motion: 'rise 60s', contrast: '4.61',
+        note: 'Amber into lilac, the whole field rising very slowly.',
+        css: `
+          .pagewash {
+            background:
+              radial-gradient(60% 44% at 20% 8%, rgba(207,196,230,0.16), transparent 62%),
+              radial-gradient(56% 46% at 84% 22%, rgba(232,198,218,0.26), transparent 60%),
+              radial-gradient(70% 52% at 52% 100%, rgba(242,201,180,0.30), transparent 64%),
+              #F2F2F2 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -30% 0;
+            background: radial-gradient(52% 30% at 50% 88%, rgba(242,201,180,0.20), transparent 64%);
+            will-change: transform;
+            animation: bg2rise 60s ease-in-out infinite alternate;
+          }
+          @keyframes bg2rise { to { transform: translate3d(0, -12%, 0) scale(1.10); } }`
+      }
+    ];
+
+    // exposed so the contrast probe measures exactly what this page serves,
+    // rather than a second copy of the same CSS that could drift from it
+    window.__BG2 = V;
+
+    var frame = document.getElementById('stage');
+    var list  = document.getElementById('list');
+    var badge = document.getElementById('badge');
+    var stop  = document.getElementById('stopMotion');
+    var current = V[0];
+
+    V.forEach(function (v, i) {
+      var b = document.createElement('button');
+      b.className = 'opt' + (i === 0 ? ' active' : '');
+      b.type = 'button';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
+      b.dataset.id = v.id;
+      b.innerHTML =
+        '<span class="opt-top">' +
+          '<span class="swatches">' + v.sw.map(function (c) {
+            return '<i style="background:' + c + '"></i>'; }).join('') + '</span>' +
+          '<span class="opt-name">' + v.name + '</span>' +
+          '<span class="opt-num">' + v.num + '</span>' +
+        '</span>' +
+        '<span class="opt-meta">' +
+          '<span class="motion">' + v.motion + '</span>' +
+          '<span data-c>contrast ' + (v.contrast || '—') + '</span>' +
+        '</span>';
+      b.addEventListener('click', function () { pick(v); });
+      list.appendChild(b);
+    });
+
+    function apply() {
+      var doc = frame.contentDocument;
+      if (!doc) return;
+      var tag = doc.getElementById('bg2-style');
+      if (!tag) {
+        tag = doc.createElement('style');
+        tag.id = 'bg2-style';
+        doc.head.appendChild(tag);
+      }
+      var css = current.css || '';
+      // the freeze switch is the same thing prefers-reduced-motion does, so the
+      // still state can be judged without changing the OS setting
+      if (stop.checked) css += '\n.pagewash, .pagewash::before { animation: none !important; }';
+      tag.textContent = css;
+    }
+
+    function pick(v) {
+      current = v;
+      [].forEach.call(list.children, function (b) {
+        var on = b.dataset.id === v.id;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-checked', on ? 'true' : 'false');
+      });
+      badge.firstElementChild.textContent = v.num + ' · ' + v.name;
+      badge.lastElementChild.textContent = v.note || 'the wash that is live right now';
+      apply();
+    }
+
+    frame.addEventListener('load', function () { pick(current); });
+    stop.addEventListener('change', apply);
+
+    // arrow keys walk the list, the way a radio group should
+    list.addEventListener('keydown', function (e) {
+      var i = V.findIndex(function (v) { return v.id === current.id; });
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); pick(V[(i + 1) % V.length]); }
+      if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  { e.preventDefault(); pick(V[(i - 1 + V.length) % V.length]); }
+    });
+  })();
+  </script>
+</body>
+</html>
