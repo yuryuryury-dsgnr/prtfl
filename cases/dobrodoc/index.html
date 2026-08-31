@@ -45,41 +45,6 @@
     .uf-key-mark--end { background: var(--uf-end-bg); border: 1px solid var(--uf-end-bd); border-radius: 100px; }
     .uf-key-mark--outside { background: transparent; border: 1px dashed var(--uf-neutral-bd); }
 
-    .phase-toggle {
-      display: flex;
-      gap: 0;
-      margin-bottom: 24px;
-      border: 1px solid rgba(0,0,0,0.1);
-      border-radius: 8px;
-      overflow: hidden;
-      width: fit-content;
-    }
-    .phase-toggle-btn {
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: inherit;
-      border: none;
-      background: transparent;
-      color: #666666;
-      cursor: pointer;
-      transition: background 150ms ease, color 150ms ease;
-      border-right: 1px solid rgba(0,0,0,0.1);
-      white-space: nowrap;
-    }
-    .phase-toggle-btn:last-child { border-right: none; }
-    .phase-toggle-btn:hover { background: rgba(0,0,0,0.02); }
-    /* the selected tab used to be solid ink, which read as a pressed button
-       rather than as "you are here" — a step down the page's own blue ramp
-       says the same thing without shouting, and keeps 12:1 on the label */
-    .phase-toggle-btn.active {
-      background: #D9D9D9;
-      color: #1A1A1A;
-    }
-    .phase-panel { display: none; }
-    .uf-panel { display: none; }
-    .uf-panel.active { display: block; }
-    .uf-tabs { margin-top: 24px; }
     .uf-who {
       margin: 18px 0 0; font-size: 11px; font-weight: 500;
       letter-spacing: 0.06em; text-transform: uppercase; color: #666666;
@@ -407,9 +372,6 @@
     .round-list.findings li::before { background: #dc2626; }
     .round-list.changes li::before { background: #16a34a; }
 
-    /* ——— FLOW SVG ——— */
-    .flow-container { margin-top: 24px; text-align: center; }
-    .flow-caption { font-size: 13px; color: #666666; margin-top: 16px; text-align: center; }
 
     /* ——— WIREFRAMES ——— */
     
@@ -434,22 +396,46 @@
     .phone-strip.is-dragging img { pointer-events: none; }
     .phone-strip::-webkit-scrollbar { display: none; }
     .phone-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .phone-track { display: flex; align-items: flex-start; gap: 10px; width: max-content; }
+    /* Every export is 640 wide with the phone body at 70..509 and its shadow
+       running to 618 — a third of each file is transparent field, and not
+       evenly split. Laying the files out edge to edge therefore left 104px
+       between two phones where the gap should have been. So the item box is
+       the body, and the picture hangs out of it by exactly the slack it
+       carries: the gap below is then the gap you actually see. All absolute,
+       no percentages — the track is width: max-content and a percentage has
+       nothing definite to resolve against. */
+    .phone-track {
+      --shot-w: min(300px, 66vw);
+      --body-w: calc(var(--shot-w) * 439 / 640);
+      --slack-l: calc(var(--shot-w) * 70 / 640);
+      --slack-r: calc(var(--shot-w) * 131 / 640);
+      --slack-b: calc(var(--shot-w) * 112 / 640);
+      display: flex; align-items: flex-start; gap: 28px; width: max-content;
+      /* give the first and last shadows somewhere to land, or the scroller
+         clips them at its two ends */
+      padding-left: var(--slack-l); padding-right: var(--slack-r);
+    }
     /* an absolute basis, never a percentage: the track is width: max-content,
        so a percentage has nothing definite to resolve against and the items
        stop being a row at all */
-    .phone-track > .phone-figure { flex: 0 0 min(300px, 66vw); display: flex; flex-direction: column; align-items: center; gap: 14px; }
-    .phone-shot { display: block; width: 100%; height: auto; border-radius: 4px; }
+    .phone-track > .phone-figure { flex: 0 0 var(--body-w); display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .phone-shot {
+      display: block; width: var(--shot-w); height: auto; border-radius: 4px;
+      margin-left: calc(-1 * var(--slack-l)); margin-right: calc(-1 * var(--slack-r));
+    }
     .phone-caption {
       font-size: 13px;
       color: #666666;
       text-align: center;
-      margin-top: 16px;
+      /* the picture ends 112/640 above its own bottom edge; take that back so
+         the caption sits 28px under the phone rather than 82px */
+      margin-top: calc(28px - var(--slack-b));
       line-height: 1.5;
     }
     
 
     @media (max-width: 520px) {
+      .phone-track { gap: 18px; }
     }
 
     /* ——— BEFORE / AFTER ——— */
@@ -538,17 +524,6 @@
       .case-hero-image { width: 100%; margin-left: 0; }
     }
     @media (max-width: 768px) {
-      /* the tab bar scrolls sideways rather than wrapping, so the row stays a row */
-      .phase-toggle {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-wrap: nowrap;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-      }
-      .phase-toggle::-webkit-scrollbar { display: none; }
       /* one gap under the header and the same one before the image, so the
          hero reads as three even steps rather than a small one and a big one */
       /* the hero's own bottom padding and the next section's top padding
@@ -633,17 +608,6 @@
        3.5 CSS px — the diagram becomes a grey smudge. Let it keep its real
        width and scroll instead, the pattern the Rebalancer flows already use. */
     @media (max-width: 760px) {
-      .flow-container {
-        overflow-x: auto; overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-        margin-left: -24px; margin-right: -24px;
-        padding: 0 24px;
-      }
-      .flow-container::-webkit-scrollbar { display: none; }
-      .flow-container > svg { width: 900px !important; min-width: 900px; max-width: none !important; }
-      .flow-container:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
     }
   
     /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ———
@@ -944,19 +908,11 @@
     <!-- 03C — USER FLOW -->
     <section id="section-05" class="case-section">
       <h2 class="section-heading">User flows</h2>
+      <p class="section-text">One path, end to end: first run, the symptom, the med card, the doctor, the format the consultation takes, and what it leaves behind.</p>
       <div class="uf-vars">
-        <div class="phase-toggle uf-tabs" role="tablist" aria-label="User flows">
-          <button class="phase-toggle-btn active" type="button" role="tab" data-uf="uf-symptom" id="uf-symptom-tab" aria-controls="uf-symptom" aria-selected="true" tabindex="0">Symptom checker</button>
-          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-booking" id="uf-booking-tab" aria-controls="uf-booking" aria-selected="false" tabindex="-1">Booking</button>
-          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-consultation" id="uf-consultation-tab" aria-controls="uf-consultation" aria-selected="false" tabindex="-1">Consultation</button>
-          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-history" id="uf-history-tab" aria-controls="uf-history" aria-selected="false" tabindex="-1">History</button>
-          <button class="phase-toggle-btn" type="button" role="tab" data-uf="uf-certificates" id="uf-certificates-tab" aria-controls="uf-certificates" aria-selected="false" tabindex="-1">Certificates</button>
-        </div>
-        <div class="uf-panel active" id="uf-symptom" role="tabpanel" aria-labelledby="uf-symptom-tab">
-          <p class="uf-who">Describe what hurts and get pointed at the right speciality</p>
-          <div class="uf-stage">
-            <div class="uf-flow" tabindex="0" role="group" aria-label="Symptom checker flow &mdash; scrollable">
-              <div class="uf-track">
+        <div class="uf-stage">
+          <div class="uf-flow" tabindex="0" role="group" aria-label="End-to-end flow, from first run to the filed conclusion &mdash; scrollable">
+            <div class="uf-track">
                 <div class="uf-step uf-step--end">
                   <span class="uf-step-kind">Start</span>
                   <span class="uf-step-title">Opens the app</span>
@@ -964,128 +920,133 @@
                 <span class="uf-link" aria-hidden="true"></span>
                 <div class="uf-step">
                   <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Home</span>
-                  <span class="uf-step-line">Ask a doctor, or open the med card</span>
+                  <span class="uf-step-title">Onboarding</span>
+                  <span class="uf-step-line">Book the way that suits you</span>
                 </div>
                 <span class="uf-link" aria-hidden="true"></span>
                 <div class="uf-step">
                   <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Symptom checker</span>
-                  <span class="uf-step-line">What worries you</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--system">
-                  <span class="uf-step-kind">System</span>
-                  <span class="uf-step-title">Doctor match</span>
-                  <span class="uf-step-line">The speciality that fits the answers</span>
-                </div>
-              </div>
-            </div>
-            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
-          </div>
-        </div>
-        <div class="uf-panel" id="uf-booking" role="tabpanel" aria-labelledby="uf-booking-tab" hidden>
-          <p class="uf-who">From picking a doctor to a confirmed appointment</p>
-          <div class="uf-stage">
-            <div class="uf-flow" tabindex="0" role="group" aria-label="Booking flow &mdash; scrollable">
-              <div class="uf-track">
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Home</span>
+                  <span class="uf-step-title">Onboarding</span>
+                  <span class="uf-step-line">A medical record for you and your family</span>
                 </div>
                 <span class="uf-link" aria-hidden="true"></span>
                 <div class="uf-step">
                   <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Search doctor</span>
-                  <span class="uf-step-line">By speciality, then by who is free</span>
+                  <span class="uf-step-title">Onboarding</span>
+                  <span class="uf-step-line">Conclusion and prescription after the visit</span>
                 </div>
                 <span class="uf-link" aria-hidden="true"></span>
                 <div class="uf-step uf-step--action">
                   <span class="uf-step-kind">Action</span>
-                  <span class="uf-step-title">Select slot</span>
+                  <span class="uf-step-title">Signs up</span>
+                </div>
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 2 &middot; What worries you</span></div>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Home</span>
+                  <span class="uf-step-line">Ask a doctor, or open the med card</span>
                 </div>
                 <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Confirm</span>
-                  <span class="uf-step-line">The appointment, before it is booked</span>
-                </div>
-              </div>
-            </div>
-            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
-          </div>
-        </div>
-        <div class="uf-panel" id="uf-consultation" role="tabpanel" aria-labelledby="uf-consultation-tab" hidden>
-          <p class="uf-who">The call itself, and what it leaves behind</p>
-          <div class="uf-stage">
-            <div class="uf-flow" tabindex="0" role="group" aria-label="Consultation flow &mdash; scrollable">
-              <div class="uf-track">
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Pre-call check</span>
-                  <span class="uf-step-line">Camera, microphone, connection</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Video call</span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Describes what worries them</span>
                 </div>
                 <span class="uf-link" aria-hidden="true"></span>
                 <div class="uf-step uf-step--system">
                   <span class="uf-step-kind">System</span>
-                  <span class="uf-step-title">Summary + prescription</span>
-                  <span class="uf-step-line">Written up and filed to the med card</span>
+                  <span class="uf-step-title">Matches a speciality</span>
+                  <span class="uf-step-line">The answers point at who to see</span>
                 </div>
-              </div>
-            </div>
-            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
-          </div>
-        </div>
-        <div class="uf-panel" id="uf-history" role="tabpanel" aria-labelledby="uf-history-tab" hidden>
-          <p class="uf-who">Everything that has already happened, in one place</p>
-          <div class="uf-stage">
-            <div class="uf-flow" tabindex="0" role="group" aria-label="History flow &mdash; scrollable">
-              <div class="uf-track">
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 3 &middot; The med card</span></div>
                 <div class="uf-step">
                   <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Home</span>
+                  <span class="uf-step-title">Medical cards</span>
+                  <span class="uf-step-line">One per family member</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Fills the card in, or picks whose it is</span>
+                </div>
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 4 &middot; Pick a doctor</span></div>
+                <div class="uf-step">
+                  <span class="uf-step-kind">Screen</span>
+                  <span class="uf-step-title">Specialist</span>
+                  <span class="uf-step-line">Consultation type, what they treat, the price</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--action">
+                  <span class="uf-step-kind">Action</span>
+                  <span class="uf-step-title">Picks a slot and pays</span>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Notifications</span>
+                  <span class="uf-step-line">The visit starts in five minutes</span>
+                </div>
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 5 &middot; The consultation</span></div>
+                <div class="uf-dec"><div class="uf-dec-in">
+                  <span class="uf-step-kind">Decision</span>
+                  <span class="uf-step-title">Which format?</span>
+                </div></div>
+                <div class="uf-branches">
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Chat</span>
+                    <div class="uf-step">
+                      <span class="uf-step-kind">Screen</span>
+                      <span class="uf-step-title">Chat</span>
+                      <span class="uf-step-line">The consultation itself, in writing</span>
+                    </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Video</span>
+                    <div class="uf-step">
+                      <span class="uf-step-kind">Screen</span>
+                      <span class="uf-step-title">Video consultation</span>
+                    </div>
+                  </div>
+                  <div class="uf-branch">
+                    <span class="uf-branch-label">Voice</span>
+                    <div class="uf-step">
+                      <span class="uf-step-kind">Screen</span>
+                      <span class="uf-step-title">Audio call</span>
+                    </div>
+                  </div>
+                </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 6 &middot; After the visit</span></div>
+                <div class="uf-step uf-step--system">
+                  <span class="uf-step-kind">System</span>
+                  <span class="uf-step-title">Conclusion written up</span>
+                  <span class="uf-step-line">The diagnosis and what was prescribed</span>
                 </div>
                 <span class="uf-link" aria-hidden="true"></span>
                 <div class="uf-step">
                   <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Consultation history</span>
-                  <span class="uf-step-line">Past calls, with their summaries</span>
-                </div>
-              </div>
-            </div>
-            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
-          </div>
-        </div>
-        <div class="uf-panel" id="uf-certificates" role="tabpanel" aria-labelledby="uf-certificates-tab" hidden>
-          <p class="uf-who">The document at the end of it</p>
-          <div class="uf-stage">
-            <div class="uf-flow" tabindex="0" role="group" aria-label="Certificates flow &mdash; scrollable">
-              <div class="uf-track">
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Home</span>
+                  <span class="uf-step-title">Med card</span>
+                  <span class="uf-step-line">The visit, filed against the right family member</span>
                 </div>
                 <span class="uf-link" aria-hidden="true"></span>
                 <div class="uf-step">
                   <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Medical certificates</span>
-                  <span class="uf-step-line">Issued after a consultation, kept in the card</span>
+                  <span class="uf-step-title">Visit history</span>
+                  <span class="uf-step-line">Every past consultation, with its conclusion</span>
                 </div>
-              </div>
+                <span class="uf-link" aria-hidden="true"></span>
+                <div class="uf-step uf-step--end">
+                  <span class="uf-step-kind">End</span>
+                  <span class="uf-step-title">Treated, with a record of it</span>
+                </div>
             </div>
-            <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
           </div>
+          <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
         </div>
-
         <div class="uf-key" aria-hidden="true">
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--screen"></span>Screen</span>
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--action"></span>Action</span>
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--system"></span>System</span>
+          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--decision"></span>Decision</span>
           <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--end"></span>Start / End</span>
         </div>
       </div>
@@ -1529,41 +1490,6 @@
       window.addEventListener('resize', later);
       // a panel behind a tab has no width until shown, so re-check after a click
       document.addEventListener('click', later, true);
-    })();
-    // ——— USER FLOW TABS ———
-    // Same tablist behaviour as the journey map above: arrows, Home and End
-    // move between flows, and only the open panel is exposed.
-    (function () {
-      var tablist = document.querySelector('.uf-tabs');
-      if (!tablist) return;
-      var tabs = [].slice.call(tablist.querySelectorAll('.phase-toggle-btn[data-uf]'));
-
-      function select(btn, focus) {
-        tabs.forEach(function (b) {
-          var on = b === btn;
-          b.classList.toggle('active', on);
-          b.setAttribute('aria-selected', on ? 'true' : 'false');
-          b.setAttribute('tabindex', on ? '0' : '-1');
-          var panel = document.getElementById(b.dataset.uf);
-          if (!panel) return;
-          panel.classList.toggle('active', on);
-          if (on) panel.removeAttribute('hidden');
-          else panel.setAttribute('hidden', '');
-        });
-        if (focus) btn.focus();
-        // a hidden panel measures as zero, so its rail has to redraw once shown
-        window.dispatchEvent(new Event('resize'));
-      }
-
-      tabs.forEach(function (btn, i) {
-        btn.addEventListener('click', function () { select(btn); });
-        btn.addEventListener('keydown', function (e) {
-          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-          if (d) { e.preventDefault(); select(tabs[(i + d + tabs.length) % tabs.length], true); }
-          else if (e.key === 'Home') { e.preventDefault(); select(tabs[0], true); }
-          else if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
-        });
-      });
     })();
     // ——— USER FLOW: the drawn scrollbar ———
     // Ported with the component from the Rebalancer case. macOS overlay
