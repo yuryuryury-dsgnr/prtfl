@@ -107,7 +107,7 @@
   <aside class="rail">
     <div class="rail-head">
       <p class="rail-title">Background studies II</p>
-      <p class="rail-sub">Nineteen washes on the live home page &mdash; the stage is the real
+      <p class="rail-sub">Twenty-two washes on the live home page &mdash; the stage is the real
         <a href="../../" target="_blank" rel="noopener">index.html</a>, with only its background layer swapped.
         The last three also swap the ink: <b>#474D5E</b> instead of #666666, which is what lets the
         ground go deep without taking the copy under 4.5.</p>
@@ -482,6 +482,74 @@
               radial-gradient(76% 88% at 98% 2%, #F5EBDE 0%, rgba(245,235,222,0) 46%),
               #F2F4FB !important;
           }`
+      },
+      {
+        id: 'warely-deep', name: 'Warely deep', num: '20', group: 'Warely ink',
+        sw: ['#8FA1E0', '#E5DEC9', '#D9DFED'], motion: 'none',
+        contrast: '4.80',
+        note: 'One step below 14 — the ground drops to #D9DFED and periwinkle carries more.',
+        css: `
+          body { background-color: #D9DFED !important; }
+          .topnav-link--secondary, .hero-bio-hook, .hero-meta dt, .case-result, .case-store-link, .footer-role, .footer-right { color: #474D5E !important; }
+          h1, h2, h3, .case-name, .topnav-logo, .hero-name { color: #1E2330 !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 22% 16%, rgba(143,161,224,0.40) 0%, rgba(143,161,224,0) 58%),
+              radial-gradient(120% 120% at 86% 88%, rgba(229,222,201,0.80) 0%, rgba(229,222,201,0) 56%),
+              radial-gradient(96% 96% at 94% 10%, rgba(234,220,205,0.70) 0%, rgba(234,220,205,0) 46%),
+              #D9DFED !important;
+          }`
+      },
+      {
+        id: 'warely-slate', name: 'Warely slate', num: '21', group: 'Warely ink',
+        sw: ['#2A2E36', '#8FA1E0', '#D2D9E8'], motion: 'breathe 40s',
+        contrast: '4.73',
+        note: 'Two steps below — a graphite veil over the deeper ground, breathing slowly.',
+        css: `
+          body { background-color: #D2D9E8 !important; }
+          .topnav-link--secondary, .hero-bio-hook, .hero-meta dt, .case-result, .case-store-link, .footer-role, .footer-right { color: #474D5E !important; }
+          h1, h2, h3, .case-name, .topnav-logo, .hero-name { color: #1E2330 !important; }
+          .pagewash {
+            background:
+              radial-gradient(115% 115% at 20% 14%, rgba(143,161,224,0.34) 0%, rgba(143,161,224,0) 58%),
+              radial-gradient(118% 118% at 88% 90%, rgba(226,212,197,0.72) 0%, rgba(226,212,197,0) 56%),
+              radial-gradient(92% 92% at 96% 8%, rgba(42,46,54,0.07) 0%, rgba(42,46,54,0) 48%),
+              #D2D9E8 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(96% 90% at 68% 96%, rgba(42,46,54,0.10) 0%, rgba(42,46,54,0) 62%);
+            will-change: transform, opacity;
+            animation: warSlate 40s ease-in-out infinite alternate;
+          }
+          @keyframes warSlate {
+            from { transform: scale(0.94); opacity: 0.7; }
+            to   { transform: scale(1.10); opacity: 1; }
+          }`
+      },
+      {
+        id: 'warely-floor', name: 'Warely floor', num: '22', group: 'Warely ink',
+        sw: ['#8FA1E0', '#2A2E36', '#CBD3E4'], motion: 'drift 50s',
+        contrast: '4.75',
+        note: 'As deep as #474D5E allows — anything past this takes the copy under 4.5.',
+        css: `
+          body { background-color: #CBD3E4 !important; }
+          .topnav-link--secondary, .hero-bio-hook, .hero-meta dt, .case-result, .case-store-link, .footer-role, .footer-right { color: #474D5E !important; }
+          h1, h2, h3, .case-name, .topnav-logo, .hero-name { color: #1E2330 !important; }
+          .pagewash {
+            background:
+              radial-gradient(120% 118% at 16% 100%, rgba(143,161,224,0.44) 0%, rgba(143,161,224,0) 58%),
+              radial-gradient(110% 110% at 90% 6%, rgba(224,208,190,0.68) 0%, rgba(224,208,190,0) 54%),
+              radial-gradient(86% 86% at 98% 72%, rgba(42,46,54,0.09) 0%, rgba(42,46,54,0) 52%),
+              #CBD3E4 !important;
+          }
+          .pagewash::before {
+            content: ''; position: absolute; inset: -25%;
+            background: radial-gradient(46% 44% at 42% 60%, rgba(143,161,224,0.22), transparent 62%);
+            will-change: transform;
+            animation: warFloor 50s ease-in-out infinite alternate;
+          }
+          @keyframes warFloor { to { transform: translate3d(9%, -7%, 0) scale(1.13); } }`
       }
     ];
 
