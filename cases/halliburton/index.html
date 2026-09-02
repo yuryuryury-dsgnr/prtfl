@@ -37,10 +37,16 @@
       inset: 0;
       z-index: -1;
       pointer-events: none;
+      /* Home's own two blooms — the near-white cool and the near-white warm —
+         in this page's own arrangement. Each case swaps where they sit; none of
+         them changes what they are. An earlier pass reached for a separate,
+         more saturated palette here, which put the warm bloom at R-B 15 against
+         home's 2: seven times the cast, and it read as a yellow stain rather
+         than as the same page. Measured on the painted pixels. */
       background:
-        radial-gradient(120% 130% at 8% 20%, #F3F5FD 0%, rgba(243,245,253,0) 58%),
-        radial-gradient(110% 120% at 92% 78%, #F9F5E9 0%, rgba(249,245,233,0) 54%),
-        radial-gradient(80% 90% at 96% 26%, #FBF4EC 0%, rgba(251,244,236,0) 48%),
+        radial-gradient(120% 130% at 8% 20%, #FDFDFF 0%, rgba(253,253,255,0) 58%),
+        radial-gradient(110% 120% at 92% 78%, #FEFDFB 0%, rgba(254,253,251,0) 54%),
+        radial-gradient(80% 90% at 96% 26%, #FEFDFB 0%, rgba(254,253,251,0) 48%),
         #F0F1F7;
       /* the two bands that carry text on this layer are the very top, before
          the header scrolls away, and the very bottom */
