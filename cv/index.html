@@ -463,6 +463,10 @@
     body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
     .navitem:hover .navitem-text { color: #666666; }
     .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
+    /* the panel takes focus on open only to move the reading position; it is a
+       container, not a control, so it draws no ring — every link inside keeps
+       its own */
+    .navoverlay:focus, .navoverlay:focus-visible { outline: none; }
 
     .navoverlay-foot {
       width: 100%; max-width: 1100px; margin: 40px auto 0;
@@ -504,7 +508,7 @@
     </div>
   </nav>
 
-  <div class="navoverlay" id="navOverlay" aria-hidden="true">
+  <div class="navoverlay" id="navOverlay" aria-hidden="true" tabindex="-1">
       <nav class="navoverlay-inner" aria-label="Menu">
         <a class="navitem" href="/assets/CV_Yurii_Fokin.pdf" download><span class="navitem-num">01</span><span class="navitem-mask"><span class="navitem-text">Download CV &#8595;</span></span></a>
         <a class="navitem" href="mailto:yuryuryury@icloud.com"><span class="navitem-num">02</span><span class="navitem-mask"><span class="navitem-text">Get in touch &#8594;</span></span></a>
@@ -749,8 +753,14 @@
         overlay.setAttribute('aria-hidden', on ? 'false' : 'true');
         if (on) {
           lastFocus = document.activeElement;
-          var first = overlay.querySelector('a');
-          if (first) setTimeout(function () { first.focus(); }, 360);
+          // Move the reading position into the panel without ringing a control.
+          // This used to focus the first link, which made Safari on iOS paint
+          // its focus-visible outline around "Download CV" the instant the menu
+          // opened — a scripted .focus() counts as focus-visible, so a pointer
+          // tap produced a keyboard-style ring. The panel carries tabindex="-1"
+          // and takes the focus itself: VoiceOver and Tab still start inside it,
+          // and nothing draws a box.
+          setTimeout(function () { overlay.focus(); }, 360);
         } else if (lastFocus) {
           lastFocus.focus();
         }
@@ -768,7 +778,8 @@
         if (e.key !== 'Tab') return;
         var items = [btn].concat([].slice.call(overlay.querySelectorAll('a')));
         var i = items.indexOf(document.activeElement);
-        if (i === -1) return;
+        // focus starts on the panel itself, which is not one of the stops
+        if (i === -1) { e.preventDefault(); items[e.shiftKey ? items.length - 1 : 0].focus(); return; }
         var next = e.shiftKey ? (i - 1 + items.length) % items.length : (i + 1) % items.length;
         e.preventDefault();
         items[next].focus();
