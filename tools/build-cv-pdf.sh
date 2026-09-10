@@ -1,6 +1,6 @@
 #!/bin/zsh
 #
-# Regenerate assets/CV_Yurii_Fokin.pdf from cv/index.html.
+# Regenerate assets/CV_Yurii_Designer.pdf from cv/index.html.
 #
 # The CV page is the source of truth; this is the only thing that turns it into
 # the PDF the site hands out. Run it in the same commit as any edit to the CV
@@ -18,7 +18,7 @@ set -e
 REPO="${0:A:h:h}"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 PORT=4598
-OUT="${1:-$REPO/assets/CV_Yurii_Fokin.pdf}"
+OUT="${1:-$REPO/assets/CV_Yurii_Designer.pdf}"
 TMP="${TMPDIR:-/tmp}/cv-build-$$.pdf"
 
 [[ -x "$CHROME" ]] || { print -u2 "Chrome not found at $CHROME"; exit 1; }
