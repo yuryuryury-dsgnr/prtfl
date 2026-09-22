@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Yurii Fokin">
-  <meta property="og:title" content="Leading UX design.">
+  <meta property="og:title" content="Yurii Fokin — Lead UX Designer">
   <meta property="og:description" content="Portfolio of Yurii Fokin, Lead UX Designer: an enterprise data platform at Halliburton, an iOS app built and shipped solo, and the design systems under them.">
   <meta property="og:url" content="https://yuryury.com/">
   <meta property="og:image" content="https://yuryury.com/assets/images/og-default.png">
@@ -310,7 +310,10 @@
     
 
     .hero-name {
-      font-size: 34px;
+      /* A greeting is a short line, and a short line at 34px left the first
+         screen empty: "Leading UX design." painted 301px of the 720 measure,
+         "Hi! I'm Yurii." only 216. The size goes up so the ink stays. */
+      font-size: 48px;
       font-weight: 600;
       letter-spacing: -0.03em;
       line-height: 1.1;
@@ -322,18 +325,51 @@
 
     
 
-    /* 520 rather than 480: the line needs 488px to stay whole, and the extra
-       32 keeps a small copy edit from orphaning its last word again */
+    /* 620 rather than 520: the role line names the employer and the client, and
+       at 520 it broke after "on" and left "data platform." hanging alone. */
     .hero-bio-hook {
       font-size: 16px;
       color: #666666;
-      max-width: 520px;
-      margin-bottom: 32px;
+      max-width: 620px;
+      margin-bottom: 0;
+    }
+
+    /* Two sentences, not two paragraphs: the role and the method read as one
+       block, so they sit closer than the block sits to anything else. */
+    .hero-bio-hook + .hero-bio-hook {
+      margin-top: 6px;
     }
 
     .hero-bio-hook strong {
       font-weight: 500;
     }
+
+    /* The employer is the one proper noun in the hero that leads somewhere, so
+       it takes the ink the grey sentence around it does not. */
+    .hero-bio-hook a {
+      color: #1A1A1A;
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+      text-decoration-thickness: 1px;
+    }
+
+    .hero-bio-hook a:hover { color: #666666; }
+
+    /* 32 below, so the band from the last hero line to the first card stays the
+       80 it was when the meta table closed the hero. */
+    .hero-jump {
+      display: flex;
+      gap: 28px;
+      margin: 24px 0 32px;
+      font-size: 14px;
+    }
+
+    .hero-jump-link {
+      font-weight: 500;
+      color: #1A1A1A;
+    }
+
+    .hero-jump-link:hover { color: #666666; }
 
     
 
@@ -612,13 +648,12 @@
 
       /* 56px of nothing above the name and 80px between the last hero line
          and the first card are desktop measurements standing on a phone screen */
-      /* The hook is the last line in the hero now that the meta table is gone,
-         so it takes over the table's zero: the band to the first card stays the
-         16 + 16 it has always been, instead of the hook's own 32 on top. */
+      /* The jump link is the last line in the hero, so it carries the zero: the
+         band to the first card stays the 16 + 16 it has always been. */
       .hero { padding: 32px 0 16px; }
-      .hero-bio-hook { margin-bottom: 0; }
+      .hero-jump { margin: 20px 0 0; }
       .hero-name {
-        font-size: 26px;
+        font-size: 32px;
       }
 
       .cases-grid {
@@ -683,7 +718,7 @@
 
   <nav class="topnav">
     <div class="container topnav-inner">
-      <a href="/" class="topnav-logo">Portfolio — Yurii Fokin</a>
+      <a href="/" class="topnav-logo">Portfolio</a>
       <button class="navburger" type="button" id="navburger" aria-expanded="false" aria-controls="navOverlay">
         <span class="visually-hidden">Menu</span>
         <span class="navburger-box" aria-hidden="true"><i></i><i></i></span>
@@ -711,8 +746,10 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container hero-content">
-      <h1 class="hero-name">Leading UX design.</h1>
+      <h1 class="hero-name">Hi! I'm Yurii.</h1>
+      <p class="hero-bio-hook">I'm a Lead UX Designer at DXC Luxoft, on <a href="cases/halliburton/">Halliburton</a>'s data platform.</p>
       <p class="hero-bio-hook">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
+      <div class="hero-jump"><a href="#work" class="hero-jump-link">Selected work <span aria-hidden="true">&rarr;</span></a></div>
     </div>
   </section>
 
