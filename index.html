@@ -335,18 +335,6 @@
       font-weight: 500;
     }
 
-    .hero-meta {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 6px 0;
-      margin-bottom: 32px;
-      font-size: 14px;
-      max-width: 520px;
-    }
-
-    .hero-meta dt { color: #666666; font-weight: 400; }
-    .hero-meta dd { color: #1A1A1A; margin: 0; }
-
     
 
     
@@ -618,12 +606,13 @@
         background: rgba(0,0,0,0.025);
       }
 
-      /* 56px of nothing above the name and 96px between the meta list and the
-         first card are desktop measurements standing on a phone screen */
-      /* the band under the nav and the band under the meta table read as a
-         pair; 24 (meta) + 28 (hero) + 16 (.cases) made the lower one 68 */
+      /* 56px of nothing above the name and 80px between the last hero line
+         and the first card are desktop measurements standing on a phone screen */
+      /* The hook is the last line in the hero now that the meta table is gone,
+         so it takes over the table's zero: the band to the first card stays the
+         16 + 16 it has always been, instead of the hook's own 32 on top. */
       .hero { padding: 32px 0 16px; }
-      .hero-meta { margin-bottom: 0; }
+      .hero-bio-hook { margin-bottom: 0; }
       .hero-name {
         font-size: 26px;
       }
@@ -713,11 +702,6 @@
     <div class="container hero-content">
       <h1 class="hero-name">Leading UX design.</h1>
       <p class="hero-bio-hook">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
-      <dl class="hero-meta">
-        <dt>Location</dt><dd>Batumi, Georgia · open to EU/US remote</dd>
-        <dt>Status</dt><dd>Open to senior and lead design roles</dd>
-        <dt>Languages</dt><dd>English · Ukrainian</dd>
-      </dl>
     </div>
   </section>
 
