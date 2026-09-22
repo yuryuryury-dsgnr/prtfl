@@ -559,6 +559,10 @@
       color: #666666;
     }
 
+    /* The one line in the footer that is a statement rather than a link, so it
+       takes the ink the links reserve for themselves and the row keeps its grey. */
+    .footer-open { color: #1A1A1A; }
+
     .footer-right a {
       position: relative;
     }
@@ -634,6 +638,13 @@
       .footer-right {
         flex-wrap: wrap;
         justify-content: center;
+      }
+
+      /* Wrapping puts the statement and the first link on one line, which reads
+         as a pair they are not. A full-width basis gives the sentence its own
+         row and leaves the three links as the row under it. */
+      .footer-open {
+        flex-basis: 100%;
       }
     }
       /* Visible only when focused: a keyboard user should not have to tab
@@ -790,6 +801,7 @@
           <span class="footer-name">Portfolio</span> · <span class="footer-role">Yurii Fokin</span>
         </div>
         <div class="footer-right">
+          <span class="footer-open">Open to senior and lead design roles</span>
           <a href="mailto:yuryuryury@icloud.com">Email</a>
           <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
           <span>Batumi, GE</span>
