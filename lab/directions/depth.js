@@ -95,6 +95,25 @@
   ].join('\n');
 
   var gl, prog, U = {}, buffers = {}, counts = { add: 0, cov: 0 }, layout = [], world = [], sp = 3, F = 800, images = [];
+  // the covers are not points: each is a textured plane, mipmapped, so it stays sharp at any distance
+  var QVS = [
+    'attribute vec3 aPos; attribute vec2 aUv;',
+    'uniform mat4 uView, uProj; uniform float uLift, uNear, uFocus;',
+    'varying vec2 vUv; varying float vFade;',
+    'void main(){',
+    '  vec3 p = aPos; p.z += uLift;',
+    '  vec4 v = uView * vec4(p, 1.0); float d = -v.z;',
+    '  vFade = smoothstep(uNear * 0.25, uNear, d) * exp(-max(d - uFocus, 0.0) / 1300.0);',
+    '  vUv = aUv; gl_Position = uProj * v;',
+    '}'
+  ].join('\n');
+  var QFS = [
+    'precision mediump float;',
+    'uniform sampler2D uTex; uniform float uAlpha, uLit;',
+    'varying vec2 vUv; varying float vFade;',
+    'void main(){ float a = uAlpha * vFade; gl_FragColor = vec4(texture2D(uTex, vUv).rgb * uLit * a, a); }'
+  ].join('\n');
+  var qprog, QU = {}, quads = [];
   var view = new Float32Array(16), proj = new Float32Array(16), labels = [];
 
   function perspective(fovy, aspect, near, far) {
@@ -154,6 +173,14 @@
         gl.enableVertexAttribArray(loc);
         gl.vertexAttribPointer(loc, a[1], gl.FLOAT, false, 0, 0);
       });
+      qprog = gl.createProgram();
+      gl.attachShader(qprog, sh(gl.VERTEX_SHADER, QVS)); gl.attachShader(qprog, sh(gl.FRAGMENT_SHADER, QFS));
+      gl.linkProgram(qprog);
+      if (!gl.getProgramParameter(qprog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(qprog));
+      ['uView', 'uProj', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
+      QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
+      for (var q = 0; q < 4; q++) quads.push({ buf: gl.createBuffer(), tex: gl.createTexture() });
+      gl.useProgram(prog);
       gl.disable(gl.DEPTH_TEST);
       gl.enable(gl.BLEND);
       var wrap = document.getElementById('depthLabels');
@@ -220,39 +247,47 @@
       }
       this.globe = gc;
 
-      // the covers, a slightly opened book of four, sampled one point per pixel
+      // the covers, a slightly opened book of four, each a real picture on a plane
       var Lr = BKit.coverLayout(W, H, mobile);
-      var per = mobile ? 11000 : 26000;
-      sp = Math.max(2, Math.sqrt((Lr[0].w * Lr[0].h) / per));
-      var cols = Math.floor(Lr[0].w / sp), rows = Math.floor(Lr[0].h / sp);
       layout = []; world = [];
-      var off = document.createElement('canvas'); off.width = cols; off.height = rows;
-      var octx = off.getContext('2d', { willReadFrequently: true });
+      var TW = mobile ? 1024 : 2048, TH = TW / 2;
       for (var k = 0; k < 4; k++) {
-        var r = Lr[k], cw = cols * sp, ch = rows * sp;
+        var r = Lr[k], cw = r.w, ch = r.h;
         var ang = (k % 2 ? -1 : 1) * 0.09, cxw = r.x + cw / 2 - W / 2;
-        octx.clearRect(0, 0, cols, rows);
-        BKit.coverDraw(octx, images[k], cols, rows);
-        var px = octx.getImageData(0, 0, cols, rows).data;
-        for (var rr = 0; rr < rows; rr++) for (var c = 0; c < cols; c++) {
-          var qx = (rr * cols + c) * 4;
-          var wx = r.x + c * sp + sp / 2 - W / 2, wy = H / 2 - (r.y + rr * sp + sp / 2);
-          var dx = wx - cxw;
-          put(cov, cxw + dx * Math.cos(ang), wy, Z_COVERS + dx * Math.sin(ang),
-            Math.pow(px[qx] / 255, 1.2) * 0.9, Math.pow(px[qx + 1] / 255, 1.2) * 0.9, Math.pow(px[qx + 2] / 255, 1.2) * 0.93, 2, k);
-        }
+        // crop to the cover's shape, then stretch into a power-of-two texture so it can be mipmapped;
+        // the plane stretches it back
+        var img = images[k], ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
+        var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
+        var tc = document.createElement('canvas'); tc.width = TW; tc.height = TH;
+        tc.getContext('2d').drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - shh) / 2, sw, shh, 0, 0, TW, TH);
+        gl.bindTexture(gl.TEXTURE_2D, quads[k].tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tc);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        var aniso = gl.getExtension('EXT_texture_filter_anisotropic');
+        if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
         // the corners, for hit tests and the labels under each cover
         var corners = [[r.x, r.y], [r.x + cw, r.y], [r.x, r.y + ch], [r.x + cw, r.y + ch]].map(function (pt) {
           var wx2 = pt[0] - W / 2, d2 = wx2 - cxw;
           return [cxw + d2 * Math.cos(ang), H / 2 - pt[1], Z_COVERS + d2 * Math.sin(ang)];
         });
         world.push({ corners: corners, center: [cxw, H / 2 - (r.y + ch / 2), Z_COVERS], w: cw, h: ch });
+        var tl = corners[0], tr = corners[1], bl = corners[2], br = corners[3];
+        gl.bindBuffer(gl.ARRAY_BUFFER, quads[k].buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+          tl[0], tl[1], tl[2], 0, 0, bl[0], bl[1], bl[2], 0, 1, tr[0], tr[1], tr[2], 1, 0,
+          tr[0], tr[1], tr[2], 1, 0, bl[0], bl[1], bl[2], 0, 1, br[0], br[1], br[2], 1, 1
+        ]), gl.STATIC_DRAW);
       }
 
       counts.add = add.p.length / 3; counts.cov = cov.p.length / 3;
       function cat(a, b) { var o = new Float32Array(a.length + b.length); o.set(a); o.set(b, a.length); return o; }
       var data = { aPos: cat(add.p, cov.p), aCol: cat(add.c, cov.c), aInfo: cat(add.i, cov.i) };
       Object.keys(data).forEach(function (n) { gl.bindBuffer(gl.ARRAY_BUFFER, buffers[n]); gl.bufferData(gl.ARRAY_BUFFER, data[n], gl.STATIC_DRAW); });
+      this.near = F * 0.35;
 
       var canvas = gl.canvas;
       canvas.width = Math.round(W * env.dpr); canvas.height = Math.round(H * env.dpr);
@@ -317,8 +352,33 @@
       // light first, added together; then the covers laid over it
       gl.blendFunc(gl.ONE, gl.ONE);
       gl.drawArrays(gl.POINTS, 0, counts.add);
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-      gl.drawArrays(gl.POINTS, counts.add, counts.cov);
+      var covVis = Math.max(0, Math.min(1, 1.6 - Math.abs(env.stage - 2) * 1.8));
+      if (covVis > 0.001) {
+        gl.useProgram(qprog);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.uniformMatrix4fv(QU.uView, false, view); gl.uniformMatrix4fv(QU.uProj, false, proj);
+        gl.uniform1f(QU.uNear, this.near); gl.uniform1f(QU.uFocus, focus); gl.uniform1i(QU.uTex, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        for (var k = 0; k < 4; k++) {
+          var h = env.hov[k], chosen = env.go === k ? 1 : 0;
+          gl.uniform1f(QU.uLift, h * 46);
+          gl.uniform1f(QU.uLit, (0.3 + 0.9 * h + (1 - env.any) * 0.7) * (1 - env.g * (1 - chosen)));
+          gl.uniform1f(QU.uAlpha, covVis * Math.min(1, inn * 1.6));
+          gl.bindTexture(gl.TEXTURE_2D, quads[k].tex);
+          gl.bindBuffer(gl.ARRAY_BUFFER, quads[k].buf);
+          gl.enableVertexAttribArray(QU.aPos); gl.vertexAttribPointer(QU.aPos, 3, gl.FLOAT, false, 20, 0);
+          gl.enableVertexAttribArray(QU.aUv); gl.vertexAttribPointer(QU.aUv, 2, gl.FLOAT, false, 20, 12);
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+        // hand the attribute slots back to the points program
+        gl.useProgram(prog);
+        [['aPos', 3], ['aCol', 3], ['aInfo', 4]].forEach(function (a) {
+          var loc = gl.getAttribLocation(prog, a[0]);
+          gl.bindBuffer(gl.ARRAY_BUFFER, buffers[a[0]]);
+          gl.enableVertexAttribArray(loc);
+          gl.vertexAttribPointer(loc, a[1], gl.FLOAT, false, 0, 0);
+        });
+      }
 
       // labels pinned to the front face of the block
       var near = Math.max(0, 1 - Math.abs(env.stage - 1) / 0.35);

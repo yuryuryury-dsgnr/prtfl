@@ -341,13 +341,79 @@
     // eight attributes: the floor WebGL guarantees on every device
     var ATTR = { aP0: 2, aP1: 2, aP2: 2, aS: 4, aC0: 3, aC1: 3, aC2: 3, aR: 4 };
     var buffers = {};
-    Object.keys(ATTR).forEach(function (n) {
-      buffers[n] = gl.createBuffer();
-      var loc = gl.getAttribLocation(prog, n);
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffers[n]);
-      gl.enableVertexAttribArray(loc);
-      gl.vertexAttribPointer(loc, ATTR[n], gl.FLOAT, false, 0, 0);
-    });
+    Object.keys(ATTR).forEach(function (n) { buffers[n] = gl.createBuffer(); });
+    function bindPoints() {
+      gl.useProgram(prog);
+      Object.keys(ATTR).forEach(function (n) {
+        var loc = gl.getAttribLocation(prog, n);
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[n]);
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(loc, ATTR[n], gl.FLOAT, false, 0, 0);
+      });
+    }
+    bindPoints();
+
+    // Once the points have settled into a cover, the real picture fades in over
+    // them, so the work is shown sharp and not as a mosaic. Power-of-two crops,
+    // mipmapped; a quad per cover, moved in step with the points.
+    var QVS = 'attribute vec2 aQ; attribute vec2 aUv; varying vec2 vUv; void main(){ vUv = aUv; gl_Position = vec4(aQ, 0.0, 1.0); }';
+    var QFS = 'precision mediump float; uniform sampler2D uTex; uniform float uA, uLit; varying vec2 vUv;' +
+      'void main(){ gl_FragColor = vec4(texture2D(uTex, vUv).rgb * 0.92 * uLit * uA, uA); }';
+    var qprog = gl.createProgram();
+    gl.attachShader(qprog, sh(gl.VERTEX_SHADER, QVS)); gl.attachShader(qprog, sh(gl.FRAGMENT_SHADER, QFS));
+    gl.linkProgram(qprog);
+    var QU = { aQ: gl.getAttribLocation(qprog, 'aQ'), aUv: gl.getAttribLocation(qprog, 'aUv'),
+      uTex: gl.getUniformLocation(qprog, 'uTex'), uA: gl.getUniformLocation(qprog, 'uA'), uLit: gl.getUniformLocation(qprog, 'uLit') };
+    var qbuf = gl.createBuffer(), qtex = [0, 1, 2, 3].map(function () { return gl.createTexture(); });
+    var aniso = gl.getExtension('EXT_texture_filter_anisotropic');
+    function coverTextures(images) {
+      var TW = W < 760 ? 1024 : 2048, TH = TW / 2, ra = cov.w / cov.h;
+      images.forEach(function (img, k) {
+        var ia = img.naturalWidth / img.naturalHeight;
+        var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
+        var c = document.createElement('canvas'); c.width = TW; c.height = TH;
+        c.getContext('2d').drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - shh) / 2, sw, shh, 0, 0, TW, TH);
+        gl.bindTexture(gl.TEXTURE_2D, qtex[k]);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+      });
+    }
+    function drawCovers(p, g, goK) {
+      // fully in only while the points are fully formed; gone the moment they start to leave
+      var q = Math.max(0, 1 - Math.abs(p - 2) / 0.045);
+      if (q <= 0.001) return;
+      q = q * q * (3 - 2 * q);
+      var ge = g * g * (3 - 2 * g), fill = Math.max(W / cov.w, H / cov.h) * 1.04;
+      gl.useProgram(qprog);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.bindBuffer(gl.ARRAY_BUFFER, qbuf);
+      gl.enableVertexAttribArray(QU.aQ); gl.vertexAttribPointer(QU.aQ, 2, gl.FLOAT, false, 16, 0);
+      gl.enableVertexAttribArray(QU.aUv); gl.vertexAttribPointer(QU.aUv, 2, gl.FLOAT, false, 16, 8);
+      gl.uniform1i(QU.uTex, 0); gl.activeTexture(gl.TEXTURE0);
+      layout.forEach(function (r, k) {
+        var h = hov[k], chosen = goK === k;
+        var cx = r.cx, cy = r.cy, sc = 1 + 0.04 * h, a = q;
+        if (goK >= 0) {
+          if (chosen) { cx = cx * (1 - ge); cy = cy * (1 - ge); sc = sc + (fill - sc) * ge; }
+          else a *= 1 - ge;
+        }
+        if (a <= 0.001) return;
+        var hw = r.w / 2 * sc, hh = r.h / 2 * sc;
+        var x0 = (cx - hw) / (W / 2), x1 = (cx + hw) / (W / 2), y0 = -(cy - hh) / (H / 2), y1 = -(cy + hh) / (H / 2);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([x0, y0, 0, 0, x0, y1, 0, 1, x1, y0, 1, 0, x1, y0, 1, 0, x0, y1, 0, 1, x1, y1, 1, 1]), gl.DYNAMIC_DRAW);
+        gl.uniform1f(QU.uA, a);
+        gl.uniform1f(QU.uLit, Math.min(1.15, 0.28 + 0.92 * h + (1 - any) * 0.72));
+        gl.bindTexture(gl.TEXTURE_2D, qtex[k]);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      });
+      gl.blendFunc(gl.ONE, gl.ONE);
+      bindPoints();
+    }
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE); // additive: overlaps glow, tiled pixels stay true
@@ -406,10 +472,10 @@
           var q = (r * cols + c) * 4;
           P2[n * 2] = layout[k].x + c * sp + sp / 2;
           P2[n * 2 + 1] = layout[k].y + r * sp + sp / 2;
-          // covers are mostly white UI; pull them down so they glow, not burn
-          C2[n * 3] = Math.pow(px[q] / 255, 1.25) * 0.82;
-          C2[n * 3 + 1] = Math.pow(px[q + 1] / 255, 1.25) * 0.82;
-          C2[n * 3 + 2] = Math.pow(px[q + 2] / 255, 1.25) * 0.86;
+          // the same colour the sharp picture arrives in, so the swap does not jump
+          C2[n * 3] = px[q] / 255 * 0.92;
+          C2[n * 3 + 1] = px[q + 1] / 255 * 0.92;
+          C2[n * 3 + 2] = px[q + 2] / 255 * 0.92;
           S[n * 4 + 3] = k;
           n++;
         }
@@ -479,6 +545,8 @@
       gl.uniform4f(U.uCenA, layout[0].cx, layout[0].cy, layout[1].cx, layout[1].cy);
       gl.uniform4f(U.uCenB, layout[2].cx, layout[2].cy, layout[3].cx, layout[3].cy);
       gl.uniform2f(U.uCov, cov.w, cov.h);
+      coverTextures(images);
+      gl.useProgram(prog);
       gl.uniform1f(U.uFly, reduce ? 0 : 1);
       gl.uniform1f(U.uPush, reduce ? 0 : 1);
 
@@ -683,6 +751,7 @@
       gl.clearColor(0.027, 0.031, 0.043, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.POINTS, 0, TOTAL);
+      drawCovers(p, g, goState ? goState.k : -1);
       captions(stage);
       strataLabels(stage, t);
       requestAnimationFrame(frame);
