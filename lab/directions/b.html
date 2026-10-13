@@ -205,7 +205,7 @@
   <div class="track"></div>
 
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="perf.js?v=10"></script>
+  <script src="perf.js?v=11"></script>
   <script src="switcher.js?v=2"></script>
   <script src="hint.js?v=3"></script>
   <script>
@@ -634,7 +634,7 @@
       el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
     });
     // never leave the reader mid-morph: once scrolling stops, settle on the nearest shape
-    // (at once under a wheel, after a pause on a phone — see Perf.whenStill)
+    // (under a wheel only: a phone is left where the thumb put it — see Perf.whenStill)
     function settleNow() {
       var p = stageAt((lenis ? lenis.animatedScroll : scrollY) / maxScroll());
       if (Math.abs(p - Math.round(p)) < 0.02) return;

@@ -1,5 +1,5 @@
 // What a phone needs to stay smooth, shared by the Matter and Depth pages:
-//   · touch devices keep the browser's own scroll (no smoothing layer; settling waits a few seconds)
+//   · touch devices keep the browser's own scroll (no smoothing layer, no settling)
 //   · the canvas starts at 2× on a phone, not its native 3×
 //   · if frames still come in slow, the resolution steps down on its own
 //   · blurred glass over a canvas that repaints every frame is dropped on touch
@@ -39,11 +39,11 @@
     return cur + Math.max(-cap, Math.min(cap, step));
   };
 
-  // Once the page stops between two shapes it eases onto the nearer one. A wheel settles at once;
-  // a phone scrolls freely and only settles after it has been still a while, never under a finger.
-  // ?settle=2 tries another delay, in seconds; ?settle=off never settles.
+  // Once a wheel stops between two shapes the page eases onto the nearer one. A phone never settles:
+  // pulled back, the scroll can't be felt under the thumb.
+  // ?settle=2 tries a settle after that many seconds; ?settle=off turns it off everywhere.
   var asked = /[?&]settle=([\w.]+)/.exec(location.search);
-  P.settleDelay = asked ? (asked[1] === 'off' ? -1 : +asked[1] * 1000) : touch ? 5000 : 380;
+  P.settleDelay = asked ? (asked[1] === 'off' ? -1 : +asked[1] * 1000) : touch ? -1 : 380;
   P.whenStill = function (fn) {
     var timer, held = false;
     function arm() { clearTimeout(timer); if (!held && P.settleDelay >= 0) timer = setTimeout(fn, P.settleDelay); }

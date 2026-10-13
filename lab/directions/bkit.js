@@ -96,7 +96,7 @@
       el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
     });
     // never leave the reader mid-morph: once scrolling stops, settle on the nearest shape
-    // (at once under a wheel, after a pause on a phone — see Perf.whenStill)
+    // (under a wheel only: a phone is left where the thumb put it — see Perf.whenStill)
     function settleNow() {
       var p = stageAt(scrollPos() / maxScroll());
       if (Math.abs(p - Math.round(p)) < 0.02) return;
