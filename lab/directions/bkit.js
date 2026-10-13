@@ -76,17 +76,17 @@
     var maxS;
     function measureScroll() {
       maxS = document.documentElement.scrollHeight - innerHeight;
-      if (window.Perf) Perf.snap(STOPS.map(function (s) { return s * maxS; }));
     }
     measureScroll();
     addEventListener('resize', measureScroll);
     function maxScroll() { return maxS; }
-    // a phone keeps its own scroll; its stops are CSS snap points (measureScroll)
+    // a phone keeps its own scroll
     var touch = window.Perf && Perf.touch;
     var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.18 }) : null;
     // a handle for poking at it from the console
     window.__bkit = { env: env, lenis: lenis, toStage: function (k) { if (lenis) lenis.scrollTo(STOPS[k] * maxScroll(), { immediate: true }); else scrollTo(0, STOPS[k] * maxScroll()); } };
     function scrollPos() { return lenis ? lenis.animatedScroll : scrollY; }
+    if (window.Perf) Perf.info = function () { return 'stage ' + env.stage.toFixed(2) + '  y ' + Math.round(scrollPos()); };
     function scrollToStage(k, dur) {
       var y = STOPS[k] * maxScroll();
       if (lenis) lenis.scrollTo(y, { duration: dur || 1.2, easing: function (x) { return 1 - Math.pow(1 - x, 3); } });
@@ -95,17 +95,15 @@
     document.querySelectorAll('[data-stage]').forEach(function (el) {
       el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
     });
-    // never leave the reader mid-morph: once the wheel stops, settle on the nearest shape
-    var settle;
-    function scheduleSettle() {
-      clearTimeout(settle);
-      settle = setTimeout(function () {
-        var p = stageAt(scrollPos() / maxScroll());
-        if (Math.abs(p - Math.round(p)) < 0.02) return;
-        scrollToStage(Math.round(p), 0.7);
-      }, 380);
+    // never leave the reader mid-morph: once scrolling stops, settle on the nearest shape
+    // (at once under a wheel, after a pause on a phone — see Perf.whenStill)
+    function settleNow() {
+      var p = stageAt(scrollPos() / maxScroll());
+      if (Math.abs(p - Math.round(p)) < 0.02) return;
+      scrollToStage(Math.round(p), 0.7);
     }
-    if (!touch) { if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true }); }
+    var settle, scheduleSettle = window.Perf ? Perf.whenStill(settleNow) : function () { clearTimeout(settle); settle = setTimeout(settleNow, 380); };
+    if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true });
     addEventListener('keydown', function (e) {
       if (e.target.closest('input, textarea') || e.metaKey || e.ctrlKey) return;
       var cur = Math.round(stageAt(scrollPos() / maxScroll()));

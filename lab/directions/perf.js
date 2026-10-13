@@ -1,5 +1,5 @@
 // What a phone needs to stay smooth, shared by the Matter and Depth pages:
-//   · touch devices keep the browser's own scroll (no smoothing layer, no snapping)
+//   · touch devices keep the browser's own scroll (no smoothing layer; settling waits a few seconds)
 //   · the canvas starts at 2× on a phone, not its native 3×
 //   · if frames still come in slow, the resolution steps down on its own
 //   · blurred glass over a canvas that repaints every frame is dropped on touch
@@ -39,21 +39,20 @@
     return cur + Math.max(-cap, Math.min(cap, step));
   };
 
-  // on a phone the stops are CSS snap points: iOS carries the momentum and lands on a whole shape
-  // by itself, where a script settling the scroll afterwards would fight the thumb
-  var snaps = [];
-  P.snap = function (ys) {
-    if (!touch) return;
-    document.documentElement.style.scrollSnapType = 'y mandatory';
-    ys.forEach(function (y, i) {
-      var el = snaps[i];
-      if (!el) {
-        el = snaps[i] = document.createElement('i');
-        el.style.cssText = 'position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-snap-align:start;scroll-snap-stop:always';
-        document.body.appendChild(el);
-      }
-      el.style.top = Math.round(y) + 'px';
-    });
+  // Once the page stops between two shapes it eases onto the nearer one. A wheel settles at once;
+  // a phone scrolls freely and only settles after it has been still a while, never under a finger.
+  // ?settle=2 tries another delay, in seconds; ?settle=off never settles.
+  var asked = /[?&]settle=([\w.]+)/.exec(location.search);
+  P.settleDelay = asked ? (asked[1] === 'off' ? -1 : +asked[1] * 1000) : touch ? 5000 : 380;
+  P.whenStill = function (fn) {
+    var timer, held = false;
+    function arm() { clearTimeout(timer); if (!held && P.settleDelay >= 0) timer = setTimeout(fn, P.settleDelay); }
+    if (touch) {
+      addEventListener('touchstart', function () { held = true; clearTimeout(timer); }, { passive: true });
+      addEventListener('touchend', function () { held = false; arm(); }, { passive: true });
+      addEventListener('touchcancel', function () { held = false; arm(); }, { passive: true });
+    }
+    return arm;
   };
 
   if (touch) {

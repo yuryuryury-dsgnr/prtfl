@@ -205,7 +205,7 @@
   <div class="track"></div>
 
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="perf.js?v=8"></script>
+  <script src="perf.js?v=10"></script>
   <script src="switcher.js?v=2"></script>
   <script src="hint.js?v=3"></script>
   <script>
@@ -618,7 +618,6 @@
     var maxS;
     function measureScroll() {
       maxS = document.documentElement.scrollHeight - innerHeight;
-      if (window.Perf) Perf.snap(STOPS.map(function (s) { return s * maxS; }));
     }
     measureScroll();
     addEventListener('resize', measureScroll);
@@ -635,18 +634,14 @@
       el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
     });
     // never leave the reader mid-morph: once scrolling stops, settle on the nearest shape
-    var settle;
-    function scheduleSettle() {
-      clearTimeout(settle);
-      settle = setTimeout(function () {
-        var s = (lenis ? lenis.animatedScroll : scrollY) / maxScroll();
-        var p = stageAt(s);
-        if (Math.abs(p - Math.round(p)) < 0.02) return;
-        scrollToStage(Math.round(p), 0.7);
-      }, 380);
+    // (at once under a wheel, after a pause on a phone — see Perf.whenStill)
+    function settleNow() {
+      var p = stageAt((lenis ? lenis.animatedScroll : scrollY) / maxScroll());
+      if (Math.abs(p - Math.round(p)) < 0.02) return;
+      scrollToStage(Math.round(p), 0.7);
     }
-    // a phone gets snap points instead (measureScroll): a script settling the scroll would fight the momentum
-    if (!touch) { if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true }); }
+    var settle, scheduleSettle = window.Perf ? Perf.whenStill(settleNow) : function () { clearTimeout(settle); settle = setTimeout(settleNow, 380); };
+    if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true });
     addEventListener('keydown', function (e) {
       if (e.target.closest('input, textarea')) return;
       var cur = Math.round(stageAt((lenis ? lenis.animatedScroll : scrollY) / maxScroll()));
