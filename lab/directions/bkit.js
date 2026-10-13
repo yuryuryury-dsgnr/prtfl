@@ -181,7 +181,7 @@
       env.t = (now - t0) / 1000;
       var max = maxScroll();
       env.s = max > 0 ? Math.min(1, Math.max(0, scrollPos() / max)) : 0;
-      env.stage = stageAt(env.s);
+      env.stage = window.Perf ? Perf.follow(env.stage, stageAt(env.s), env.dt) : stageAt(env.s);
 
       var m = env.mouse, k = Math.min(1, env.dt / 16.7);
       if (tx < -9000) { m.on += (0 - m.on) * 0.1 * k; }

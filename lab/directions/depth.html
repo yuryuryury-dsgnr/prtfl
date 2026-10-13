@@ -45,7 +45,6 @@
     .cap-hero { left: var(--pad); bottom: clamp(72px, 12vh, 120px); max-width: 520px; padding-right: 16px; }
     .cap-hero p { font-size: clamp(16px, 1.5vw, 19px); color: rgba(238,240,246,.82); }
     .cap-hero a { border-bottom: 1px solid rgba(238,240,246,.35); }
-    .hint { margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); }
 
     .cap-streams { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
     .cap-streams h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
@@ -103,7 +102,7 @@
   <div class="ring" id="ring"><span>Open</span></div>
 
   <header class="nav">
-    <a href="#" data-stage="0">Yurii Fokin <span>· Lead UX Designer</span></a>
+    <a href="#" data-stage="0">Portfolio</a>
     <nav class="nav-links">
       <a href="#work" data-stage="2">Work</a>
       <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
@@ -120,9 +119,9 @@
 
   <section class="cap cap-hero" data-cap="0">
     <h1 class="sr-only">Hi! I'm Yurii.</h1>
-    <span class="eyebrow">Portfolio · Batumi, GE</span>
+    <span class="eyebrow">Yurii Fokin · Batumi, GE</span>
     <p>Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=depth">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
-    <div class="hint">scroll to fly · move the cursor to look around</div>
+    <div data-hint data-mouse="scroll to fly through it|move the cursor to look around|click anywhere" data-touch="swipe up to fly through it|tap anywhere"></div>
   </section>
 
   <section class="cap cap-streams" data-cap="1">
@@ -154,9 +153,10 @@
   <div class="track"></div>
 
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="perf.js?v=7"></script>
+  <script src="perf.js?v=8"></script>
   <script src="switcher.js?v=2"></script>
-  <script src="bkit.js?v=5"></script>
+  <script src="hint.js?v=3"></script>
+  <script src="bkit.js?v=6"></script>
   <script src="depth.js?v=3"></script>
 </body>
 </html>

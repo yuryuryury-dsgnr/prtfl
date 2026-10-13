@@ -92,11 +92,12 @@
     var path = pts.map(function (p, k) { return (k ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2); }).join(' ');
     var svg = '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' +
       '<line x1="0" y1="50" x2="100" y2="50" stroke="rgba(233,236,242,.15)" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+      '<line class="mark" x1="' + pts[0][0] + '" y1="0" x2="' + pts[0][0] + '" y2="100" stroke="rgba(233,236,242,.35)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>' +
       '<path d="' + path + '" fill="none" stroke="#E9ECF2" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>' +
       pts.map(function (p, k) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="1.6" fill="' + (st[k][3] < 0 ? '#E5484D' : '#B8F0C9') + '"/>'; }).join('') + '</svg>';
     return '<div class="card journey" role="tabpanel" id="j' + (i + 1) + '" aria-labelledby="t-j' + (i + 1) + '"' + (i ? ' hidden' : '') + ' style="margin-top:12px">' +
       '<span class="eyebrow">' + g[0] + '</span><p style="margin-top:6px">' + g[1] + '</p>' + svg +
-      '<div class="stages">' + st.map(function (s, k) {
+      '<div class="stages hx">' + st.map(function (s, k) {
         return '<div class="st"><b>0' + (k + 1) + '</b><div><h4>' + s[0] + '<span class="emo">· ' + s[2] + '</span></h4><q>' + s[1] + '</q>' +
           '<div class="po"><span><b>Pain point</b>' + s[4] + '</span><span><b>Opportunity</b>' + s[5] + '</span></div></div></div>';
       }).join('') + '</div></div>';
@@ -148,6 +149,49 @@
   // content changes — never per frame. A read after the frame's style writes
   // forces a reflow, and on a phone that is the stutter.
   var stepY = [], personaY = [], heroAbs = { x: 0, y: 0, w: 1, h: 1 }, maxS = 1;
+
+  // ——— on a phone the long lists run sideways (.hx): a counter, a track, and a nudge until first swiped ———
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  var rails = [].slice.call(document.querySelectorAll('.hx')).map(function (el) {
+    var bar = document.createElement('div');
+    bar.className = 'hx-bar'; bar.setAttribute('aria-hidden', 'true');
+    bar.innerHTML = '<span class="hx-n"></span><i><b></b></i><span class="hx-go">swipe</span>';
+    el.parentNode.insertBefore(bar, el.nextSibling);
+    var r = { el: el, bar: bar, n: el.children.length, idx: -1, on: false, step: 1, max: 1, num: bar.querySelector('.hx-n'), thumb: bar.querySelector('b') };
+    r.thumb.style.width = (100 / r.n) + '%';
+    el.addEventListener('scroll', function () { railUpdate(r); if (r.el.scrollLeft > 8) bar.classList.add('used'); }, { passive: true });
+    // the bar itself steps to the next card, and wraps to the first after the last
+    bar.addEventListener('click', function () { el.scrollTo({ left: r.idx >= r.n - 1 ? 0 : (r.idx + 1) * r.step, behavior: 'smooth' }); });
+    return r;
+  });
+  function railMeasure() {
+    rails.forEach(function (r) {
+      r.on = r.el.scrollWidth > r.el.clientWidth + 2;
+      r.step = r.on && r.el.children[1] ? r.el.children[1].offsetLeft - r.el.children[0].offsetLeft : 1;
+      r.max = Math.max(1, r.el.scrollWidth - r.el.clientWidth);
+      railUpdate(r);
+    });
+  }
+  function railUpdate(r) {
+    var x = r.el.scrollLeft, i = !r.on ? 0 : x >= r.max - 2 ? r.n - 1 : Math.min(r.n - 1, Math.round(x / r.step));
+    put(r.thumb, 'transform', 'translateX(' + (Math.min(1, x / r.max) * (r.n - 1) * 100).toFixed(1) + '%)');
+    if (i !== r.idx) { r.idx = i; r.num.textContent = pad(i + 1) + ' / ' + pad(r.n); if (r.onIdx) r.onIdx(i); }
+  }
+  // a journey's stages, swiped: the marker walks the emotion line to the stage in view
+  rails.forEach(function (r) {
+    var svg = r.el.classList.contains('stages') && r.el.parentNode.querySelector('svg');
+    if (!svg) return;
+    var mark = svg.querySelector('.mark'), dots = [].slice.call(svg.querySelectorAll('circle'));
+    r.onIdx = function (i) {
+      if (!r.on || !dots[i]) return;
+      var x = dots[i].getAttribute('cx');
+      mark.setAttribute('x1', x); mark.setAttribute('x2', x);
+      dots.forEach(function (d, k) { d.setAttribute('r', k === i ? 2.6 : 1.6); });
+    };
+  });
+  function railOf(el) { for (var k = 0; k < rails.length; k++) if (rails[k].el === el) return rails[k]; return null; }
+  var stepRail = railOf(document.getElementById('steps')), personaRail = railOf(document.getElementById('personas'));
+  var stepOn = -1;
   function centre(el, y) { var r = el.getBoundingClientRect(); return r.top + y + r.height / 2; }
   function measure() {
     var y = scrollY;
@@ -158,6 +202,7 @@
     var hr = heroFig.getBoundingClientRect();
     heroAbs = { x: hr.left, y: hr.top + y, w: hr.width, h: hr.height };
     maxS = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    railMeasure();
   }
   function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
   new ResizeObserver(function () { measure(); }).observe(document.querySelector('main'));
@@ -187,11 +232,14 @@
     // the roadmap step nearest the middle of the screen, from cached positions
     var mid = y + vh * 0.5, best = 0, bd = 1e9;
     stepY.forEach(function (c, i) { var d = Math.abs(c - mid); if (d < bd) { bd = d; best = i; } });
-    if (best !== env.step) stepEls.forEach(function (li, i) { li.classList.toggle('on', i === best); });
+    // sideways, the card in view is the step
+    if (stepRail && stepRail.on) best = stepRail.idx;
+    if (best !== stepOn) { stepEls.forEach(function (li, i) { li.classList.toggle('on', i === best); }); stepOn = best; }
     env.step = best;
     // and the persona: the hovered one, or the one in view
     var bp = 0; bd = 1e9;
     personaY.forEach(function (c, i) { var d = Math.abs(c - mid); if (d < bd) { bd = d; bp = i; } });
+    if (personaRail && personaRail.on) bp = personaRail.idx;
     var pOn = hoverPersona >= 0 ? hoverPersona : bp, inRes = env.scene > 3.5 && env.scene < 4.5;
     if (pOn !== env.persona || inRes !== env.inRes) personaEls.forEach(function (p, i) { p.classList.toggle('on', i === pOn && inRes); });
     env.persona = pOn; env.inRes = inRes;

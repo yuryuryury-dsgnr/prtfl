@@ -71,9 +71,6 @@
     .cap-hero { left: var(--pad); bottom: clamp(72px, 12vh, 120px); max-width: 520px; padding-right: 16px; }
     .cap-hero p { font-size: clamp(16px, 1.5vw, 19px); color: rgba(238,240,246,.82); }
     .cap-hero a { border-bottom: 1px solid rgba(238,240,246,.35); }
-    .cap-hint { margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); display: flex; gap: 10px; align-items: center; }
-    .cap-hint i { width: 28px; height: 1px; background: currentColor; transform-origin: 0 50%; animation: hint 2.4s cubic-bezier(.7,0,.3,1) infinite; }
-    @keyframes hint { 0% { transform: scaleX(0); } 50% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: 0; } }
 
     .cap-layers { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
     .cap-layers h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
@@ -143,7 +140,7 @@
     .fallback li span { color: var(--muted); }
 
     @media (prefers-reduced-motion: reduce) {
-      .grain, .cap-hint i { animation: none; }
+      .grain { animation: none; }
     }
   </style>
 </head>
@@ -155,7 +152,7 @@
   <div class="ring" id="ring"><span>Open</span></div>
 
   <header class="nav">
-    <a href="#" data-stage="0">Yurii Fokin <span>· Lead UX Designer</span></a>
+    <a href="#" data-stage="0">Portfolio</a>
     <nav class="nav-links">
       <a href="#work" data-stage="2">Work</a>
       <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
@@ -172,9 +169,9 @@
 
   <section class="cap cap-hero" data-cap="0">
     <h1 class="sr-only">Hi! I'm Yurii.</h1>
-    <span class="eyebrow">Portfolio · Batumi, GE</span>
+    <span class="eyebrow">Yurii Fokin · Batumi, GE</span>
     <p>Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=matter">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
-    <div class="cap-hint"><i></i>scroll · move through it · click anywhere</div>
+    <div data-hint data-mouse="scroll to reshape it|move through it|click anywhere" data-touch="swipe up to reshape it|tap anywhere"></div>
   </section>
 
   <section class="cap cap-layers" data-cap="1">
@@ -208,8 +205,9 @@
   <div class="track"></div>
 
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="perf.js?v=7"></script>
+  <script src="perf.js?v=8"></script>
   <script src="switcher.js?v=2"></script>
+  <script src="hint.js?v=3"></script>
   <script>
   (function () {
     var CASES = [
@@ -737,13 +735,13 @@
     var lastNow = performance.now();
     function frame(rafNow) {
       if (lenis) lenis.raf(rafNow);
-      var now = performance.now();
+      var now = performance.now(), dt = Math.min(50, now - lastNow);
       if (window.Perf) Perf.frame(now - lastNow);
       lastNow = now;
       var t = (now - t0) / 1000;
       var max = maxScroll();
       var s = max > 0 ? Math.min(1, Math.max(0, (lenis ? lenis.animatedScroll : scrollY) / max)) : 0;
-      stage = stageAt(s);
+      stage = window.Perf ? Perf.follow(stage, stageAt(s), dt) : stageAt(s);
       // by the clock, not per frame, so a slow device still finishes it in time
       if (introStart === null) introStart = now;
       if (!reduce) intro = Math.min(1, (now - introStart) / 1800);

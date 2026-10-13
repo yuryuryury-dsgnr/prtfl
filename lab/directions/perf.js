@@ -31,6 +31,14 @@
     return Math.max(probe.offsetHeight, innerHeight);
   };
 
+  // a flick can carry the page a whole section in a few frames; on a phone the shape still takes
+  // its time to get there, so the morph is seen rather than skipped
+  P.follow = function (cur, target, dt) {
+    if (!touch) return target;
+    var step = (target - cur) * (1 - Math.exp(-dt / 160)), cap = dt / 1000 * 1.4;
+    return cur + Math.max(-cap, Math.min(cap, step));
+  };
+
   // on a phone the stops are CSS snap points: iOS carries the momentum and lands on a whole shape
   // by itself, where a script settling the scroll afterwards would fight the thumb
   var snaps = [];
@@ -41,7 +49,7 @@
       var el = snaps[i];
       if (!el) {
         el = snaps[i] = document.createElement('i');
-        el.style.cssText = 'position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-snap-align:start';
+        el.style.cssText = 'position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-snap-align:start;scroll-snap-stop:always';
         document.body.appendChild(el);
       }
       el.style.top = Math.round(y) + 'px';
