@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>A · Living system — Yurii Fokin</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ground: #F0F1F7;
+      --ink: #16181D;
+      --muted: #6B6E78;
+      --line: rgba(22,24,29,0.08);
+      --select: #0D99FF;
+      --brand: #CC0000;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--ink); background: var(--ground);
+      font-size: 16px; line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ——— nav ——— */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px clamp(16px, 4vw, 40px);
+      font-size: 14px; font-weight: 500;
+      transition: background .4s, padding .4s, box-shadow .4s;
+    }
+    /* once the page runs under it, the bar gets a ground of its own */
+    .nav.solid {
+      padding-top: 12px; padding-bottom: 12px;
+      background: rgba(240,241,247,.78); box-shadow: 0 1px 0 var(--line);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+    }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--select); outline-offset: 3px; border-radius: 6px; }
+
+    .curtain { position: fixed; inset: 0; z-index: 200; background: var(--ink); clip-path: inset(100% 0 0 0); pointer-events: none; }
+    .nav-logo { letter-spacing: -0.01em; }
+    .nav-logo span { color: var(--muted); font-weight: 400; }
+    .nav-links { display: flex; gap: 22px; align-items: center; }
+    .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
+    .nav-links a:not(.pill):hover { color: var(--ink); }
+    .pill { border: 1px solid rgba(22,24,29,.2); border-radius: 999px; padding: 7px 15px; transition: background .2s; }
+    .pill:hover { background: rgba(22,24,29,.04); }
+    @media (max-width: 640px) { .nav-links a:not(.pill) { display: none; } }
+
+    /* ——— the build: one sticky stage, scrubbed by the section around it ——— */
+    .build { position: relative; height: 560vh; }
+    .stage {
+      position: sticky; top: 0; height: 100vh; height: 100svh;
+      overflow: hidden;
+    }
+    .stage-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      background-position: center center;
+      -webkit-mask-image: radial-gradient(70% 60% at 50% 50%, #000 0%, transparent 100%);
+      mask-image: radial-gradient(70% 60% at 50% 50%, #000 0%, transparent 100%);
+      opacity: .55;
+    }
+
+    .hero-copy {
+      position: absolute; left: clamp(16px, 6vw, 88px); top: 0; bottom: 0;
+      margin: auto 0; height: fit-content;
+      max-width: 560px;
+    }
+    .hero-name {
+      font-size: clamp(48px, 8vw, 112px); font-weight: 600;
+      letter-spacing: -0.045em; line-height: .98;
+    }
+    .hero-sub { margin-top: 28px; font-size: clamp(16px, 1.5vw, 19px); color: #3A3D46; max-width: 440px; }
+    .hero-sub a { border-bottom: 1px solid rgba(22,24,29,.25); }
+    .hero-hint {
+      margin-top: 40px; font: 500 12px/1 var(--mono); color: var(--muted);
+      letter-spacing: .02em; display: flex; gap: 10px; align-items: center;
+    }
+    .hero-hint i { width: 28px; height: 1px; background: currentColor; display: inline-block; }
+    .line { display: block; overflow: hidden; padding-bottom: .06em; }
+    .line > span { display: block; }
+
+    /* the token sheet: real slots that the tokens are measured from */
+    .sheet {
+      /* centred with auto margins, not a transform: the tokens are measured
+         with offsetTop, which a transform would not show up in */
+      position: absolute; right: clamp(16px, 6vw, 88px); top: 0; bottom: 0;
+      margin: auto 0; height: fit-content; z-index: 1;
+      padding: 20px 22px 22px;
+    }
+    .sheet-bg {
+      position: absolute; inset: 0; z-index: -1; border-radius: 18px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: 0 1px 0 rgba(22,24,29,.04), 0 24px 60px -30px rgba(22,24,29,.25);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
+    .sheet-head {
+      display: flex; justify-content: space-between; align-items: center;
+      font: 500 11px/1 var(--mono); color: var(--muted); margin-bottom: 18px;
+    }
+    .sheet-head b { color: var(--ink); font-weight: 500; }
+    .sheet-grid { display: grid; grid-template-columns: repeat(4, 76px); gap: 18px 16px; }
+    .slot-cell { display: flex; flex-direction: column; gap: 8px; }
+    .slot-box { width: 76px; height: 76px; }
+    .slot-label { font: 400 10px/1.35 var(--mono); color: var(--muted); white-space: nowrap; }
+    .slot-label b { display: block; color: var(--ink); font-weight: 500; }
+
+    @media (max-width: 900px) {
+      .hero-copy { top: 96px; bottom: auto; margin: 0; right: 16px; }
+      .hero-hint { display: none; }
+      .sheet { top: auto; bottom: 84px; margin: 0; left: 16px; right: 16px; padding: 14px; }
+      .sheet-grid { grid-template-columns: repeat(4, 1fr); gap: 12px 10px; }
+      .slot-box { width: 100%; height: 48px; }
+      .slot-label { font-size: 9px; }
+    }
+
+    /* tokens fly between the sheet and the card; positioned in stage px */
+    .tok {
+      position: absolute; left: 0; top: 0; z-index: 3;
+      display: grid; place-items: center;
+      will-change: left, top, width, height;
+      animation: tokIn .8s cubic-bezier(.2,.8,.2,1) backwards;
+      animation-delay: calc(var(--i) * 55ms + 350ms);
+    }
+    @keyframes tokIn { from { opacity: 0; transform: scale(.55) rotate(-6deg); } }
+    .tok[data-k="surface"] { z-index: 2; background: #fff; box-shadow: inset 0 0 0 1px rgba(22,24,29,.08); }
+    .tok[data-k="ink"] { background: var(--ink); }
+    .tok[data-k="brand"] { background: var(--brand); }
+    .tok[data-k="blue"] { background: #E3EDFD; }
+    .tok[data-k="green"] { background: #E2F3E7; }
+    .tok[data-k="amber"] { background: #FCEFD6; }
+    .tok[data-k="title"], .tok[data-k="body"] { background: transparent; box-shadow: inset 0 0 0 1px rgba(22,24,29,.12); }
+    .tok-glyph { font-size: 34px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
+    .tok[data-k="body"] .tok-glyph { font-weight: 400; font-size: 26px; }
+    .tok[data-k="avatar"] { background: conic-gradient(from 200deg, #FFB199, #FF6F91, #845EC2, #2C73D2, #FFB199); }
+    .tok[data-k="rating"] { background: #FFF6DB; color: #9A6A00; }
+    .tok[data-k="rating"] .tok-glyph { font-size: 18px; font-weight: 600; }
+    .tok[data-k="space"] { border: 1.5px dashed var(--select); background: rgba(13,153,255,.06); }
+    .tok[data-k="space"] .tok-glyph { font: 500 13px/1 var(--mono); color: var(--select); }
+
+    /* ——— the component the tokens become ——— */
+    .dc {
+      width: min(400px, 86vw);
+      background: #fff; border-radius: 16px;
+      border: 1px solid rgba(22,24,29,.07);
+      box-shadow: 0 1px 2px rgba(22,24,29,.04), 0 18px 40px -24px rgba(22,24,29,.28);
+      padding: 20px; position: relative;
+      text-align: left;
+    }
+    .dc-head { display: flex; gap: 12px; align-items: center; }
+    .dc-icon {
+      flex: 0 0 40px; height: 40px; border-radius: 10px; background: var(--ink);
+      display: grid; place-items: center; color: #fff;
+    }
+    .dc-titles { flex: 1; min-width: 0; }
+    .dc-title { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+    .dc-sub { font-size: 12px; color: var(--muted); line-height: 1.3; margin-top: 2px; }
+    .dc-rating {
+      flex: 0 0 auto; padding: 4px 8px; border-radius: 8px;
+      background: #FFF6DB; color: #9A6A00; font-size: 12px; font-weight: 600;
+    }
+    .dc-desc { margin-top: 14px; font-size: 13.5px; line-height: 1.5; color: #4A4D57; }
+    .dc-tags { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+    .dc-tag { font-size: 11.5px; font-weight: 500; padding: 4px 10px; border-radius: 999px; }
+    .dc-tag.t1 { background: #E3EDFD; color: #1D4FA8; }
+    .dc-tag.t2 { background: #E2F3E7; color: #1E6B3A; }
+    .dc-tag.t3 { background: #FCEFD6; color: #8A5A00; }
+    .dc-foot {
+      display: flex; align-items: center; gap: 8px; margin-top: 18px;
+      padding-top: 14px; border-top: 1px solid rgba(22,24,29,.06);
+    }
+    .dc-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: conic-gradient(from 200deg, #FFB199, #FF6F91, #845EC2, #2C73D2, #FFB199);
+    }
+    .dc-owner { flex: 1; font-size: 12px; color: var(--muted); }
+    .dc-btn {
+      font-size: 12.5px; font-weight: 600; color: #fff; background: var(--brand);
+      padding: 8px 14px; border-radius: 9px;
+    }
+    .dc-btn { position: relative; overflow: hidden; }
+    #card .dc-btn b { font-weight: 600; display: inline-block; }
+    #card .dc-btn b + b { position: absolute; left: 0; right: 0; top: 50%; text-align: center; opacity: 0; }
+    .dc-guide {
+      position: absolute; inset: 20px; border: 1.5px dashed var(--select);
+      border-radius: 4px; pointer-events: none; opacity: 0;
+    }
+    .dc-guide::before {
+      content: '20'; position: absolute; left: -20px; top: 50%; width: 20px;
+      transform: translateY(-50%); text-align: center;
+      font: 500 10px/1 var(--mono); color: var(--select);
+    }
+
+    #card { position: absolute; z-index: 4; transform-origin: 0 0; left: 0; top: 0; }
+
+    /* selection chrome — the Figma moment */
+    .sel {
+      position: absolute; z-index: 6; pointer-events: none; opacity: 0;
+      outline: 1.5px solid var(--select); border-radius: 16px;
+    }
+    .sel i {
+      position: absolute; width: 8px; height: 8px; background: #fff;
+      border: 1.5px solid var(--select); border-radius: 2px;
+    }
+    .sel i:nth-child(1) { left: -5px; top: -5px; }
+    .sel i:nth-child(2) { right: -5px; top: -5px; }
+    .sel i:nth-child(3) { left: -5px; bottom: -5px; }
+    .sel i:nth-child(4) { right: -5px; bottom: -5px; }
+    .sel-name, .sel-size {
+      position: absolute; font: 500 11px/1 var(--mono); white-space: nowrap;
+    }
+    .sel-name { left: 0; top: -22px; color: var(--select); }
+    .sel-size {
+      left: 50%; bottom: -28px; transform: translateX(-50%);
+      background: var(--select); color: #fff; padding: 4px 6px; border-radius: 4px;
+    }
+
+    /* ——— the screen the component lives in ——— */
+    .screen {
+      position: absolute; z-index: 3; left: 0; top: 0;
+      background: #F7F8FA; border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(22,24,29,.08);
+      box-shadow: 0 40px 100px -40px rgba(22,24,29,.35);
+      opacity: 0; visibility: hidden;
+    }
+    .scr-bar {
+      display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px;
+      background: #fff; border-bottom: 1px solid rgba(22,24,29,.06);
+    }
+    .scr-bar i { width: 9px; height: 9px; border-radius: 50%; background: #E2E3E8; }
+    .scr-bar span { margin-left: 14px; font: 500 11px/1 var(--mono); color: var(--muted); }
+    .scr-body { padding: 18px; }
+    .scr-search {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #fff; border: 1px solid rgba(22,24,29,.08); border-radius: 12px;
+      padding: 10px 10px 10px 16px; font-size: 14px; color: var(--muted);
+    }
+    .scr-search b { background: var(--brand); color: #fff; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 8px; }
+    .scr-chips { display: flex; gap: 6px; margin: 12px 0 16px; flex-wrap: wrap; }
+    .scr-chips span { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid rgba(22,24,29,.08); color: #4A4D57; }
+    .scr-chips span:first-child { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .scr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .gslot { position: relative; height: calc(var(--ch) * var(--s)); }
+    .gslot .dc {
+      position: absolute; left: 0; top: 0; transform-origin: 0 0;
+      transform: scale(var(--s)); width: var(--cw);
+      box-shadow: 0 1px 2px rgba(22,24,29,.04);
+    }
+    @media (max-width: 900px) {
+      .scr-grid { grid-template-columns: repeat(2, 1fr); }
+      .gslot:nth-child(n+5) { display: none; }
+      .scr-body { padding: 12px; }
+    }
+
+    .shot {
+      position: absolute; z-index: 5; left: 0; top: 0;
+      object-fit: cover; border-radius: 16px;
+      box-shadow: 0 40px 100px -40px rgba(22,24,29,.4);
+      opacity: 0; visibility: hidden;
+    }
+    .shot-cap {
+      position: absolute; z-index: 5; left: 0; top: 0;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      opacity: 0; visibility: hidden;
+    }
+    .shot-cap .no { font: 500 12px/1 var(--mono); color: var(--muted); }
+    .shot-cap h2 { font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; margin-top: 8px; }
+    .shot-cap p { color: var(--muted); font-size: 15px; margin-top: 4px; }
+    .shot-cap a.go { flex: 0 0 auto; margin-top: 18px; }
+
+    /* the pointer that tries the component */
+    .ptr { position: absolute; z-index: 8; left: 0; top: 0; pointer-events: none; opacity: 0; visibility: hidden; }
+    .ptr svg { display: block; filter: drop-shadow(0 3px 6px rgba(0,0,0,.25)); }
+    .toast {
+      position: absolute; right: 16px; top: 46px; z-index: 2;
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 10px;
+      background: var(--ink); color: #fff; border-radius: 12px; font-size: 13px; font-weight: 500;
+      box-shadow: 0 16px 40px -16px rgba(22,24,29,.5); opacity: 0; visibility: hidden;
+    }
+    .toast i { width: 22px; height: 22px; border-radius: 50%; background: #1E7B45; display: grid; place-items: center; font-style: normal; font-size: 12px; }
+    .toast span { color: rgba(255,255,255,.6); font-weight: 400; }
+    @media (max-width: 640px) { .toast { font-size: 12px; right: 10px; top: 44px; padding: 8px 12px 8px 8px; } .toast span { display: none; } .shot-cap { flex-direction: column; gap: 0; } }
+
+    /* phase rail */
+    .rail {
+      position: absolute; z-index: 7; left: 50%; top: 76px; transform: translateX(-50%);
+      display: flex; gap: 4px; font: 500 11px/1 var(--mono);
+      opacity: 0; visibility: hidden;
+    }
+    .rail button {
+      padding: 7px 10px; border-radius: 999px; color: var(--muted); background: none; border: 0; cursor: pointer;
+      font: inherit; transition: background .3s, color .3s;
+    }
+    .rail button:hover { color: var(--ink); }
+    .rail button.on { background: var(--ink); color: #fff; }
+    @media (max-width: 640px) { .rail { top: 68px; } .rail button { padding: 6px 7px; font-size: 10px; } }
+
+    /* ——— the rest of the work ——— */
+    .work { padding: 120px clamp(16px, 6vw, 88px) 40px; max-width: 1400px; margin: 0 auto; }
+    .work-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 72px;
+    }
+    .work-head h2 { font-size: clamp(28px, 3.4vw, 44px); font-weight: 600; letter-spacing: -0.035em; }
+    .work-head span { font: 500 12px/1 var(--mono); color: var(--muted); }
+
+    .case {
+      display: grid; grid-template-columns: 1.55fr 1fr; gap: clamp(24px, 4vw, 64px);
+      align-items: center; margin-bottom: clamp(80px, 12vw, 160px);
+    }
+    .case:nth-child(even) { grid-template-columns: 1fr 1.55fr; }
+    .case:nth-child(even) .case-media { order: 2; }
+    @media (max-width: 800px) {
+      .case, .case:nth-child(even) { grid-template-columns: 1fr; }
+      .case:nth-child(even) .case-media { order: 0; }
+    }
+    .case-media { position: relative; }
+    .case-clip { border-radius: 16px; overflow: hidden; aspect-ratio: 16 / 10; background: #E6E7EE; }
+    .case-clip img { width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+    .case-media .sel { inset: -6px; border-radius: 20px; transition: opacity .25s; }
+    .case-media .sel-name { top: -24px; }
+    .case:hover .case-media .sel { opacity: 1; }
+    .case-no { font: 500 12px/1 var(--mono); color: var(--muted); }
+    .case h3 { font-size: clamp(28px, 3.2vw, 44px); font-weight: 600; letter-spacing: -0.035em; line-height: 1.1; margin: 14px 0 10px; }
+    .case p { font-size: 17px; color: #3A3D46; }
+    .case-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 20px; }
+    .case-tags span { font: 500 11px/1 var(--mono); padding: 6px 9px; border-radius: 6px; background: rgba(22,24,29,.05); color: #4A4D57; }
+    .case-go { display: inline-flex; gap: 8px; margin-top: 28px; font-weight: 500; font-size: 15px; }
+    .case-go i { font-style: normal; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+    .case:hover .case-go i { transform: translateX(6px); }
+
+    .foot {
+      padding: 120px clamp(16px, 6vw, 88px) 120px; max-width: 1400px; margin: 0 auto;
+      border-top: 1px solid var(--line);
+    }
+    .foot h2 { font-size: clamp(40px, 7vw, 104px); font-weight: 600; letter-spacing: -0.05em; line-height: .98; max-width: 11ch; }
+    .foot-mail {
+      display: inline-block; margin-top: 40px; font-size: clamp(22px, 3vw, 40px); font-weight: 500; letter-spacing: -0.03em;
+      background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; padding-bottom: 4px;
+      transition: background-size .5s cubic-bezier(.2,.8,.2,1);
+    }
+    .foot-mail:hover { background-size: 100% 2px; }
+    .foot-row { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; margin-top: 36px; font-weight: 500; }
+    .foot-row a { border-bottom: 1px solid rgba(22,24,29,.25); }
+    .foot-row span { color: var(--muted); }
+    .foot-row button { margin-left: auto; background: none; border: 0; cursor: pointer; font: 500 12px/1 var(--mono); color: var(--muted); }
+    .foot-row button:hover { color: var(--ink); }
+
+    /* reduced motion: no build, the same content as a quiet page */
+    .case-hal { display: none !important; }
+    .reduce .case-hal { display: grid !important; }
+    .reduce .build { height: auto; }
+    .reduce .stage { position: relative; height: auto; min-height: 100vh; }
+    .reduce .tok, .reduce .screen, .reduce #card, .reduce .sel, .reduce .shot, .reduce .shot-cap, .reduce .rail, .reduce .ptr, .reduce .hero-hint { display: none; }
+    .reduce .slot-box { border-radius: 14px; }
+    .reduce [data-slot="surface"] { background: #fff; box-shadow: inset 0 0 0 1px rgba(22,24,29,.08); }
+    .reduce [data-slot="ink"] { background: #16181D; } .reduce [data-slot="brand"] { background: #CC0000; }
+    .reduce [data-slot="blue"] { background: #E3EDFD; } .reduce [data-slot="green"] { background: #E2F3E7; }
+    .reduce [data-slot="amber"] { background: #FCEFD6; } .reduce [data-slot="rating"] { background: #FFF6DB; }
+    .reduce [data-slot="avatar"] { background: conic-gradient(from 200deg, #FFB199, #FF6F91, #845EC2, #2C73D2, #FFB199); border-radius: 50%; }
+    .reduce [data-slot="title"], .reduce [data-slot="body"], .reduce [data-slot="space"] { box-shadow: inset 0 0 0 1px rgba(22,24,29,.12); }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <a class="nav-logo" href="#">Yurii Fokin <span>· Lead UX Designer</span></a>
+    <nav class="nav-links">
+      <a href="#work">Work</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+    </nav>
+  </header>
+
+  <section class="build" id="build">
+    <div class="stage" id="stage">
+      <div class="stage-grid"></div>
+
+      <div class="hero-copy" id="heroCopy">
+        <h1 class="hero-name">
+          <span class="line"><span>Hi! I'm</span></span>
+          <span class="line"><span>Yurii.</span></span>
+        </h1>
+        <p class="hero-sub">
+          <span class="line"><span>Lead UX Designer at DXC Luxoft, on <a href="../../cases/halliburton/">Halliburton</a>'s data platform.</span></span>
+          <span class="line"><span>Currently building through an AI-native design-to-code pipeline.</span></span>
+        </p>
+        <div class="hero-hint"><i></i>scroll — watch it assemble</div>
+      </div>
+
+      <div class="sheet" id="sheet">
+        <div class="sheet-bg"></div>
+        <div class="sheet-head"><b>tokens.json</b><span>10 tokens</span></div>
+        <div class="sheet-grid">
+          <div class="slot-cell"><div class="slot-box" data-slot="surface"></div><div class="slot-label"><b>surface</b>#FFFFFF</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="ink"></div><div class="slot-label"><b>ink/900</b>#16181D</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="brand"></div><div class="slot-label"><b>brand/red</b>#CC0000</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="title"></div><div class="slot-label"><b>title</b>17 / 600</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="blue"></div><div class="slot-label"><b>tag/info</b>#E3EDFD</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="green"></div><div class="slot-label"><b>tag/ok</b>#E2F3E7</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="amber"></div><div class="slot-label"><b>tag/warn</b>#FCEFD6</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="body"></div><div class="slot-label"><b>body</b>13.5 / 400</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="avatar"></div><div class="slot-label"><b>avatar</b>24 / round</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="rating"></div><div class="slot-label"><b>rating</b>badge</div></div>
+          <div class="slot-cell"><div class="slot-box" data-slot="space"></div><div class="slot-label"><b>space/20</b>inset</div></div>
+        </div>
+      </div>
+
+      <!-- tokens: from a sheet slot to a part of the card -->
+      <div class="tok" data-k="surface" data-to="#card" style="--i:0"></div>
+      <div class="tok" data-k="ink" data-to="#card .dc-icon" style="--i:1"></div>
+      <div class="tok" data-k="brand" data-to="#card .dc-btn" style="--i:2"></div>
+      <div class="tok" data-k="title" data-to="#card .dc-title" style="--i:3"><span class="tok-glyph">Aa</span></div>
+      <div class="tok" data-k="blue" data-to="#card .t1" style="--i:4"></div>
+      <div class="tok" data-k="green" data-to="#card .t2" style="--i:5"></div>
+      <div class="tok" data-k="amber" data-to="#card .t3" style="--i:6"></div>
+      <div class="tok" data-k="body" data-to="#card .dc-desc" style="--i:7"><span class="tok-glyph">Aa</span></div>
+      <div class="tok" data-k="avatar" data-to="#card .dc-avatar" style="--i:8"></div>
+      <div class="tok" data-k="rating" data-to="#card .dc-rating" style="--i:9"><span class="tok-glyph">★</span></div>
+      <div class="tok" data-k="space" data-to="#card .dc-guide" style="--i:10"><span class="tok-glyph">20</span></div>
+
+      <div class="screen" id="screen">
+        <div class="scr-bar"><i></i><i></i><i></i><span>Data Marketplace</span></div>
+        <div class="scr-body">
+          <div class="scr-search"><span>What data are you looking for?</span><b>Search</b></div>
+          <div class="scr-chips"><span>All</span><span>Production</span><span>Drilling</span><span>Reservoir</span><span>Certified</span></div>
+          <div class="scr-grid" id="scrGrid"></div>
+        </div>
+        <div class="toast" id="toast"><i>✓</i>Access requested <span>· Repair KPIs</span></div>
+      </div>
+
+      <article class="dc" id="card">
+        <div class="dc-guide"></div>
+        <header class="dc-head">
+          <div class="dc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+          <div class="dc-titles"><h4 class="dc-title">Repair KPIs</h4><p class="dc-sub">Data product · Production</p></div>
+          <div class="dc-rating">★ 4.8</div>
+        </header>
+        <p class="dc-desc">Repair events, cost and downtime, by well and by region — refreshed daily.</p>
+        <div class="dc-tags"><span class="dc-tag t1">Production</span><span class="dc-tag t2">Certified</span><span class="dc-tag t3">Daily</span></div>
+        <footer class="dc-foot"><span class="dc-avatar"></span><span class="dc-owner">Owned by Data Office</span><span class="dc-btn"><b>Request access</b><b>Requested ✓</b></span></footer>
+      </article>
+
+      <div class="sel" id="cardSel"><i></i><i></i><i></i><i></i><span class="sel-name">Card / Data product</span><span class="sel-size" id="cardSize">400 × 212</span></div>
+
+      <img class="shot" id="shot" src="../../assets/images/halliburton/halliburton-card.webp" alt="Halliburton Data Marketplace screens">
+      <div class="shot-cap" id="shotCap">
+        <div>
+          <span class="no">01 — Enterprise · Web</span>
+          <h2>Data Marketplace · Halliburton</h2>
+          <p>Data search: from weeks to under five minutes</p>
+        </div>
+        <a class="pill go" href="../../cases/halliburton/">View case →</a>
+      </div>
+
+      <div class="ptr" id="ptr"><svg width="22" height="26" viewBox="0 0 22 26"><path d="M2 2l17 10.5-7.6 1.6L7.8 22z" fill="#16181D" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+      <nav class="rail" id="rail" aria-label="Build steps"><button>01 Tokens</button><button>02 Component</button><button>03 Screen</button><button>04 Product</button></nav>
+    </div>
+  </section>
+
+  <section class="work" id="work">
+    <div class="work-head"><h2 id="workTitle">More work</h2><span>02 — 04</span></div>
+
+    <a class="case case-hal" href="../../cases/halliburton/">
+      <div class="case-media">
+        <div class="case-clip"><img src="../../assets/images/halliburton/halliburton-card.webp" alt="Halliburton Data Marketplace screens"></div>
+      </div>
+      <div class="case-meta">
+        <span class="case-no">01</span>
+        <h3>Data Marketplace · Halliburton</h3>
+        <p>Data search: from weeks to under five minutes</p>
+        <div class="case-tags"><span>Enterprise</span><span>Web</span><span>Sole designer</span></div>
+        <span class="case-go">View case <i>→</i></span>
+      </div>
+    </a>
+
+    <a class="case" href="../../cases/rebalancer/">
+      <div class="case-media">
+        <div class="case-clip"><img src="../../assets/images/rebalancer/rebalancer-hero.webp" alt="Rebalancer app screens"></div>
+        <div class="sel"><i></i><i></i><i></i><i></i><span class="sel-name">Rebalancer / Hero</span><span class="sel-size">1440 × 900</span></div>
+      </div>
+      <div class="case-meta">
+        <span class="case-no">02</span>
+        <h3>Rebalancer</h3>
+        <p>Designed and built solo, from concept to the App Store</p>
+        <div class="case-tags"><span>iOS</span><span>Solo</span><span>Design → code</span></div>
+        <span class="case-go">View case <i>→</i></span>
+      </div>
+    </a>
+
+    <a class="case" href="../../cases/dobrodoc/">
+      <div class="case-media">
+        <div class="case-clip"><img src="../../assets/images/dobrodoc/dobrodoc-cover-v3.webp" alt="DobroDoc+ onboarding screens"></div>
+        <div class="sel"><i></i><i></i><i></i><i></i><span class="sel-name">DobroDoc+ / Cover</span><span class="sel-size">1920 × 1080</span></div>
+      </div>
+      <div class="case-meta">
+        <span class="case-no">03</span>
+        <h3>DobroDoc+</h3>
+        <p>Time to booking cut 40% in usability tests</p>
+        <div class="case-tags"><span>iOS</span><span>Android</span><span>Healthcare</span></div>
+        <span class="case-go">View case <i>→</i></span>
+      </div>
+    </a>
+
+    <a class="case" href="../../cases/dopas/">
+      <div class="case-media">
+        <div class="case-clip"><img src="../../assets/images/dopas/dopas-cover-v3.webp" alt="dopas.dp.ua booking flow"></div>
+        <div class="sel"><i></i><i></i><i></i><i></i><span class="sel-name">dopas / Cover</span><span class="sel-size">2400 × 1525</span></div>
+      </div>
+      <div class="case-meta">
+        <span class="case-no">04</span>
+        <h3>dopas.dp.ua</h3>
+        <p>Launched from zero in 2020, live and earning since</p>
+        <div class="case-tags"><span>Web</span><span>B2C</span><span>0 → 1</span></div>
+        <span class="case-go">View case <i>→</i></span>
+      </div>
+    </a>
+  </section>
+
+  <footer class="foot">
+    <h2 class="foot-title">Open to senior and lead design roles.</h2>
+    <a class="foot-mail" href="mailto:yuryuryury@icloud.com">yuryuryury@icloud.com</a>
+    <div class="foot-row">
+      <a href="https://www.linkedin.com/in/yuryury/">LinkedIn ↗</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <span>Batumi, GE · UTC+4</span>
+      <button id="toTop">back to the top ↑</button>
+    </div>
+  </footer>
+  <div class="curtain" id="curtain"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="switcher.js"></script>
+  <script>
+  (function () {
+    gsap.registerPlugin(ScrollTrigger);
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var lenis = null;
+    if (reduce) document.documentElement.classList.add('reduce');
+
+    // ——— leaving for a case: a curtain, then the page ———
+    var curtain = document.getElementById('curtain');
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="../../cases/"]');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey || reduce) return;
+      e.preventDefault();
+      gsap.to(curtain, { clipPath: 'inset(0% 0 0 0)', duration: 0.6, ease: 'expo.inOut', onComplete: function () { location.href = a.href; } });
+    });
+    addEventListener('pageshow', function (e) { if (e.persisted) gsap.set(curtain, { clipPath: 'inset(100% 0 0 0)' }); });
+    document.getElementById('toTop').addEventListener('click', function () { lenis ? lenis.scrollTo(0, { duration: 2 }) : scrollTo(0, 0); });
+    var nav = document.querySelector('.nav');
+    ScrollTrigger.create({ trigger: '#work', start: 'top 72px',
+      onEnter: function () { nav.classList.add('solid'); }, onLeaveBack: function () { nav.classList.remove('solid'); } });
+
+    if (window.Lenis && !reduce) {
+      lenis = new Lenis({ lerp: 0.09 });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    var stage = document.getElementById('stage');
+    var card = document.getElementById('card');
+    var screen = document.getElementById('screen');
+    var grid = document.getElementById('scrGrid');
+    var shot = document.getElementById('shot');
+    var cap = document.getElementById('shotCap');
+    var sel = document.getElementById('cardSel');
+    var rail = document.getElementById('rail');
+    var toks = gsap.utils.toArray('.tok');
+
+    // the other cards on the marketplace screen — same component, other data
+    var others = [
+      ['Logix Unit Vitality', 'Data product · Drilling', '4.6', 'Rig sensor health, normalised across vendors and fleets.', ['Drilling', 'Certified', 'Hourly']],
+      ['Well Header Master', 'Reference · Reservoir', '4.9', 'The one list of wells everyone else joins against.', ['Reservoir', 'Golden', 'Weekly']],
+      ['Job Tracker', 'Data product · Ops', '4.4', 'Every job, its crew and its status, as it happens.', ['Ops', 'Certified', 'Live']],
+      ['Production Daily', 'Data product · Production', '4.7', 'Allocated volumes per well, per day, per stream.', ['Production', 'Certified', 'Daily']],
+      ['Seismic Index', 'Catalogue · Geoscience', '4.5', 'Where every survey lives, who owns it, how to get it.', ['Geo', 'Review', 'Monthly']]
+    ];
+    var slotHTML = '<div class="gslot" id="slot0"></div>' + others.map(function (o) {
+      return '<div class="gslot"><article class="dc mini">' +
+        '<header class="dc-head"><div class="dc-icon"></div><div class="dc-titles"><h4 class="dc-title">' + o[0] +
+        '</h4><p class="dc-sub">' + o[1] + '</p></div><div class="dc-rating">★ ' + o[2] + '</div></header>' +
+        '<p class="dc-desc">' + o[3] + '</p><div class="dc-tags"><span class="dc-tag t1">' + o[4][0] +
+        '</span><span class="dc-tag t2">' + o[4][1] + '</span><span class="dc-tag t3">' + o[4][2] + '</span></div>' +
+        '<footer class="dc-foot"><span class="dc-avatar"></span><span class="dc-owner">Owned by Data Office</span><span class="dc-btn">Request access</span></footer>' +
+        '</article></div>';
+    }).join('');
+    grid.innerHTML = slotHTML;
+    var minis = gsap.utils.toArray('.gslot .mini');
+
+    // Positions are read from layout (offsetLeft/Top), never from
+    // getBoundingClientRect, so whatever transform a tween has left on an
+    // element, the numbers describe where it sits at rest.
+    function rel(el) {
+      var x = 0, y = 0, n = el;
+      while (n && n !== stage) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+      return { x: x, y: y, w: el.offsetWidth, h: el.offsetHeight };
+    }
+    var M = {};
+    function measure() {
+      var W = stage.offsetWidth, H = stage.offsetHeight;
+      // the card rests in the middle of the stage
+      card.style.left = Math.round((W - card.offsetWidth) / 2) + 'px';
+      card.style.top = Math.round((H - card.offsetHeight) / 2 + 10) + 'px';
+      // the screen: as wide as fits, then shrunk if it is too tall
+      var cw = card.offsetWidth, ch = card.offsetHeight;
+      screen.style.setProperty('--cw', cw + 'px');
+      screen.style.setProperty('--ch', ch + 'px');
+      var sw = Math.min(1080, W * 0.92);
+      function fit(w) {
+        screen.style.width = w + 'px';
+        var slotW = document.getElementById('slot0').offsetWidth;
+        screen.style.setProperty('--s', (slotW / cw).toFixed(4));
+        return screen.offsetHeight;
+      }
+      var sh = fit(sw), room = H - 250;
+      if (sh > room) { sw = sw * room / sh; sh = fit(sw); }
+      screen.style.left = Math.round((W - sw) / 2) + 'px';
+      screen.style.top = Math.round((H - sh) / 2 - 30) + 'px';
+      shot.style.left = screen.style.left; shot.style.top = screen.style.top;
+      shot.style.width = sw + 'px'; shot.style.height = sh + 'px';
+      cap.style.left = screen.style.left; cap.style.width = sw + 'px';
+      cap.style.top = (parseFloat(screen.style.top) + sh + 22) + 'px';
+      // a phone's screen is taller than the shot: keep the shot at its own 16:9
+      if (W < 900) {
+        var shw = W - 32, shh = shw * 630 / 1120, sht = Math.round((H - shh) / 2 - 70);
+        shot.style.left = '16px'; shot.style.width = shw + 'px'; shot.style.height = shh + 'px'; shot.style.top = sht + 'px';
+        cap.style.left = '16px'; cap.style.width = shw + 'px'; cap.style.top = (sht + shh + 20) + 'px';
+      }
+
+      var c = rel(card);
+      sel.style.left = c.x + 'px'; sel.style.top = c.y + 'px';
+      sel.style.width = c.w + 'px'; sel.style.height = c.h + 'px';
+      document.getElementById('cardSize').textContent = c.w + ' × ' + c.h;
+
+      toks.forEach(function (t) {
+        var k = t.dataset.k;
+        M[k] = {
+          from: rel(stage.querySelector('[data-slot="' + k + '"]')),
+          to: rel(stage.querySelector(t.dataset.to))
+        };
+      });
+      var s0 = rel(document.getElementById('slot0'));
+      M.dock = { x: s0.x - c.x, y: s0.y - c.y, s: s0.w / c.w };
+      // where the docked card's button ends up, for the pointer to find it
+      var b = rel(card.querySelector('.dc-btn'));
+      M.btn = { x: s0.x + (b.x - c.x + b.w * 0.55) * M.dock.s, y: s0.y + (b.y - c.y + b.h * 0.6) * M.dock.s };
+      M.ptrFrom = { x: W * 0.86, y: H * 0.92 };
+    }
+    measure();
+
+    // reduced motion: the hero and the list, nothing assembles itself
+    if (reduce) {
+      document.getElementById('workTitle').textContent = 'Selected work';
+      return;
+    }
+
+    var radius = { surface: 16, ink: 10, brand: 9, title: 6, body: 6, blue: 999, green: 999, amber: 999, avatar: 999, rating: 8, space: 4 };
+    var slots = gsap.utils.toArray('.gslot:not(#slot0)');
+
+    // ——— load: the hero lines rise out of their masks ———
+    gsap.from('.hero-copy .line > span', { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.08, delay: 0.15 });
+    gsap.from('.sheet', { autoAlpha: 0, y: 24, duration: 1, ease: 'expo.out', delay: 0.2 });
+    gsap.from('.hero-hint', { autoAlpha: 0, duration: 1, delay: 1.1 });
+
+    // ——— the build ———
+    // Every step is a fromTo. invalidateOnRefresh re-reads start values on
+    // resize, and a plain to()/from() would re-read them from wherever the
+    // scroll happened to leave the element.
+    var tl = gsap.timeline({
+      defaults: { ease: 'power3.inOut' },
+      scrollTrigger: {
+        trigger: '#build', start: 'top top', end: 'bottom bottom', scrub: 0.6,
+        invalidateOnRefresh: true,
+        onRefreshInit: measure
+      }
+    });
+    var later = { immediateRender: false };
+    function after(vars) { return Object.assign({}, later, vars); }
+
+    tl.fromTo('#heroCopy', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -40, duration: 1.2, ease: 'power2.in' }, 0.1)
+      .fromTo('.slot-label, .sheet-head', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.5, stagger: 0.02 }, 0.1)
+      .fromTo('.sheet-bg', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.6 }, 0.3)
+      .fromTo(rail, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 0.5);
+
+    toks.forEach(function (t, i) {
+      var k = t.dataset.k;
+      var at = 0.6 + i * 0.13;
+      tl.fromTo(t, {
+        left: function () { return M[k].from.x; },
+        top: function () { return M[k].from.y; },
+        width: function () { return M[k].from.w; },
+        height: function () { return M[k].from.h; },
+        borderRadius: k === 'avatar' ? 999 : 16
+      }, {
+        left: function () { return M[k].to.x; },
+        top: function () { return M[k].to.y; },
+        width: function () { return M[k].to.w; },
+        height: function () { return M[k].to.h; },
+        borderRadius: radius[k],
+        duration: 2.1
+      }, at);
+      var glyph = t.querySelector('.tok-glyph');
+      if (glyph) tl.fromTo(glyph, { autoAlpha: 1, scale: 1 }, { autoAlpha: 0, scale: 0.6, duration: 0.6, ease: 'power2.in' }, at + 0.2);
+      // type tokens become the grey bars text sits in before it arrives
+      if (k === 'title' || k === 'body') tl.fromTo(t,
+        { backgroundColor: 'rgba(232,233,238,0)', boxShadow: 'inset 0 0 0 1px rgba(22,24,29,0.12)' },
+        { backgroundColor: 'rgba(232,233,238,1)', boxShadow: 'inset 0 0 0 0px rgba(22,24,29,0)', duration: 0.8 }, at + 0.4);
+    });
+
+    var cardShadow = '0 1px 2px rgba(22,24,29,0.04), 0 18px 40px -24px rgba(22,24,29,0.28)';
+    var flatShadow = '0 1px 2px rgba(22,24,29,0.04), 0 0px 0px 0px rgba(22,24,29,0)';
+
+    // the guide shows the inset rule, then the real component replaces its parts
+    tl.fromTo('#card .dc-guide', { opacity: 0 }, { opacity: 1, duration: 0.01 }, 3.3)
+      .fromTo(card, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.7, ease: 'none' }, 3.4)
+      .fromTo(toks, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.5, ease: 'none' }, 3.75)
+      .fromTo(sel, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: 'none' }, 3.6)
+      .fromTo('#card .dc-guide', { opacity: 1 }, after({ opacity: 0, duration: 0.5 }), 4.4)
+      .fromTo(sel, { autoAlpha: 1 }, after({ autoAlpha: 0, duration: 0.4 }), 4.7)
+
+      // the component docks into the screen it belongs to
+      .fromTo(screen, { autoAlpha: 0, scale: 0.97 }, { autoAlpha: 1, scale: 1, duration: 1, ease: 'power2.out' }, 4.9)
+      .fromTo(card, { x: 0, y: 0, scale: 1, boxShadow: cardShadow }, {
+        x: function () { return M.dock.x; },
+        y: function () { return M.dock.y; },
+        scale: function () { return M.dock.s; },
+        boxShadow: flatShadow,
+        duration: 1.7
+      }, 4.9)
+      .fromTo('.scr-search, .scr-chips', { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' }, 5.3)
+      .fromTo(slots, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.14, ease: 'power2.out' }, 5.6)
+
+      // someone uses it: one click, and access is requested from the card itself
+      .fromTo('#ptr', { autoAlpha: 0, x: function () { return M.ptrFrom.x; }, y: function () { return M.ptrFrom.y; } },
+        { autoAlpha: 1, x: function () { return M.btn.x; }, y: function () { return M.btn.y; }, duration: 0.8, ease: 'power3.inOut' }, 7.0)
+      .fromTo('#ptr', { scale: 1 }, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 7.85)
+      .fromTo('#card .dc-btn', { scale: 1 }, { scale: 0.94, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 7.85)
+      .fromTo('#card .dc-btn', { backgroundColor: '#CC0000' }, { backgroundColor: '#1E7B45', duration: 0.25, ease: 'none' }, 7.95)
+      .fromTo('#card .dc-btn b:first-child', { autoAlpha: 1, yPercent: 0 }, { autoAlpha: 0, yPercent: -60, duration: 0.25, ease: 'power2.in' }, 7.95)
+      .fromTo('#card .dc-btn b + b', { autoAlpha: 0, yPercent: -10 }, { autoAlpha: 1, yPercent: -50, duration: 0.3, ease: 'power2.out' }, 8.1)
+      .fromTo('#toast', { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'back.out(2)' }, 8.15)
+      .to('#ptr', { x: '+=60', y: '+=40', autoAlpha: 0, duration: 0.6, ease: 'power2.in' }, 8.5)
+
+      // and the screen gives way to the product it actually became
+      .fromTo(shot, { autoAlpha: 0, scale: 1.04 }, { autoAlpha: 1, scale: 1, duration: 1.1, ease: 'power2.out' }, 9.0)
+      .fromTo([screen, card], { autoAlpha: 1 }, after({ autoAlpha: 0, duration: 0.5, ease: 'none' }), 9.7)
+      .fromTo(cap, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 9.7)
+      .to({}, { duration: 1.2 });
+
+    var steps = gsap.utils.toArray('#rail button');
+    var bounds = [3.4, 4.9, 9.0];
+    // the rail is also a way to jump: each step lands where that stage reads best
+    var jumpTo = [2.2, 4.4, 8.7, 11.2];
+    steps.forEach(function (b, i) {
+      b.addEventListener('click', function () {
+        var st = tl.scrollTrigger;
+        var y = st.start + (st.end - st.start) * (jumpTo[i] / tl.duration());
+        lenis ? lenis.scrollTo(y, { duration: 1.6 }) : scrollTo(0, y);
+      });
+    });
+    tl.eventCallback('onUpdate', function () {
+      var t = tl.time(), on = t < bounds[0] ? 0 : t < bounds[1] ? 1 : t < bounds[2] ? 2 : 3;
+      steps.forEach(function (s, i) { s.classList.toggle('on', i === on); });
+    });
+
+    // ——— the rest of the work: covers open as they arrive ———
+    gsap.utils.toArray('.case').forEach(function (c) {
+      var clip = c.querySelector('.case-clip'), img = clip.querySelector('img');
+      gsap.fromTo(clip, { clipPath: 'inset(12% 9% 12% 9% round 28px)' }, {
+        clipPath: 'inset(0% 0% 0% 0% round 16px)', ease: 'none',
+        scrollTrigger: { trigger: c, start: 'top 95%', end: 'top 35%', scrub: true }
+      });
+      gsap.fromTo(img, { scale: 1.22 }, {
+        scale: 1, ease: 'none',
+        scrollTrigger: { trigger: c, start: 'top 95%', end: 'bottom top', scrub: true }
+      });
+      gsap.from(c.querySelectorAll('.case-meta > *'), {
+        autoAlpha: 0, y: 28, duration: 0.9, ease: 'expo.out', stagger: 0.07,
+        scrollTrigger: { trigger: c, start: 'top 70%' }
+      });
+    });
+    gsap.from('.foot-title', {
+      autoAlpha: 0, y: 60, duration: 1.2, ease: 'expo.out',
+      scrollTrigger: { trigger: '.foot', start: 'top 80%' }
+    });
+
+    document.fonts && document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+  })();
+  </script>
+</body>
+</html>

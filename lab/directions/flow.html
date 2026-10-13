@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Flow — Yurii Fokin</title>
+  <meta name="theme-color" content="#06070A">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #06070A; --fg: #EEF0F6; --muted: rgba(238,240,246,.55); --mono: 'JetBrains Mono', ui-monospace, monospace; --pad: clamp(16px, 6vw, 88px); --accent: #8FD3FF; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+    ::selection { background: var(--accent); color: var(--bg); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    .vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.6) 100%); }
+
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(16px, 4vw, 40px); font-size: 14px; font-weight: 500; }
+    .nav span { color: var(--muted); font-weight: 400; }
+    .nav-links { display: flex; gap: 22px; align-items: center; }
+    .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
+    .nav-links a:not(.pill):hover { color: var(--fg); }
+    .pill { border: 1px solid rgba(238,240,246,.25); border-radius: 999px; padding: 7px 15px; transition: background .2s, border-color .2s; }
+    .pill:hover { background: rgba(238,240,246,.08); border-color: rgba(238,240,246,.45); }
+    @media (max-width: 640px) { .nav-links a:not(.pill) { display: none; } .nav > a span { display: none; } }
+
+    .meter { position: fixed; z-index: 20; right: clamp(16px, 4vw, 40px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; }
+    .meter button { background: none; border: 0; cursor: pointer; padding: 5px 0; font: 500 10px/1 var(--mono); color: var(--muted); display: flex; gap: 8px; align-items: center; justify-content: flex-end; transition: color .4s; }
+    .meter button::after { content: ''; width: 14px; height: 1px; background: currentColor; transition: width .4s cubic-bezier(.2,.8,.2,1); }
+    .meter button:hover, .meter button.on { color: var(--fg); }
+    .meter button.on::after { width: 28px; }
+    @media (max-width: 760px) { .meter { display: none; } }
+
+    .track { height: 480vh; }
+    .cap { position: fixed; z-index: 10; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+    .eyebrow { font: 500 11px/1 var(--mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 14px; display: block; }
+    .cap-hero { left: var(--pad); bottom: clamp(72px, 12vh, 120px); max-width: 520px; padding-right: 16px; }
+    .cap-hero p { font-size: clamp(16px, 1.5vw, 19px); color: rgba(238,240,246,.82); }
+    .cap-hero a { border-bottom: 1px solid rgba(238,240,246,.35); }
+    .hint { margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); }
+
+    .cap-streams { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
+    .cap-streams h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
+    .cap-streams p { margin-top: 14px; color: rgba(238,240,246,.75); font-size: clamp(15px, 1.2vw, 17px); max-width: 540px; }
+    .flow-labels { position: fixed; inset: 0; z-index: 9; pointer-events: none; }
+    .fl { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; font: 500 11px/1 var(--mono); white-space: nowrap; opacity: 0; will-change: transform, opacity; }
+    .fl i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(6,7,10,.6), 0 0 16px currentColor; flex: 0 0 auto; }
+    .fl span { color: var(--fg); background: rgba(6,7,10,.62); padding: 5px 8px; border-radius: 5px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .fl b { font-weight: 500; color: var(--muted); }
+    @media (max-width: 760px) { .fl b { display: none; } }
+
+    .cap-work { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+    .cap-work h2 { position: absolute; left: var(--pad); top: 0; font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; letter-spacing: -0.035em; }
+    .tag { position: absolute; left: 0; top: 0; pointer-events: auto; padding: 10px 0 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .tag b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; display: block; }
+    .tag b i { font: normal 500 11px/1 var(--mono); color: var(--muted); margin-right: 8px; }
+    .tag small { font-size: 13px; color: var(--muted); display: block; transition: color .3s; }
+    .tag em { font: normal 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s, transform .3s cubic-bezier(.2,.8,.2,1); }
+    .tag.on small { color: rgba(238,240,246,.85); }
+    .tag.on em { color: var(--fg); transform: translateX(4px); }
+    .tag .short { display: none; }
+    @media (max-width: 760px) { .tag small, .tag em, .tag .long { display: none; } .tag .short { display: inline; } .tag b { font-size: 13px; } .tag b i { display: none; } }
+
+    .cap-end { left: 0; right: 0; bottom: clamp(64px, 11vh, 112px); text-align: center; padding: 0 16px; }
+    .cap-end h2 { font-size: clamp(32px, 5vw, 72px); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
+    .cap-end .row { display: flex; gap: 12px 24px; justify-content: center; flex-wrap: wrap; margin-top: 26px; font-weight: 500; }
+    .cap-end .row a { border-bottom: 1px solid rgba(238,240,246,.35); transition: border-color .2s; }
+    .cap-end .row a:hover { border-color: var(--fg); }
+    .cap-end .top { display: inline-block; margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); background: none; border: 0; cursor: pointer; }
+
+    .ring { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 50%; border: 1px solid rgba(238,240,246,.5); display: grid; place-items: center; opacity: 0; transition: width .4s cubic-bezier(.2,.8,.2,1), height .4s cubic-bezier(.2,.8,.2,1), margin .4s cubic-bezier(.2,.8,.2,1), background .3s, border-color .3s, opacity .3s; }
+    .ring span { font: 600 11px/1 'Inter'; color: #06070A; opacity: 0; transition: opacity .2s; }
+    .ring.big { width: 76px; height: 76px; margin: -38px 0 0 -38px; background: #EEF0F6; border-color: #EEF0F6; }
+    .ring.big span { opacity: 1; }
+    @media (hover: none), (pointer: coarse) { .ring { display: none; } }
+
+    .loading { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; font: 500 11px/1 var(--mono); color: var(--muted); transition: opacity .7s; pointer-events: none; }
+    .loading b { font-weight: 500; color: var(--fg); }
+
+    .fallback { display: none; position: relative; z-index: 15; padding: 120px var(--pad); max-width: 900px; }
+    .no-gl .fallback { display: block; }
+    .no-gl .track, .no-gl .meter, .no-gl .cap, .no-gl #gl, .no-gl .loading, .no-gl .flow-labels { display: none; }
+    .fallback h1 { font-size: clamp(40px, 7vw, 88px); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+    .fallback > p { margin-top: 20px; font-size: 18px; color: rgba(238,240,246,.8); }
+    .fallback ul { list-style: none; margin-top: 56px; border-top: 1px solid rgba(238,240,246,.12); }
+    .fallback li a { display: flex; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(238,240,246,.12); }
+    .fallback li b { font-size: 20px; font-weight: 600; }
+    .fallback li span { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="loading" id="loading" aria-hidden="true">stirring <b id="loadPct">0</b>%</div>
+  <div class="ring" id="ring"><span>Open</span></div>
+
+  <header class="nav">
+    <a href="#" data-stage="0">Yurii Fokin <span>· Lead UX Designer</span></a>
+    <nav class="nav-links">
+      <a href="#work" data-stage="2">Work</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+    </nav>
+  </header>
+
+  <nav class="meter" id="meter" aria-label="Sections">
+    <button data-stage="0">00 · Hello</button>
+    <button data-stage="1">01 · Flow</button>
+    <button data-stage="2">02 · Work</button>
+    <button data-stage="3">03 · Contact</button>
+  </nav>
+
+  <section class="cap cap-hero" data-cap="0">
+    <h1 class="sr-only">Hi! I'm Yurii.</h1>
+    <span class="eyebrow">Portfolio · Batumi, GE</span>
+    <p>Lead UX Designer at DXC Luxoft, on <a href="../../cases/halliburton/">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <div class="hint">stir it with the cursor · scroll · click anywhere</div>
+  </section>
+
+  <section class="cap cap-streams" data-cap="1">
+    <span class="eyebrow">Under the surface</span>
+    <h2>Most of the work flows where nobody looks.</h2>
+    <p>On Halliburton's first unified data platform I'm the sole designer — from the research at the bottom to the pipeline that hands design to code.</p>
+  </section>
+  <div class="flow-labels" id="flowLabels" aria-hidden="true"></div>
+
+  <section class="cap cap-work" data-cap="2" id="capWork"><h2 id="workTitle">Selected work</h2></section>
+
+  <section class="cap cap-end" data-cap="3">
+    <span class="eyebrow">Batumi, GE · UTC+4</span>
+    <h2>Open to senior and<br>lead design roles.</h2>
+    <div class="row">
+      <a href="mailto:yuryuryury@icloud.com">yuryuryury@icloud.com</a>
+      <a href="https://www.linkedin.com/in/yuryury/">LinkedIn ↗</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+    </div>
+    <button class="top" data-stage="0">back to the start ↑</button>
+  </section>
+
+  <main class="fallback" id="work">
+    <h1>Hi! I'm Yurii.</h1>
+    <p>Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <ul id="fallbackList"></ul>
+  </main>
+
+  <div class="track"></div>
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="switcher.js"></script>
+  <script src="bkit.js"></script>
+  <script>
+  (function () {
+    var CASES = [
+      { img: '../../assets/images/halliburton/halliburton-card.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Data search: from weeks to under five minutes', href: '../../cases/halliburton/' },
+      { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Designed and built solo, concept to App Store', href: '../../cases/rebalancer/' },
+      { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Time to booking cut 40% in usability tests', href: '../../cases/dobrodoc/' },
+      { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero in 2020, earning since', href: '../../cases/dopas/' }
+    ];
+    var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
+    var LABELS = [
+      { band: 0, x: 0.56, text: 'Interface', note: 'what people actually touch' },
+      { band: 2, x: 0.2, text: 'Design system', note: 'tokens, components' },
+      { band: 4, x: 0.6, text: 'Information architecture', note: '4 personas, 5 flows' },
+      { band: 6, x: 0.3, text: 'Research', note: '10 people across 4 roles' },
+      { band: 7, x: 0.66, text: 'Pipeline', note: 'Figma → MCP → IDE' }
+    ];
+
+    // ——— GLSL ———
+    var NOISE = [
+      'vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}',
+      'vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}',
+      'vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}',
+      'vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}',
+      'float snoise(vec3 v){',
+      '  const vec2 C=vec2(1.0/6.0,1.0/3.0); const vec4 D=vec4(0.0,0.5,1.0,2.0);',
+      '  vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);',
+      '  vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.0-g; vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);',
+      '  vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;',
+      '  i=mod289(i);',
+      '  vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));',
+      '  float n_=0.142857142857; vec3 ns=n_*D.wyz-D.xzx;',
+      '  vec4 j=p-49.0*floor(p*ns.z*ns.z); vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.0*x_);',
+      '  vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.0-abs(x)-abs(y);',
+      '  vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);',
+      '  vec4 s0=floor(b0)*2.0+1.0; vec4 s1=floor(b1)*2.0+1.0; vec4 sh=-step(h,vec4(0.0));',
+      '  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;',
+      '  vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);',
+      '  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));',
+      '  p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;',
+      '  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0); m=m*m;',
+      '  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));',
+      '}',
+      'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}'
+    ].join('\n');
+
+    // one step of the simulation: every texel is a particle (xy position, zw velocity)
+    var SIM = [
+      '#version 300 es',
+      'precision highp float;',
+      'uniform sampler2D uState, uT0, uT1, uT2, uT3;',
+      'uniform float uStage, uTime, uFlow, uMouseOn, uGo, uGoI, uFill, uAny;',
+      'uniform vec2 uRes, uMouse, uMouseV;',
+      'uniform vec3 uWave; uniform vec4 uHov, uCenA, uCenB;',
+      'out vec4 o;',
+      NOISE,
+      'vec2 curl(vec2 p, float t){',
+      '  float e = 0.6;',
+      '  float a = snoise(vec3(p.x, p.y + e, t)), b = snoise(vec3(p.x, p.y - e, t));',
+      '  float c = snoise(vec3(p.x + e, p.y, t)), d = snoise(vec3(p.x - e, p.y, t));',
+      '  return vec2(a - b, -(c - d)) / (2.0 * e);',
+      '}',
+      'vec4 T(int k, ivec2 ij){ if (k == 0) return texelFetch(uT0, ij, 0); if (k == 1) return texelFetch(uT1, ij, 0); if (k == 2) return texelFetch(uT2, ij, 0); return texelFetch(uT3, ij, 0); }',
+      // where stage k wants this particle, and how hard it pulls
+      'vec2 aim(int k, vec4 t, vec2 p, float rnd, out float stiff, out float drift){',
+      '  drift = 0.0;',
+      '  if (k == 0) { stiff = 0.035; return t.xy; }',
+      '  if (k == 1) { stiff = 0.02; drift = 1.0;',
+      '    return vec2(p.x, t.y + sin(p.x * 0.0045 + uTime * 0.55 + t.z) * 9.0 + sin(p.x * 0.011 - uTime * 0.4) * 3.0); }',
+      '  if (k == 2) { stiff = 0.075;',
+      '    float g = t.z; if (g < -0.5) { stiff = 0.02; return t.xy; }',
+      '    vec2 cen = g < 0.5 ? uCenA.xy : (g < 1.5 ? uCenA.zw : (g < 2.5 ? uCenB.xy : uCenB.zw));',
+      '    float h = g < 0.5 ? uHov.x : (g < 1.5 ? uHov.y : (g < 2.5 ? uHov.z : uHov.w));',
+      '    vec2 q = cen + (t.xy - cen) * (1.0 + 0.04 * h);',
+      '    float chosen = 1.0 - step(0.5, abs(g - uGoI));',
+      '    vec2 fill = uRes * 0.5 + (t.xy - cen) * uFill;',
+      '    vec2 away = t.xy + (vec2(hash(t.xy), hash(t.yx)) - 0.5) * uRes * 3.0;',
+      '    return mix(q, mix(away, fill, chosen), uGo); }',
+      '  stiff = 0.03;',
+      '  vec2 c = vec2(uRes.x * 0.5, uRes.y * 0.36); vec2 d = t.xy - c; float r = length(d);',
+      '  float a = uTime * 1.6 / (1.0 + r * 0.015); float ca = cos(a), sa = sin(a);',
+      '  return c + vec2(d.x * ca - d.y * sa, d.x * sa + d.y * ca);',
+      '}',
+      'void main(){',
+      '  ivec2 ij = ivec2(gl_FragCoord.xy);',
+      '  vec4 st = texelFetch(uState, ij, 0);',
+      '  vec2 p = st.xy, v = st.zw;',
+      '  float rnd = hash(vec2(ij));',
+      '  float seg = min(floor(uStage), 2.0); float f = uStage - seg;',
+      '  float t = clamp((f - rnd * 0.35) / 0.65, 0.0, 1.0); t = t * t * (3.0 - 2.0 * t);',
+      '  int A = int(seg), B = A + 1;',
+      '  float kA, kB, dA, dB;',
+      '  vec2 tA = aim(A, T(A, ij), p, rnd, kA, dA);',
+      '  vec2 tB = aim(B, T(B, ij), p, rnd, kB, dB);',
+      '  vec2 target = mix(tA, tB, t); float k = mix(kA, kB, t); float drift = mix(dA, dB, t);',
+      '  float img = (A == 1 ? t : (A == 2 ? 1.0 - t : 0.0));',
+      '  vec2 acc = (target - p) * k;',
+      // streams travel along x instead of being pulled to a point
+      '  float speed = 1.4 + hash(vec2(ij) + 7.0) * 2.6;',
+      '  acc.x = mix(acc.x, (speed - v.x) * 0.04, drift);',
+      // the fluid: always a little, a lot while things are moving between shapes
+      '  float base = A == 0 && t < 0.5 ? 0.24 : 0.0;',
+      '  float flow = uFlow * (base + 0.9 * drift + 2.4 * sin(t * 3.14159) + (A == 2 ? uGo * 3.0 : 0.0) + (1.0 - img) * 0.05);',
+      '  acc += curl(p * 0.0032, uTime * 0.11) * flow;',
+      // the cursor drags the ink along and turns it
+      '  vec2 dm = p - uMouse; float d2 = dot(dm, dm);',
+      '  float fall = exp(-d2 / (2.0 * 110.0 * 110.0)) * uMouseOn * (1.0 - img * 0.8);',
+      '  acc += uMouseV * fall * 0.45;',
+      '  acc += vec2(-dm.y, dm.x) / (sqrt(d2) + 1.0) * fall * 1.6 * uFlow;',
+      '  acc += normalize(dm + 0.0001) * fall * 0.9;',
+      // a click sends a ring through it
+      '  float age = uTime - uWave.z; vec2 dw = p - uWave.xy; float dwl = length(dw);',
+      '  float ring = exp(-pow((dwl - age * 820.0) / 48.0, 2.0)) * max(0.0, 1.0 - age / 1.2) * (1.0 - img * 0.8);',
+      '  acc += normalize(dw + 0.0001) * ring * 7.0;',
+      '  v = v * mix(0.88, 0.8, img) + acc;',
+      '  float sp = length(v); if (sp > 40.0) v *= 40.0 / sp;',
+      '  p += v;',
+      '  if (drift > 0.5 && p.x > uRes.x + 40.0) p.x -= uRes.x + 80.0;',
+      '  o = vec4(p, v);',
+      '}'
+    ].join('\n');
+
+    var DRAW_VS = [
+      '#version 300 es',
+      'precision highp float;',
+      'uniform sampler2D uState, uC0, uC1, uC2, uC3, uT2;',
+      'uniform int uW; uniform float uStage, uDpr, uSp, uAny, uGo, uGoI, uFill; uniform vec4 uHov; uniform vec2 uRes;',
+      'out vec3 vC; out float vSq;',
+      'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}',
+      'vec3 C(int k, ivec2 ij){ if (k == 0) return texelFetch(uC0, ij, 0).rgb; if (k == 1) return texelFetch(uC1, ij, 0).rgb; if (k == 2) return texelFetch(uC2, ij, 0).rgb; return texelFetch(uC3, ij, 0).rgb; }',
+      'void main(){',
+      '  ivec2 ij = ivec2(gl_VertexID % uW, gl_VertexID / uW);',
+      '  vec4 st = texelFetch(uState, ij, 0);',
+      '  float rnd = hash(vec2(ij));',
+      '  float seg = min(floor(uStage), 2.0); float f = uStage - seg;',
+      '  float t = clamp((f - rnd * 0.35) / 0.65, 0.0, 1.0); t = t * t * (3.0 - 2.0 * t);',
+      '  int A = int(seg);',
+      '  float img = (A == 1 ? t : (A == 2 ? 1.0 - t : 0.0));',
+      '  vec3 c = mix(C(A, ij), C(A + 1, ij), t);',
+      '  float g = texelFetch(uT2, ij, 0).z;',
+      '  float h = g < 0.5 ? uHov.x : (g < 1.5 ? uHov.y : (g < 2.5 ? uHov.z : uHov.w));',
+      '  float lit = mix(1.0, 0.3 + 0.9 * h + (1.0 - uAny) * 0.7, img * step(-0.5, g));',
+      '  float chosen = 1.0 - step(0.5, abs(g - uGoI));',
+      '  lit *= 1.0 - uGo * (1.0 - chosen) * img;',
+      '  float sp = length(st.zw);',
+      // fast ink burns brighter and cooler
+      '  c += vec3(0.25, 0.35, 0.5) * smoothstep(3.0, 16.0, sp) * (1.0 - img * 0.8);',
+      '  vC = c * lit;',
+      '  vSq = img;',
+      '  gl_PointSize = mix(1.6 + rnd * 0.9, (uSp + 0.7) * mix(1.0, uFill, uGo * chosen), img) * uDpr;',
+      '  gl_Position = vec4(st.x / uRes.x * 2.0 - 1.0, 1.0 - st.y / uRes.y * 2.0, 0.0, 1.0);',
+      '}'
+    ].join('\n');
+    var DRAW_FS = [
+      '#version 300 es',
+      'precision mediump float;',
+      'in vec3 vC; in float vSq; out vec4 o;',
+      'void main(){',
+      '  vec2 c = gl_PointCoord - 0.5;',
+      '  float a = mix(1.0 - smoothstep(0.25, 0.5, length(c)), 1.0, step(0.5, vSq));',
+      '  o = vec4(vC * a, 1.0);',
+      '}'
+    ].join('\n');
+    var QUAD_VS = [
+      '#version 300 es',
+      'out vec2 vUv;',
+      'void main(){ vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2); vUv = p; gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0); }'
+    ].join('\n');
+    var FADE_FS = '#version 300 es\nprecision mediump float; uniform float uKeep; out vec4 o; void main(){ o = vec4(0.0, 0.0, 0.0, uKeep); }';
+    var SHOW_FS = [
+      '#version 300 es',
+      'precision mediump float;',
+      'uniform sampler2D uAcc; in vec2 vUv; out vec4 o;',
+      'void main(){ vec3 c = texture(uAcc, vUv).rgb; o = vec4(max(vec3(0.024, 0.027, 0.039), c), 1.0); }'
+    ].join('\n');
+
+    var gl, P = {}, SW, SH, N, state = [], fbo = [], cur = 0, tex = {}, acc = {}, vao, layout = [], sp = 3, fillK = 4;
+    var labels = [];
+
+    function shader(type, src) {
+      var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) + '\n' + src.split('\n').slice(0, 3).join('\n'));
+      return s;
+    }
+    function program(vs, fs, uniforms) {
+      var p = gl.createProgram();
+      gl.attachShader(p, shader(gl.VERTEX_SHADER, vs)); gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(p);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+      var u = {};
+      uniforms.forEach(function (n) { u[n] = gl.getUniformLocation(p, n); });
+      return { p: p, u: u };
+    }
+    function texture(fmt, w, h, data) {
+      var t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      var F = { rgba32f: [gl.RGBA32F, gl.RGBA, gl.FLOAT], rgba16f: [gl.RGBA16F, gl.RGBA, gl.HALF_FLOAT], rgba8: [gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE] }[fmt];
+      gl.texImage2D(gl.TEXTURE_2D, 0, F[0], w, h, 0, F[1], F[2], data || null);
+      var filter = fmt === 'rgba32f' ? gl.NEAREST : gl.LINEAR;
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      return t;
+    }
+    function framebuffer(t) {
+      var f = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, f);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+      var ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      return ok ? f : null;
+    }
+
+    var images = [];
+    var renderer = {
+      init: function (env) {
+        var canvas = document.getElementById('gl');
+        gl = canvas.getContext('webgl2', { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'high-performance' });
+        if (!gl || !gl.getExtension('EXT_color_buffer_float')) return false;
+        SW = env.mobile ? 256 : 512; SH = 256; N = SW * SH;
+        P.sim = program(QUAD_VS, SIM, ['uState', 'uT0', 'uT1', 'uT2', 'uT3', 'uStage', 'uTime', 'uFlow', 'uMouseOn', 'uGo', 'uGoI', 'uFill', 'uAny', 'uRes', 'uMouse', 'uMouseV', 'uWave', 'uHov', 'uCenA', 'uCenB']);
+        P.draw = program(DRAW_VS, DRAW_FS, ['uState', 'uC0', 'uC1', 'uC2', 'uC3', 'uT2', 'uW', 'uStage', 'uDpr', 'uSp', 'uAny', 'uGo', 'uGoI', 'uFill', 'uHov', 'uRes']);
+        P.fade = program(QUAD_VS, FADE_FS, ['uKeep']);
+        P.show = program(QUAD_VS, SHOW_FS, ['uAcc']);
+        vao = gl.createVertexArray();
+        for (var i = 0; i < 2; i++) { state[i] = texture('rgba32f', SW, SH); fbo[i] = framebuffer(state[i]); }
+        if (!fbo[0]) return false;
+        ['T0', 'T1', 'T2', 'T3'].forEach(function (n) { tex[n] = texture('rgba32f', SW, SH); });
+        ['C0', 'C1', 'C2', 'C3'].forEach(function (n) { tex[n] = texture('rgba8', SW, SH); });
+        var wrap = document.getElementById('flowLabels');
+        labels = LABELS.map(function (l) {
+          var el = document.createElement('div'); el.className = 'fl'; el.style.color = PALETTE[l.band];
+          el.innerHTML = '<i></i><span>' + l.text + ' <b>· ' + l.note + '</b></span>';
+          wrap.appendChild(el); return el;
+        });
+        return true;
+      },
+      load: function (tick) {
+        var fonts = document.fonts ? document.fonts.load('700 100px Inter') : Promise.resolve();
+        return fonts.then(function () { tick(0.2); return BKit.loadImages(CASES.map(function (c) { return c.img; }), tick, 1, 5); })
+          .then(function (imgs) { images = imgs; });
+      },
+      build: function (env) {
+        var W = env.W, H = env.H, mobile = env.mobile, i, k;
+        var T = [new Float32Array(N * 4), new Float32Array(N * 4), new Float32Array(N * 4), new Float32Array(N * 4)];
+        var C = [new Uint8Array(N * 4), new Uint8Array(N * 4), new Uint8Array(N * 4), new Uint8Array(N * 4)];
+        function rnd() { return Math.random(); }
+
+        // covers: one particle per sampled pixel, the rest become dust
+        var L = BKit.coverLayout(W, H, mobile);
+        var per = Math.floor(N * 0.94 / 4);
+        sp = Math.sqrt((L[0].w * L[0].h) / per);
+        var cols = Math.floor(L[0].w / sp), rows = Math.floor(L[0].h / sp);
+        layout = L.map(function (r) { return { x: r.x, y: r.y, w: cols * sp, h: rows * sp, cx: r.x + cols * sp / 2, cy: r.y + rows * sp / 2 }; });
+        fillK = Math.max(W / layout[0].w, H / layout[0].h) * 1.04;
+        var off = document.createElement('canvas'); off.width = cols; off.height = rows;
+        var octx = off.getContext('2d', { willReadFrequently: true });
+        var n = 0;
+        for (k = 0; k < 4; k++) {
+          octx.clearRect(0, 0, cols, rows);
+          BKit.coverDraw(octx, images[k], cols, rows);
+          var px = octx.getImageData(0, 0, cols, rows).data;
+          for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++, n++) {
+            var q = (r * cols + c) * 4;
+            T[2][n * 4] = layout[k].x + c * sp + sp / 2; T[2][n * 4 + 1] = layout[k].y + r * sp + sp / 2; T[2][n * 4 + 2] = k;
+            C[2][n * 4] = Math.pow(px[q] / 255, 1.2) * 225; C[2][n * 4 + 1] = Math.pow(px[q + 1] / 255, 1.2) * 225; C[2][n * 4 + 2] = Math.pow(px[q + 2] / 255, 1.2) * 232;
+          }
+        }
+        for (; n < N; n++) {
+          T[2][n * 4] = rnd() * W; T[2][n * 4 + 1] = rnd() * H; T[2][n * 4 + 2] = -1;
+          var dl = 20 + rnd() * 30; C[2][n * 4] = dl; C[2][n * 4 + 1] = dl * 1.1; C[2][n * 4 + 2] = dl * 1.3;
+        }
+
+        // the greeting
+        var g = BKit.greeting(W, H, mobile), gn = g.length / 2;
+        // streams: eight bands under the caption
+        var band = H * 0.4 / PALETTE.length, top0 = H * (mobile ? 0.5 : 0.52);
+        // the galaxy: three arms and a core
+        var R = Math.min(W, H) * (mobile ? 0.42 : 0.3);
+        for (i = 0; i < N; i++) {
+          var j = Math.floor(rnd() * gn) * 2;
+          T[0][i * 4] = g[j] + (rnd() - 0.5) * 2.2; T[0][i * 4 + 1] = g[j + 1] + (rnd() - 0.5) * 2.2;
+          var b = 150 + rnd() * 90; C[0][i * 4] = b * 0.86; C[0][i * 4 + 1] = b * 0.92; C[0][i * 4 + 2] = b;
+
+          var Lb = Math.floor(rnd() * PALETTE.length);
+          T[1][i * 4] = rnd() * W; T[1][i * 4 + 1] = top0 + Lb * band + (rnd() + rnd() + rnd() - 1.5) * band * 0.34; T[1][i * 4 + 2] = Lb * 0.9;
+          var col = BKit.hex(PALETTE[Lb]), lb = 0.45 + rnd() * 0.5;
+          C[1][i * 4] = col[0] * 255 * lb; C[1][i * 4 + 1] = col[1] * 255 * lb; C[1][i * 4 + 2] = col[2] * 255 * lb;
+
+          var core = rnd() < 0.18, rr, th;
+          if (core) { rr = Math.pow(rnd(), 2) * R * 0.25; th = rnd() * 6.283; }
+          else { rr = Math.pow(rnd(), 0.6) * R; th = Math.floor(rnd() * 3) * 2.094 + rr / R * 3.2 + (rnd() - 0.5) * 0.55 * (1 - rr / R * 0.5); }
+          T[3][i * 4] = W * 0.5 + Math.cos(th) * rr; T[3][i * 4 + 1] = H * 0.36 + Math.sin(th) * rr * 0.62;
+          var u = rr / R;
+          C[3][i * 4] = (1 - u) * 250 + u * 110; C[3][i * 4 + 1] = (1 - u) * 215 + u * 190; C[3][i * 4 + 2] = (1 - u) * 170 + u * 230;
+          if (!core && rnd() < 0.5) { C[3][i * 4] *= 0.55; C[3][i * 4 + 1] *= 0.55; C[3][i * 4 + 2] *= 0.55; }
+        }
+        for (k = 0; k < 4; k++) {
+          gl.bindTexture(gl.TEXTURE_2D, tex['T' + k]); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, SW, SH, gl.RGBA, gl.FLOAT, T[k]);
+          gl.bindTexture(gl.TEXTURE_2D, tex['C' + k]); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, SW, SH, gl.RGBA, gl.UNSIGNED_BYTE, C[k]);
+        }
+
+        // the first build scatters everything across the screen; the springs condense it
+        if (!this.started) {
+          var S = new Float32Array(N * 4);
+          for (i = 0; i < N; i++) { S[i * 4] = rnd() * W; S[i * 4 + 1] = rnd() * H; S[i * 4 + 2] = (rnd() - 0.5) * 4; S[i * 4 + 3] = (rnd() - 0.5) * 4; }
+          for (k = 0; k < 2; k++) { gl.bindTexture(gl.TEXTURE_2D, state[k]); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, SW, SH, gl.RGBA, gl.FLOAT, S); }
+          this.started = true;
+        }
+
+        var canvas = gl.canvas;
+        canvas.width = Math.round(W * env.dpr); canvas.height = Math.round(H * env.dpr);
+        if (acc.t) { gl.deleteTexture(acc.t); gl.deleteFramebuffer(acc.f); }
+        acc.t = texture('rgba16f', canvas.width, canvas.height); acc.f = framebuffer(acc.t);
+        env.tags = layout.map(function (r) { return { x: r.x, y: r.y + r.h, w: r.w, top: r.y }; });
+        this.stepAcc = 0;
+      },
+      frame: function (env) {
+        var W = env.W, H = env.H;
+        var stage = Math.min(2.9999, env.stage);
+        var flow = env.reduce ? 0 : 1;
+        // the simulation runs at 60 steps a second whatever the display does
+        this.stepAcc += env.dt;
+        var steps = Math.min(3, Math.floor(this.stepAcc / 16.67));
+        this.stepAcc -= steps * 16.67;
+        gl.bindVertexArray(vao);
+        gl.disable(gl.BLEND);
+        var u = P.sim.u;
+        gl.useProgram(P.sim.p);
+        gl.viewport(0, 0, SW, SH);
+        gl.uniform1i(u.uT0, 1); gl.uniform1i(u.uT1, 2); gl.uniform1i(u.uT2, 3); gl.uniform1i(u.uT3, 4); gl.uniform1i(u.uState, 0);
+        ['T0', 'T1', 'T2', 'T3'].forEach(function (n, i) { gl.activeTexture(gl.TEXTURE1 + i); gl.bindTexture(gl.TEXTURE_2D, tex[n]); });
+        gl.uniform1f(u.uStage, stage); gl.uniform1f(u.uTime, env.t); gl.uniform1f(u.uFlow, flow);
+        gl.uniform1f(u.uMouseOn, env.reduce ? 0 : env.mouse.on);
+        gl.uniform2f(u.uRes, W, H); gl.uniform2f(u.uMouse, env.mouse.x, env.mouse.y); gl.uniform2f(u.uMouseV, env.mouse.vx, env.mouse.vy);
+        gl.uniform3f(u.uWave, env.wave.x, env.wave.y, env.wave.t);
+        gl.uniform4f(u.uHov, env.hov[0], env.hov[1], env.hov[2], env.hov[3]); gl.uniform1f(u.uAny, env.any);
+        gl.uniform4f(u.uCenA, layout[0].cx, layout[0].cy, layout[1].cx, layout[1].cy);
+        gl.uniform4f(u.uCenB, layout[2].cx, layout[2].cy, layout[3].cx, layout[3].cy);
+        gl.uniform1f(u.uGo, env.g); gl.uniform1f(u.uGoI, env.go >= 0 ? env.go : -9); gl.uniform1f(u.uFill, fillK);
+        for (var s = 0; s < steps; s++) {
+          gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, state[cur]);
+          gl.bindFramebuffer(gl.FRAMEBUFFER, fbo[1 - cur]);
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+          cur = 1 - cur;
+        }
+
+        // trails: last frame fades, this frame's particles are drawn over it with MAX,
+        // so a still particle holds its colour and a moving one leaves a tail
+        var cw = Math.max(0, 1 - Math.abs(env.stage - 2) * 1.6);
+        var keep = (env.reduce ? 0 : 0.88) * (1 - cw);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, acc.f);
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        gl.enable(gl.BLEND);
+        gl.useProgram(P.fade.p);
+        gl.blendEquation(gl.FUNC_ADD); gl.blendFunc(gl.ZERO, gl.SRC_ALPHA);
+        gl.uniform1f(P.fade.u.uKeep, keep);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        gl.useProgram(P.draw.p);
+        gl.blendEquation(gl.MAX);
+        var d = P.draw.u;
+        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, state[cur]); gl.uniform1i(d.uState, 0);
+        ['C0', 'C1', 'C2', 'C3', 'T2'].forEach(function (n, i) { gl.activeTexture(gl.TEXTURE1 + i); gl.bindTexture(gl.TEXTURE_2D, tex[n]); gl.uniform1i(d['u' + n], 1 + i); });
+        gl.uniform1i(d.uW, SW); gl.uniform1f(d.uStage, stage); gl.uniform1f(d.uDpr, env.dpr); gl.uniform1f(d.uSp, sp);
+        gl.uniform1f(d.uAny, env.any); gl.uniform1f(d.uGo, env.g); gl.uniform1f(d.uGoI, env.go >= 0 ? env.go : -9); gl.uniform1f(d.uFill, fillK);
+        gl.uniform4f(d.uHov, env.hov[0], env.hov[1], env.hov[2], env.hov[3]); gl.uniform2f(d.uRes, W, H);
+        gl.drawArrays(gl.POINTS, 0, N);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.disable(gl.BLEND);
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.useProgram(P.show.p);
+        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, acc.t); gl.uniform1i(P.show.u.uAcc, 0);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        // labels ride the bands they name
+        var near = Math.max(0, 1 - Math.abs(env.stage - 1) / 0.35);
+        var band = H * 0.4 / PALETTE.length, top0 = H * (env.mobile ? 0.5 : 0.52);
+        LABELS.forEach(function (l, i) {
+          var x = (env.mobile ? 0.06 : l.x) * W;
+          var y = top0 + l.band * band + Math.sin(x * 0.0045 + env.t * 0.55 + l.band * 0.9) * 9 + Math.sin(x * 0.011 - env.t * 0.4) * 3;
+          var o = Math.max(0, Math.min(1, near * 1.8 - i * 0.16));
+          labels[i].style.opacity = o;
+          labels[i].style.transform = 'translate(' + (x - 3.5) + 'px,' + (y - 10) + 'px) translateX(' + ((1 - o) * -12) + 'px)';
+        });
+      },
+      coverAt: function (x, y) {
+        for (var k = 0; k < layout.length; k++) {
+          var r = layout[k];
+          if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
+        }
+        return -1;
+      }
+    };
+
+    BKit({ cases: CASES, renderer: renderer });
+  })();
+  </script>
+</body>
+</html>

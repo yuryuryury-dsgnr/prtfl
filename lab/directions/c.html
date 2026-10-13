@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>C · Cases as film — Yurii Fokin</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0B0B0D; --fg: #F2F2F2;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --pad: clamp(16px, 4vw, 48px);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.5; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; }
+    @media (hover: hover) and (pointer: fine) { body, a { cursor: none; } }
+
+    .grain {
+      position: fixed; inset: -50%; z-index: 90; pointer-events: none; opacity: .06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain 1s steps(6) infinite;
+    }
+    @keyframes grain { 0%{transform:translate(0,0)} 25%{transform:translate(-3%,2%)} 50%{transform:translate(2%,-3%)} 75%{transform:translate(-2%,-1%)} 100%{transform:translate(1%,3%)} }
+
+    .cursor {
+      position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none;
+      width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+      background: #fff; mix-blend-mode: difference;
+      display: grid; place-items: center;
+      transition: width .35s cubic-bezier(.2,.8,.2,1), height .35s cubic-bezier(.2,.8,.2,1), margin .35s cubic-bezier(.2,.8,.2,1);
+    }
+    .cursor span { font: 600 11px/1 'Inter'; color: #000; opacity: 0; transition: opacity .2s; letter-spacing: .02em; }
+    .cursor.big { width: 84px; height: 84px; margin: -42px 0 0 -42px; }
+    .cursor.big span { opacity: 1; }
+    @media (hover: none), (pointer: coarse) { .cursor { display: none; } }
+
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px var(--pad); font-size: 14px; font-weight: 500;
+      mix-blend-mode: difference; color: #fff;
+    }
+    .nav-links { display: flex; gap: 22px; }
+    @media (max-width: 640px) { .nav-links a:not(:last-child) { display: none; } }
+
+    .chapter {
+      position: fixed; left: var(--pad); bottom: 22px; z-index: 50;
+      font: 500 11px/1 var(--mono); mix-blend-mode: difference; color: #fff;
+      display: flex; gap: 12px; align-items: center;
+    }
+    .chapter i { width: 40px; height: 1px; background: rgba(255,255,255,.3); position: relative; overflow: hidden; }
+    .chapter i b { position: absolute; inset: 0; background: #fff; transform-origin: 0 50%; transform: scaleX(0); }
+    @media (max-width: 640px) { .chapter { display: none; } }
+
+    /* ——— leader: a count, then the curtain lifts ——— */
+    .leader { position: fixed; inset: 0; z-index: 150; background: #050506; color: #F2F2F2; display: flex; flex-direction: column; justify-content: space-between; padding: 24px var(--pad); }
+    .leader-top, .leader-bot { display: flex; justify-content: space-between; font: 500 11px/1 var(--mono); opacity: .55; }
+    .leader-num { font-size: clamp(80px, 16vw, 260px); font-weight: 700; letter-spacing: -0.06em; line-height: .8; font-variant-numeric: tabular-nums; }
+    .leader-line { height: 1px; background: rgba(242,242,242,.15); margin: 18px 0; position: relative; overflow: hidden; }
+    .leader-line b { position: absolute; inset: 0; background: #F2F2F2; transform-origin: 0 50%; transform: scaleX(0); }
+    .curtain { position: fixed; inset: 0; z-index: 140; background: #050506; clip-path: inset(100% 0 0 0); pointer-events: none; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 4px; }
+
+    /* ——— hero ——— */
+    .hero { height: 100vh; height: 100svh; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 var(--pad) clamp(28px, 6vh, 64px); overflow: hidden; }
+    .hero-top { position: absolute; top: 96px; left: var(--pad); right: var(--pad); display: flex; justify-content: space-between; font: 500 11px/1.5 var(--mono); opacity: .6; }
+    .hero-name {
+      font-weight: 700; letter-spacing: -0.065em; line-height: .8; white-space: nowrap;
+      font-size: 15vw; margin-left: -0.04em; width: max-content; /* so scrollWidth is the text, not the box */
+    }
+    .hero-name .ch { display: inline-block; will-change: transform; }
+    .hero-name .mask { display: inline-block; overflow: hidden; padding-bottom: .04em; vertical-align: bottom; }
+    .hero-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-top: clamp(20px, 3vh, 36px); }
+    .hero-row p { max-width: 460px; font-size: clamp(15px, 1.3vw, 18px); opacity: .75; }
+    .hero-row p em { font-family: var(--serif); font-style: italic; font-size: 1.2em; opacity: 1; }
+    .hero-row .scroll { font: 500 11px/1 var(--mono); opacity: .6; white-space: nowrap; }
+
+    /* ——— scenes ——— */
+    .scene { position: relative; }
+    .pin { height: 100vh; height: 100svh; position: relative; overflow: hidden; }
+    .no { font: 500 11px/1 var(--mono); opacity: .6; letter-spacing: .02em; }
+
+    /* 01 — Halliburton: the frame opens to full bleed */
+    .hal-title {
+      position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+      font-size: clamp(56px, 13vw, 220px); font-weight: 700; letter-spacing: -0.06em; line-height: .86;
+    }
+    .hal-title span { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: -0.03em; }
+    .hal-frame { position: absolute; inset: 0; will-change: clip-path; }
+    .hal-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .hal-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,10,.15) 0%, rgba(8,8,10,.92) 100%); opacity: 0; }
+    .hal-copy { position: absolute; left: var(--pad); right: var(--pad); bottom: clamp(56px, 10vh, 110px); color: #F2F2F2; }
+    .stmt { font-size: clamp(36px, 6.4vw, 104px); font-weight: 600; letter-spacing: -0.05em; line-height: .98; margin-top: 18px; }
+    .stmt .w { display: inline-block; }
+    .stmt s { text-decoration: none; position: relative; opacity: .55; }
+    .stmt s::after { content: ''; position: absolute; left: -2%; right: -2%; top: 54%; height: .07em; background: #FF5B3A; transform: scaleX(var(--strike, 0)); transform-origin: 0 50%; }
+    .stmt em { font-family: var(--serif); font-weight: 400; font-style: italic; color: #FFB199; letter-spacing: -0.02em; }
+    .go {
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 28px;
+      font-size: 15px; font-weight: 500; padding: 12px 20px; border-radius: 999px;
+      border: 1px solid currentColor;
+    }
+
+    /* 02 — Rebalancer: the phone turns to face you */
+    .reb { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: clamp(16px, 4vw, 64px); padding: 0 var(--pad); height: 100%; perspective: 1400px; }
+    .reb-list { list-style: none; display: flex; flex-direction: column; gap: 22px; }
+    .reb-list li { opacity: .28; transition: opacity .4s; }
+    .reb-list li.on { opacity: 1; }
+    .reb-list b { display: block; font-size: clamp(18px, 1.8vw, 24px); font-weight: 600; letter-spacing: -0.02em; }
+    .reb-list span { font-size: 14px; opacity: .7; }
+    .phone { width: clamp(220px, 24vw, 340px); aspect-ratio: 450 / 920; position: relative; transform-style: preserve-3d; will-change: transform; }
+    .phone img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 40px 60px rgba(60,40,90,.35)); }
+    .phone img + img { opacity: 0; }
+    .reb-side { text-align: right; }
+    .reb-side h2 { font-size: clamp(40px, 5.4vw, 88px); font-weight: 700; letter-spacing: -0.055em; line-height: .9; margin-top: 14px; }
+    .reb-side p { font-family: var(--serif); font-style: italic; font-size: clamp(22px, 2.2vw, 32px); line-height: 1.15; margin-top: 12px; }
+    @media (max-width: 860px) {
+      .reb { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; justify-items: center; padding-top: 84px; padding-bottom: 72px; gap: 12px; }
+      .reb-side { text-align: center; grid-row: 1; }
+      .reb-side h2 { font-size: 40px; }
+      .phone { width: min(46vw, 34vh); grid-row: 2; }
+      .reb-list { grid-row: 3; flex-direction: row; gap: 12px; }
+      .reb-list span { display: none; }
+      .reb-list b { font-size: 13px; }
+    }
+
+    /* 03 — DobroDoc+: a coverflow you scroll through */
+    .dd-head { position: absolute; top: clamp(84px, 12vh, 120px); left: var(--pad); right: var(--pad); display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; z-index: 2; }
+    .dd-head h2 { font-size: clamp(40px, 5.4vw, 88px); font-weight: 700; letter-spacing: -0.055em; line-height: .9; margin-top: 14px; }
+    .dd-count { text-align: right; }
+    .dd-count b { display: block; font-size: clamp(64px, 10vw, 168px); font-weight: 700; letter-spacing: -0.06em; line-height: .8; font-variant-numeric: tabular-nums; }
+    .dd-count > span { font-family: var(--serif); font-style: italic; font-size: clamp(18px, 1.8vw, 26px); }
+    .dd-note { position: absolute; left: var(--pad); bottom: 22px; font: 500 11px/1 var(--mono); opacity: .55; z-index: 2; }
+    @media (max-width: 640px) { .dd-note { display: none; } .dd-card { width: 50vw; } }
+    .dd-track { position: absolute; left: 0; bottom: clamp(40px, 8vh, 80px); display: flex; gap: clamp(16px, 2.4vw, 36px); padding: 0 50vw; perspective: 1200px; will-change: transform; }
+    .dd-card { flex: 0 0 auto; width: clamp(150px, 16vw, 240px); aspect-ratio: 640 / 1110; border-radius: 22px; overflow: hidden; background: #fff; box-shadow: 0 1px 0 rgba(20,40,80,.06), 0 40px 70px -30px rgba(20,40,80,.45); will-change: transform; }
+    .dd-card img { width: 100%; height: 100%; object-fit: cover; }
+    @media (max-width: 860px) { .dd-head { flex-direction: column; } .dd-count { text-align: left; } }
+
+    /* 04 — dopas: a wipe */
+    .dop { min-height: 100vh; padding: clamp(120px, 18vh, 200px) var(--pad) clamp(80px, 12vh, 140px); }
+    .dop-title { font-size: clamp(48px, 11vw, 190px); font-weight: 700; letter-spacing: -0.06em; line-height: .86; overflow: hidden; }
+    .dop-title span { display: inline-block; }
+    .dop-media { margin-top: clamp(32px, 6vh, 64px); border-radius: 18px; overflow: hidden; aspect-ratio: 2400 / 1300; }
+    .dop-media img { width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+    .dop-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-top: 28px; flex-wrap: wrap; }
+    .dop-row p { font-family: var(--serif); font-style: italic; font-size: clamp(24px, 2.6vw, 40px); line-height: 1.1; max-width: 640px; }
+    .dop-row .go { margin-top: 0; }
+
+    /* end */
+    .end { padding: clamp(100px, 16vh, 180px) 0 clamp(80px, 12vh, 120px); overflow: hidden; }
+    .marquee { display: flex; white-space: nowrap; font-size: clamp(56px, 10vw, 168px); font-weight: 700; letter-spacing: -0.055em; line-height: 1; will-change: transform; }
+    .marquee span { padding-right: .35em; }
+    .marquee em { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: -0.02em; }
+    .end-row { display: flex; gap: 28px; flex-wrap: wrap; padding: 0 var(--pad); margin-top: clamp(40px, 6vh, 72px); font-size: clamp(18px, 2vw, 26px); font-weight: 500; letter-spacing: -0.02em; }
+    .end-row a { border-bottom: 1.5px solid currentColor; }
+    .end-row span { opacity: .55; }
+    .marquee { cursor: pointer; }
+
+    /* reduced motion: every scene shown in its finished state, nothing pinned */
+    .reduce .hal-frame { clip-path: none; }
+    .reduce .hal-shade { opacity: 1; }
+    .reduce .hal-title { display: none; }
+    .reduce .reb-list li { opacity: 1; }
+    .reduce .dd-track { position: relative; left: auto; bottom: auto; padding: 0 var(--pad); overflow-x: auto; margin-top: 50vh; transform: none; }
+    .reduce #dd .pin { height: auto; min-height: 100vh; padding-bottom: 40px; }
+    .reduce .dop-media { clip-path: none; }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="leader" id="leader" aria-hidden="true">
+    <div class="leader-top"><span>Yurii Fokin</span><span>Selected work · 4 cases</span></div>
+    <div><div class="leader-num" id="leaderNum">00</div><div class="leader-line"><b id="leaderBar"></b></div>
+      <div class="leader-bot"><span>Lead UX Designer</span><span>Batumi, GE</span></div></div>
+  </div>
+  <div class="curtain" id="curtain"></div>
+  <div class="cursor" id="cursor"><span>View</span></div>
+
+  <header class="nav">
+    <a href="#">Yurii Fokin</a>
+    <nav class="nav-links">
+      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <a href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+    </nav>
+  </header>
+  <div class="chapter" id="chapter"><span id="chNo">00 / 04</span><i><b id="chBar"></b></i><span id="chName">Intro</span></div>
+
+  <section class="hero" data-bg="#0B0B0D" data-fg="#F2F2F2" data-ch="00 / 04|Intro">
+    <div class="hero-top"><span>Lead UX Designer<br>DXC Luxoft · Halliburton</span><span>Batumi, GE<br>Selected work, 4 cases</span></div>
+    <h1 class="hero-name" id="heroName">Yurii Fokin</h1>
+    <div class="hero-row">
+      <p>Hi! I design enterprise data platforms and the systems under them — currently through an <em>AI-native</em> design-to-code pipeline.</p>
+      <span class="scroll">Scroll ↓</span>
+    </div>
+  </section>
+
+  <section class="scene" id="hal" data-bg="#0B0B0D" data-fg="#F2F2F2" data-ch="01 / 04|Data Marketplace">
+    <div class="pin">
+      <h2 class="hal-title">Data<br><span>Marketplace</span></h2>
+      <div class="hal-frame" id="halFrame"><img src="../../assets/images/halliburton/halliburton-hero.webp" alt="Halliburton Data Marketplace"></div>
+      <div class="hal-shade" id="halShade"></div>
+      <div class="hal-copy" id="halCopy">
+        <span class="no">01 — Halliburton · sole designer · enterprise data platform</span>
+        <p class="stmt"><span class="w">Cut</span> <span class="w">data</span> <span class="w">search</span> <span class="w">from</span> <span class="w"><s id="weeks">weeks</s></span> <span class="w"><em>to under</em></span> <span class="w"><em>five minutes.</em></span></p>
+        <a class="go" href="../../cases/halliburton/" data-cursor="Open">View case →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="reb" data-bg="#E7E2F6" data-fg="#17141F" data-ch="02 / 04|Rebalancer">
+    <div class="pin">
+      <div class="reb">
+        <ol class="reb-list" id="rebList">
+          <li class="on"><b>Watchlist</b><span>The pair is the only thing you create</span></li>
+          <li><b>Pair detail</b><span>The ratio, not the dollar price</span></li>
+          <li><b>Simulator</b><span>What a swap would do, without doing it</span></li>
+          <li><b>Alerts</b><span>Prefilled at where the ratio sits now</span></li>
+        </ol>
+        <div class="phone" id="phone">
+          <img src="../../assets/images/rebalancer/rebalancer-pairs-watchlist.webp" alt="">
+          <img src="../../assets/images/rebalancer/rebalancer-pair-detail.webp" alt="">
+          <img src="../../assets/images/rebalancer/rebalancer-simulator.webp" alt="">
+          <img src="../../assets/images/rebalancer/rebalancer-alerts-push.webp" alt="">
+        </div>
+        <div class="reb-side">
+          <span class="no">02 — iOS · solo</span>
+          <h2>Rebalancer</h2>
+          <p>Designed and built solo —<br>app, backend, push.</p>
+          <a class="go" href="../../cases/rebalancer/" data-cursor="Open">View case →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="dd" data-bg="#E8F0FB" data-fg="#111723" data-ch="03 / 04|DobroDoc+">
+    <div class="pin">
+      <div class="dd-head">
+        <div><span class="no">03 — iOS & Android · Healthcare</span><h2>DobroDoc+</h2>
+          <a class="go" href="../../cases/dobrodoc/" data-cursor="Open">View case →</a></div>
+        <div class="dd-count"><b><span id="ddNum">0</span>%</b><span>less time to booking, in usability tests</span></div>
+      </div>
+      <div class="dd-track" id="ddTrack"></div>
+      <span class="dd-note">Eleven screens from the shipped app</span>
+    </div>
+  </section>
+
+  <section class="scene dop" id="dop" data-bg="#0B0B0D" data-fg="#F2F2F2" data-ch="04 / 04|dopas.dp.ua">
+    <span class="no">04 — Web · B2C · 0 → 1</span>
+    <h2 class="dop-title" id="dopTitle">dopas.dp.ua</h2>
+    <a class="dop-media" id="dopMedia" href="../../cases/dopas/" data-cursor="View"><img src="../../assets/images/dopas/dopas-cover-v3.webp" alt="dopas.dp.ua booking flow"></a>
+    <div class="dop-row"><p>Launched in 2020 into a market with no online alternative — live and earning since.</p><a class="go" href="../../cases/dopas/" data-cursor="Open">View case →</a></div>
+  </section>
+
+  <section class="end" data-bg="#F2F0EA" data-fg="#0B0B0D" data-ch="— |Contact">
+    <div class="marquee" id="marquee"></div>
+    <div class="end-row">
+      <a href="mailto:yuryuryury@icloud.com" data-cursor="Write">yuryuryury@icloud.com</a>
+      <a href="https://www.linkedin.com/in/yuryury/" data-cursor="Open">LinkedIn ↗</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf" data-cursor="Get">CV ↓</a>
+      <span>Batumi, GE · UTC+4</span>
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="switcher.js"></script>
+  <script>
+  (function () {
+    gsap.registerPlugin(ScrollTrigger);
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) document.documentElement.classList.add('reduce');
+    var lenis = null;
+    if (window.Lenis && !reduce) {
+      lenis = new Lenis({ lerp: 0.085 });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    // ——— cursor ———
+    var cur = document.getElementById('cursor'), curLabel = cur.querySelector('span');
+    var cx = gsap.quickTo(cur, 'x', { duration: 0.35, ease: 'power3' });
+    var cy = gsap.quickTo(cur, 'y', { duration: 0.35, ease: 'power3' });
+    addEventListener('pointermove', function (e) { cx(e.clientX); cy(e.clientY); });
+    document.addEventListener('pointerover', function (e) {
+      var a = e.target.closest('a');
+      cur.classList.toggle('big', !!a);
+      if (a) curLabel.textContent = a.dataset.cursor || 'Open';
+    });
+
+    // ——— leaving for a case: the curtain comes down first ———
+    var curtain = document.getElementById('curtain');
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="../../cases/"]');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey || reduce) return;
+      e.preventDefault();
+      gsap.to(curtain, { clipPath: 'inset(0% 0 0 0)', duration: 0.7, ease: 'expo.inOut', onComplete: function () { location.href = a.href; } });
+    });
+    addEventListener('pageshow', function (e) { if (e.persisted) gsap.set(curtain, { clipPath: 'inset(100% 0 0 0)' }); });
+    document.getElementById('marquee').addEventListener('click', function () { location.href = 'mailto:yuryuryury@icloud.com'; });
+
+    // ——— leader: count to 100, lift, then the name ———
+    var leader = document.getElementById('leader');
+    var intro = gsap.timeline({ paused: true });
+    if (reduce) { leader.remove(); }
+    else {
+      if (lenis) lenis.stop();
+      var count = { v: 0 };
+      intro.to(count, { v: 100, duration: 1.3, ease: 'power2.inOut', onUpdate: function () {
+          document.getElementById('leaderNum').textContent = String(Math.round(count.v)).padStart(2, '0');
+        } }, 0)
+        .to('#leaderBar', { scaleX: 1, duration: 1.3, ease: 'power2.inOut' }, 0)
+        .to(leader, { clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'expo.inOut' }, 1.45)
+        .call(function () { leader.remove(); if (lenis) lenis.start(); });
+    }
+
+    // ——— hero: the name is fitted to the width, then rises letter by letter ———
+    var name = document.getElementById('heroName');
+    name.innerHTML = name.textContent.split('').map(function (c) {
+      return c === ' ' ? '<span class="ch">&nbsp;</span>' : '<span class="mask"><span class="ch">' + c + '</span></span>';
+    }).join('');
+    function fitName() {
+      name.style.fontSize = '15vw';
+      var target = name.parentElement.clientWidth - 2 * parseFloat(getComputedStyle(name.parentElement).paddingLeft);
+      name.style.fontSize = (parseFloat(getComputedStyle(name).fontSize) * target / name.scrollWidth) + 'px';
+    }
+    fitName();
+    addEventListener('resize', fitName);
+    var chars = name.querySelectorAll('.ch');
+    if (!reduce) {
+      intro.from(chars, { yPercent: 105, duration: 1.4, ease: 'expo.out', stagger: 0.045 }, 1.75)
+           .from('.hero-row > *, .hero-top', { autoAlpha: 0, y: 20, duration: 1.2, ease: 'expo.out', stagger: 0.1 }, 2.2);
+      document.fonts.ready.then(function () { intro.play(); });
+    }
+    // on the way out each letter leaves at its own speed
+    if (!reduce) gsap.to(chars, {
+      yPercent: function (i) { return -40 - ((i * 37) % 11) * 9; },
+      ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+
+    var num = document.getElementById('ddNum');
+    var ddFiles = ['dd-onboarding-appointment', 'dd-onboarding-record', 'dd-onboarding-results', 'dd-home', 'dd-specialist', 'dd-chat', 'dd-video-call', 'dd-audio-call', 'dd-medical-cards', 'dd-notifications', 'dd-account'];
+    var track = document.getElementById('ddTrack');
+    track.innerHTML = ddFiles.map(function (f) {
+      return '<div class="dd-card"><img src="../../assets/images/dobrodoc/' + f + '-v3.webp" alt="" loading="lazy"></div>';
+    }).join('');
+    var dt = document.getElementById('dopTitle');
+    dt.innerHTML = dt.textContent.split('').map(function (c) { return '<span>' + c + '</span>'; }).join('');
+    var mq = document.getElementById('marquee');
+    var phrase = '<span>Open to senior and <em>lead</em> design roles —</span>';
+    mq.innerHTML = phrase + phrase + phrase + phrase;
+
+    if (reduce) { num.textContent = '40'; gsap.set('#weeks', { '--strike': 1 }); }
+    else {
+    // ——— 01 Halliburton ———
+    var hal = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: { trigger: '#hal', start: 'top top', end: '+=220%', pin: '#hal .pin', scrub: 0.8 }
+    });
+    hal.fromTo('#halFrame', { clipPath: 'inset(24% 32% 24% 32% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1, ease: 'power2.inOut' }, 0)
+      .fromTo('#halFrame img', { scale: 1.35 }, { scale: 1, duration: 1.2, ease: 'power2.out' }, 0)
+      .fromTo('.hal-title', { scale: 1 }, { scale: 0.86, duration: 1 }, 0)
+      .fromTo('#halShade', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.75)
+      .fromTo('#halCopy .no', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.9)
+      .fromTo('#halCopy .w', { autoAlpha: 0, yPercent: 60 }, { autoAlpha: 1, yPercent: 0, duration: 0.3, stagger: 0.07, ease: 'power3.out' }, 0.95)
+      .fromTo('#weeks', { '--strike': 0 }, { '--strike': 1, duration: 0.25, ease: 'power2.inOut' }, 1.45)
+      .fromTo('#halCopy .go', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.2 }, 1.6)
+      .to({}, { duration: 0.35 });
+
+    // ——— 02 Rebalancer ———
+    var shots = gsap.utils.toArray('#phone img');
+    var items = gsap.utils.toArray('#rebList li');
+    var reb = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: '#reb', start: 'top top', end: '+=300%', pin: '#reb .pin', scrub: 0.8,
+        onUpdate: function (st) {
+          var i = Math.min(3, Math.max(0, Math.floor((st.progress - 0.22) / 0.19) + 1));
+          if (st.progress < 0.22) i = 0;
+          items.forEach(function (li, k) { li.classList.toggle('on', k === i); });
+        }
+      }
+    });
+    reb.fromTo('#phone', { rotationY: -42, rotationX: 16, rotationZ: -6, scale: 0.82, y: 60 },
+                         { rotationY: 0, rotationX: 0, rotationZ: 0, scale: 1, y: 0, duration: 1, ease: 'power3.out' }, 0)
+       .fromTo('.reb-side > *', { autoAlpha: 0, x: 40 }, { autoAlpha: 1, x: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out' }, 0.2)
+       .fromTo('#rebList', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.3)
+       .fromTo('#rebList li', { x: -30 }, { x: 0, duration: 0.4, stagger: 0.06, ease: 'power3.out' }, 0.3);
+    // each screen arrives with a small turn of the phone, as if it were tapped
+    [1, 2, 3].forEach(function (k) {
+      var at = 1.0 + (k - 1) * 0.9;
+      reb.to(shots[k], { opacity: 1, duration: 0.25 }, at)
+         .to('#phone', { rotationY: k % 2 ? 8 : -8, duration: 0.25, ease: 'power2.out' }, at - 0.1)
+         .to('#phone', { rotationY: 0, duration: 0.4, ease: 'power2.inOut' }, at + 0.15);
+    });
+    reb.to({}, { duration: 0.6 });
+
+    // ——— 03 DobroDoc+ ———
+    var cards = gsap.utils.toArray('.dd-card');
+    function coverflow() {
+      var mid = innerWidth / 2;
+      cards.forEach(function (c) {
+        var r = c.getBoundingClientRect();
+        var d = (r.left + r.width / 2 - mid) / mid; // -1 … 1 across the screen
+        var a = gsap.utils.clamp(-1.4, 1.4, d);
+        gsap.set(c, { rotationY: a * -28, z: -Math.abs(a) * 160, y: Math.abs(a) * 20, opacity: 1 - Math.min(0.55, Math.abs(a) * 0.35) });
+      });
+    }
+    gsap.fromTo(track, { x: function () { return 0; } }, {
+      x: function () { return -(track.scrollWidth - innerWidth); },
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#dd', start: 'top top', end: function () { return '+=' + (track.scrollWidth - innerWidth) * 0.9; },
+        pin: '#dd .pin', scrub: 0.8, invalidateOnRefresh: true,
+        onUpdate: function (st) {
+          coverflow();
+          num.textContent = Math.round(gsap.utils.clamp(0, 1, st.progress / 0.7) * 40);
+        }
+      }
+    });
+    coverflow();
+
+    // ——— 04 dopas ———
+    gsap.from('#dopTitle span', {
+      yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.03,
+      scrollTrigger: { trigger: '#dopTitle', start: 'top 85%' }
+    });
+    gsap.fromTo('#dopMedia', { clipPath: 'inset(0% 100% 0% 0% round 18px)' }, {
+      clipPath: 'inset(0% 0% 0% 0% round 18px)', ease: 'none',
+      scrollTrigger: { trigger: '#dopMedia', start: 'top 90%', end: 'top 30%', scrub: true }
+    });
+    gsap.fromTo('#dopMedia img', { scale: 1.3, xPercent: -6 }, {
+      scale: 1, xPercent: 0, ease: 'none',
+      scrollTrigger: { trigger: '#dopMedia', start: 'top 90%', end: 'bottom top', scrub: true }
+    });
+
+    // ——— the end: a marquee that runs faster when you scroll ———
+    var mqX = 0, boost = 0;
+    gsap.ticker.add(function (t, dt) {
+      var v = lenis ? Math.abs(lenis.velocity) : 0;
+      boost += (v * 0.6 - boost) * 0.1;
+      mqX -= (1.2 + boost) * dt / 16;
+      var w = mq.firstChild.offsetWidth;
+      if (-mqX > w) mqX += w;
+      gsap.set(mq, { x: mqX, skewX: -Math.min(12, boost * 0.8) });
+    });
+    }
+
+    // ——— colour per chapter; the chapter readout follows ———
+    // Created after the pinned scenes, so their pin spacing is already in
+    // the page when these measure where each chapter starts.
+    var root = document.documentElement;
+    var chNo = document.getElementById('chNo'), chName = document.getElementById('chName');
+    gsap.utils.toArray('[data-bg]').forEach(function (sec) {
+      function apply() {
+        gsap.to(root, { '--bg': sec.dataset.bg, '--fg': sec.dataset.fg, duration: 0.9, ease: 'power2.out', overwrite: 'auto' });
+        var ch = sec.dataset.ch.split('|');
+        chNo.textContent = ch[0]; chName.textContent = ch[1];
+      }
+      ScrollTrigger.create({ trigger: sec, start: 'top 55%', end: 'bottom 55%', onEnter: apply, onEnterBack: apply });
+    });
+    gsap.to('#chBar', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
+
+    document.fonts && document.fonts.ready.then(function () { fitName(); ScrollTrigger.refresh(); });
+  })();
+  </script>
+</body>
+</html>

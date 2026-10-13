@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Directions — Yurii Fokin</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #07080B; color: #EEF0F6; -webkit-font-smoothing: antialiased; padding: clamp(24px, 6vw, 72px) clamp(16px, 5vw, 64px) 110px; }
+    a { color: inherit; text-decoration: none; }
+    h1 { font-size: clamp(32px, 4vw, 52px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.05; }
+    .lead { margin-top: 12px; color: rgba(238,240,246,.55); font-size: 16px; max-width: 560px; }
+    h2 { font: 500 12px/1 'JetBrains Mono', monospace; color: rgba(238,240,246,.5); text-transform: uppercase; letter-spacing: .06em; margin: 56px 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .d { display: flex; flex-direction: column; padding: 22px; border-radius: 16px; min-height: 230px; border: 1px solid rgba(238,240,246,.08); transition: transform .4s cubic-bezier(.2,.8,.2,1), border-color .3s; }
+    .d:hover { transform: translateY(-4px); border-color: rgba(238,240,246,.25); }
+    .d b { font: 500 11px/1 'JetBrains Mono', monospace; opacity: .6; }
+    .d h3 { font-size: 28px; font-weight: 700; letter-spacing: -0.04em; margin-top: auto; }
+    .d p { font-size: 14px; line-height: 1.45; margin-top: 8px; opacity: .7; }
+    .d .how { margin-top: 12px; font: 500 11px/1.5 'JetBrains Mono', monospace; opacity: .45; }
+    .m { background: radial-gradient(120% 120% at 80% 0%, rgba(158,216,200,.16), transparent 60%), #0B0D11; }
+    .f { background: radial-gradient(120% 120% at 80% 0%, rgba(143,211,255,.18), transparent 60%), #0B0D11; }
+    .z { background: radial-gradient(120% 120% at 80% 0%, rgba(231,169,107,.18), transparent 60%), #0B0D11; }
+    .s { background: radial-gradient(120% 120% at 80% 0%, rgba(124,255,178,.14), transparent 60%), #070A08; }
+    .s h3 { font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em; }
+    .g { background: radial-gradient(120% 120% at 80% 0%, rgba(242,242,240,.12), transparent 60%), #0B0B0C; }
+    .v { background: #ECE8DF; color: #141414; border-color: transparent; }
+    .sand .d { min-height: 150px; background: #101217; opacity: .7; }
+    .sand .d:hover { opacity: 1; }
+    .sand .d h3 { font-size: 22px; }
+  </style>
+</head>
+<body>
+  <h1>Главная, шесть подходов</h1>
+  <p class="lead">Один и тот же контент: приветствие, слои работы, четыре кейса, контакт. Скролл и стрелки листают стадии. Переключаться можно капсулой внизу.</p>
+
+  <h2>Семейство B</h2>
+  <div class="grid">
+    <a class="d m" href="b.html"><b>B · фаворит</b><h3>Материя</h3><p>Сто тысяч точек перетекают между формами: приветствие, слои с фактами, обложки из точек, сфера.</p><span class="how">WebGL · морфинг по скроллу</span></a>
+    <a class="d f" href="flow.html"><b>B2</b><h3>Поток</h3><p>Наследник Материи, но с настоящей физикой: частицы текут как чернила, оставляют шлейф, курсор их размешивает. В конце галактика.</p><span class="how">WebGL2 · симуляция на GPU · curl noise</span></a>
+    <a class="d z" href="depth.html"><b>B3</b><h3>Глубина</h3><p>Ничего не морфит: камера летит сквозь приветствие, над геологическим разрезом, к обложкам и к планете. Глубина резкости, туман, боке.</p><span class="how">WebGL · 3D-камера · DOF</span></a>
+    <a class="d s" href="signal.html"><b>B4</b><h3>Сигнал</h3><p>Весь сайт из символов. Курсор работает линзой и показывает настоящую картинку. Сцены расшифровываются, в конце ASCII-бублик.</p><span class="how">WebGL2 · два прохода · raymarching</span></a>
+  </div>
+
+  <h2>Другие идеи</h2>
+  <div class="grid">
+    <a class="d g" href="gallery.html"><b>E</b><h3>Галерея</h3><p>Бесконечная стена из 37 экранов твоих кейсов. Таскаешь во все стороны, на ходу она изгибается линзой и расходится по цветам. Фильтр по продукту, клик раскрывает экран с листанием.</p><span class="how">WebGL2 · один шейдер на весь экран</span></a>
+    <a class="d v" href="gravity.html"><b>F</b><h3>Гравитация</h3><p>«Hi! I'm Yurii» висит на нитях. Если сильно дёрнуть букву, нить рвётся. Карточки кейсов и контакты лежат кучей, их можно бросать. Есть невесомость, встряска и наклон телефона.</p><span class="how">matter.js · физика</span></a>
+  </div>
+
+  <h2>Песочница</h2>
+  <div class="grid sand">
+    <a class="d" href="a.html"><b>A</b><h3>Живая система</h3><p>Токены → компонент → экран → продукт.</p></a>
+    <a class="d" href="c.html"><b>C</b><h3>Кейсы-фильмы</h3><p>Сцена на кейс, смена цвета по главам.</p></a>
+    <a class="d" href="d.html"><b>D</b><h3>Рабочий стол</h3><p>Портфолио как файл в Figma.</p></a>
+  </div>
+  <script src="switcher.js"></script>
+</body>
+</html>
