@@ -1,14 +1,10 @@
 // The pill pinned to the bottom of every direction, so the pages can be
-// flicked between without going back to the hub. The B family is the focus;
-// A, C and D stay reachable from the hub's sandbox.
+// flicked between without going back to the hub. Matter and Depth are the
+// focus; everything else lives in the hub's sandbox.
 (function () {
   var pages = [
     ['b', 'Материя'],
-    ['depth', 'Глубина'],
-    ['flow', 'Поток'],
-    ['signal', 'Сигнал'],
-    ['gallery', 'Галерея'],
-    ['gravity', 'Гравитация']
+    ['depth', 'Глубина']
   ];
   // the live site serves these without .html, the local server with it
   var here = (location.pathname.match(/\/([a-z]+)(?:\.html)?$/) || [])[1];

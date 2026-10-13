@@ -181,7 +181,7 @@
 
       if (env.go >= 0) {
         env.g = Math.min(1, (now - goStart) / (reduce ? 300 : 1100));
-        if (env.g >= 1 && !env.left) { env.left = true; location.href = CASES[env.go].href; }
+        if (env.g >= 1 && !env.left) { env.left = true; if (CASES[env.go].href.indexOf('halliburton.html') >= 0) { try { sessionStorage.setItem('land', '1'); } catch (e) {} } location.href = CASES[env.go].href; }
       }
 
       R.frame(env);

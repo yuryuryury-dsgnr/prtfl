@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Data Marketplace · Halliburton — Yurii Fokin</title>
+  <meta name="description" content="Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline. Lead UX, sole designer.">
+  <meta name="theme-color" content="#07080B">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="../../assets/images/halliburton/halliburton-hero.webp">
+  <style>
+    :root {
+      --bg: #07080B; --fg: #E9ECF2; --muted: rgba(233,236,242,.58); --faint: rgba(233,236,242,.1);
+      --card: rgba(14,16,21,.78); --line: rgba(233,236,242,.1); --red: #E5484D; --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --col: min(640px, 100%); --left: clamp(20px, 7vw, 120px);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.6; font-size: 16px; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; border-radius: 6px; }
+    ::selection { background: var(--fg); color: var(--bg); }
+    img { display: block; max-width: 100%; }
+
+    #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+    .shade { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(120% 90% at 70% 50%, transparent 50%, rgba(0,0,0,.55) 100%); }
+    @media (max-width: 860px) { .shade { background: rgba(7,8,11,.35); } }
+
+    /* ——— chrome ——— */
+    .progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 40; background: var(--fg); transform-origin: 0 50%; transform: scaleX(0); }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 30; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px clamp(16px, 3vw, 32px); font-size: 14px; font-weight: 500; transition: background .4s; }
+    .nav.solid { background: rgba(7,8,11,.72); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+    .nav .back { display: flex; align-items: center; gap: 10px; }
+    .nav .back span { color: var(--muted); font-weight: 400; }
+    .nav-r { display: flex; align-items: center; gap: 10px; }
+    .style { display: flex; padding: 3px; border-radius: 999px; background: rgba(233,236,242,.07); border: 1px solid var(--line); }
+    .style a { padding: 6px 12px; border-radius: 999px; font-size: 12.5px; color: var(--muted); }
+    .style a[aria-current] { background: var(--fg); color: var(--bg); }
+    .pill { border: 1px solid rgba(233,236,242,.25); border-radius: 999px; padding: 7px 15px; }
+    .pill:hover { background: rgba(233,236,242,.08); }
+    @media (max-width: 640px) { .nav .back span, .nav-r .pill { display: none; } }
+
+    .rail { position: fixed; right: clamp(14px, 2.4vw, 32px); top: 50%; transform: translateY(-50%); z-index: 20; display: flex; flex-direction: column; gap: 4px; }
+    .rail a { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 3px 0; font: 500 10px/1 var(--mono); color: rgba(233,236,242,.4); transition: color .3s; }
+    .rail a span { max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .4s cubic-bezier(.2,.8,.2,1); }
+    .rail a::after { content: ''; width: 12px; height: 1px; background: currentColor; transition: width .4s cubic-bezier(.2,.8,.2,1); }
+    .rail:hover a span, .rail a.on span { max-width: 180px; }
+    .rail a.on, .rail a:hover { color: var(--fg); }
+    .rail a.on::after { width: 26px; }
+    @media (max-width: 1000px) { .rail { display: none; } }
+
+    /* ——— content ——— */
+    main { position: relative; z-index: 5; }
+    .sec { position: relative; padding: 22vh var(--left) 10vh; min-height: 110vh; }
+    .col { width: var(--col); }
+    .num { font: 500 12px/1 var(--mono); color: var(--muted); letter-spacing: .04em; display: block; margin-bottom: 18px; }
+    h2 { font-size: clamp(34px, 4.6vw, 64px); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
+    h3 { font-size: clamp(20px, 1.9vw, 26px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; }
+    .lead { font-size: clamp(17px, 1.45vw, 20px); color: rgba(233,236,242,.82); margin-top: 22px; line-height: 1.55; }
+    p + p { margin-top: 12px; }
+    .muted { color: var(--muted); }
+    .eyebrow { font: 500 11px/1.4 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+    .card + .card { margin-top: 12px; }
+    .stack { display: grid; gap: 12px; margin-top: 32px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+    .tag { display: inline-block; font: 500 11px/1 var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; margin-top: 14px; }
+    ul.plain { list-style: none; margin-top: 12px; }
+    ul.plain li { padding: 9px 0; border-top: 1px solid var(--line); font-size: 15px; }
+    ul.plain li:first-child { border-top: 0; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 28px; }
+    .tabs button { padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--muted); border: 1px solid var(--line); background: rgba(233,236,242,.03); transition: background .2s, color .2s; }
+    .tabs button:hover { color: var(--fg); }
+    .tabs button[aria-selected="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    [role="tabpanel"][hidden] { display: none; }
+
+    /* text arrives as it is reached */
+    .rv { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1); }
+    .rv.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; transition: none; } }
+
+    /* hero */
+    .hero { padding-top: 18vh; min-height: auto; padding-bottom: 6vh; }
+    .hero h1 { font-size: clamp(48px, 8.6vw, 140px); font-weight: 700; letter-spacing: -0.055em; line-height: .9; }
+    .hero .lead { max-width: 640px; }
+    .meta { display: grid; grid-template-columns: repeat(5, auto); gap: 14px 36px; margin-top: 40px; max-width: 1100px; }
+    .meta dt { font: 500 11px/1.4 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .meta dd { font-size: 14.5px; margin-top: 6px; }
+    @media (max-width: 900px) { .meta { grid-template-columns: 1fr 1fr; } }
+    .nda { display: flex; gap: 10px; align-items: center; margin-top: 28px; font-size: 13px; color: var(--muted); }
+    .nda i { font: normal 500 10px/1 var(--mono); border: 1px solid var(--line); border-radius: 4px; padding: 4px 5px; }
+    .hero-fig { margin: 7vh 0 0; border-radius: 18px; overflow: hidden; aspect-ratio: 2425 / 1364; max-width: 1240px; background: #1a1c22; will-change: opacity, transform; }
+    .hero-fig img { width: 100%; height: 100%; object-fit: cover; }
+    /* arriving from the home page: the cover lands in its place */
+    .landing .hero-fig { position: relative; z-index: 50; }
+
+    /* problem */
+    .pg { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: baseline; }
+    .pg .eyebrow { grid-column: 1 / -1; }
+    .arrow { font-size: 22px; color: var(--muted); text-align: center; padding: 6px 0; }
+
+    /* roadmap */
+    .steps { list-style: none; margin-top: 40px; border-left: 1px solid var(--line); }
+    .steps li { position: relative; padding: 0 0 46px 32px; transition: opacity .4s; opacity: .45; }
+    .steps li.on { opacity: 1; }
+    .steps li::before { content: ''; position: absolute; left: -5px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 1.5px solid var(--muted); transition: background .3s, border-color .3s, box-shadow .3s; }
+    .steps li.on::before { background: var(--fg); border-color: var(--fg); box-shadow: 0 0 0 6px rgba(233,236,242,.1); }
+    .steps b { font: 500 12px/1 var(--mono); color: var(--muted); display: block; margin-bottom: 8px; }
+    .steps p { color: rgba(233,236,242,.78); margin-top: 8px; font-size: 15.5px; }
+
+    /* strategy */
+    .vps { display: grid; gap: 14px; }
+    .vps dt { font: 500 11px/1.4 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .vps dd { margin-top: 4px; font-size: 15.5px; }
+    .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .kpi .card b { display: block; font-size: clamp(26px, 3vw, 40px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.05; margin-top: 10px; }
+    .kpi .card b s { text-decoration: none; color: var(--muted); position: relative; }
+    .kpi .card b s::after { content: ''; position: absolute; left: -2%; right: -2%; top: 55%; height: 2px; background: var(--red); }
+    @media (max-width: 640px) { .kpi { grid-template-columns: 1fr; } }
+    .principles { counter-reset: p; list-style: none; margin-top: 12px; display: grid; gap: 10px; }
+    .principles li { counter-increment: p; padding-left: 34px; position: relative; font-size: 15px; }
+    .principles li::before { content: counter(p, decimal-leading-zero); position: absolute; left: 0; top: 2px; font: 500 11px/1.4 var(--mono); color: var(--muted); }
+    .principles li b { font-weight: 600; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .chips span { font-size: 13px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); color: rgba(233,236,242,.85); }
+
+    /* research */
+    .personas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+    .persona { cursor: default; transition: border-color .3s, transform .4s cubic-bezier(.2,.8,.2,1); }
+    .persona.on { border-color: rgba(233,236,242,.4); }
+    .persona i { font: normal 500 11px/1 var(--mono); padding: 4px 7px; border-radius: 5px; color: #07080B; }
+    .persona h3 { margin-top: 12px; font-size: 18px; }
+    .persona p { font-size: 14px; color: rgba(233,236,242,.75); margin-top: 8px; }
+    .persona p b { color: var(--muted); font: 500 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; display: block; margin-bottom: 3px; }
+    @media (max-width: 640px) { .personas { grid-template-columns: 1fr; } }
+    .flow { list-style: none; margin-top: 18px; display: grid; gap: 8px; }
+    .flow li { display: grid; grid-template-columns: 74px 1fr; gap: 12px; align-items: start; font-size: 14.5px; }
+    .flow li.head { display: block; font: 500 11px/1.4 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 12px; }
+    .flow em { font: normal 500 10px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; padding: 5px 6px; border-radius: 5px; text-align: center; margin-top: 2px; }
+    .flow small { display: block; color: var(--muted); font-size: 13px; }
+    .k-screen { background: #2A3346; color: #BFD2FF; } .k-action { background: #3A2A2E; color: #FFC2C6; } .k-system { background: #26332C; color: #B8F0C9; }
+    .k-decision { background: #3B3423; color: #FFE08A; } .k-end { background: var(--fg); color: var(--bg); } .k-off { background: #2B2B2B; color: #AAA; }
+    .journey svg { display: block; width: 100%; height: 120px; margin-top: 18px; overflow: visible; }
+    .journey .stages { display: grid; gap: 10px; margin-top: 8px; }
+    .journey .st { display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
+    .journey .st > b { font: 500 11px/1.4 var(--mono); color: var(--muted); }
+    .journey .st h4 { font-size: 15px; font-weight: 600; }
+    .journey .st q { display: block; color: rgba(233,236,242,.8); font-style: italic; margin-top: 4px; }
+    .journey .st .po { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; font-size: 13.5px; }
+    .journey .st .po span b { display: block; font: 500 10px/1.4 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .journey .st .emo { font: 500 11px/1.4 var(--mono); color: var(--muted); margin-left: 6px; }
+
+    /* prototype */
+    .viewer { margin-top: 30px; width: min(1000px, 100%); }
+    .viewer figure { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #111; aspect-ratio: 2880 / 1800; position: relative; }
+    .viewer img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .45s; }
+    .viewer figcaption { margin-top: 12px; font-size: 14px; color: var(--muted); }
+    .viewer .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .viewer .tabs { margin-top: 0; }
+    .theme { display: flex; padding: 3px; border-radius: 999px; border: 1px solid var(--line); }
+    .theme button { padding: 6px 12px; border-radius: 999px; font-size: 12.5px; color: var(--muted); }
+    .theme button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+    .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; width: min(1000px, 100%); }
+    .tier h4 { font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: baseline; }
+    .tier h4 span { font: 500 11px/1 var(--mono); color: var(--muted); }
+    .tier ul { list-style: none; margin-top: 12px; display: grid; gap: 7px; font: 400 12px/1.3 var(--mono); }
+    .tier li { display: flex; align-items: center; gap: 8px; color: rgba(233,236,242,.85); }
+    .tier li i { width: 14px; height: 14px; border-radius: 4px; flex: 0 0 auto; border: 1px solid rgba(255,255,255,.12); }
+    .tier li em { font-style: normal; color: var(--muted); margin-left: auto; }
+    @media (max-width: 760px) { .tiers { grid-template-columns: 1fr; } }
+
+    /* hand-off */
+    .pipe { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 30px; width: min(1000px, 100%); }
+    .pipe div { padding: 18px; border: 1px solid var(--line); background: var(--card); position: relative; }
+    .pipe div:first-child { border-radius: 14px 0 0 14px; } .pipe div:last-child { border-radius: 0 14px 14px 0; }
+    .pipe div + div { border-left: 0; }
+    .pipe b { display: block; font-size: 15px; font-weight: 600; }
+    .pipe span { display: block; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .pipe div + div::before { content: '→'; position: absolute; left: -9px; top: 50%; transform: translateY(-50%); background: var(--bg); color: var(--muted); font-size: 13px; padding: 2px 0; }
+    @media (max-width: 760px) { .pipe { grid-template-columns: 1fr; } .pipe div, .pipe div:first-child, .pipe div:last-child { border-radius: 0; border-left: 1px solid var(--line); border-top: 0; } .pipe div:first-child { border-radius: 14px 14px 0 0; border-top: 1px solid var(--line); } .pipe div:last-child { border-radius: 0 0 14px 14px; } .pipe div + div::before { content: '↓'; left: 18px; top: -11px; transform: none; } }
+
+    /* post-launch */
+    .loop { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .loop span { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 13.5px; }
+    .loop span::after { content: ' →'; color: var(--muted); }
+    .loop span:last-child::after { content: ' ↺'; }
+
+    /* outcome & reflection */
+    .big { font-size: clamp(28px, 3.6vw, 52px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.08; }
+    blockquote { font-size: clamp(20px, 2vw, 28px); letter-spacing: -0.02em; line-height: 1.35; padding-left: 22px; border-left: 2px solid var(--fg); }
+    blockquote + blockquote { margin-top: 26px; }
+    .next { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; margin-top: 12vh; padding-top: 28px; border-top: 1px solid var(--line); }
+    .next a.n { font-size: clamp(32px, 5vw, 72px); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+    .next a.n small { display: block; font: 500 12px/1 var(--mono); color: var(--muted); letter-spacing: .04em; margin-bottom: 12px; }
+    .next .ct { display: flex; gap: 18px; flex-wrap: wrap; font-weight: 500; }
+    .next .ct a { border-bottom: 1px solid rgba(233,236,242,.35); }
+
+    @media (max-width: 860px) { .sec { padding-top: 16vh; min-height: 100vh; } }
+  </style>
+</head>
+<body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="shade"></div>
+  <div class="progress" id="progress"></div>
+
+  <header class="nav" id="nav">
+    <a class="back" id="home" href="b.html">← Yurii Fokin <span>· Data Marketplace</span></a>
+    <div class="nav-r">
+      <nav class="style" aria-label="Style"><a id="sMatter" href="?v=matter">Материя</a><a id="sDepth" href="?v=depth">Глубина</a></nav>
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+    </div>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Chapters"></nav>
+
+  <main>
+    <!-- 00 -->
+    <section class="sec hero" data-scene="0" id="top">
+      <span class="num rv">Case 01 · Halliburton · 2025–2026</span>
+      <h1 class="rv">Data Marketplace</h1>
+      <p class="lead rv">Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.</p>
+      <dl class="meta rv">
+        <div><dt>Role</dt><dd>Lead UX, sole designer</dd></div>
+        <div><dt>Core team</dt><dd>3 engineers, PO, AI lead, Technology Director</dd></div>
+        <div><dt>Research</dt><dd>10 participants across 4 roles</dd></div>
+        <div><dt>Timeline</dt><dd>2025–2026</dd></div>
+        <div><dt>Status</dt><dd>In active use + testing</dd></div>
+      </dl>
+      <p class="nda rv"><i>NDA</i>Sensitive data and metadata are under NDA. All values are placeholders; process and design are shown in full.</p>
+      <figure class="hero-fig" id="heroFig"><img id="heroImg" src="../../assets/images/halliburton/halliburton-hero.webp" alt="Data Marketplace — screens across desktop and mobile"></figure>
+    </section>
+
+    <!-- 01 -->
+    <section class="sec" data-scene="1" id="problem" data-title="Problem">
+      <div class="col">
+        <span class="num rv">01 — Problem &amp; context</span>
+        <h2 class="rv">Scattered and unfindable.</h2>
+        <p class="lead rv">Data assets live across disconnected systems with inconsistent metadata and unclear ownership.</p>
+        <div class="stack">
+          <div class="card rv"><span class="eyebrow">Problem</span><h3 style="margin-top:8px">Scattered and unfindable</h3><p class="muted" style="margin-top:6px">Users cannot efficiently work with data because it is difficult to find, difficult to access, and not easy to compare across multiple sources.</p></div>
+          <div class="arrow rv" aria-hidden="true">↓</div>
+          <div class="card rv"><span class="eyebrow">Goal</span><h3 style="margin-top:8px">One entry point</h3><p class="muted" style="margin-top:6px">A unified marketplace for curated data, reports, models, and AI agents — part of Halliburton's Data Ribbon.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="sec" data-scene="2" id="roadmap" data-title="Roadmap">
+      <div class="col">
+        <span class="num rv">02 — Roadmap</span>
+        <h2 class="rv">Six steps, one designer.</h2>
+        <ol class="steps" id="steps">
+          <li class="rv"><b>1.0</b><h3>Discovery</h3><p>Aligned with the Technology Director and AI lead on vision, then split the work into two phases — MVP and Trust/AI — so the design system could scale without rework.</p><span class="tag">2 strategies · 1 foundation</span></li>
+          <li class="rv"><b>2.0</b><h3>Research</h3><p>Mapped 4 persona groups, 5 user flows, user journey maps, and the information architecture that later powered the MCP hand-off.</p><span class="tag">4 personas · 5 flows · IA</span></li>
+          <li class="rv"><b>3.0</b><h3>Prototype &amp; design system</h3><p>Started with AI-generated prototypes to validate structure fast, then built a scalable design system with reusable tokens and components.</p><span class="tag">AI prototype · Figma system</span></li>
+          <li class="rv"><b>4.0</b><h3>Usability testing</h3><p>Two rounds of testing with real users — Data POD Leads and Product Owners. Caught blind spots before a single line of code was written.</p><span class="tag">2 rounds · 10 users</span></li>
+          <li class="rv"><b>5.0</b><h3>Hand-off to dev</h3><p>Connected the dev team to Figma through an MCP server. Developers pulled specs, tokens, and components directly into their IDE — no screenshots, no outdated docs.</p><span class="tag">Figma MCP · live specs</span></li>
+          <li class="rv"><b>6.0</b><h3>Post-launch research</h3><p>Tracked adoption, task success, and friction points after launch. The platform keeps evolving based on real usage data.</p><span class="tag">Analytics · iteration</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="sec" data-scene="3" id="strategy" data-title="UX strategy">
+      <div class="col">
+        <span class="num rv">03 — UX strategy</span>
+        <h2 class="rv">Structure first. AI second.</h2>
+        <div class="tabs rv" role="tablist" aria-label="Phase">
+          <button role="tab" aria-selected="true" aria-controls="ph1" id="t-ph1">Phase 1 — MVP</button>
+          <button role="tab" aria-selected="false" aria-controls="ph2" id="t-ph2">Phase 2 — Trust, social &amp; AI</button>
+        </div>
+        <div role="tabpanel" id="ph1" aria-labelledby="t-ph1">
+          <p class="lead">Phase 1 built the foundation — one marketplace to find, trust, and access any data asset. Structure and core workflows first; AI and social came later.</p>
+          <div class="stack">
+            <dl class="card vps rv">
+              <div><dt>Vision</dt><dd>Provide a user-friendly means of accessing curated, trusted data, reports, models, and AI Agents that are a part of Halliburton's Data Ribbon.</dd></div>
+              <div><dt>Success looks like</dt><dd>Data engineers use the dashboard daily as the primary entry point to find, validate, request access, and consume data assets within minutes — not days or weeks.</dd></div>
+            </dl>
+            <div class="kpi rv">
+              <div class="card"><span class="eyebrow">Search time</span><b><s>weeks</s> → under 5 min</b></div>
+              <div class="card"><span class="eyebrow">Access request time</span><b><s>months</s> → days</b></div>
+            </div>
+            <div class="card rv"><span class="eyebrow">UX goals</span>
+              <ul class="plain"><li>Help users find the right data product quickly</li><li>Make data product cards and details easy to understand</li><li>Simplify the access request flow</li><li>Make access statuses and permissions clear</li><li>Differentiate View and Edit access levels clearly</li><li>Enable product owners to add and manage products with minimal friction</li></ul>
+            </div>
+            <div class="card rv"><span class="eyebrow">UX principles</span>
+              <ol class="principles"><li><b>Reduce cognitive load</b> — engineers already drown in data; the UI shouldn't add noise.</li><li><b>Trust over decoration</b> — every element earns its place; metadata, status, and lineage come first.</li><li><b>Speed as a feature</b> — every flow optimized for “minutes, not weeks.”</li><li><b>Desktop-first</b> — users live in multi-window data environments.</li></ol>
+            </div>
+            <div class="card rv"><span class="eyebrow">Core scenarios</span>
+              <div class="chips"><span>Search and discover</span><span>Filter and narrow down</span><span>Judge a dataset from its page</span><span>1-click access request</span><span>Track request status</span><span>Compare data sets</span><span>Add and manage products</span><span>Manage access levels</span></div>
+            </div>
+            <div class="card rv"><span class="eyebrow">Deliverables</span>
+              <div class="chips"><span>UX strategy for 2 phases</span><span>4 persona groups</span><span>Journey maps</span><span>Jobs-to-be-done</span><span>5 user flows</span><span>Wireframes &amp; mockups</span><span>Interactive prototype</span><span>Design system</span><span>2 testing reports</span><span>Post-launch research report</span></div>
+            </div>
+          </div>
+        </div>
+        <div role="tabpanel" id="ph2" aria-labelledby="t-ph2" hidden>
+          <p class="lead">Phase 2 turns browsing into AI-powered discovery. Users describe what they need in plain language and get ranked, trustworthy results.</p>
+          <div class="stack">
+            <dl class="card vps">
+              <div><dt>Vision</dt><dd>Transform the Data Marketplace from a browsing tool into an intelligent, trust-driven data discovery platform powered by AI.</dd></div>
+              <div><dt>Problem</dt><dd>Users can find data but cannot judge if it's reliable, relevant, or safe to use. Discovery is manual, trust signals are absent, and social knowledge is invisible.</dd></div>
+              <div><dt>Success looks like</dt><dd>Engineers and business users describe what they need in plain language, receive ranked trusted results in seconds, and make access decisions confidently.</dd></div>
+            </dl>
+            <div class="card"><span class="eyebrow">Structural change</span><p style="margin-top:8px">The existing browse experience moves to a secondary role. A new AI-powered entry point takes its place — built around intent rather than navigation.</p></div>
+            <div class="card"><span class="eyebrow">UX goals</span>
+              <ul class="plain"><li>Reduce time to find the right data product from weeks to minutes</li><li>Give users confidence to trust data before requesting access</li><li>Make approval decisions faster for owners</li><li>Surface peer knowledge that currently lives only in people's heads</li><li>Support both technical and business user journeys</li></ul>
+            </div>
+            <p class="nda"><i>NDA</i>AI capabilities, feature clusters and Phase 2 KPIs stay under NDA.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section class="sec" data-scene="4" id="research" data-title="Research">
+      <div class="col">
+        <span class="num rv">04 — Research</span>
+        <h2 class="rv">Four groups, five flows.</h2>
+        <p class="lead rv">Persona groups, user flows and end-to-end journey maps shaped every design decision.</p>
+        <div class="personas" id="personas">
+          <div class="card persona rv" data-g="0"><i style="background:#8FD3FF">G1</i><h3>Data scientist / engineer</h3><p><b>Who</b>Technical specialist working with Python, ML models, and data integrations.</p><p><b>Pain</b>Hard to find datasets across sources; long approval cycles; unclear ownership.</p></div>
+          <div class="card persona rv" data-g="1"><i style="background:#FFD08A">G2</i><h3>Business user</h3><p><b>Who</b>Analysts, PMs, and business stakeholders using BI tools.</p><p><b>Pain</b>Too much raw data, too few curated business-ready reports; hard to trust freshness.</p></div>
+          <div class="card persona rv" data-g="2"><i style="background:#B8F0C9">G3</i><h3>Data product owner</h3><p><b>Who</b>Product manager responsible for governance and lifecycle of data products.</p><p><b>Pain</b>Fragmented ownership; too many manual approval steps; slow onboarding.</p></div>
+          <div class="card persona rv" data-g="3"><i style="background:#FF9FB0">G4</i><h3>Data POD lead</h3><p><b>Who</b>Team/Tech Lead for a data engineering POD or domain.</p><p><b>Pain</b>Heavy manual documentation work; poor visibility into who uses their products.</p></div>
+        </div>
+
+        <h3 class="rv" style="margin-top:56px">User flows</h3>
+        <p class="muted rv" style="margin-top:8px">Five flows cover the platform. Three are here: the two sides of getting access, and the one that puts a product on the shelf in the first place. The other two stay under NDA.</p>
+        <div class="tabs rv" role="tablist" aria-label="Flow">
+          <button role="tab" aria-selected="true" aria-controls="f1" id="t-f1">Find and get access</button>
+          <button role="tab" aria-selected="false" aria-controls="f2" id="t-f2">Publish a product</button>
+          <button role="tab" aria-selected="false" aria-controls="f3" id="t-f3">Decide on a request</button>
+        </div>
+        <div class="card" role="tabpanel" id="f1" aria-labelledby="t-f1" style="margin-top:12px">
+          <span class="eyebrow">Group 1 · Data scientist / engineer</span>
+          <ol class="flow">
+            <li><em class="k-end">Start</em><span>Opens the web app</span></li>
+            <li class="head">Step 1 · Sign in</li>
+            <li><em class="k-screen">Screen</em><span>Login page</span></li>
+            <li><em class="k-action">Action</em><span>Enter credentials, pick a role<small>the role is asked once, on first sign-in</small></span></li>
+            <li><em class="k-system">System</em><span>Validate and sign in</span></li>
+            <li class="head">Step 2 · Find the data</li>
+            <li><em class="k-screen">Screen</em><span>All data products<small>the whole catalogue, unfiltered</small></span></li>
+            <li><em class="k-decision">Decision</em><span>Three ways in<small>search by name or question · filter by domain, owner, certification · browse the catalogue</small></span></li>
+            <li><em class="k-decision">Decision</em><span>Anything that fits?</span></li>
+            <li class="head">Step 3 · Judge and request</li>
+            <li><em class="k-screen">Screen</em><span>Data product page<small>schema, lineage, quality, owner</small></span></li>
+            <li><em class="k-decision">Decision</em><span>Certified and trusted?<small>the question the whole page has to answer</small></span></li>
+            <li><em class="k-action">Action</em><span>Request access</span></li>
+            <li><em class="k-system">System</em><span>Check sensitivity and permissions</span></li>
+            <li class="head">Step 4 · Track the request</li>
+            <li><em class="k-screen">Screen</em><span>Track access requests<small>every request and where it stands</small></span></li>
+            <li><em class="k-system">System</em><span>Email on the owner's decision</span></li>
+            <li><em class="k-end">End</em><span>Approved — access granted</span></li>
+            <li><em class="k-off">Off-flow</em><span>Rejected — reason shown, back to the catalogue</span></li>
+          </ol>
+        </div>
+        <div class="card" role="tabpanel" id="f2" aria-labelledby="t-f2" hidden style="margin-top:12px">
+          <span class="eyebrow">Group 3 · Data product owner</span>
+          <ol class="flow">
+            <li><em class="k-end">Start</em><span>Clicks “Add data product”</span></li>
+            <li><em class="k-screen">Screen</em><span>Add data product</span></li>
+            <li><em class="k-action">Action</em><span>Pick the source product<small>the selector lists only what belongs to this owner</small></span></li>
+            <li><em class="k-system">System</em><span>Pull everything from Databricks<small>title, type, PSL, domain, tags, schema, lineage, usage</small></span></li>
+            <li><em class="k-decision">Decision</em><span>Anything to fix first?<small>preview before publishing, or save as a draft</small></span></li>
+            <li><em class="k-action">Action</em><span>Changes needed — edit fields and access groups<small>edits go back to Databricks; four AD groups, viewers and editors, per sensitivity</small></span></li>
+            <li><em class="k-action">Action</em><span>Looks right — preview, or save as a draft</span></li>
+            <li><em class="k-action">Action</em><span>Publish to the marketplace</span></li>
+            <li><em class="k-end">End</em><span>Live on the catalogue</span></li>
+          </ol>
+        </div>
+        <div class="card" role="tabpanel" id="f3" aria-labelledby="t-f3" hidden style="margin-top:12px">
+          <span class="eyebrow">Group 3 · Data product owner, answering Group 1</span>
+          <ol class="flow">
+            <li><em class="k-end">Start</em><span>Engineer requests access</span></li>
+            <li><em class="k-system">System</em><span>Is the product sensitive?<small>the fork the whole flow turns on</small></span></li>
+            <li class="head">Not sensitive</li>
+            <li><em class="k-action">Action</em><span>Access granted for 7 days</span></li>
+            <li><em class="k-system">System</em><span>Owner notified, expiry set<small>the product lands on the requester's My data access</small></span></li>
+            <li><em class="k-decision">Decision</em><span>Owner reviews — extends and sets permissions, or lets it lapse after 7 days</span></li>
+            <li class="head">Sensitive</li>
+            <li><em class="k-action">Action</em><span>Request goes to the owner</span></li>
+            <li><em class="k-system">System</em><span>Owner notified, request queued<small>it appears on the Requests page</small></span></li>
+            <li><em class="k-decision">Decision</em><span>Owner's call — approves and sets an expiry, or rejects</span></li>
+            <li><em class="k-system">System</em><span>Requester told the outcome</span></li>
+          </ol>
+        </div>
+
+        <h3 class="rv" style="margin-top:56px">Journey maps</h3>
+        <div class="tabs rv" role="tablist" aria-label="Journey">
+          <button role="tab" aria-selected="true" aria-controls="j1" id="t-j1">Data scientist</button>
+          <button role="tab" aria-selected="false" aria-controls="j2" id="t-j2">Business user</button>
+          <button role="tab" aria-selected="false" aria-controls="j3" id="t-j3">Product owner</button>
+          <button role="tab" aria-selected="false" aria-controls="j4" id="t-j4">POD lead</button>
+        </div>
+        <div id="journeys"></div>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section class="sec" data-scene="5" id="system" data-title="Prototype & system">
+      <div class="col">
+        <span class="num rv">05 — Prototype &amp; design system</span>
+        <h2 class="rv">Prove the structure. Then build the system.</h2>
+        <p class="lead rv">Instead of pixel-perfect mockups, I started with an AI prototype to test concepts and layouts before investing in high-fidelity design. Once the structure was proven, I built a scalable design system — reusable components, tokens, and patterns — then the final mockups for the dev team.</p>
+      </div>
+      <div class="viewer rv" id="viewer">
+        <div class="bar">
+          <div class="tabs" role="tablist" aria-label="Screen" id="screenTabs"></div>
+          <div class="theme" role="group" aria-label="Theme"><button aria-pressed="false" data-t="light">Light</button><button aria-pressed="true" data-t="dark">Dark</button></div>
+        </div>
+        <figure style="margin-top:14px"><img id="shotA" alt=""><img id="shotB" alt="" style="opacity:0"></figure>
+        <figcaption id="shotCap"></figcaption>
+      </div>
+      <div class="col" style="margin-top:72px">
+        <h3 class="rv">Three-tier token architecture</h3>
+        <p class="muted rv" style="margin-top:8px">One system, two themes, zero duplication. Every colour flows through three layers — primitives, semantic tokens that swap for light and dark, and component tokens.</p>
+      </div>
+      <div class="tiers rv">
+        <div class="card tier"><h4>Primitives <span>~158</span></h4><ul>
+          <li><i style="background:#CC0000"></i>red-50<em>#CC0000</em></li><li><i style="background:#FFFFFF"></i>white<em>#FFFFFF</em></li><li><i style="background:#000000"></i>black<em>#000000</em></li>
+          <li><i style="background:#ECEFF0"></i>grey-5<em>#ECEFF0</em></li><li><i style="background:#D4DADD"></i>grey-20<em>#D4DADD</em></li><li><i style="background:#7F878D"></i>grey-50<em>#7F878D</em></li>
+          <li><i style="background:#6D757A"></i>grey-60<em>#6D757A</em></li><li><i style="background:#1E2224"></i>grey-95<em>#1E2224</em></li><li><i style="background:#CFF0DD"></i>green-10<em>#CFF0DD</em></li>
+          <li><i style="background:#0C7135"></i>green-70<em>#0C7135</em></li><li><i style="background:#A94722"></i>orange-70<em>#A94722</em></li><li><i style="background:#E3ECF7"></i>blue-10<em>#E3ECF7</em></li></ul></div>
+        <div class="card tier"><h4>Semantic <span>~45</span></h4><ul>
+          <li><i style="background:#CC0000"></i>primary-background</li><li><i style="background:#FFFFFF"></i>primary-foreground</li><li><i style="background:#ECEFF0"></i>secondary-background</li>
+          <li><i style="background:#FFFFFF"></i>surface-background</li><li><i style="background:#6D757A"></i>surface-fg-muted</li><li><i style="background:#D4DADD"></i>border-default</li>
+          <li><i style="background:#1E2224"></i>border-focus</li><li><i style="background:#CFF0DD"></i>success-background</li><li><i style="background:#0C7135"></i>success-foreground</li>
+          <li><i style="background:#A94722"></i>warning-foreground</li><li><i style="background:#E3ECF7"></i>data-bg</li></ul></div>
+        <div class="card tier"><h4>Component <span>~459</span></h4><ul>
+          <li><i style="background:#CC0000"></i>button/primary/bg</li><li><i style="background:#FFFFFF"></i>button/primary/text</li><li><i style="background:#000000"></i>button/secondary/text</li>
+          <li><i style="background:#ECEFF0"></i>button/secondary/bg</li><li><i style="background:#FFFFFF"></i>page/page-bg</li><li><i style="background:#000000"></i>content/text</li>
+          <li><i style="background:#D4DADD"></i>input/border-default</li><li><i style="background:#1E2224"></i>input/border-focused</li><li><i style="background:#CFF0DD"></i>statuses/success-bg</li>
+          <li><i style="background:#0C7135"></i>statuses/success-text</li><li><i style="background:#E3ECF7"></i>data product/bg</li></ul></div>
+      </div>
+      <p class="muted rv" style="margin-top:14px; font-size:14px">~158 primitive · ~45 semantic · ~459 component tokens across 2 themes.</p>
+    </section>
+
+    <!-- 06 -->
+    <section class="sec" data-scene="6" id="testing" data-title="Usability testing">
+      <div class="col">
+        <span class="num rv">06 — Usability testing</span>
+        <h2 class="rv">Blind spots, caught before code.</h2>
+        <p class="lead rv">Before moving to development, I ran two structured feedback sessions with the primary user groups — validating designs, aligning on roles and workflows, and catching blind spots early.</p>
+        <div class="stack">
+          <div class="card rv"><span class="eyebrow">Session 1</span><h3 style="margin-top:8px">Data POD Leads</h3><p class="muted" style="margin-top:6px">The technical owners who create and maintain data products. Validated roles, publishing workflows, and access management.</p>
+            <ul class="plain"><li>Overall Marketplace concept is supported</li><li>Clear separation between POD Lead and Data Product Owner responsibilities</li><li>Automation-first approach validated</li><li>Access management should be user-centric</li><li>Sensitivity column removed from UI</li><li>Dev access management remains an open exploration topic</li></ul></div>
+          <div class="card rv"><span class="eyebrow">Session 2</span><h3 style="margin-top:8px">Data Product Owners</h3><p class="muted" style="margin-top:6px">The business owners responsible for final approval and publication. Validated publication flow, access governance, and role alignment.</p>
+            <ul class="plain"><li>Overall Marketplace concept is supported</li><li>Clear separation between technical and business ownership</li><li>Access management should be user-centric with clear access reasons</li><li>Publication and access decisions should stay lightweight</li><li>Marketplace enables confident decisions without exposing technical complexity</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 -->
+    <section class="sec" data-scene="7" id="handoff" data-title="Hand-off">
+      <div class="col">
+        <span class="num rv">07 — Hand-off to dev</span>
+        <h2 class="rv">No screenshots. No outdated PDFs.</h2>
+        <p class="lead rv">Traditional hand-off means screenshots, redlines, and a PDF that's outdated the moment you save it. Instead, I connected developers directly to the Figma design system through MCP (Model Context Protocol) — they pulled specs, tokens, and interaction states straight into their IDE in real time.</p>
+      </div>
+      <div class="pipe rv">
+        <div><b>Figma file</b><span>Design system, tokens, variables</span></div>
+        <div><b>MCP server</b><span>Structured data layer</span></div>
+        <div><b>Claude Code / IDE</b><span>Live queries from the dev environment</span></div>
+        <div><b>Production code</b><span>Components built 1:1 with design</span></div>
+      </div>
+    </section>
+
+    <!-- 08 -->
+    <section class="sec" data-scene="8" id="postlaunch" data-title="Post-launch">
+      <div class="col">
+        <span class="num rv">08 — Post-launch research</span>
+        <h2 class="rv">Measure from day one.</h2>
+        <p class="lead rv">The platform is in active use while testing continues. Rather than waiting to measure success, I designed the post-launch research programme upfront — combining analytics, AI-powered tools, and continuous user feedback.</p>
+        <div class="stack">
+          <dl class="card vps rv"><span class="eyebrow">What we'll measure</span>
+            <div><dt>Adoption</dt><dd>Active users, onboarding completion, return visits.</dd></div>
+            <div><dt>Task success</dt><dd>Time-to-find, search-to-access, first-attempt access.</dd></div>
+            <div><dt>Satisfaction</dt><dd>Micro-surveys and interviews triggered in-product.</dd></div>
+            <div><dt>Pain points</dt><dd>Friction from session replays, tickets, heatmaps.</dd></div>
+          </dl>
+          <dl class="card vps rv"><span class="eyebrow">Modern research stack</span>
+            <div><dt>Analytics copilot</dt><dd>Natural-language queries across usage data.</dd></div>
+            <div><dt>AI session replay</dt><dd>LLM insights instead of hundreds of recordings.</dd></div>
+            <div><dt>Continuous interviews</dt><dd>Weekly short calls, built in, not one-off studies.</dd></div>
+            <div><dt>Feedback synthesis</dt><dd>Surveys, tickets, and interviews themed by LLM.</dd></div>
+          </dl>
+          <div class="card rv"><span class="eyebrow">Feedback-driven iteration</span>
+            <div class="loop"><span>Listen</span><span>Synthesize</span><span>Ship</span><span>Validate</span></div>
+            <p class="muted" style="margin-top:12px; font-size:14px">Surveys, replays, interviews and tickets → themes prioritised by impact → the worst friction fixed in short cycles → re-measured to confirm the metric moved.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 -->
+    <section class="sec" data-scene="9" id="outcome" data-title="Outcome & reflection">
+      <div class="col">
+        <span class="num rv">09 — Outcome</span>
+        <p class="big rv">Built, validated with real users, in active use while testing continues.</p>
+        <p class="lead rv">In place: a three-tier design system, an MCP pipeline wired into dev, and Figma-to-code hand-off.</p>
+        <span class="num rv" style="margin-top:12vh">10 — Reflection</span>
+        <blockquote class="rv">I'd bring data governance in earlier — their requirements landed mid-project and sent the access flow back for rework.</blockquote>
+        <blockquote class="rv">Leading alone taught me seniority is owning decisions, not headcount. AI speeds up only what you already understand.</blockquote>
+      </div>
+      <div class="next rv">
+        <a class="n" href="../../cases/rebalancer/"><small>Next case →</small>Rebalancer</a>
+        <div class="ct"><a href="mailto:yuryuryury@icloud.com">yuryuryury@icloud.com</a><a href="https://www.linkedin.com/in/yuryury/">LinkedIn ↗</a><a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="case-matter.js"></script>
+  <script src="case-depth.js"></script>
+  <script src="case-kit.js"></script>
+</body>
+</html>
