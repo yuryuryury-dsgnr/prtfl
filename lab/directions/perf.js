@@ -1,12 +1,12 @@
 // What a phone needs to stay smooth, shared by the Matter and Depth pages:
 //   · touch devices keep the browser's own scroll (no smoothing layer, no snapping)
-//   · the canvas starts at 1.5× on a phone, not its native 3×
+//   · the canvas starts at 2× on a phone, not its native 3×
 //   · if frames still come in slow, the resolution steps down on its own
 //   · blurred glass over a canvas that repaints every frame is dropped on touch
 //   · ?fps on the URL shows the frame rate and the resolution in use
 (function () {
   var touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
-  var steps = touch ? [1.5, 1, 0.75] : [2, 1.5, 1];
+  var steps = [2, 1.5, 1];
   var native = window.devicePixelRatio || 1;
   var level = 0;
   while (level < steps.length - 1 && steps[level] > native) level++;
@@ -15,7 +15,37 @@
     touch: touch,
     dpr: Math.min(native, steps[level]),
     onChange: null,
+    info: null, // a page can add a line of its own state to the ?fps readout
     frame: frame
+  };
+
+  // the tallest the viewport gets (phone toolbar hidden): the canvas is drawn that tall, so the toolbar
+  // sliding in or out neither stretches the picture nor bares the page under it
+  var probe;
+  P.vh = function () {
+    if (!probe) {
+      probe = document.createElement('div');
+      probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:100lvh;visibility:hidden;pointer-events:none';
+      document.documentElement.appendChild(probe);
+    }
+    return Math.max(probe.offsetHeight, innerHeight);
+  };
+
+  // on a phone the stops are CSS snap points: iOS carries the momentum and lands on a whole shape
+  // by itself, where a script settling the scroll afterwards would fight the thumb
+  var snaps = [];
+  P.snap = function (ys) {
+    if (!touch) return;
+    document.documentElement.style.scrollSnapType = 'y mandatory';
+    ys.forEach(function (y, i) {
+      var el = snaps[i];
+      if (!el) {
+        el = snaps[i] = document.createElement('i');
+        el.style.cssText = 'position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-snap-align:start';
+        document.body.appendChild(el);
+      }
+      el.style.top = Math.round(y) + 'px';
+    });
   };
 
   if (touch) {
@@ -48,6 +78,7 @@
   }
   function draw(now) {
     if (now - shown < 250) return; shown = now;
-    hud.textContent = Math.round(1000 / ema) + ' fps  ' + ema.toFixed(1) + ' ms\nres ' + P.dpr + '×' + (touch ? '  touch' : '');
+    hud.textContent = Math.round(1000 / ema) + ' fps  ' + ema.toFixed(1) + ' ms\nres ' + P.dpr + '×' + (touch ? '  touch' : '') +
+      '\nview ' + innerWidth + '×' + innerHeight + '  canvas ' + P.vh() + (P.info ? '\n' + P.info() : '');
   }
 })();

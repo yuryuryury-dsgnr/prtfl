@@ -232,6 +232,8 @@
         heroWorld = [[r.x - W / 2, H / 2 - r.y], [r.x + r.w - W / 2, H / 2 - r.y], [r.x - W / 2, H / 2 - r.y - r.h], [r.x + r.w - W / 2, H / 2 - r.y - r.h]];
       }
       var ha = 1 - Math.min(1, Math.max(0, (env.scene - 0.9) / 0.5));
+      // under a thumb the page scrolls ahead of the canvas, so the plane can't sit behind the picture: the picture just fades
+      if (window.Perf && Perf.touch) ha = 0;
       if (ha > 0.001) {
         var hw = heroWorld;
         gl.useProgram(qprog);

@@ -21,9 +21,9 @@
     a:focus-visible, button:focus-visible { outline: 2px solid #9ED8C8; outline-offset: 4px; border-radius: 4px; }
     ::selection { background: #9ED8C8; color: #07080B; }
 
-    #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    #gl { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; display: block; }
     .vignette {
-      position: fixed; inset: 0; pointer-events: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; pointer-events: none;
       background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.65) 100%);
     }
     .grain {
@@ -151,7 +151,7 @@
   <canvas id="gl" aria-hidden="true"></canvas>
   <div class="vignette"></div>
   <div class="grain"></div>
-  <div class="loading" id="loading" aria-hidden="true">sampling <b id="loadPct">0</b>%</div>
+  <div class="loading" id="loading" aria-hidden="true"><span>sampling <b id="loadPct">0</b>%</span></div>
   <div class="ring" id="ring"><span>Open</span></div>
 
   <header class="nav">
@@ -208,7 +208,7 @@
   <div class="track"></div>
 
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="perf.js?v=2"></script>
+  <script src="perf.js?v=7"></script>
   <script src="switcher.js?v=2"></script>
   <script>
   (function () {
@@ -444,7 +444,7 @@
     function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
 
     function build(images) {
-      W = window.innerWidth; H = window.innerHeight;
+      W = window.innerWidth; H = window.Perf ? Perf.vh() : window.innerHeight;
       var mobile = W < 760;
 
       // the four covers decide N: one point per sampled pixel
@@ -617,8 +617,13 @@
       return 3;
     }
     // read once and on resize, not every frame: a layout read after style writes forces a reflow
-    var maxS = document.documentElement.scrollHeight - innerHeight;
-    addEventListener('resize', function () { maxS = document.documentElement.scrollHeight - innerHeight; });
+    var maxS;
+    function measureScroll() {
+      maxS = document.documentElement.scrollHeight - innerHeight;
+      if (window.Perf) Perf.snap(STOPS.map(function (s) { return s * maxS; }));
+    }
+    measureScroll();
+    addEventListener('resize', measureScroll);
     function maxScroll() { return maxS; }
     // a phone keeps its own scroll: iOS momentum is smoother than anything layered on it
     var touch = window.Perf && Perf.touch;
@@ -626,7 +631,7 @@
     function scrollToStage(k, dur) {
       var y = STOPS[k] * maxScroll();
       if (lenis) lenis.scrollTo(y, { duration: dur || 1.2, easing: function (x) { return 1 - Math.pow(1 - x, 3); } });
-      else scrollTo(0, y);
+      else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
     }
     document.querySelectorAll('[data-stage]').forEach(function (el) {
       el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
@@ -642,7 +647,7 @@
         scrollToStage(Math.round(p), 0.7);
       }, 380);
     }
-    // and no snapping under a thumb: settling would fight the momentum
+    // a phone gets snap points instead (measureScroll): a script settling the scroll would fight the momentum
     if (!touch) { if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true }); }
     addEventListener('keydown', function (e) {
       if (e.target.closest('input, textarea')) return;
@@ -684,7 +689,13 @@
       document.body.style.cursor = onCover >= 0 ? 'pointer' : '';
     });
     var wave = { x: 0, y: 0, t: -10 };
-    addEventListener('click', function (e) {
+    // a tap rather than a click: iOS sends no click up to the window from a plain block over the canvas
+    var down = null;
+    addEventListener('pointerdown', function (e) { down = { x: e.clientX, y: e.clientY, t: e.timeStamp }; });
+    addEventListener('pointercancel', function () { down = null; });
+    addEventListener('pointerup', function (e) {
+      var d = down; down = null;
+      if (!d || Math.abs(e.clientX - d.x) > 10 || Math.abs(e.clientY - d.y) > 10 || e.timeStamp - d.t > 600) return;
       if (e.target.closest('a, button, .dir-switch')) return;
       if (Math.abs(stage - 2) < 0.15) {
         var k = coverAt(e.clientX - W / 2, e.clientY - H / 2);
@@ -702,6 +713,9 @@
       hover = k;
     }
     addEventListener('pageshow', function (e) { if (e.persisted) { goState = null; gl.uniform1f(U.uGo, 0); } });
+    // a handle for checking the page from the console
+    window.__matter = { stage: function () { return stage; }, goState: function () { return goState; }, coverAt: function (x, y) { return coverAt(x - W / 2, y - H / 2); } };
+    if (window.Perf) Perf.info = function () { return 'stage ' + stage.toFixed(2) + '  y ' + Math.round(scrollY) + (goState ? '  go ' + goState.k : ''); };
 
     var caps = [].slice.call(document.querySelectorAll('[data-cap]'));
     var meter = [].slice.call(document.querySelectorAll('#meter button'));

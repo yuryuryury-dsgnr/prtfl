@@ -163,7 +163,7 @@
   new ResizeObserver(function () { measure(); }).observe(document.querySelector('main'));
 
   var env = {
-    W: innerWidth, H: innerHeight, dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2), mobile: innerWidth < 860, reduce: reduce,
+    W: innerWidth, H: (window.Perf ? Perf.vh() : innerHeight), dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2), mobile: innerWidth < 860, reduce: reduce,
     t: 0, dt: 16, scene: 0, sub: 0, step: 0, persona: 0, heroRect: { x: 0, y: 0, w: 1, h: 1 }, heroVis: 1,
     mouse: { x: -9999, y: -9999, vx: 0, vy: 0, on: 0 }
   };
@@ -197,12 +197,15 @@
     env.persona = pOn; env.inRes = inRes;
 
     env.heroRect = { x: heroAbs.x, y: heroAbs.y - y, w: heroAbs.w, h: heroAbs.h };
-    // the picture gives way to the scene as soon as the next chapter starts to take over
-    env.heroVis = 1 - Math.max(0, Math.min(1, (sc - 0.02) / 0.16));
+    // the picture gives way to the scene as soon as the next chapter starts to take over;
+    // on a phone it sits below the fold, so there it stays until it scrolls off the top
+    env.heroVis = env.mobile
+      ? Math.max(0, Math.min(1, (heroAbs.y - y + heroAbs.h * 0.5) / (vh * 0.3)))
+      : 1 - Math.max(0, Math.min(1, (sc - 0.02) / 0.16));
     put(heroImg, 'opacity', env.heroVis.toFixed(3));
 
     put(progress, 'transform', 'scaleX(' + (y / maxS).toFixed(4) + ')');
-    var solid = y > vh * 0.6;
+    var solid = y > 24;
     if (solid !== env.solid) { nav.classList.toggle('solid', solid); env.solid = solid; }
     if (k !== env.k) { railLinks.forEach(function (a, i) { a.classList.toggle('on', i === k - 1); }); env.k = k; }
 
@@ -227,9 +230,11 @@
     ov.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100vh;object-fit:cover;z-index:60;border-radius:0;pointer-events:none';
     document.body.appendChild(ov);
     heroImg.style.visibility = 'hidden';
+    // on a phone the picture's place is below the fold: it sinks toward it and fades rather than vanish off the edge
+    var below = r.top > innerHeight - 80;
     ov.animate([
-      { left: '0px', top: '0px', width: innerWidth + 'px', height: innerHeight + 'px', borderRadius: '0px' },
-      { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: '18px' }
+      { left: '0px', top: '0px', width: innerWidth + 'px', height: innerHeight + 'px', borderRadius: '0px', opacity: 1 },
+      { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: '18px', opacity: below ? 0 : 1 }
     ], { duration: 1100, easing: 'cubic-bezier(.7,0,.2,1)', fill: 'forwards', delay: 150 }).onfinish = function () {
       heroImg.style.visibility = ''; ov.remove();
     };
@@ -264,9 +269,10 @@
         if (innerWidth === lw && Math.abs(innerHeight - lh) < 120) return;
         lw = innerWidth; lh = innerHeight;
         clearTimeout(to);
-        to = setTimeout(function () { env.W = innerWidth; env.H = innerHeight; env.mobile = innerWidth < 860; measure(); R.build(env); }, 200);
+        to = setTimeout(function () { env.W = innerWidth; env.H = (window.Perf ? Perf.vh() : innerHeight); env.mobile = innerWidth < 860; measure(); R.build(env); }, 200);
       });
     }).catch(function (e) { console.error(e); });
   }
   window.__case = { env: env, lenis: lenis, measure: measure };
+  if (window.Perf) Perf.info = function () { return 'scene ' + env.scene.toFixed(2) + '  hero ' + env.heroVis.toFixed(2) + (env.solid ? '  nav' : ''); };
 })();

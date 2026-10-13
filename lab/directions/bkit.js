@@ -16,7 +16,7 @@
     var root = document.documentElement;
 
     var env = {
-      W: innerWidth, H: innerHeight, mobile: innerWidth < 760, reduce: reduce,
+      W: innerWidth, H: (window.Perf ? Perf.vh() : innerHeight), mobile: innerWidth < 760, reduce: reduce,
       dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2),
       t: 0, dt: 16.7, s: 0, stage: 0,
       mouse: { x: -9999, y: -9999, vx: 0, vy: 0, on: 0 },
@@ -73,10 +73,15 @@
       return 3;
     }
     // read once and on resize: a layout read after the frame's style writes forces a reflow
-    var maxS = document.documentElement.scrollHeight - innerHeight;
-    addEventListener('resize', function () { maxS = document.documentElement.scrollHeight - innerHeight; });
+    var maxS;
+    function measureScroll() {
+      maxS = document.documentElement.scrollHeight - innerHeight;
+      if (window.Perf) Perf.snap(STOPS.map(function (s) { return s * maxS; }));
+    }
+    measureScroll();
+    addEventListener('resize', measureScroll);
     function maxScroll() { return maxS; }
-    // a phone keeps its own scroll, and nothing snaps under a thumb
+    // a phone keeps its own scroll; its stops are CSS snap points (measureScroll)
     var touch = window.Perf && Perf.touch;
     var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.18 }) : null;
     // a handle for poking at it from the console
@@ -85,7 +90,7 @@
     function scrollToStage(k, dur) {
       var y = STOPS[k] * maxScroll();
       if (lenis) lenis.scrollTo(y, { duration: dur || 1.2, easing: function (x) { return 1 - Math.pow(1 - x, 3); } });
-      else scrollTo(0, y);
+      else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
     }
     document.querySelectorAll('[data-stage]').forEach(function (el) {
       el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
@@ -125,7 +130,13 @@
     document.addEventListener('pointerleave', away);
     addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') away(); });
     addEventListener('pointercancel', away);
-    addEventListener('click', function (e) {
+    // a tap rather than a click: iOS sends no click up to the window from a plain block over the canvas
+    var down = null;
+    addEventListener('pointerdown', function (e) { down = { x: e.clientX, y: e.clientY, t: e.timeStamp }; });
+    addEventListener('pointercancel', function () { down = null; });
+    addEventListener('pointerup', function (e) {
+      var d = down; down = null;
+      if (!d || Math.abs(e.clientX - d.x) > 10 || Math.abs(e.clientY - d.y) > 10 || e.timeStamp - d.t > 600) return;
       if (e.target.closest('a, button, .dir-switch')) return;
       if (Math.abs(env.stage - 2) < 0.15) {
         var k = R.coverAt(e.clientX, e.clientY);
@@ -214,7 +225,7 @@
         lastW = innerWidth; lastH = innerHeight;
         clearTimeout(to);
         to = setTimeout(function () {
-          env.W = innerWidth; env.H = innerHeight; env.mobile = innerWidth < 760;
+          env.W = innerWidth; env.H = (window.Perf ? Perf.vh() : innerHeight); env.mobile = innerWidth < 760;
           lastTagKey = '';
           R.build(env);
         }, 200);

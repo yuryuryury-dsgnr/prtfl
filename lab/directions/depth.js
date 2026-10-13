@@ -389,8 +389,12 @@
         var y = (yb(l.layer, x, Z_STRATA_FRONT) + yb(l.layer + 1, x, Z_STRATA_FRONT)) / 2;
         var s = project([x, y, Z_STRATA_FRONT + 2], W, H);
         var o = s ? Math.max(0, Math.min(1, near * 1.8 - n * 0.16)) : 0;
-        labels[n].style.opacity = o;
-        if (s) labels[n].style.transform = 'translate(' + (s.x - 3.5) + 'px,' + (s.y - 10) + 'px)';
+        var el = labels[n];
+        el.style.opacity = o;
+        if (!s) return;
+        // kept on screen: on a phone the right-hand labels would run off the edge (width read once, not per frame)
+        if (!el._w) el._w = el.offsetWidth;
+        el.style.transform = 'translate(' + Math.max(12, Math.min(s.x - 3.5, W - el._w - 12)) + 'px,' + (s.y - 10) + 'px)';
       });
 
       // where the covers ended up on screen, for the hit test and the tags

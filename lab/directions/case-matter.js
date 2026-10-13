@@ -26,7 +26,7 @@
     '    if (row >= uGrid.y) { p = vec2(r.x * uRes.x, uHero.y + r.y * uHero.w); c = vec3(0.06); return; }',
     '    vec2 uv = (vec2(col, row) + 0.5) / uGrid;',
     '    p = uHero.xy + uv * uHero.zw;',
-    '    c = texture(uImg, uv).rgb * 0.92; sz = uHero.z / uGrid.x; sq = 1.0; return;',
+    '    c = texture(uImg, uv).rgb * 0.92 * (1.0 - uHeroVis); sz = uHero.z / uGrid.x; sq = 1.0; return;',
     '  }',
     // 01 — everything scattered; reading on pulls it into one ring, one entry point
     '  if (k == 1) {',
@@ -215,7 +215,9 @@
       gl.uniform1f(U.uT, env.t); gl.uniform1f(U.uScene, Math.min(9, env.scene)); gl.uniform1f(U.uSub, env.sub);
       gl.uniform1f(U.uStep, env.step); gl.uniform1f(U.uPersona, env.persona);
       gl.uniform2f(U.uMouse, env.mouse.x, env.mouse.y); gl.uniform1f(U.uMouseOn, env.reduce ? 0 : env.mouse.on);
-      gl.uniform1f(U.uHeroVis, env.heroVis);
+      // under a thumb the page scrolls ahead of the canvas, so the copy would peek out from behind the
+      // picture: there it only shows as the picture fades
+      gl.uniform1f(U.uHeroVis, window.Perf && Perf.touch ? env.heroVis : 0);
       gl.clearColor(0.027, 0.031, 0.043, 1); gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.POINTS, 0, N);
     }
