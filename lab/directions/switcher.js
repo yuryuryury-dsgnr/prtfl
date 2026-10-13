@@ -10,7 +10,8 @@
     ['gallery', 'Галерея'],
     ['gravity', 'Гравитация']
   ];
-  var here = (location.pathname.match(/\/([a-z]+)\.html$/) || [])[1];
+  // the live site serves these without .html, the local server with it
+  var here = (location.pathname.match(/\/([a-z]+)(?:\.html)?$/) || [])[1];
   var nav = document.createElement('nav');
   nav.className = 'dir-switch';
   nav.setAttribute('aria-label', 'Directions');
