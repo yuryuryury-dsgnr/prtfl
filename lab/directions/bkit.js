@@ -17,7 +17,7 @@
 
     var env = {
       W: innerWidth, H: innerHeight, mobile: innerWidth < 760, reduce: reduce,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2),
       t: 0, dt: 16.7, s: 0, stage: 0,
       mouse: { x: -9999, y: -9999, vx: 0, vy: 0, on: 0 },
       hover: -1, hov: [0, 0, 0, 0], any: 0,
@@ -72,8 +72,13 @@
       }
       return 3;
     }
-    function maxScroll() { return document.documentElement.scrollHeight - innerHeight; }
-    var lenis = window.Lenis && !reduce ? new Lenis({ lerp: 0.18 }) : null;
+    // read once and on resize: a layout read after the frame's style writes forces a reflow
+    var maxS = document.documentElement.scrollHeight - innerHeight;
+    addEventListener('resize', function () { maxS = document.documentElement.scrollHeight - innerHeight; });
+    function maxScroll() { return maxS; }
+    // a phone keeps its own scroll, and nothing snaps under a thumb
+    var touch = window.Perf && Perf.touch;
+    var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.18 }) : null;
     // a handle for poking at it from the console
     window.__bkit = { env: env, lenis: lenis, toStage: function (k) { if (lenis) lenis.scrollTo(STOPS[k] * maxScroll(), { immediate: true }); else scrollTo(0, STOPS[k] * maxScroll()); } };
     function scrollPos() { return lenis ? lenis.animatedScroll : scrollY; }
@@ -95,7 +100,7 @@
         scrollToStage(Math.round(p), 0.7);
       }, 380);
     }
-    if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true });
+    if (!touch) { if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true }); }
     addEventListener('keydown', function (e) {
       if (e.target.closest('input, textarea') || e.metaKey || e.ctrlKey) return;
       var cur = Math.round(stageAt(scrollPos() / maxScroll()));
@@ -139,16 +144,17 @@
     addEventListener('pageshow', function (e) { if (e.persisted) { env.go = -1; env.g = 0; } });
 
     // ——— captions and rail ———
+    function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
     var caps = [].slice.call(document.querySelectorAll('[data-cap]'));
     var meter = [].slice.call(document.querySelectorAll('#meter button'));
     function captions(p) {
       caps.forEach(function (el) {
         var i = +el.dataset.cap, d = Math.abs(p - i);
         var o = Math.max(0, 1 - d / 0.22) * (1 - env.g * 3 > 0 ? 1 - env.g * 3 : 0);
-        el.style.opacity = o;
-        el.style.visibility = o > 0.01 ? 'visible' : 'hidden';
-        el.style.transform = reduce ? '' : 'translateY(' + ((p - i) * -40).toFixed(1) + 'px)';
-        el.style.pointerEvents = o > 0.6 ? '' : 'none';
+        put(el, 'opacity', o.toFixed(3));
+        put(el, 'visibility', o > 0.01 ? 'visible' : 'hidden');
+        put(el, 'transform', reduce || o < 0.01 ? '' : 'translateY(' + ((p - i) * -40).toFixed(1) + 'px)');
+        put(el, 'pointerEvents', o > 0.6 ? '' : 'none');
       });
       var on = Math.round(p);
       meter.forEach(function (m, i) { m.classList.toggle('on', i === on); });
@@ -159,6 +165,7 @@
     function frame(rafNow) {
       if (lenis) lenis.raf(rafNow);
       var now = performance.now();
+      if (window.Perf) Perf.frame(now - prev);
       env.dt = Math.min(50, now - prev); prev = now;
       env.t = (now - t0) / 1000;
       var max = maxScroll();
@@ -193,6 +200,7 @@
     // ——— load ———
     var loading = document.getElementById('loading'), pct = document.getElementById('loadPct');
     function tick(f) { if (pct) pct.textContent = Math.round(f * 100); }
+    if (window.Perf) Perf.onChange = function (d) { env.dpr = d; if (R.setDpr) R.setDpr(env); else R.build(env); };
     Promise.resolve(R.load(tick)).then(function () {
       R.build(env);
       if (loading) { loading.style.opacity = 0; setTimeout(function () { loading.remove(); }, 800); }

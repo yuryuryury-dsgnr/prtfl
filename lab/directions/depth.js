@@ -24,7 +24,7 @@
   var VS = [
     'precision highp float;',
     'attribute vec3 aPos; attribute vec3 aCol; attribute vec4 aInfo;',
-    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uSp, uF, uAny, uGo, uGoI, uIn, uNear, uCovVis;',
+    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uSp, uF, uAny, uGo, uGoI, uIn, uNear, uCovVis, uMaxSize;',
     'uniform vec4 uHov; uniform vec2 uRes, uMouse; uniform vec3 uWave, uGlobe; uniform vec2 uGlobeRot;',
     'varying vec3 vC; varying float vA; varying float vSq;',
     'void main(){',
@@ -75,7 +75,8 @@
     '  alpha *= exp(-max(d - uFocus, 0.0) / 1300.0);',
     '  alpha *= smoothstep(uNear * 0.25, uNear, d);',
     '  alpha *= uIn;',
-    '  size = min(size, 70.0);',
+    // big bokeh discs are what a phone's GPU pays for: they stay smaller there
+    '  size = min(size, uMaxSize);',
     '  vC = aCol * lit * alpha * (1.0 + (push + ring) * 0.5);',
     '  vA = alpha; vSq = sq;',
     '  gl_PointSize = size * uDpr;',
@@ -164,7 +165,7 @@
       gl.linkProgram(prog);
       if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
       gl.useProgram(prog);
-      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uSp', 'uF', 'uAny', 'uGo', 'uGoI', 'uIn', 'uNear', 'uCovVis', 'uHov', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
+      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uSp', 'uF', 'uAny', 'uGo', 'uGoI', 'uIn', 'uNear', 'uCovVis', 'uMaxSize', 'uHov', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
         .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       [['aPos', 3], ['aCol', 3], ['aInfo', 4]].forEach(function (a) {
         buffers[a[0]] = gl.createBuffer();
@@ -203,19 +204,19 @@
       function put(b, x, y, z, r, g, bl, kind, grp, size) { b.p.push(x, y, z); b.c.push(r, g, bl); b.i.push(kind, grp, R(), size || 0); }
 
       // stars, the length of the flight
-      var stars = mobile ? 3000 : 7000;
+      var stars = mobile ? 2000 : 7000;
       for (var i = 0; i < stars; i++) {
         var l = 0.25 + R() * 0.5;
         put(add, (R() - 0.5) * 5000, (R() - 0.5) * 3200, 900 - R() * 8000, l * 0.8, l * 0.88, l, 4, 0);
       }
       // the greeting, a slab a little thick, at the start of the flight
-      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = mobile ? 22000 : 42000;
+      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = mobile ? 15000 : 42000;
       for (i = 0; i < names; i++) {
         var j = Math.floor(R() * gn) * 2, b = 0.55 + R() * 0.45;
         put(add, g[j] - W / 2 + (R() - 0.5) * 2, H / 2 - g[j + 1] + (R() - 0.5) * 2, (R() - 0.5) * 40, 0.82 * b, 0.86 * b, 0.95 * b, 0, 0);
       }
       // a cut-away block of strata: front face, top, sides, and three faint inner surfaces
-      var faces = mobile ? 26000 : 56000, zf = Z_STRATA_FRONT, zb = Z_STRATA_BACK;
+      var faces = mobile ? 17000 : 56000, zf = Z_STRATA_FRONT, zb = Z_STRATA_BACK;
       function layerCol(L, k) { var c = BKit.hex(PALETTE[L]); return [c[0] * k, c[1] * k, c[2] * k]; }
       for (i = 0; i < faces; i++) {
         var u = R(), x, y, z, L = Math.floor(R() * PALETTE.length), col;
@@ -237,7 +238,7 @@
         }
       }
       // the planet at the end
-      var globe = mobile ? 9000 : 16000, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27);
+      var globe = mobile ? 7000 : 16000, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27);
       var gc = [0, H * 0.12, Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323;
@@ -295,6 +296,7 @@
       proj = perspective(2 * Math.atan(H / (2 * F)), W / H, 5, 12000);
       gl.uniformMatrix4fv(U.uProj, false, proj);
       gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uDpr, env.dpr); gl.uniform1f(U.uSp, sp); gl.uniform1f(U.uF, F);
+      gl.uniform1f(U.uMaxSize, mobile ? 16 : 70);
       gl.uniform1f(U.uNear, F * 0.35);
       gl.uniform3f(U.uGlobe, gc[0], gc[1], gc[2]);
 
@@ -402,6 +404,13 @@
       env.tags = layout.map(function (r) {
         return r.bl ? { x: r.bl.x, y: Math.max(r.bl.y, r.br.y), w: r.br.x - r.bl.x, top: r.y } : { x: -1e4, y: -1e4, w: 0, top: 0 };
       });
+    },
+    setDpr: function (env) {
+      var c = gl.canvas;
+      c.width = Math.round(env.W * env.dpr); c.height = Math.round(env.H * env.dpr);
+      gl.useProgram(prog);
+      gl.viewport(0, 0, c.width, c.height);
+      gl.uniform1f(U.uDpr, env.dpr);
     },
     coverAt: function (x, y) {
       for (var k = 0; k < layout.length; k++) {

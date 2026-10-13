@@ -7,7 +7,7 @@
   var VS = [
     'precision highp float;',
     'attribute vec3 aPos; attribute vec3 aCol; attribute vec4 aInfo;',
-    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uStep, uPersona, uIn;',
+    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uStep, uPersona, uIn, uMaxSize;',
     'uniform vec2 uRes, uMouse; uniform float uMouseOn;',
     'uniform vec3 uStreamC; uniform float uStreamSpan, uTierSpan, uTunnelLen;',
     'uniform vec3 uLoopC, uGlobeC, uRingC; uniform vec3 uPC0, uPC1, uPC2, uPC3;',
@@ -42,7 +42,7 @@
     '  float a = min(1.0, 7.0 / (size * size));',
     '  a *= exp(-max(d - uFocus, 0.0) / 1500.0) * smoothstep(uNear * 0.2, uNear, d) * uIn;',
     '  vC = col * a * (1.0 + push * 0.4);',
-    '  gl_PointSize = min(size, 64.0) * uDpr;',
+    '  gl_PointSize = min(size, uMaxSize) * uDpr;',
     '  gl_Position = clip;',
     '}'
   ].join('\n');
@@ -81,7 +81,7 @@
       function sh(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
       function link(vs, fs) { var p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; }
       prog = link(VS, FS); qprog = link(QVS, QFS);
-      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uStep', 'uPersona', 'uIn', 'uRes', 'uMouse', 'uMouseOn', 'uStreamC', 'uStreamSpan', 'uTierSpan', 'uTunnelLen',
+      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uStep', 'uPersona', 'uIn', 'uMaxSize', 'uRes', 'uMouse', 'uMouseOn', 'uStreamC', 'uStreamSpan', 'uTierSpan', 'uTunnelLen',
        'uLoopC', 'uGlobeC', 'uRingC', 'uPC0', 'uPC1', 'uPC2', 'uPC3'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       ['uView', 'uProj', 'uTex', 'uA'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
       QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
@@ -108,7 +108,7 @@
       });
     },
     build: function (env) {
-      var W = env.W, H = env.H, R = Math.random, m = env.mobile ? 0.45 : 1;
+      var W = env.W, H = env.H, R = Math.random, m = env.mobile ? 0.32 : 1;
       F = H * 0.96;
       var P = [], C = [], I = [];
       function put(x, y, z, c, kind, grp, ex) { P.push(x, y, z); C.push(c[0], c[1], c[2]); I.push(kind, grp || 0, R(), ex || 0); }
@@ -173,6 +173,8 @@
       gl.uniform3fv(U.uLoopC, LC); gl.uniform3fv(U.uGlobeC, GC); gl.uniform3f(U.uRingC, 0, 0, Z[1] - 700);
       gl.uniform3fv(U.uPC0, PC[0]); gl.uniform3fv(U.uPC1, PC[1]); gl.uniform3fv(U.uPC2, PC[2]); gl.uniform3fv(U.uPC3, PC[3]);
       gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uDpr, env.dpr); gl.uniform1f(U.uF, F); gl.uniform1f(U.uNear, F * 0.35);
+      // big bokeh discs are what a phone's GPU pays for
+      gl.uniform1f(U.uMaxSize, env.mobile ? 16 : 64);
 
       var c = gl.canvas;
       c.width = Math.round(W * env.dpr); c.height = Math.round(H * env.dpr);
@@ -191,6 +193,12 @@
         { e: [0, 40, Z[9] + 1000], t: [0, 40, Z[9]] }
       ];
       this.W = W; this.H = H;
+    },
+    setDpr: function (env) {
+      var c = gl.canvas;
+      c.width = Math.round(env.W * env.dpr); c.height = Math.round(env.H * env.dpr);
+      gl.viewport(0, 0, c.width, c.height);
+      gl.useProgram(prog); gl.uniform1f(U.uDpr, env.dpr);
     },
     frame: function (env) {
       var W = env.W, H = env.H, sc = Math.min(8.9999, env.scene), i = Math.floor(sc), f = sc - i;

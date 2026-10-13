@@ -192,7 +192,7 @@
       });
     },
     build: function (env) {
-      N = env.mobile ? 42000 : 96000;
+      N = env.mobile ? 28000 : 96000;
       var aspect = img.naturalWidth / img.naturalHeight;
       grid[0] = Math.floor(Math.sqrt(N * aspect)); grid[1] = Math.floor(N / grid[0]);
       var c = gl.canvas;
@@ -202,6 +202,12 @@
       gl.uniform1f(U.uDpr, env.dpr); gl.uniform1f(U.uMobile, env.mobile ? 1 : 0); gl.uniform1f(U.uN, N);
       gl.uniform1i(U.uImg, 0);
       gl.uniform1f(U.uDim, Math.pow(Math.min(1, 38000 / N), 0.8));
+    },
+    setDpr: function (env) {
+      var c = gl.canvas;
+      c.width = Math.round(env.W * env.dpr); c.height = Math.round(env.H * env.dpr);
+      gl.viewport(0, 0, c.width, c.height);
+      gl.uniform1f(U.uDpr, env.dpr);
     },
     frame: function (env) {
       var hr = env.heroRect;

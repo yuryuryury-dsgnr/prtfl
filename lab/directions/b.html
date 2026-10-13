@@ -208,7 +208,8 @@
   <div class="track"></div>
 
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="switcher.js"></script>
+  <script src="perf.js?v=2"></script>
+  <script src="switcher.js?v=2"></script>
   <script>
   (function () {
     var CASES = [
@@ -432,6 +433,16 @@
       return H * 0.02 + L * band + Math.sin(x * 0.0032 + L * 0.9) * H * 0.045 + Math.sin(x * 0.009 + L) * H * 0.012;
     }
 
+    function setDpr(dpr) {
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      gl.useProgram(prog);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform1f(U.uDpr, dpr);
+    }
+    if (window.Perf) Perf.onChange = setDpr;
+    // style writes only when the value moves: a write per element per frame keeps the phone restyling
+    function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
+
     function build(images) {
       W = window.innerWidth; H = window.innerHeight;
       var mobile = W < 760;
@@ -443,7 +454,7 @@
       var cw = (gw - gap) / 2, chh = (gh - gap - labelH * 2) / 2;
       var gx = -gw / 2, gy = -gh / 2 + (mobile ? 16 : 26);
       // dense enough that a UI screenshot still reads as one
-      var target = mobile ? 45000 : 120000;
+      var target = mobile ? 32000 : 120000;
       var sp = Math.max(2.2, Math.sqrt((cw * chh * 4) / target));
       var cols = Math.floor(cw / sp), rows = Math.floor(chh / sp);
       cov = { w: cols * sp, h: rows * sp };
@@ -453,7 +464,7 @@
         layout.push({ x: x, y: y, w: cov.w, h: cov.h, cx: x + cov.w / 2, cy: y + cov.h / 2 });
       }
       N = cols * rows * 4;
-      var DUST = mobile ? 1200 : 2600;
+      var DUST = mobile ? 700 : 2600;
       TOTAL = N + DUST;
 
       var P0 = new Float32Array(TOTAL * 2), P1 = new Float32Array(TOTAL * 2), P2 = new Float32Array(TOTAL * 2);
@@ -532,11 +543,8 @@
         gl.bufferData(gl.ARRAY_BUFFER, data[k2], gl.STATIC_DRAW);
       });
 
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      setDpr(window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2));
       gl.uniform2f(U.uRes, W, H);
-      gl.uniform1f(U.uDpr, dpr);
       gl.uniform1f(U.uSp, sp);
       gl.uniform1f(U.uR, Math.min(W, H) * (mobile ? 0.36 : 0.27));
       gl.uniform1f(U.uFall, H * 0.12);
@@ -595,8 +603,8 @@
         var y = strataY(x, l.layer) + Math.sin(x * 0.0045 + t * 0.55 + 0.3) * 7 + Math.sin(x * 0.011 - t * 0.4) * 3;
         // each label waits its turn, top layer first
         var o = Math.max(0, Math.min(1, near * 1.8 - i * 0.16));
-        sls[i].style.opacity = o;
-        sls[i].style.transform = 'translate(' + (W / 2 + x - 3.5) + 'px,' + (H / 2 + y - 10) + 'px) translateX(' + ((1 - o) * -12) + 'px)';
+        put(sls[i], 'opacity', o.toFixed(3));
+        if (o > 0) put(sls[i], 'transform', 'translate(' + (W / 2 + x - 3.5).toFixed(1) + 'px,' + (H / 2 + y - 10).toFixed(1) + 'px) translateX(' + ((1 - o) * -12).toFixed(1) + 'px)');
       });
     }
 
@@ -608,8 +616,13 @@
       }
       return 3;
     }
-    function maxScroll() { return document.documentElement.scrollHeight - innerHeight; }
-    var lenis = window.Lenis && !reduce ? new Lenis({ lerp: 0.18 }) : null;
+    // read once and on resize, not every frame: a layout read after style writes forces a reflow
+    var maxS = document.documentElement.scrollHeight - innerHeight;
+    addEventListener('resize', function () { maxS = document.documentElement.scrollHeight - innerHeight; });
+    function maxScroll() { return maxS; }
+    // a phone keeps its own scroll: iOS momentum is smoother than anything layered on it
+    var touch = window.Perf && Perf.touch;
+    var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.18 }) : null;
     function scrollToStage(k, dur) {
       var y = STOPS[k] * maxScroll();
       if (lenis) lenis.scrollTo(y, { duration: dur || 1.2, easing: function (x) { return 1 - Math.pow(1 - x, 3); } });
@@ -629,7 +642,8 @@
         scrollToStage(Math.round(p), 0.7);
       }, 380);
     }
-    if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true });
+    // and no snapping under a thumb: settling would fight the momentum
+    if (!touch) { if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true }); }
     addEventListener('keydown', function (e) {
       if (e.target.closest('input, textarea')) return;
       var cur = Math.round(stageAt((lenis ? lenis.animatedScroll : scrollY) / maxScroll()));
@@ -696,19 +710,22 @@
         var i = +el.dataset.cap, d = Math.abs(p - i);
         var o = Math.max(0, 1 - d / 0.22);
         if (goState) o *= 1 - Math.min(1, (performance.now() - goState.start) / 300);
-        el.style.opacity = o;
-        el.style.visibility = o > 0.01 ? 'visible' : 'hidden';
-        el.style.transform = reduce ? '' : 'translateY(' + ((p - i) * -40).toFixed(1) + 'px)';
-        el.style.pointerEvents = o > 0.6 ? '' : 'none';
+        put(el, 'opacity', o.toFixed(3));
+        put(el, 'visibility', o > 0.01 ? 'visible' : 'hidden');
+        put(el, 'transform', reduce || o < 0.01 ? '' : 'translateY(' + ((p - i) * -40).toFixed(1) + 'px)');
+        put(el, 'pointerEvents', o > 0.6 ? '' : 'none');
       });
       var on = Math.round(p);
       meter.forEach(function (m, i) { m.classList.toggle('on', i === on); });
     }
 
     var t0 = performance.now(), intro = reduce ? 1 : 0, introStart = null, rotY = 0, rotX = 0.35;
+    var lastNow = performance.now();
     function frame(rafNow) {
       if (lenis) lenis.raf(rafNow);
       var now = performance.now();
+      if (window.Perf) Perf.frame(now - lastNow);
+      lastNow = now;
       var t = (now - t0) / 1000;
       var max = maxScroll();
       var s = max > 0 ? Math.min(1, Math.max(0, (lenis ? lenis.animatedScroll : scrollY) / max)) : 0;

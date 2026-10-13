@@ -23,7 +23,9 @@
     });
   });
 
-  var lenis = window.Lenis && !reduce ? new Lenis({ lerp: 0.16 }) : null;
+  // a phone keeps its own scroll: iOS momentum is smoother than anything layered on top of it
+  var touch = window.Perf && Perf.touch;
+  var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.16 }) : null;
   function scrollPos() { return lenis ? lenis.animatedScroll : scrollY; }
   function goTo(el) { if (lenis) lenis.scrollTo(el, { offset: -20, duration: 1.4 }); else el.scrollIntoView({ behavior: 'smooth' }); }
 
@@ -142,15 +144,26 @@
     p.addEventListener('mouseenter', function () { hoverPersona = i; });
     p.addEventListener('mouseleave', function () { hoverPersona = -1; });
   });
+  // Everything the frame needs from the layout is read here, on resize and when
+  // content changes — never per frame. A read after the frame's style writes
+  // forces a reflow, and on a phone that is the stutter.
+  var stepY = [], personaY = [], heroAbs = { x: 0, y: 0, w: 1, h: 1 }, maxS = 1;
+  function centre(el, y) { var r = el.getBoundingClientRect(); return r.top + y + r.height / 2; }
   function measure() {
     var y = scrollY;
     tops = sections.map(function (s) { return s.getBoundingClientRect().top + y; });
     heights = sections.map(function (s) { return s.offsetHeight; });
+    stepY = stepEls.map(function (el) { return centre(el, y); });
+    personaY = personaEls.map(function (el) { return centre(el, y); });
+    var hr = heroFig.getBoundingClientRect();
+    heroAbs = { x: hr.left, y: hr.top + y, w: hr.width, h: hr.height };
+    maxS = Math.max(1, document.documentElement.scrollHeight - innerHeight);
   }
+  function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
   new ResizeObserver(function () { measure(); }).observe(document.querySelector('main'));
 
   var env = {
-    W: innerWidth, H: innerHeight, dpr: Math.min(window.devicePixelRatio || 1, 2), mobile: innerWidth < 860, reduce: reduce,
+    W: innerWidth, H: innerHeight, dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2), mobile: innerWidth < 860, reduce: reduce,
     t: 0, dt: 16, scene: 0, sub: 0, step: 0, persona: 0, heroRect: { x: 0, y: 0, w: 1, h: 1 }, heroVis: 1,
     mouse: { x: -9999, y: -9999, vx: 0, vy: 0, on: 0 }
   };
@@ -171,33 +184,27 @@
     var k = Math.min(sections.length - 1, Math.round(sc));
     env.sub = Math.max(0, Math.min(1, (y + vh * 0.5 - tops[k]) / Math.max(1, heights[k])));
 
-    // the roadmap step nearest the middle of the screen
-    var best = 0, bd = 1e9;
-    stepEls.forEach(function (li, i) {
-      var r = li.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - vh * 0.5);
-      if (d < bd) { bd = d; best = i; }
-    });
-    stepEls.forEach(function (li, i) { li.classList.toggle('on', i === best); });
+    // the roadmap step nearest the middle of the screen, from cached positions
+    var mid = y + vh * 0.5, best = 0, bd = 1e9;
+    stepY.forEach(function (c, i) { var d = Math.abs(c - mid); if (d < bd) { bd = d; best = i; } });
+    if (best !== env.step) stepEls.forEach(function (li, i) { li.classList.toggle('on', i === best); });
     env.step = best;
     // and the persona: the hovered one, or the one in view
     var bp = 0; bd = 1e9;
-    personaEls.forEach(function (p, i) {
-      var r = p.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - vh * 0.5);
-      if (d < bd) { bd = d; bp = i; }
-    });
-    env.persona = hoverPersona >= 0 ? hoverPersona : bp;
-    personaEls.forEach(function (p, i) { p.classList.toggle('on', i === env.persona && env.scene > 3.5 && env.scene < 4.5); });
+    personaY.forEach(function (c, i) { var d = Math.abs(c - mid); if (d < bd) { bd = d; bp = i; } });
+    var pOn = hoverPersona >= 0 ? hoverPersona : bp, inRes = env.scene > 3.5 && env.scene < 4.5;
+    if (pOn !== env.persona || inRes !== env.inRes) personaEls.forEach(function (p, i) { p.classList.toggle('on', i === pOn && inRes); });
+    env.persona = pOn; env.inRes = inRes;
 
-    var hr = heroFig.getBoundingClientRect();
-    env.heroRect = { x: hr.left, y: hr.top, w: hr.width, h: hr.height };
+    env.heroRect = { x: heroAbs.x, y: heroAbs.y - y, w: heroAbs.w, h: heroAbs.h };
     // the picture gives way to the scene as soon as the next chapter starts to take over
     env.heroVis = 1 - Math.max(0, Math.min(1, (sc - 0.02) / 0.16));
-    heroImg.style.opacity = env.heroVis;
+    put(heroImg, 'opacity', env.heroVis.toFixed(3));
 
-    var max = document.documentElement.scrollHeight - vh;
-    progress.style.transform = 'scaleX(' + (max > 0 ? y / max : 0) + ')';
-    nav.classList.toggle('solid', y > vh * 0.6);
-    railLinks.forEach(function (a, i) { a.classList.toggle('on', i === k - 1); });
+    put(progress, 'transform', 'scaleX(' + (y / maxS).toFixed(4) + ')');
+    var solid = y > vh * 0.6;
+    if (solid !== env.solid) { nav.classList.toggle('solid', solid); env.solid = solid; }
+    if (k !== env.k) { railLinks.forEach(function (a, i) { a.classList.toggle('on', i === k - 1); }); env.k = k; }
 
     var m = env.mouse, kk = Math.min(1, env.dt / 16.7);
     if (tx < -9000) m.on += (0 - m.on) * 0.08 * kk;
@@ -235,6 +242,7 @@
   function frame(raf) {
     if (lenis) lenis.raf(raf);
     var now = performance.now();
+    if (window.Perf) Perf.frame(now - prev);
     env.dt = Math.min(50, now - prev); prev = now; env.t = (now - t0) / 1000;
     update(now);
     if (running) R.frame(env);
@@ -244,6 +252,7 @@
   if (location.hash) { var target = document.querySelector(location.hash); if (target) setTimeout(function () { if (lenis) lenis.scrollTo(target, { immediate: true, offset: -20 }); else target.scrollIntoView(); measure(); }, 60); }
   land();
   requestAnimationFrame(frame);
+  if (R && window.Perf) Perf.onChange = function (d) { env.dpr = d; if (running) { if (R.setDpr) R.setDpr(env); else R.build(env); } };
   if (R) {
     var ok = false;
     try { ok = R.init(canvas, env); } catch (e) { console.error(e); }
