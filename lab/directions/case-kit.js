@@ -99,7 +99,6 @@
         return '<span class="jm-pt" data-c="' + c + '" style="left:' + f2(c / n * 100) + '%;top:' + LEVEL[s[3]][0] + '%;--c:' + LEVEL[s[3]][1] + ';--d:' + (0.35 + c * 0.16).toFixed(2) + 's"><i></i><em>' + esc(s[4]) + '</em></span>';
       }).join('') + '</div>';
     return '<div class="jm-panel" role="tabpanel" id="' + id + '" aria-labelledby="t-' + id + '"' + (gi ? ' hidden' : '') + '>' +
-      '<p class="jm-goal"><span class="eyebrow">' + esc(g[0]) + '</span>' + esc(g[1]) + '</p>' +
       '<div class="jm-sheet" tabindex="0" role="group" data-hxs="thead th" aria-label="' + esc(g[0]) + ' journey map, ' + n + ' stages — scrollable">' +
       '<table class="jm" style="--n:' + n + '"><caption class="sr-only">' + esc(g[0]) + ' — current journey, ' + n + ' stages.</caption>' +
       '<colgroup><col class="lc"><col span="' + n + '"></colgroup>' +
