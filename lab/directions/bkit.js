@@ -3,7 +3,11 @@
 // cover, loading and the frame loop. A page brings only its renderer:
 //
 //   BKit({ cases, keys?, stops?, last?, renderer: { init(env) -> bool, load(tick) -> Promise,
-//          build(env), frame(env), coverAt(x, y) -> k | -1, workAt?(stage) -> bool } })
+//          build(env), frame(env), setDpr?(env), coverAt(x, y) -> k | -1, workAt?(stage) -> bool,
+//          free?(stage) -> bool, coverRect?(k), coverImage?(k) } })
+//
+// keys and stops may be changed in place by build() (a new screen size, a new track): the shell
+// re-measures after every build and keeps the reader on the same stage.
 //
 // A caption names its stage (data-cap="1") or a run of them (data-cap="2-5").
 //
@@ -27,7 +31,7 @@
       mouse: { p: 0, x: -9999, y: -9999, on: 0 },
       hover: -1, hov: [0, 0, 0, 0], any: 0,
       go: -1, g: 0, wave: { x: 0, y: 0, t: -10 },
-      tags: null, cases: CASES
+      tags: null
     };
 
     var list = document.getElementById('fallbackList');
@@ -39,6 +43,8 @@
     var ok = false;
     try { ok = R.init(env); } catch (e) { console.error(e); }
     if (!ok) { root.classList.add('no-gl'); return; }
+    // the plain list stays for screen readers; the keyboard reaches the cases through their labels
+    if (list) [].forEach.call(list.querySelectorAll('a'), function (a) { a.tabIndex = -1; });
 
     // ——— case labels under the covers; the renderer says where ———
     var capWork = document.getElementById('capWork');
@@ -49,7 +55,7 @@
         '</span></b><small>' + c.line + '</small></span><em>View case →</em>';
       var a, main;
       if (c.links) {
-        a = document.createElement('div'); a.className = 'tag tag-box';
+        a = document.createElement('div'); a.className = 'tag';
         a.innerHTML = '<a class="tag-main" href="' + c.href + '">' + inner + '</a><span class="tag-st">' +
           c.links.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</span>';
         main = a.querySelector('.tag-main');
@@ -59,9 +65,10 @@
       }
       a.addEventListener('mouseenter', function () { env.hover = k; });
       a.addEventListener('mouseleave', function () { env.hover = -1; });
-      a.addEventListener('focusin', function () { env.hover = k; });
+      a.addEventListener('focusin', function () { env.hover = k; reveal(k); });
       a.addEventListener('focusout', function () { env.hover = -1; });
-      main.addEventListener('click', function (e) { e.preventDefault(); go(k); });
+      // a modified click (a new tab, a new window) is the browser's
+      main.addEventListener('click', function (e) { if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return; e.preventDefault(); go(k); });
       capWork.appendChild(a);
       return a;
     });
@@ -71,6 +78,8 @@
       if (!env.tags) return;
       for (var k = 0; k < env.tags.length; k++) {
         var r = env.tags[k], el = tags[k];
+        // a label that isn't seen is only hidden, not moved: nothing to lay out
+        if (r.o != null && r.o <= 0.01) { put(el, 'opacity', '0'); put(el, 'visibility', 'hidden'); put(el, 'pointerEvents', 'none'); continue; }
         put(el, 'transform', 'translate(' + r.x.toFixed(1) + 'px,' + r.y.toFixed(1) + 'px)');
         put(el, 'width', r.w.toFixed(1) + 'px');
         // under a small picture only the name fits
@@ -93,32 +102,41 @@
       }
       return LAST;
     }
-    // read once and on resize: a layout read after the frame's style writes forces a reflow
+    // read once and on resize: a layout read after the frame's style writes forces a reflow.
+    // On a phone the range is taken against the tallest viewport, so the toolbar sliding in or out
+    // doesn't rescale it (and move a page-like stretch under the finger)
     var maxS;
     function measureScroll() {
-      maxS = document.documentElement.scrollHeight - innerHeight;
+      maxS = Math.max(1, document.documentElement.scrollHeight - (touch && window.Perf ? Perf.vh() : innerHeight));
     }
+    // a phone keeps its own scroll; a wheel gets Lenis once it has loaded
+    var touch = window.Perf && Perf.touch;
+    var lenis = null;
     measureScroll();
     addEventListener('resize', measureScroll);
     function maxScroll() { return maxS; }
-    // a phone keeps its own scroll
-    var touch = window.Perf && Perf.touch;
-    var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.18 }) : null;
-    // a handle for poking at it from the console
-    window.__bkit = { env: env, lenis: lenis, toStage: function (k) { if (lenis) lenis.scrollTo(STOPS[k] * maxScroll(), { immediate: true }); else scrollTo(0, STOPS[k] * maxScroll()); },
-      // the scroll position that shows a given stage (for checking any moment of the flight)
-      yAt: function (st) {
-        for (var i = 1; i < KEYS.length; i++) if (st <= KEYS[i][1] && KEYS[i][1] > KEYS[i - 1][1]) {
-          var a = KEYS[i - 1], b = KEYS[i]; return (a[0] + (b[0] - a[0]) * (st - a[1]) / (b[1] - a[1])) * maxScroll();
-        }
-        return maxScroll();
-      } };
+    // the scroll position that shows a given stage
+    function yAt(st) {
+      for (var i = 1; i < KEYS.length; i++) if (st <= KEYS[i][1] && KEYS[i][1] > KEYS[i - 1][1]) {
+        var a = KEYS[i - 1], b = KEYS[i]; return (a[0] + (b[0] - a[0]) * (st - a[1]) / (b[1] - a[1])) * maxScroll();
+      }
+      return maxScroll();
+    }
+    // a handle for the test scripts (any moment of the flight, from the console)
+    window.__bkit = { env: env, lenis: null, yAt: yAt };
+    if (window.Perf) Perf.smooth({ lerp: 0.18 }, function (l) { lenis = window.__bkit.lenis = l; });
     function scrollPos() { return lenis ? lenis.animatedScroll : scrollY; }
     if (window.Perf) Perf.info = function () { return 'stage ' + env.stage.toFixed(2) + '  y ' + Math.round(scrollPos()); };
-    function scrollToStage(k, dur) {
-      var y = STOPS[k] * maxScroll();
+    function scrollToY(y, dur) {
       if (lenis) lenis.scrollTo(y, { duration: dur || 1.2, easing: function (x) { return 1 - Math.pow(1 - x, 3); } });
       else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+    }
+    function scrollToStage(k, dur) { scrollToY(STOPS[k] * maxScroll(), dur); }
+    // a label reached with Tab: its case is brought into view (the work, and in a page-like stretch the case itself)
+    function reveal(k) {
+      if (!inWork()) { scrollToStage(2); return; }
+      var r = env.tags && env.tags[k], H = innerHeight;
+      if (R.free && r && (r.top < H * 0.15 || r.y > H * 0.9)) scrollToY(Math.max(0, Math.min(maxScroll(), scrollPos() + r.top - H * 0.22)), 0.8);
     }
     document.querySelectorAll('[data-stage]').forEach(function (el) {
       el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
@@ -133,12 +151,23 @@
       scrollToStage(Math.round(p), 0.7);
     }
     var settle, scheduleSettle = window.Perf ? Perf.whenStill(settleNow) : function () { clearTimeout(settle); settle = setTimeout(settleNow, 380); };
-    if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true });
+    // Lenis moves the window, so the window's own scroll event covers both
+    var lastScroll = -1e9;
+    addEventListener('scroll', function () { lastScroll = performance.now(); scheduleSettle(); }, { passive: true });
     addEventListener('keydown', function (e) {
-      if (e.target.closest('input, textarea') || e.metaKey || e.ctrlKey) return;
-      var cur = Math.round(stageAt(scrollPos() / maxScroll()));
-      if (['ArrowDown', 'PageDown', ' '].indexOf(e.key) >= 0) { e.preventDefault(); scrollToStage(Math.min(LAST, cur + 1)); }
-      if (['ArrowUp', 'PageUp'].indexOf(e.key) >= 0) { e.preventDefault(); scrollToStage(Math.max(0, cur - 1)); }
+      if (e.target.closest('input, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+      // Space on a focused button or link presses it, as anywhere else
+      if (e.key === ' ' && e.target.closest('a, button')) return;
+      var p = stageAt(scrollPos() / maxScroll()), cur = Math.round(p);
+      var down = e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ' && !e.shiftKey;
+      var up = e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === ' ' && e.shiftKey;
+      // a stretch scrolled like a page is read like one: a key moves it most of a screen
+      if ((down || up) && R.free && R.free(p)) {
+        var y = scrollPos() + (down ? 1 : -1) * innerHeight * 0.8;
+        if (down || R.free(stageAt(y / maxScroll()))) { e.preventDefault(); scrollToY(Math.max(0, Math.min(maxScroll(), y)), 0.8); return; }
+      }
+      if (down) { e.preventDefault(); scrollToStage(Math.min(LAST, cur + 1)); }
+      if (up) { e.preventDefault(); scrollToStage(Math.max(0, cur - 1)); }
       if (e.key === 'Home') { e.preventDefault(); scrollToStage(0); }
       if (e.key === 'End') { e.preventDefault(); scrollToStage(LAST); }
     });
@@ -160,12 +189,14 @@
     addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') away(); });
     addEventListener('pointercancel', away);
     // a tap rather than a click: iOS sends no click up to the window from a plain block over the canvas
-    var down = null;
-    addEventListener('pointerdown', function (e) { down = { x: e.clientX, y: e.clientY, t: e.timeStamp }; });
-    addEventListener('pointercancel', function () { down = null; });
+    // A finger that lands while the page is still gliding stops it: iOS sends no click for that touch,
+    // and neither does this
+    var pdown = null;
+    addEventListener('pointerdown', function (e) { pdown = { x: e.clientX, y: e.clientY, t: e.timeStamp, gliding: performance.now() - lastScroll < 100 }; });
+    addEventListener('pointercancel', function () { pdown = null; });
     addEventListener('pointerup', function (e) {
-      var d = down; down = null;
-      if (!d || Math.abs(e.clientX - d.x) > 10 || Math.abs(e.clientY - d.y) > 10 || e.timeStamp - d.t > 600) return;
+      var d = pdown; pdown = null;
+      if (!d || d.gliding || e.button || Math.abs(e.clientX - d.x) > 10 || Math.abs(e.clientY - d.y) > 10 || e.timeStamp - d.t > 600) return;
       if (e.target.closest('a, button, .dir-switch')) return;
       if (inWork()) {
         var k = R.coverAt(e.clientX, e.clientY);
@@ -191,25 +222,29 @@
       if (/\.html/.test(CASES[k].href)) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
       location.href = CASES[k].href;
     }
-    addEventListener('pageshow', function (e) { if (e.persisted) { env.go = -1; env.g = 0; env.left = false; } });
+    // back from the case: the page comes back as it was before the click, nothing still lifted
+    addEventListener('pageshow', function (e) { if (e.persisted) { env.go = -1; env.g = 0; env.left = false; env.hover = -1; } });
 
     // ——— captions and rail ———
     function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
     var caps = [].slice.call(document.querySelectorAll('[data-cap]'));
     var meter = [].slice.call(document.querySelectorAll('#meter button'));
+    // each caption's run of stages, and each rail button's stage, read once
+    caps.forEach(function (el) { el._r = el.dataset.cap.split('-').map(Number); });
+    var meterAt = meter.map(function (m) { return +m.dataset.stage; }), meterLit = -2;
     function captions(p) {
-      caps.forEach(function (el) {
-        var r = el._r || (el._r = el.dataset.cap.split('-').map(Number));
+      for (var c = 0; c < caps.length; c++) {
+        var el = caps[c], r = el._r;
         var off = p - Math.max(r[0], Math.min(r[r.length - 1], p)), d = Math.abs(off);
         var o = Math.max(0, 1 - d / 0.22) * (1 - env.g * 3 > 0 ? 1 - env.g * 3 : 0);
         put(el, 'opacity', o.toFixed(3));
         put(el, 'visibility', o > 0.01 ? 'visible' : 'hidden');
         put(el, 'transform', reduce || o < 0.01 ? '' : 'translateY(' + (off * -40).toFixed(1) + 'px)');
         put(el, 'pointerEvents', o > 0.6 ? '' : 'none');
-      });
+      }
       var on = Math.round(p), lit = -1;
-      meter.forEach(function (m, i) { if (+m.dataset.stage <= on) lit = i; });
-      meter.forEach(function (m, i) { m.classList.toggle('on', i === lit); });
+      for (var i = 0; i < meterAt.length; i++) if (meterAt[i] <= on) lit = i;
+      if (lit !== meterLit) { meterLit = lit; for (i = 0; i < meter.length; i++) meter[i].classList.toggle('on', i === lit); }
     }
 
     // ——— frame ———
@@ -223,8 +258,9 @@
       var max = maxScroll();
       env.s = max > 0 ? Math.min(1, Math.max(0, scrollPos() / max)) : 0;
       // on a phone a shape takes its time to catch up with a flick; a stretch scrolled like a page keeps up
+      // (only once the shape has caught up does a page-like stretch go one to one)
       var target = stageAt(env.s);
-      env.stage = window.Perf && !(R.free && R.free(target)) ? Perf.follow(env.stage, target, env.dt) : target;
+      env.stage = window.Perf && !(R.free && R.free(target) && R.free(env.stage)) ? Perf.follow(env.stage, target, env.dt) : target;
 
       var m = env.mouse, k = Math.min(1, env.dt / 16.7);
       // p: is a pointer there at all — full while a mouse is on the page or a finger is down, gone soon after a lift
@@ -239,14 +275,14 @@
 
       env.any = 0;
       for (var i = 0; i < 4; i++) { env.hov[i] += ((env.hover === i ? 1 : 0) - env.hov[i]) * 0.12 * k; env.any = Math.max(env.any, env.hov[i]); }
-      if (env.hover !== litTag) { litTag = env.hover; tags.forEach(function (tg, i) { tg.classList.toggle('on', litTag === i); }); }
+      if (env.hover !== litTag) { litTag = env.hover; for (i = 0; i < tags.length; i++) tags[i].classList.toggle('on', litTag === i); }
 
       if (env.go >= 0) {
         env.g = Math.min(1, (now - goStart) / (reduce ? 300 : 1100));
         if (env.g >= 1) leaveFor(env.go);
       }
 
-      R.frame(env);
+      if (!env.lost) R.frame(env);
       placeTags();
       captions(env.stage);
       requestAnimationFrame(frame);
@@ -263,17 +299,34 @@
       // a phone's toolbar sliding away changes the height a little; only rebuild for a real resize
       var to, lastW = innerWidth, lastH = innerHeight;
       addEventListener('resize', function () {
-        if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return;
+        if (innerWidth === lastW && (innerHeight === lastH || touch && Math.abs(innerHeight - lastH) < 120)) return;
         // a hidden or collapsing frame reports a zero size; there is nothing to build for
         if (innerWidth < 50 || innerHeight < 50) return;
         lastW = innerWidth; lastH = innerHeight;
         clearTimeout(to);
-        to = setTimeout(function () {
-          env.W = innerWidth; env.H = (window.Perf ? Perf.vh() : innerHeight); env.mobile = innerWidth < 760;
-          R.build(env);
-        }, 200);
+        to = setTimeout(rebuild, 200);
       });
+      // iOS takes the GL context back under memory pressure or in the background; when it is returned
+      // the scene is built again rather than left black
+      var cv = document.getElementById('gl');
+      if (cv) {
+        cv.addEventListener('webglcontextlost', function (e) { e.preventDefault(); env.lost = true; });
+        cv.addEventListener('webglcontextrestored', function () {
+          try { if (R.restore) R.restore(env); else { R.init(env); R.build(env); } env.lost = false; } catch (e) { console.error(e); }
+        });
+      }
     }).catch(function (e) { console.error(e); root.classList.add('no-gl'); });
+
+    // a new size: the scene is built for it, and the reader stays on the stage they were on
+    // (the track may have changed under them)
+    function rebuild() {
+      var st = env.stage;
+      env.W = innerWidth; env.H = (window.Perf ? Perf.vh() : innerHeight); env.mobile = innerWidth < 760;
+      R.build(env);
+      measureScroll();
+      var y = yAt(st);
+      if (Math.abs(scrollPos() - y) > 2) { if (lenis) lenis.scrollTo(y, { immediate: true }); else scrollTo(0, y); }
+    }
 
     return env;
   };

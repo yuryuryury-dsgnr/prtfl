@@ -12,9 +12,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="../../assets/images/rebalancer/rebalancer-hero.webp">
-  <link rel="stylesheet" href="case.css?v=8">
-  <script src="handoff.js?v=6"></script>
-  <script>Handoff.expect();</script>
+  <link rel="stylesheet" href="case.css?v=9">
+  <script src="handoff.js?v=7"></script>
+  <script>document.documentElement.classList.add('js'); Handoff.expect();</script>
 </head>
 <body>
   <canvas id="gl" aria-hidden="true"></canvas>
@@ -287,14 +287,13 @@
     </section>
   </main>
 
-  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <!-- versioned, so a phone that saw an older build doesn't keep it -->
-  <script src="perf.js?v=12"></script>
+  <script src="perf.js?v=13"></script>
   <script>
     // the world behind the chapters: a motif per chapter, and the case's accent
     window.CASE = { world: ['', 'scatter', 'road', 'clusters', 'screens', 'rings', 'gates', 'loop', 'planet'], accent: [0.82, 0.56, 1.0] };
   </script>
-  <script src="case-depth.js?v=8"></script>
-  <script src="case-kit.js?v=24"></script>
+  <script src="case-depth.js?v=10"></script>
+  <script src="case-kit.js?v=25"></script>
 </body>
 </html>

@@ -28,11 +28,13 @@
     });
   });
 
-  // a phone keeps its own scroll: iOS momentum is smoother than anything layered on top of it
+  // a phone keeps its own scroll: iOS momentum is smoother than anything layered on top of it.
+  // A wheel gets Lenis once it has loaded; until then (and if it never does) the page scrolls natively
   var touch = window.Perf && Perf.touch;
-  var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.16 }) : null;
+  var lenis = null;
+  if (window.Perf) Perf.smooth({ lerp: 0.16 }, function (l) { lenis = l; if (window.__case) __case.lenis = l; });
   function scrollPos() { return lenis ? lenis.animatedScroll : scrollY; }
-  function goTo(el) { if (lenis) lenis.scrollTo(el, { offset: -20, duration: 1.4 }); else el.scrollIntoView({ behavior: 'smooth' }); }
+  function goTo(el) { if (lenis) lenis.scrollTo(el, { offset: -20, duration: reduce ? 0 : 1.4 }); else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }
 
   var sections = [].slice.call(document.querySelectorAll('[data-scene]'));
   var rail = document.getElementById('rail');
@@ -51,16 +53,25 @@
   document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
 
   // ——— tabs ———
+  // only the chosen tab is in the Tab order; the arrow keys move between them (Home and End to the ends)
   document.querySelectorAll('[role="tablist"]').forEach(function (list) {
-    list.addEventListener('click', function (e) {
-      var b = e.target.closest('[role="tab"]'); if (!b) return;
-      list.querySelectorAll('[role="tab"]').forEach(function (t) {
+    var tabs = [].slice.call(list.querySelectorAll('[role="tab"]'));
+    function choose(b) {
+      tabs.forEach(function (t) {
         var on = t === b;
-        t.setAttribute('aria-selected', on);
+        t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1;
         var p = document.getElementById(t.getAttribute('aria-controls'));
         if (p) { p.hidden = !on; if (on) p.querySelectorAll('.rv').forEach(function (r) { r.classList.add('in'); }); }
       });
       measure();
+    }
+    tabs.forEach(function (t) { t.tabIndex = t.getAttribute('aria-selected') === 'true' ? 0 : -1; });
+    list.addEventListener('click', function (e) { var b = e.target.closest('[role="tab"]'); if (b) choose(b); });
+    list.addEventListener('keydown', function (e) {
+      var i = tabs.indexOf(document.activeElement); if (i < 0) return;
+      var j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : null;
+      if (j === null) return;
+      e.preventDefault(); j = (j + tabs.length) % tabs.length; tabs[j].focus(); choose(tabs[j]);
     });
   });
 
@@ -158,22 +169,27 @@
   var galTheme = 'dark', lbGal = null;
   function shotsOf(g) { return [].slice.call(g.querySelectorAll('.shot')); }
   function setPressed(group, t) { [].forEach.call(group.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.t === t); }); }
-  function shotSrc(shot, t) { return (shot.querySelector(t === 'light' ? 'img.l' : 'img.d') || shot.querySelector('img')).getAttribute('src'); }
+  function shotSrc(shot, t) { var im = shot.querySelector(t === 'light' ? 'img.l' : 'img.d') || shot.querySelector('img'); return im.getAttribute('src') || im.dataset.src; }
+  // the second look of each screen (img.l) waits in data-src until someone reaches for the switch
+  function loadLight(g) { [].forEach.call(g.querySelectorAll('img.l[data-src]'), function (im) { im.loading = 'eager'; im.src = im.dataset.src; im.removeAttribute('data-src'); }); }
   gals.forEach(function (g) {
     var theme = g.querySelector('.theme');
-    if (theme) theme.addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b) return;
-      galTheme = b.dataset.t; g.classList.toggle('light', galTheme === 'light'); setPressed(this, galTheme);
-      // both themes are on the page, so the lit one must be there before it shows
-      shotsOf(g).forEach(function (s) { var im = s.querySelector('img.' + (galTheme === 'light' ? 'l' : 'd')); if (im) im.loading = 'eager'; });
-    });
+    if (theme) {
+      theme.addEventListener('pointerenter', function () { loadLight(g); });
+      theme.addEventListener('focusin', function () { loadLight(g); });
+      theme.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        galTheme = b.dataset.t; g.classList.toggle('light', galTheme === 'light'); setPressed(this, galTheme);
+        loadLight(g);
+      });
+    }
     g.addEventListener('click', function (e) { var b = e.target.closest('.shot-f'); if (b) openShot(g, +b.dataset.i, b); });
   });
   // the full-size view grows out of the picture that was clicked and goes back into it
   var lb = null, lbI = 0, lbFrom = null;
   function lbBuild() {
     lb = document.createElement('div');
-    lb.className = 'lb'; lb.hidden = true;
+    lb.className = 'lb'; lb.hidden = true; lb.tabIndex = -1;
     lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Screen, full size');
     lb.innerHTML = '<div class="lb-top"><span class="lb-n"></span><div class="lb-r">' +
       '<div class="theme" role="group" aria-label="Theme"><button type="button" data-t="light">Light</button><button type="button" data-t="dark">Dark</button></div>' +
@@ -189,16 +205,17 @@
       lbGal.querySelector('.theme [data-t="' + b.dataset.t + '"]').click(); lbShow();
     });
     lb.querySelector('.lb-stage').addEventListener('click', function (e) { if (e.target === this) closeShot(); });
-    lb.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeShot();
-      else if (e.key === 'ArrowRight') stepShot(1);
-      else if (e.key === 'ArrowLeft') stepShot(-1);
-      else if (e.key === 'Tab') {
-        // focus stays inside while it is open
-        var f = [].slice.call(lb.querySelectorAll('button')).filter(function (b) { return b.offsetParent; }), k = f.indexOf(document.activeElement);
-        e.preventDefault(); f[(k + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
-      }
-    });
+  }
+  // while it is open, its keys work wherever focus has gone (a click on the picture leaves it on the body)
+  function lbKeys(e) {
+    if (e.key === 'Escape') closeShot();
+    else if (e.key === 'ArrowRight') stepShot(1);
+    else if (e.key === 'ArrowLeft') stepShot(-1);
+    else if (e.key === 'Tab') {
+      // focus stays inside while it is open
+      var f = [].slice.call(lb.querySelectorAll('button')).filter(function (b) { return b.offsetParent; }), k = f.indexOf(document.activeElement);
+      e.preventDefault(); f[(k + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
+    }
   }
   function lbShow() {
     var shots = shotsOf(lbGal), shot = shots[lbI], cap = shot.querySelector('figcaption'), themed = !!lbGal.querySelector('.theme');
@@ -226,10 +243,13 @@
   }
   // the picture inside a frame: a phone screen sits in its frame with room round it
   function picOf(from) { return rectOf(from.querySelector('img') || from); }
+  var closing = false;
   function openShot(g, i, from) {
     if (!lb) lbBuild();
+    if (closing) return;
     lbGal = g; lbI = i; lbFrom = from; lbShow();
     lb.hidden = false;
+    document.addEventListener('keydown', lbKeys);
     root.style.overflow = 'hidden'; if (lenis) lenis.stop();
     var img = lb.querySelector('.lb-img');
     requestAnimationFrame(function () {
@@ -239,10 +259,13 @@
       lb.querySelector('.lb-x').focus();
     });
   }
-  function stepShot(d) { var shots = shotsOf(lbGal); if (shots.length < 2) return; lbI = (lbI + d + shots.length) % shots.length; lbFrom = shots[lbI].querySelector('.shot-f'); lbShow(); }
+  function stepShot(d) { var shots = shotsOf(lbGal); if (closing || shots.length < 2) return; lbI = (lbI + d + shots.length) % shots.length; lbFrom = shots[lbI].querySelector('.shot-f'); lbShow(); }
   function closeShot() {
+    if (closing || lb.hidden) return;
+    closing = true;
+    document.removeEventListener('keydown', lbKeys);
     var img = lb.querySelector('.lb-img'), to = lbFrom;
-    function gone() { lb.hidden = true; root.style.overflow = ''; if (lenis) lenis.start(); img.getAnimations && img.getAnimations().forEach(function (a) { a.cancel(); }); to.focus({ preventScroll: true }); }
+    function gone() { closing = false; lb.hidden = true; root.style.overflow = ''; if (lenis) lenis.start(); img.getAnimations && img.getAnimations().forEach(function (a) { a.cancel(); }); to.focus({ preventScroll: true }); }
     lb.classList.remove('open');
     var r = picOf(to);
     if ((!env.mobile || lb.classList.contains('tall')) && r.y > -r.h && r.y < innerHeight && r.x > -r.w && r.x < innerWidth) flip(img, r, rectOf(img), true, gone); else setTimeout(gone, 350);
@@ -364,6 +387,7 @@
     tgEl.addEventListener('click', function (e) {
       var b = e.target.closest('.tk'); if (!b) return;
       tgPin = tgPin === b.dataset.id ? null : b.dataset.id; tgLight(tgPin || (touch ? null : b.dataset.id));
+      Object.keys(tgOf).forEach(function (id) { tgOf[id].setAttribute('aria-pressed', id === tgPin); });
     });
     document.addEventListener('pointerdown', function (e) { if (tgPin && !e.target.closest('#tg')) { tgPin = null; tgLight(null); } });
     document.getElementById('tgTheme').addEventListener('click', function (e) {
@@ -393,8 +417,8 @@
   var personaEls = [].slice.call(document.querySelectorAll('[data-g]')), hoverPersona = -1;
   var personaSec = personaEls.length ? sections.indexOf(personaEls[0].closest('[data-scene]')) : -1;
   personaEls.forEach(function (p, i) {
-    p.addEventListener('mouseenter', function () { hoverPersona = i; });
-    p.addEventListener('mouseleave', function () { hoverPersona = -1; });
+    p.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hoverPersona = i; });
+    p.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hoverPersona = -1; });
   });
   // Everything the frame needs from the layout is read here, on resize and when
   // content changes — never per frame. A read after the frame's style writes
@@ -414,7 +438,7 @@
     r.thumb.style.width = (100 / r.n) + '%';
     el.addEventListener('scroll', function () { railUpdate(r); if (r.el.scrollLeft > 8) bar.classList.add('used'); }, { passive: true });
     // the bar itself steps to the next card, and wraps to the first after the last
-    bar.addEventListener('click', function () { el.scrollTo({ left: r.idx >= r.n - 1 ? 0 : (r.idx + 1) * r.step, behavior: 'smooth' }); });
+    bar.addEventListener('click', function () { el.scrollTo({ left: r.idx >= r.n - 1 ? 0 : (r.idx + 1) * r.step, behavior: reduce ? 'auto' : 'smooth' }); });
     return r;
   });
   function railMeasure() {
@@ -426,33 +450,39 @@
       var it = railItems(r.el);
       r.step = r.on && it[1] ? it[1].offsetLeft - it[0].offsetLeft : 1;
       r.max = Math.max(1, r.el.scrollWidth - r.el.clientWidth);
-      railUpdate(r);
+      r.x = r.el.scrollLeft;
     });
+    rails.forEach(function (r) { railShow(r, r.x); });
   }
-  function railUpdate(r) {
-    var x = r.el.scrollLeft, i = !r.on ? 0 : x >= r.max - 2 ? r.n - 1 : Math.min(r.n - 1, Math.round(x / r.step));
+  function railUpdate(r) { railShow(r, r.el.scrollLeft); }
+  function railShow(r, x) {
+    var i = !r.on ? 0 : x >= r.max - 2 ? r.n - 1 : Math.min(r.n - 1, Math.round(x / r.step));
     put(r.thumb, 'transform', 'translateX(' + (Math.min(1, x / r.max) * (r.n - 1) * 100).toFixed(1) + '%)');
     if (i !== r.idx) { r.idx = i; r.num.textContent = pad(i + 1) + ' / ' + pad(r.n); if (r.onIdx) r.onIdx(i); }
   }
   // a journey map, swiped: the stage in view is the lit one
   rails.forEach(function (r) {
     var panel = r.el.classList.contains('jm-sheet') && r.el.parentNode;
-    if (panel) r.onIdx = function (i) { if (r.on) panel.light(i); };
+    if (panel) r.onIdx = function (i) { if (r.on && (touch || innerWidth <= 860)) panel.light(i); };
   });
   function railOf(el) { for (var k = 0; k < rails.length; k++) if (rails[k].el === el) return rails[k]; return null; }
   var stepRail = railOf(document.getElementById('steps')), personaRail = railOf(document.getElementById('personas'));
-  var stepOn = -1;
+  var stepOn = -1, stepX = [];
+  // sideways, the axis fills up to the dot of the step in view
+  function fillTo(i) { if (stepRail && stepRail.on && i >= 0) stepRail.el.style.setProperty('--tl', (stepX[i] + 5) + 'px'); }
   function centre(el, y) { var r = el.getBoundingClientRect(); return r.top + y + r.height / 2; }
   function measure() {
     var y = scrollY;
     tops = sections.map(function (s) { return s.getBoundingClientRect().top + y; });
     heights = sections.map(function (s) { return s.offsetHeight; });
     stepY = stepEls.map(function (el) { return centre(el, y); });
+    stepX = stepEls.map(function (el) { return el.offsetLeft; });
     personaY = personaEls.map(function (el) { return centre(el, y); });
     var hr = heroFig.getBoundingClientRect();
     heroAbs = { x: hr.left, y: hr.top + y, w: hr.width, h: hr.height };
     maxS = Math.max(1, document.documentElement.scrollHeight - innerHeight);
     railMeasure();
+    fillTo(stepOn);
     tgLayout();
     jmLayout();
   }
@@ -484,26 +514,26 @@
     env.sub = Math.max(0, Math.min(1, (y + vh * 0.5 - tops[k]) / Math.max(1, heights[k])));
 
     // the roadmap step nearest the middle of the screen, from cached positions
-    var mid = y + vh * 0.5, best = 0, bd = 1e9;
-    stepY.forEach(function (c, i) { var d = Math.abs(c - mid); if (d < bd) { bd = d; best = i; } });
+    var mid = y + vh * 0.5, best = 0, bd = 1e9, d;
+    for (i = 0; i < stepY.length; i++) { d = Math.abs(stepY[i] - mid); if (d < bd) { bd = d; best = i; } }
     // sideways, the card in view is the step
     if (stepRail && stepRail.on) best = stepRail.idx;
     if (best !== stepOn) {
       stepEls.forEach(function (li, i) { li.classList.toggle('on', i === best); li.classList.toggle('past', i < best); });
       stepOn = best;
       // sideways, the axis fills up to the dot of the step in view (read only when the step changes)
-      if (stepRail && stepRail.on) stepRail.el.style.setProperty('--tl', (stepEls[best].offsetLeft + 5) + 'px');
+      fillTo(best);
     }
     env.step = best;
     // and the persona: the hovered one, or the one in view
     var bp = 0; bd = 1e9;
-    personaY.forEach(function (c, i) { var d = Math.abs(c - mid); if (d < bd) { bd = d; bp = i; } });
+    for (i = 0; i < personaY.length; i++) { d = Math.abs(personaY[i] - mid); if (d < bd) { bd = d; bp = i; } }
     if (personaRail && personaRail.on) bp = personaRail.idx;
     var pOn = hoverPersona >= 0 ? hoverPersona : bp, inRes = personaSec > 0 && Math.abs(env.scene - personaSec) < 0.5;
     if (pOn !== env.persona || inRes !== env.inRes) personaEls.forEach(function (p, i) { p.classList.toggle('on', i === pOn && inRes); });
     env.persona = pOn; env.inRes = inRes;
 
-    env.heroRect = { x: heroAbs.x, y: heroAbs.y - y, w: heroAbs.w, h: heroAbs.h };
+    var hr = env.heroRect; hr.x = heroAbs.x; hr.y = heroAbs.y - y; hr.w = heroAbs.w; hr.h = heroAbs.h;
     // the picture scrolls away with the page and fades as it leaves the top (the figure whole, its dark
     // ground too); in the Matter look on a wide screen it gives way to the scene, which takes it apart
     env.heroVis = env.mobile || style === 'depth'
@@ -514,7 +544,10 @@
     put(progress, 'transform', 'scaleX(' + (y / maxS).toFixed(4) + ')');
     var solid = y > 24;
     if (solid !== env.solid) { nav.classList.toggle('solid', solid); env.solid = solid; }
-    if (k !== env.k) { railLinks.forEach(function (a, i) { a.classList.toggle('on', i === k - 1); }); env.k = k; }
+    if (k !== env.k) {
+      for (i = 0; i < railLinks.length; i++) { var cur = i === k - 1; railLinks[i].classList.toggle('on', cur); if (cur) railLinks[i].setAttribute('aria-current', 'true'); else railLinks[i].removeAttribute('aria-current'); }
+      env.k = k;
+    }
 
     var m = env.mouse, kk = Math.min(1, env.dt / 16.7);
     if (tx < -9000) m.on += (0 - m.on) * 0.08 * kk;
@@ -541,18 +574,27 @@
     requestAnimationFrame(frame);
   }
   measure();
-  if (location.hash) { var target = document.querySelector(location.hash); if (target) setTimeout(function () { if (lenis) lenis.scrollTo(target, { immediate: true, offset: -20 }); else target.scrollIntoView(); measure(); }, 60); }
+  var target = null;
+  try { target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) {}
+  if (target) { setTimeout(function () { if (lenis) lenis.scrollTo(target, { immediate: true, offset: -20 }); else target.scrollIntoView(); measure(); }, 60); }
   requestAnimationFrame(frame);
   if (R && window.Perf) Perf.onChange = function (d) { env.dpr = d; if (running) { if (R.setDpr) R.setDpr(env); else R.build(env); } };
   if (R) {
     var ok = false;
     try { ok = R.init(canvas, env); } catch (e) { console.error(e); }
+    // iOS takes the GL context back under memory pressure or in the background: when it is returned,
+    // the world is built again rather than left black
+    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); running = false; });
+    canvas.addEventListener('webglcontextrestored', function () {
+      try { if (R.init(canvas, env)) { R.build(env); running = true; } } catch (e) { console.error(e); }
+    });
     if (ok) Promise.resolve(R.load()).then(function () {
       R.build(env); running = true;
       var to, lw = innerWidth, lh = innerHeight;
       addEventListener('resize', function () {
         if (innerWidth < 50 || innerHeight < 50) return;
-        if (innerWidth === lw && Math.abs(innerHeight - lh) < 120) return;
+        // a phone's toolbar sliding away changes the height a little; only rebuild for a real resize
+        if (innerWidth === lw && (innerHeight === lh || touch && Math.abs(innerHeight - lh) < 120)) return;
         lw = innerWidth; lh = innerHeight;
         clearTimeout(to);
         to = setTimeout(function () { env.W = innerWidth; env.H = (window.Perf ? Perf.vh() : innerHeight); env.mobile = innerWidth < 860; measure(); R.build(env); }, 200);

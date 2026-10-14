@@ -27,37 +27,41 @@
   // where the column hangs
   var Z_COL = -5200;
 
-  // the column's layout, worked out here (before the shell measures the track) so the scroll
-  // through it can be one to one: a screen of scroll moves the column a screen
-  var W0 = innerWidth, H0 = window.Perf ? Perf.vh() : innerHeight, MOB = W0 < 760, F0 = H0 * 0.96;
-  var COL = (function () {
-    var cw = MOB ? W0 * 0.9 : Math.min(W0 * 0.58, H0 * 0.62 * 1.6, 1100), ch = cw / (MOB ? 1.3 : 1.6);
-    var gap = ch * (MOB ? 0.46 : 0.24);
-    // the distance at which a picture takes this much of the screen's width
-    var d = F0 * cw / (W0 * (MOB ? 0.92 : 0.46));
-    var k = F0 / d; // world to screen
-    // the camera's height with the first picture's top at 22% of the screen, and with the last one's bottom at 74%
-    var top = -(H0 * 0.5 - H0 * 0.22) / k + ch / 2, bottom = -3 * (ch + gap) - ch / 2 + (H0 * 0.74 - H0 * 0.5) / k;
-    return { cw: cw, ch: ch, gap: gap, d: d, top: top, bottom: bottom, run: (top - bottom) * k / H0 };
-  })();
   // past the last case the page keeps scrolling the same way, one to one, down to the planet below it
   var END_RUN = 1;
-  // the scroll track, in screens: a short hold where a shape is read, none from the column on
-  var RUNS = [1.2, 1.7, COL.run, END_RUN], HOLDS = [0.45, 0, 0], LEAD = 0.12;
-  var keys = [[0, 0]], stops = [0], pos = LEAD;
-  keys.push([pos, 0]);
-  RUNS.forEach(function (r, i) {
-    pos += r; keys.push([pos, i + 1]);
-    stops.push(pos);
-    if (i + 1 < LAST && HOLDS[i]) { pos += HOLDS[i]; keys.push([pos, i + 1]); }
-  });
-  var TOTAL = pos;
-  // Matter's dust slides about a screen per screen of its own track; this one is longer
-  var DUST_K = TOTAL / 3.8;
-  keys = keys.map(function (k) { return [k[0] / TOTAL, k[1]]; });
-  stops = stops.map(function (s, i) { return i === 0 ? 0 : s / TOTAL; });
-  // the track is as long as the flight
-  document.querySelector('.track').style.height = ((TOTAL + 1) * 100) + 'vh';
+  // The column's layout and the scroll track, for a screen size. It is worked out before the shell
+  // measures the track (and again for a new size) so the scroll through the column can be one to one:
+  // a screen of scroll moves the column a screen. keys and stops are changed in place: the shell holds them
+  var COL = {}, keys = [], stops = [], DUST_K = 1, laid = '';
+  function layout(W, H, mob) {
+    if (laid === W + 'x' + H + mob) return;
+    laid = W + 'x' + H + mob;
+    var F0 = H * 0.96;
+    var cw = mob ? W * 0.9 : Math.min(W * 0.58, H * 0.62 * 1.6, 1100), ch = cw / (mob ? 1.3 : 1.6);
+    var gap = ch * (mob ? 0.46 : 0.24);
+    // the distance at which a picture takes this much of the screen's width
+    var d = F0 * cw / (W * (mob ? 0.92 : 0.46));
+    var k = F0 / d; // world to screen
+    // the camera's height with the first picture's top at 22% of the screen, and with the last one's bottom at 74%
+    var top = -(H * 0.5 - H * 0.22) / k + ch / 2, bottom = -3 * (ch + gap) - ch / 2 + (H * 0.74 - H * 0.5) / k;
+    COL.cw = cw; COL.ch = ch; COL.gap = gap; COL.d = d; COL.top = top; COL.bottom = bottom; COL.run = (top - bottom) * k / H;
+    // the scroll track, in screens: a short hold where a shape is read, none from the column on
+    var RUNS = [1.2, 1.7, COL.run, END_RUN], HOLDS = [0.45, 0, 0], pos = 0.12;
+    keys.length = 0; stops.length = 0;
+    keys.push([0, 0], [pos, 0]); stops.push(0);
+    RUNS.forEach(function (r, i) {
+      pos += r; keys.push([pos, i + 1]);
+      stops.push(pos);
+      if (i + 1 < LAST && HOLDS[i]) { pos += HOLDS[i]; keys.push([pos, i + 1]); }
+    });
+    keys.forEach(function (kk) { kk[0] /= pos; });
+    for (var i = 1; i < stops.length; i++) stops[i] /= pos;
+    // Matter's dust slides about a screen per screen of its own track; this one is longer
+    DUST_K = pos / 3.8;
+    // the track is as long as the flight
+    document.querySelector('.track').style.height = ((pos + 1) * 100) + 'vh';
+  }
+  layout(innerWidth, window.Perf ? Perf.vh() : innerHeight, innerWidth < 760);
 
   var VS = [
     'precision highp float;',
@@ -174,7 +178,7 @@
   var PAL = PALETTE.map(function (h) { return BKit.hex(h); });
   // what each frame works out, kept from frame to frame rather than made anew sixty times a second
   var E = [0, 0, 0], T = [0, 0, 0], PT = { x: 0, y: 0 };
-  var rects = [0, 1, 2, 3].map(function () { return { ok: false, x: 0, y: 0, w: 0, h: 0, o: 0 }; });
+  var rects = [0, 1, 2, 3].map(function () { return { ok: false, x: 0, y: 0, w: 0, h: 0 }; });
   var tags = [0, 1, 2, 3].map(function () { return { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 }; });
 
   function perspective(fovy, aspect, near, far) {
@@ -236,6 +240,19 @@
 
   var renderer = {
     init: function () {
+      if (!this.initGL()) return false;
+      var wrap = document.getElementById('diveLabels');
+      labels = LABELS.map(function (l) {
+        var el = document.createElement('div'); el.className = 'fl'; el.style.color = PALETTE[l.layer];
+        el.setAttribute('aria-hidden', 'true');
+        el.innerHTML = '<i></i><span>' + l.text + ' <b>· ' + l.note + '</b></span>';
+        wrap.appendChild(el); return el;
+      });
+      return true;
+    },
+    // after the GL context was lost and given back: everything on the GPU is made again
+    restore: function (env) { if (this.initGL()) this.build(env); },
+    initGL: function () {
       var canvas = document.getElementById('gl');
       gl = canvas.getContext('webgl', { antialias: false, alpha: false, depth: false, powerPreference: 'high-performance' });
       if (!gl) return false;
@@ -255,14 +272,9 @@
       ['aPos', 'aCol', 'aInfo', 'aAlt'].forEach(function (n) { buffers[n] = gl.createBuffer(); A[n] = gl.getAttribLocation(prog, n); });
       ['uView', 'uProj', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize', 'uTop'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
       QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
+      planes = [];
       for (var k = 0; k < 4; k++) planes.push({ buf: gl.createBuffer(), tex: gl.createTexture() });
       gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND);
-      var wrap = document.getElementById('diveLabels');
-      labels = LABELS.map(function (l) {
-        var el = document.createElement('div'); el.className = 'fl'; el.style.color = PALETTE[l.layer];
-        el.innerHTML = '<i></i><span>' + l.text + ' <b>· ' + l.note + '</b></span>';
-        wrap.appendChild(el); return el;
-      });
       return true;
     },
     // the greeting needs only its font; the pictures come in behind it, long before the column is reached
@@ -270,17 +282,18 @@
       var self = this;
       images = CASES.map(function (c, k) {
         var im = new Image();
-        im.onload = function () { if (self.size) self.picture(k); };
+        // decoded off the main thread first, so the upload doesn't stall the greeting
+        im.onload = function () { (im.decode ? im.decode() : Promise.resolve()).catch(function () {}).then(function () { if (self.size) self.picture(k); }); };
         im.src = c.img;
         return im;
       });
       return (document.fonts ? document.fonts.load('700 100px Inter') : Promise.resolve()).then(function () { tick(1); });
     },
-    // a case's picture, cropped to its plane at the size it is seen up close, onto the GPU
+    // a case's picture, cropped to its plane at the size it is seen on the screen, onto the GPU
     picture: function (k) {
       var img = images[k];
       if (!img.complete || !img.naturalWidth) return;
-      var cw = this.size[0], ch = this.size[1], dpr = this.texDpr;
+      var cw = this.size[0] * this.texScale, ch = this.size[1] * this.texScale, dpr = this.texDpr;
       var ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
       var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
       var tc = document.createElement('canvas'); tc.width = Math.round(cw * dpr); tc.height = Math.round(ch * dpr);
@@ -297,6 +310,7 @@
     build: function (env) {
       var W = env.W, H = env.H, mobile = env.mobile, R = Math.random, i;
       F = H * 0.96;
+      layout(W, H, mobile);
       // the greeting, each point with a place waiting for it in the strata; exactly as many grains
       // as Matter draws its greeting with on this screen, scattered as Matter scatters them
       var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = matterCount(W, H, mobile);
@@ -339,7 +353,9 @@
 
       // the work: four wide pictures in a column, read top to bottom
       var cw = COL.cw, ch = COL.ch, gap = COL.gap;
-      this.size = [cw, ch]; this.texDpr = Math.min(2, env.dpr || 1);
+      // world units to screen px where the column is read
+      this.size = [cw, ch]; this.texScale = F / COL.d; this.texDpr = Math.min(2, env.dpr || 1);
+      for (var p = 0; p < 4; p++) planes[p].ready = false;
       this.cases = [];
       for (var k = 0; k < 4; k++) {
         var cy = -k * (ch + gap), z = Z_COL, x0 = -cw / 2, x1 = cw / 2, ya = cy + ch / 2, yz = cy - ch / 2;
@@ -405,8 +421,8 @@
       var n = Math.min(LAST - 1, Math.floor(stage)), sE = n >= TOP ? stage : n + smooth(stage - n);
       var i = 0; while (i < S.length - 2 && S[i + 1].s <= sE) i++;
       var f = Math.max(0, Math.min(1, (sE - S[i].s) / (S[i + 1].s - S[i].s)));
-      // a spline through the dive, ending on the overview (no point past it, so no overshoot);
-      // from there straight from station to station, each eased by its own stage
+      // a spline through the dive, ending at the top of the column (no point past it, so no overshoot);
+      // from there straight from station to station
       var iRow = 3, e = E, t = T;
       var s0 = S[Math.max(0, i - 1)], s1 = S[Math.min(iRow, i)], s2 = S[Math.min(iRow, i + 1)], s3 = S[Math.min(iRow, i + 2)];
       if (i < iRow) { catmull(e, s0.e, s1.e, s2.e, s3.e, f); catmull(t, s0.t, s1.t, s2.t, s3.t, f); }
@@ -417,9 +433,11 @@
       if (this.introAt == null) this.introAt = performance.now();
       var inn = env.reduce ? 1 : Math.min(1, (performance.now() - this.introAt) / 1800);
       // the cursor turns the head a little
-      var mx = env.mouse.x < -9000 ? 0 : (env.mouse.x / W - 0.5) * 2, my = env.mouse.y < -9000 ? 0 : (env.mouse.y / H - 0.5) * 2;
-      this.mx = (this.mx || 0) + (mx * env.mouse.on - (this.mx || 0)) * 0.06;
-      this.my = (this.my || 0) + (my * env.mouse.on - (this.my || 0)) * 0.06;
+      // (by the clock, not by the frame: a 120 Hz screen turns no faster than a 60 Hz one)
+      var mx = env.mouse.x < -9000 ? 0 : (env.mouse.x / W - 0.5) * 2, my = env.mouse.y < -9000 ? 0 : (env.mouse.y / H - 0.5) * 2, kt = env.dt / 16.7;
+      var ease = 1 - Math.pow(0.94, kt);
+      this.mx = (this.mx || 0) + (mx * env.mouse.on - (this.mx || 0)) * ease;
+      this.my = (this.my || 0) + (my * env.mouse.on - (this.my || 0)) * ease;
       if (!env.reduce && stage > 0.2) { var lk = Math.min(1, stage - 0.2); e[0] += this.mx * 50 * lk; e[1] -= this.my * 32 * lk; t[0] += this.mx * 12 * lk; t[1] -= this.my * 8 * lk; }
       // opening a case flies square into its picture, under the hand-off box
       if (env.go >= 0) {
@@ -430,7 +448,7 @@
         focus += (dFill - focus) * gg;
       }
       lookAt(view, e, t);
-      this.rot += 0.0025 + this.mx * 0.01;
+      this.rot += (0.0025 + this.mx * 0.01) * kt;
 
       gl.useProgram(prog);
       for (k = 0; k < ATTRS.length; k++) {
@@ -509,7 +527,7 @@
           if (c === 2) { blx = PT.x; bly = PT.y; } else if (c === 3) { brx = PT.x; bry = PT.y; }
         }
         if (!r.ok) { tg.x = tg.y = -1e4; tg.w = tg.top = tg.o = 0; continue; }
-        r.x = x0; r.y = y0; r.w = x1 - x0; r.h = y1 - y0; r.o = vis;
+        r.x = x0; r.y = y0; r.w = x1 - x0; r.h = y1 - y0;
         // the label hangs from the picture's bottom edge
         var by = Math.max(bly, bry);
         tg.x = blx; tg.y = by; tg.w = brx - blx; tg.top = y0; tg.o = vis * smooth((by - bar0) / (bar1 - bar0));

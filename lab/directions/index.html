@@ -32,13 +32,12 @@
     .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.65) 100%); }
 
     .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(16px, 4vw, 40px); font-size: 14px; font-weight: 500; }
-    .nav span { color: var(--muted); font-weight: 400; }
     .nav-links { display: flex; gap: 22px; align-items: center; }
     .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
     .nav-links a:not(.pill):hover { color: var(--fg); }
     .pill { border: 1px solid rgba(238,240,246,.25); border-radius: 999px; padding: 7px 15px; transition: background .2s, border-color .2s; }
     .pill:hover { background: rgba(238,240,246,.08); border-color: rgba(238,240,246,.45); }
-    @media (max-width: 640px) { .nav-links a:not(.pill) { display: none; } .nav > a span { display: none; } }
+    @media (max-width: 640px) { .nav-links a:not(.pill) { display: none; } }
 
     .meter { position: fixed; z-index: 20; right: clamp(16px, 4vw, 40px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; }
     .meter button { background: none; border: 0; cursor: pointer; padding: 5px 0; font: 500 10px/1 var(--mono); color: var(--muted); display: flex; gap: 8px; align-items: center; justify-content: flex-end; transition: color .4s; }
@@ -115,8 +114,9 @@
     .loading { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; font: 500 11px/1 var(--mono); color: var(--muted); transition: opacity .7s; pointer-events: none; }
     .loading b { font-weight: 500; color: var(--fg); }
 
-    .fallback { display: none; position: relative; z-index: 15; padding: 120px var(--pad); max-width: 900px; }
-    .no-gl .fallback { display: block; }
+    /* the page in plain words: what a screen reader (and a search engine) reads; it is the page itself without WebGL */
+    .fallback { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .no-gl .fallback { position: relative; z-index: 15; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; padding: 120px var(--pad); max-width: 900px; }
     .no-gl .track, .no-gl .meter, .no-gl .cap, .no-gl #gl, .no-gl .loading, .no-gl .dive-labels { display: none; }
     .fallback h1 { font-size: clamp(40px, 7vw, 88px); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
     .fallback > p { margin-top: 20px; font-size: 18px; color: rgba(238,240,246,.8); }
@@ -131,7 +131,7 @@
   <div class="vignette"></div>
   <div class="grain"></div>
   <div class="loading" id="loading" aria-hidden="true"><span>gathering <b id="loadPct">0</b>%</span></div>
-  <div class="ring" id="ring"><span>Open</span></div>
+  <div class="ring" id="ring" aria-hidden="true"><span>Open</span></div>
 
   <header class="nav">
     <a href="#" data-stage="0">Portfolio</a>
@@ -182,11 +182,10 @@
 
   <div class="track"></div>
 
-  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="perf.js?v=12"></script>
+  <script src="perf.js?v=13"></script>
   <script src="hint.js?v=6"></script>
-  <script src="handoff.js?v=6"></script>
-  <script src="bkit.js?v=23"></script>
-  <script src="dive.js?v=40"></script>
+  <script src="handoff.js?v=7"></script>
+  <script src="bkit.js?v=24"></script>
+  <script src="dive.js?v=41"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 // What a phone needs to stay smooth, shared by every lab page (Dive, the sandbox, the case):
-//   · touch devices keep the browser's own scroll (no smoothing layer, no settling)
+//   · touch devices keep the browser's own scroll (no smoothing layer, no settling); a wheel gets
+//     Lenis, fetched after the page is up, so nothing waits for it and a phone never downloads it
 //   · the canvas starts at 2× on a phone, not its native 3×
 //   · if frames still come in slow, the resolution steps down on its own
 //   · blurred glass over a canvas that repaints every frame is dropped on touch
@@ -55,6 +56,16 @@
     return arm;
   };
 
+  // the smoothing layer for a wheel: cb gets a Lenis once it has loaded (never on touch or reduced motion)
+  P.smooth = function (opts, cb) {
+    if (touch || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    function make() { if (window.Lenis) cb(new Lenis(opts)); }
+    if (window.Lenis) return make();
+    var s = document.createElement('script');
+    s.src = 'https://unpkg.com/lenis@1.1.13/dist/lenis.min.js'; s.async = true; s.onload = make;
+    document.head.appendChild(s);
+  };
+
   if (touch) {
     var css = document.createElement('style');
     css.textContent = '*{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.grain{display:none!important}';
@@ -80,8 +91,8 @@
   var hud = /[?&]fps/.test(location.search) ? document.createElement('div') : null, shown = 0;
   if (hud) {
     hud.style.cssText = 'position:fixed;left:8px;top:64px;z-index:99999;font:500 11px/1.4 ui-monospace,monospace;color:#B8F0C9;background:rgba(0,0,0,.75);padding:6px 8px;border-radius:6px;pointer-events:none;white-space:pre';
-    document.addEventListener('DOMContentLoaded', function () { document.body.appendChild(hud); });
     if (document.body) document.body.appendChild(hud);
+    else document.addEventListener('DOMContentLoaded', function () { document.body.appendChild(hud); });
   }
   function draw(now) {
     if (now - shown < 250) return; shown = now;
