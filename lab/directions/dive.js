@@ -521,6 +521,8 @@
         var shift = stage > TOP ? Math.max(0, (COL.top - camY) * F / COL.d) : 0;
         var to = (vis * smooth((this.titleY - shift - bar0) / (bar1 - bar0))).toFixed(2), tt = 'translateY(' + (-shift).toFixed(1) + 'px)';
         css(title, 'opacity', to); css(title, 'transform', tt);
+        // it starts where the pictures start: the column's left edge as it stands on the screen
+        css(title, 'left', (W / 2 - COL.cw * F / COL.d / 2).toFixed(1) + 'px');
       }
     },
     workAt: function (stage) { return openable(stage); },
