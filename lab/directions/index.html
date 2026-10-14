@@ -57,6 +57,8 @@
     .cap-layers { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
     .cap-layers h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
     .cap-layers p { margin-top: 14px; color: rgba(238,240,246,.75); font-size: clamp(15px, 1.2vw, 17px); max-width: 540px; }
+    /* on a phone the words sit higher, clear of the top of the strata */
+    @media (max-width: 760px) { .cap-layers { top: 78px; } .cap-layers p { margin-top: 10px; } }
     .dive-labels { position: fixed; inset: 0; z-index: 9; pointer-events: none; }
     .fl { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; font: 500 11px/1 var(--mono); white-space: nowrap; opacity: 0; will-change: transform, opacity; }
     .fl i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(6,7,10,.6), 0 0 16px currentColor; flex: 0 0 auto; }
@@ -150,9 +152,9 @@
   </section>
 
   <section class="cap cap-layers" data-cap="1">
-    <span class="eyebrow">Halliburton · 2025–2026</span>
-    <h2>Data Marketplace</h2>
-    <p>Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.</p>
+    <span class="eyebrow">Under the surface</span>
+    <h2>Most of the work is in the layers nobody sees.</h2>
+    <p>On Halliburton's first unified data platform I'm the sole designer — from the research at the bottom to the pipeline that hands design to code.</p>
   </section>
   <div class="dive-labels" id="diveLabels" aria-hidden="true"></div>
 
