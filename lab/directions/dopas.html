@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>dopas.dp.ua — Yurii Fokin</title>
+  <meta name="description" content="dopas.dp.ua: online bus ticket booking, designed from zero — platform launched and generating revenue.">
+  <meta name="theme-color" content="#07080B">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="../../assets/images/dopas/dopas-cover-v3.webp">
+  <link rel="stylesheet" href="case.css?v=6">
+  <script src="handoff.js?v=6"></script>
+  <script>Handoff.expect();</script>
+</head>
+<body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="shade"></div>
+  <div class="progress" id="progress"></div>
+
+  <header class="nav" id="nav">
+    <a class="back" id="home" href="./">← Portfolio <span>· dopas.dp.ua</span></a>
+    <div class="nav-r">
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+    </div>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Chapters"></nav>
+
+  <main>
+    <!-- 00 -->
+    <section class="sec hero" data-scene="0" id="top">
+      <span class="num rv">Case 04 · dopas.dp.ua · 2020</span>
+      <h1 class="rv">dopas.dp.ua</h1>
+      <p class="lead rv">Designed from zero — platform launched and generating revenue.</p>
+      <dl class="meta rv">
+        <div><dt>Role</dt><dd>UX Designer — research, flows, prototyping</dd></div>
+        <div><dt>Platform</dt><dd>Web platform</dd></div>
+        <div><dt>Year</dt><dd>2020</dd></div>
+      </dl>
+      <div class="links rv"><a href="https://www.dopas.dp.ua/" target="_blank" rel="noopener">Website ↗</a></div>
+      <figure class="hero-fig" id="heroFig" style="--ar:2400/1525"><img id="heroImg" src="../../assets/images/dopas/dopas-cover-v3.webp" alt="dopas.dp.ua project overview"></figure>
+      <script>Handoff.land(document.getElementById('heroFig'), document.getElementById('heroImg'), { radius: 18 });</script>
+    </section>
+
+    <!-- 01 -->
+    <section class="sec" data-scene="1" id="problem" data-title="Problem">
+      <div class="col">
+        <span class="num rv">01</span>
+        <h2 class="rv">Problem &amp; Context</h2>
+        <p class="lead rv">Before dopas.dp.ua, bus tickets in Dnipro were sold exclusively offline — at ticket offices and directly from drivers.</p>
+        <div class="stack">
+          <div class="card rv"><span class="eyebrow">Problem</span><p style="margin-top:8px">For a city with diverse ridership spanning all age groups, this meant queues, cash dependency, and no record of purchase.</p></div>
+          <div class="arrow rv" aria-hidden="true">↓</div>
+          <div class="card rv"><span class="eyebrow">The challenge</span><p style="margin-top:8px">Build an online ticketing platform from zero that works for everyone — from teenagers booking on a phone to elderly passengers unfamiliar with digital services.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="sec" data-scene="2" id="roadmap" data-title="Roadmap">
+      <div class="col">
+        <span class="num rv">02</span>
+        <h2 class="rv">Roadmap</h2>
+        <ol class="steps hx" id="steps">
+          <li class="rv"><b>1.0</b><h3>Market Analysis</h3><p>Audited existing ticketing platforms in Ukraine and nearby markets.</p><span class="tag">Competitive matrix</span></li>
+          <li class="rv"><b>2.0</b><h3>Wireframes &amp; Lo-fi</h3><p>Mapped core user flows — search, seat selection, checkout, ticket storage.</p><span class="tag">User flow · Lo-fi wireframes</span></li>
+          <li class="rv"><b>3.0</b><h3>Usability Study</h3><p>Tested lo-fi prototype with users across age groups.</p><span class="tag">Usability report</span></li>
+          <li class="rv"><b>4.0</b><h3>Mockups &amp; Hi-fi</h3><p>Translated validated flows into high-fidelity screens.</p><span class="tag">Hi-fi prototype</span></li>
+          <li class="rv"><b>5.0</b><h3>Testing &amp; Iterating</h3><p>Refined edge cases — returns, errors, empty states.</p><span class="tag">Iteration log</span></li>
+          <li class="rv"><b>6.0</b><h3>Hand-off</h3><p>Full specs, annotations, developer handoff.</p><span class="tag">Figma handoff</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="sec" data-scene="3" id="market" data-title="Market analysis">
+      <div class="col">
+        <span class="num rv">03</span>
+        <h2 class="rv">Market analysis</h2>
+        <div class="stack hx" id="personas">
+          <div class="card persona rv" data-g="0"><span class="eyebrow">01</span><h3 style="margin-top:8px">Direct competitive audit</h3><p>Reviewed 6 Ukrainian and regional ticketing platforms — Busfor and Infobus as direct competitors, Ukrzaliznytsia as the rail alternative travellers weigh against a bus.</p><div class="chips"><span>6 platforms</span><span>UX audit</span><span>heuristic review</span></div></div>
+          <div class="card persona rv" data-g="1"><span class="eyebrow">02</span><h3 style="margin-top:8px">Comparative analysis</h3><p>Compared booking flows across competitors — search, seat selection, payment, post-purchase experience.</p><div class="chips"><span>flow comparison</span><span>friction mapping</span><span>benchmarking</span></div></div>
+          <div class="card persona key rv" data-g="2"><span class="eyebrow">03</span><h3 style="margin-top:8px">Key insight</h3><p>Most platforms forced 7+ steps before purchase. None offered ticket storage or self-service returns. This defined dopas's differentiators from day one.</p><div class="chips"><span>7+ steps avg.</span><span>no returns flow</span><span>opportunity gap</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section class="sec" data-scene="4" id="flows" data-title="User flows">
+      <div class="col">
+        <span class="num rv">04</span>
+        <h2 class="rv">User flows</h2>
+        <div class="card uf rv" style="margin-top:32px">
+          <ol class="fl">
+            <li><div class="fn" data-k="end"><i>Start</i>Opens the website</div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Search route<small>From, to, date — nothing else above the fold</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>View results<small>Time, duration, seats left and price per departure</small></div></li>
+            <li class="fx"><div class="fn" data-k="decision"><i>Decision</i>Is this the trip?</div><div class="fx-out"><span class="fb-l">No</span><div class="fn" data-k="off"><i>Action</i>Back to search</div></div></li>
+            <li class="fs yes"><span>Yes</span></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Select seat<small>The seat map, with the total updating</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Passenger info<small>One block per seat, so a pair books in one pass</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Payment<small>The fee is named before the card is</small></div></li>
+            <li><div class="fn" data-k="system"><i>System</i>Confirmation<small>The ticket, ready to download</small></div></li>
+            <li><div class="fn" data-k="end"><i>End</i>Ticket in hand</div></li>
+          </ol>
+        </div>
+        <div class="fkey" aria-hidden="true"><span data-k="screen">Screen</span><span data-k="system">System</span><span data-k="decision">Decision</span><span data-k="end">Start / End</span><span data-k="off">Off-flow</span></div>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section class="sec" data-scene="5" id="screens-sec" data-title="Screens">
+      <div class="col">
+        <span class="num rv">05</span>
+        <h2 class="rv">Screens</h2>
+        <p class="lead rv">The booking flow as it shipped, in order — from the search on the landing page to the ticket in your inbox.</p>
+      </div>
+      <div class="gal pairs" id="screens">
+        <div class="gal-bar rv"><span class="eyebrow">Booking flow · 6 screens</span></div>
+        <div class="gal-grid hx">
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="0" style="--sr:1600/844" aria-label="Main — open full size"><img src="../../assets/images/dopas/dopas-main.webp" alt="dopas.dp.ua landing page: a from/to/date search over a photograph of a road" loading="lazy" width="1600" height="844"></button><figcaption><span>01</span><b>Main</b> — one search field, three inputs, nothing else above the fold</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="1" style="--sr:1600/844" aria-label="Search results — open full size"><img src="../../assets/images/dopas/dopas-search-results.webp" alt="Search results: six departures with times, duration, seats left, price and a Choose button" loading="lazy" width="1600" height="844"></button><figcaption><span>02</span><b>Search results</b> — time, duration, seats left and price on one line per departure</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="2" style="--sr:1600/844" aria-label="Choose place — open full size"><img src="../../assets/images/dopas/dopas-choose-places.webp" alt="Seat picker: a numbered seat map with free, occupied and chosen states, and a running total" loading="lazy" width="1600" height="844"></button><figcaption><span>03</span><b>Choose place</b> — the seat map, with the total updating as seats are picked</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="3" style="--sr:1600/844" aria-label="Passenger information — open full size"><img src="../../assets/images/dopas/dopas-passenger-info.webp" alt="Passenger details: name, surname and luggage per seat" loading="lazy" width="1600" height="844"></button><figcaption><span>04</span><b>Passenger information</b> — one block per seat, so a pair books in one pass</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="4" style="--sr:1600/844" aria-label="Payment — open full size"><img src="../../assets/images/dopas/dopas-payment.webp" alt="Payment: total including the service fee, card logos, email and phone, and the two consents" loading="lazy" width="1600" height="844"></button><figcaption><span>05</span><b>Payment</b> — the fee is named before the card is, not after</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="5" style="--sr:1600/844" aria-label="Confirmation — open full size"><img src="../../assets/images/dopas/dopas-confirmation.webp" alt="Confirmation: the ticket to download, and what to carry when travelling abroad" loading="lazy" width="1600" height="844"></button><figcaption><span>06</span><b>Confirmation</b> — the ticket to download, and the documents to bring</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section class="sec" data-scene="6" id="testing" data-title="Usability testing">
+      <div class="col">
+        <span class="num rv">06</span>
+        <h2 class="rv">Usability testing</h2>
+        <div class="stack hx">
+          <div class="card rv"><span class="eyebrow">01</span><h3 style="margin-top:8px">Seat selection too late in the flow</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>Users tried to go back mid-form to choose seats, causing confusion and drop-off.</dd></div><div class="c"><dt>Fix</dt><dd>Moved seat selection before passenger info</dd></div></dl></div>
+          <div class="card rv"><span class="eyebrow">02</span><h3 style="margin-top:8px">No luggage option at booking</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>Multiple users abandoned the flow thinking the platform didn't support extra luggage.</dd></div><div class="c"><dt>Fix</dt><dd>Luggage toggle added on passenger info screen</dd></div></dl></div>
+          <div class="card rv"><span class="eyebrow">03</span><h3 style="margin-top:8px">Price not visible until checkout</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>Total cost including fees wasn't shown on results page — felt like hidden costs, reducing trust.</dd></div><div class="c"><dt>Fix</dt><dd>Full price shown on search results card</dd></div></dl></div>
+          <div class="card rv"><span class="eyebrow">04</span><h3 style="margin-top:8px">Return ticket not discoverable</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>3 of 5 users assumed one-way was the only option.</dd></div><div class="c"><dt>Fix</dt><dd>Round-trip toggle added to homepage search</dd></div></dl></div>
+        </div>
+        <h3 class="rv" style="margin-top:64px">Before and after</h3>
+        <p class="muted rv" style="margin-top:8px">Drag the handle. The first pass was built in greys to settle structure before colour; the shipped version is the same screen once the palette and the card treatment landed.</p>
+      </div>
+      <div class="ba-block rv">
+        <div class="ba-sw" role="group" aria-label="Screen">
+          <button type="button" aria-pressed="true" data-b="../../assets/images/dopas/dopas-choose-places-first.webp" data-a="../../assets/images/dopas/dopas-choose-places.webp">Choose place</button>
+          <button type="button" aria-pressed="false" data-b="../../assets/images/dopas/dopas-search-results-first.webp" data-a="../../assets/images/dopas/dopas-search-results.webp">Search results</button>
+          <button type="button" aria-pressed="false" data-b="../../assets/images/dopas/dopas-passenger-info-first.webp" data-a="../../assets/images/dopas/dopas-passenger-info.webp">Passenger info</button>
+        </div>
+        <div class="ba" data-ba>
+          <img class="ba-a" src="../../assets/images/dopas/dopas-choose-places.webp" alt="Choose place, as shipped" loading="lazy" width="1600" height="844">
+          <img class="ba-b" src="../../assets/images/dopas/dopas-choose-places-first.webp" alt="Choose place, first pass" loading="lazy" width="1600" height="844">
+          <span class="ba-line" aria-hidden="true"></span><span class="ba-grip" aria-hidden="true">↔</span>
+          <span class="ba-tag l" aria-hidden="true">First pass</span><span class="ba-tag r" aria-hidden="true">Shipped</span>
+          <input type="range" min="0" max="100" value="50" aria-label="Compare the first pass with the shipped screen">
+        </div>
+      </div>
+      <div class="col">
+        <p class="muted rv" style="margin-top:16px; font-size:14px">What moves here is the visual pass, not the four fixes above: those changed the order of the flow and what each screen asks for, and the build from before the tests was never exported.</p>
+      </div>
+    </section>
+
+    <!-- 07 -->
+    <section class="sec" data-scene="7" id="outcome" data-title="Outcome & reflection">
+      <div class="col">
+        <span class="num rv">07 — Outcome</span>
+        <p class="big rv">Launched late autumn 2020 into a market with no online alternative.</p>
+        <p class="lead rv">dopas.dp.ua has been live and earning since.</p>
+        <span class="num rv" style="margin-top:12vh">08 — Reflection</span>
+        <blockquote class="rv">I’d start with a design system on day one — ad hoc components left inconsistencies to fix at handoff.</blockquote>
+        <blockquote class="rv">Two testing sessions caught four flow issues that would have shipped as bugs.</blockquote>
+      </div>
+      <div class="next rv">
+        <a class="n" href="halliburton.html"><small>Next case →</small>Data Marketplace</a>
+        <div class="ct"><a href="mailto:yuryuryury@icloud.com">Email</a><a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a><a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <!-- versioned, so a phone that saw an older build doesn't keep it -->
+  <script src="perf.js?v=12"></script>
+  <script>
+    // the world behind the chapters: a motif per chapter, and the case's accent
+    window.CASE = { world: ['', 'scatter', 'road', 'clusters', 'streams', 'screens', 'rings', 'planet'], accent: [0.3, 0.52, 1.0] };
+  </script>
+  <script src="case-depth.js?v=8"></script>
+  <script src="case-kit.js?v=24"></script>
+</body>
+</html>

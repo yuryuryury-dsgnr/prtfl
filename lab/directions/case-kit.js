@@ -2,10 +2,10 @@
 // a document, and every section names a scene for the background. This
 // works out which scene is up and how far into it the reader is, runs the
 // tabs, the screen viewer and the journey maps, and hands each frame to
-// the renderer the URL asks for (?v=matter or ?v=depth).
+// the renderer: Depth, or Matter when the sandbox asks for it (?v=matter).
 (function () {
   var params = new URLSearchParams(location.search);
-  var style = params.get('v') === 'depth' ? 'depth' : 'matter';
+  var style = params.get('v') === 'matter' ? 'matter' : 'depth';
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var root = document.documentElement;
   root.classList.add('style-' + style);
@@ -15,11 +15,12 @@
   var from = params.get('from');
   document.getElementById('home').href = from === 'matter' ? 'matter.html' : from === 'depth' ? 'depth.html' : './';
   // the style pill compares the sandbox's two looks; opened from Dive the case simply is what it is
-  if (from !== 'matter' && from !== 'depth') document.querySelector('.nav .style').style.display = 'none';
+  var pill = document.querySelector('.nav .style');
+  if (pill && from !== 'matter' && from !== 'depth') pill.style.display = 'none';
   var sM = document.getElementById('sMatter'), sD = document.getElementById('sDepth');
-  (style === 'depth' ? sD : sM).setAttribute('aria-current', 'page');
+  if (pill) (style === 'depth' ? sD : sM).setAttribute('aria-current', 'page');
   // switching style keeps your place: it lands on the same chapter
-  [sM, sD].forEach(function (a) {
+  if (pill) [sM, sD].forEach(function (a) {
     a.addEventListener('click', function (e) {
       e.preventDefault();
       var cur = sections[Math.min(sections.length - 1, Math.round(env.scene))];
@@ -148,22 +149,26 @@
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('drawn'); drawIO.unobserve(e.target); } });
   }, { rootMargin: '0px 0px -15% 0px' });
   jmPanels.forEach(function (p) { drawIO.observe(p.querySelector('.jm-plot').parentNode); });
+  [].forEach.call(document.querySelectorAll('.cmp'), function (t) { drawIO.observe(t); });
 
-  // ——— the final screens: all five on the page, any one full size ———
-  var gal = document.getElementById('gallery');
-  var shots = gal ? [].slice.call(gal.querySelectorAll('.shot')) : [];
-  var galTheme = 'dark';
+  // ——— the screens: all of them on the page, any one full size ———
+  // A gallery with a Light/Dark switch carries both looks of every screen (img.d, img.l); the
+  // full-size view steps through the gallery it was opened from.
+  var gals = [].slice.call(document.querySelectorAll('.gal'));
+  var galTheme = 'dark', lbGal = null;
+  function shotsOf(g) { return [].slice.call(g.querySelectorAll('.shot')); }
   function setPressed(group, t) { [].forEach.call(group.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.t === t); }); }
-  function shotSrc(i, t) { return shots[i].querySelector('img.' + (t === 'light' ? 'l' : 'd')).getAttribute('src'); }
-  if (gal) {
-    gal.querySelector('.theme').addEventListener('click', function (e) {
+  function shotSrc(shot, t) { return (shot.querySelector(t === 'light' ? 'img.l' : 'img.d') || shot.querySelector('img')).getAttribute('src'); }
+  gals.forEach(function (g) {
+    var theme = g.querySelector('.theme');
+    if (theme) theme.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
-      galTheme = b.dataset.t; gal.classList.toggle('light', galTheme === 'light'); setPressed(this, galTheme);
+      galTheme = b.dataset.t; g.classList.toggle('light', galTheme === 'light'); setPressed(this, galTheme);
       // both themes are on the page, so the lit one must be there before it shows
-      shots.forEach(function (s) { var im = s.querySelector('img.' + (galTheme === 'light' ? 'l' : 'd')); im.loading = 'eager'; });
+      shotsOf(g).forEach(function (s) { var im = s.querySelector('img.' + (galTheme === 'light' ? 'l' : 'd')); if (im) im.loading = 'eager'; });
     });
-    gal.addEventListener('click', function (e) { var b = e.target.closest('.shot-f'); if (b) openShot(+b.dataset.i, b); });
-  }
+    g.addEventListener('click', function (e) { var b = e.target.closest('.shot-f'); if (b) openShot(g, +b.dataset.i, b); });
+  });
   // the full-size view grows out of the picture that was clicked and goes back into it
   var lb = null, lbI = 0, lbFrom = null;
   function lbBuild() {
@@ -181,7 +186,7 @@
     lb.querySelector('.theme').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       // the page's screens follow, so closing lands on the same look
-      gal.querySelector('.theme [data-t="' + b.dataset.t + '"]').click(); lbShow();
+      lbGal.querySelector('.theme [data-t="' + b.dataset.t + '"]').click(); lbShow();
     });
     lb.querySelector('.lb-stage').addEventListener('click', function (e) { if (e.target === this) closeShot(); });
     lb.addEventListener('keydown', function (e) {
@@ -190,18 +195,24 @@
       else if (e.key === 'ArrowLeft') stepShot(-1);
       else if (e.key === 'Tab') {
         // focus stays inside while it is open
-        var f = [].slice.call(lb.querySelectorAll('button')), k = f.indexOf(document.activeElement);
+        var f = [].slice.call(lb.querySelectorAll('button')).filter(function (b) { return b.offsetParent; }), k = f.indexOf(document.activeElement);
         e.preventDefault(); f[(k + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
       }
     });
   }
   function lbShow() {
-    var cap = shots[lbI].querySelector('figcaption');
-    lb.querySelector('.lb-img').src = shotSrc(lbI, galTheme);
-    lb.querySelector('.lb-img').alt = shots[lbI].querySelector('b').textContent + ' screen, ' + galTheme + ' theme';
-    lb.querySelector('.lb-cap').innerHTML = cap.innerHTML.replace(/<span>\d+<\/span>/, '');
-    lb.querySelector('.lb-n').textContent = pad(lbI + 1) + ' / ' + pad(shots.length);
-    setPressed(lb.querySelector('.theme'), galTheme);
+    var shots = shotsOf(lbGal), shot = shots[lbI], cap = shot.querySelector('figcaption'), themed = !!lbGal.querySelector('.theme');
+    var img = lb.querySelector('.lb-img');
+    img.src = shotSrc(shot, galTheme);
+    img.alt = shot.querySelector('img').alt + (themed ? ', ' + galTheme + ' theme' : '');
+    lb.querySelector('.lb-cap').innerHTML = cap ? cap.innerHTML.replace(/<span>\d+<\/span>/, '') : '';
+    lb.querySelector('.lb-n').textContent = shots.length > 1 ? pad(lbI + 1) + ' / ' + pad(shots.length) : '';
+    lb.querySelector('.lb-r .theme').hidden = !themed;
+    lb.querySelector('.lb-nav').hidden = shots.length < 2;
+    // a phone screen stands at full height; a desktop one is as wide as the view allows
+    var im0 = shot.querySelector('img');
+    lb.classList.toggle('tall', +im0.getAttribute('height') > +im0.getAttribute('width'));
+    if (themed) setPressed(lb.querySelector('.theme'), galTheme);
     lb.querySelector('.lb-stage').scrollLeft = 0;
   }
   function rectOf(el) { var r = el.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; }
@@ -213,27 +224,66 @@
     var an = img.animate([{ transform: back ? b : a }, { transform: back ? a : b }], { duration: back ? 420 : 560, easing: 'cubic-bezier(.3,0,.12,1)', fill: 'both' });
     an.onfinish = function () { if (done) done(); else an.cancel(); };
   }
-  function openShot(i, from) {
+  // the picture inside a frame: a phone screen sits in its frame with room round it
+  function picOf(from) { return rectOf(from.querySelector('img') || from); }
+  function openShot(g, i, from) {
     if (!lb) lbBuild();
-    lbI = i; lbFrom = from; lbShow();
+    lbGal = g; lbI = i; lbFrom = from; lbShow();
     lb.hidden = false;
     root.style.overflow = 'hidden'; if (lenis) lenis.stop();
     var img = lb.querySelector('.lb-img');
     requestAnimationFrame(function () {
       lb.classList.add('open');
-      // on a phone the full-size picture is wider than the screen and starts at its left edge
-      if (!env.mobile && img.complete) flip(img, rectOf(from), rectOf(img));
+      // on a phone a wide picture is wider than the screen and starts at its left edge
+      if ((!env.mobile || lb.classList.contains('tall')) && img.complete) flip(img, picOf(from), rectOf(img));
       lb.querySelector('.lb-x').focus();
     });
   }
-  function stepShot(d) { lbI = (lbI + d + shots.length) % shots.length; lbFrom = shots[lbI].querySelector('.shot-f'); lbShow(); }
+  function stepShot(d) { var shots = shotsOf(lbGal); if (shots.length < 2) return; lbI = (lbI + d + shots.length) % shots.length; lbFrom = shots[lbI].querySelector('.shot-f'); lbShow(); }
   function closeShot() {
     var img = lb.querySelector('.lb-img'), to = lbFrom;
     function gone() { lb.hidden = true; root.style.overflow = ''; if (lenis) lenis.start(); img.getAnimations && img.getAnimations().forEach(function (a) { a.cancel(); }); to.focus({ preventScroll: true }); }
     lb.classList.remove('open');
-    var r = rectOf(to);
-    if (!env.mobile && r.y > -r.h && r.y < innerHeight) flip(img, r, rectOf(img), true, gone); else setTimeout(gone, 350);
+    var r = picOf(to);
+    if ((!env.mobile || lb.classList.contains('tall')) && r.y > -r.h && r.y < innerHeight && r.x > -r.w && r.x < innerWidth) flip(img, r, rectOf(img), true, gone); else setTimeout(gone, 350);
   }
+
+  // ——— before and after: one screen in two passes, a handle between them ———
+  [].forEach.call(document.querySelectorAll('[data-ba]'), function (box) {
+    var before = box.querySelector('.ba-b'), after = box.querySelector('.ba-a'), range = box.querySelector('input'), sw = box.parentNode.querySelector('.ba-sw');
+    var drag = false, moved = false, sx = 0, sy = 0, down = false;
+    function set(v) { v = Math.max(0, Math.min(100, v)); box.style.setProperty('--x', v + '%'); range.value = Math.round(v); }
+    function at(e) { var r = box.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 100; }
+    function grab(e) { drag = true; moved = true; box.setPointerCapture(e.pointerId); set(at(e)); box.classList.add('held'); }
+    // a mouse takes the handle at once; a finger only once it moves sideways, so a vertical swipe is still the page's
+    box.addEventListener('pointerdown', function (e) { down = true; sx = e.clientX; sy = e.clientY; if (e.pointerType === 'mouse') grab(e); });
+    box.addEventListener('pointermove', function (e) {
+      if (drag) set(at(e));
+      else if (down && Math.abs(e.clientX - sx) > 6 && Math.abs(e.clientX - sx) > Math.abs(e.clientY - sy)) grab(e);
+    });
+    function up() { drag = down = false; box.classList.remove('held'); }
+    box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
+    range.addEventListener('input', function () { moved = true; set(+range.value); });
+    // the screens: each button names one, and both passes change together
+    if (sw) sw.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(sw.querySelectorAll('button'), function (o) { o.setAttribute('aria-pressed', o === b); });
+      before.src = b.dataset.b; after.src = b.dataset.a;
+      before.alt = b.textContent + ', first pass'; after.alt = b.textContent + ', as shipped';
+    });
+    // the first time it is seen, the handle shows what it does: across, back, and home to the middle
+    if (!reduce) new IntersectionObserver(function (es, o) {
+      if (!es[0].isIntersecting) return; o.disconnect();
+      var t0 = performance.now();
+      (function f(now) {
+        if (moved) return;
+        var k = Math.min(1, (now - t0) / 2200);
+        set(50 + Math.sin(k * Math.PI * 2) * 22 * (1 - k * 0.3));
+        if (k < 1) requestAnimationFrame(f); else set(50);
+      })(t0);
+    }, { rootMargin: '0px 0px -30% 0px' }).observe(box);
+    set(50);
+  });
 
   // ——— the token graph ———
   // three columns, a line from each token to the ones made of it; touch one and its whole chain lights
@@ -247,7 +297,8 @@
         return '<li><button type="button" class="tk" data-id="' + t[0] + '"><i></i><b>' + esc(t[1]) + '</b><em></em></button></li>';
       }).join('') + '</ul></div>';
     };
-    tgEl.innerHTML = '<svg class="tg-lines" aria-hidden="true"></svg>' + col('Primitives', '~158', T.prim) + col('Semantic', '~45', T.sem) + col('Component', '~459', T.comp);
+    var n = T.counts || [];
+    tgEl.innerHTML = '<svg class="tg-lines" aria-hidden="true"></svg>' + col('Primitives', n[0] || '', T.prim) + col('Semantic', n[1] || '', T.sem) + col('Component', n[2] || '', T.comp);
     [].forEach.call(tgEl.querySelectorAll('.tk'), function (b) { tgOf[b.dataset.id] = b; });
     var svgNS = 'http://www.w3.org/2000/svg', lines = tgEl.querySelector('.tg-lines');
     tgLinks = T.edges.map(function (e) {
@@ -338,7 +389,9 @@
 
   // ——— scene bookkeeping ———
   var tops = [], heights = [], stepEls = [].slice.call(document.querySelectorAll('#steps li'));
-  var personaEls = [].slice.call(document.querySelectorAll('.persona')), hoverPersona = -1;
+  // the groups of the research (personas, or the research's own cards): each has its world in the scene
+  var personaEls = [].slice.call(document.querySelectorAll('[data-g]')), hoverPersona = -1;
+  var personaSec = personaEls.length ? sections.indexOf(personaEls[0].closest('[data-scene]')) : -1;
   personaEls.forEach(function (p, i) {
     p.addEventListener('mouseenter', function () { hoverPersona = i; });
     p.addEventListener('mouseleave', function () { hoverPersona = -1; });
@@ -446,7 +499,7 @@
     var bp = 0; bd = 1e9;
     personaY.forEach(function (c, i) { var d = Math.abs(c - mid); if (d < bd) { bd = d; bp = i; } });
     if (personaRail && personaRail.on) bp = personaRail.idx;
-    var pOn = hoverPersona >= 0 ? hoverPersona : bp, inRes = env.scene > 3.5 && env.scene < 4.5;
+    var pOn = hoverPersona >= 0 ? hoverPersona : bp, inRes = personaSec > 0 && Math.abs(env.scene - personaSec) < 0.5;
     if (pOn !== env.persona || inRes !== env.inRes) personaEls.forEach(function (p, i) { p.classList.toggle('on', i === pOn && inRes); });
     env.persona = pOn; env.inRes = inRes;
 

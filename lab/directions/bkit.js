@@ -184,11 +184,11 @@
       if (window.Handoff && R.coverRect) Handoff.leave(R.coverImage(k), R.coverRect(k), { lit: Math.min(1.15, 0.3 + 0.9 * env.hov[k] + (1 - env.any) * 0.7), fade: true, done: function () { leaveFor(k); } });
       if (ring) ring.style.opacity = 0;
     }
-    // the case page picks up from the last frame (only the Halliburton case has the landing so far)
+    // the case page picks up from the last frame (the lab's own case pages; the live ones have no landing)
     function leaveFor(k) {
       if (env.left) return;
       env.left = true;
-      if (CASES[k].href.indexOf('halliburton.html') >= 0) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
+      if (/\.html/.test(CASES[k].href)) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
       location.href = CASES[k].href;
     }
     addEventListener('pageshow', function (e) { if (e.persisted) { env.go = -1; env.g = 0; env.left = false; } });

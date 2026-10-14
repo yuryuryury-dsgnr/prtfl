@@ -2,6 +2,8 @@
 // and the camera flies it as the text scrolls. The hero picture stays on the
 // page and scrolls away with it. On a wide screen the lens is shifted so the
 // world hangs to the right of the text.
+// Every case builds its world from the same motifs, one per chapter, named in
+// CASE.world; counts come from the page (the roadmap's steps, the personas, the screens).
 (function () {
   var VS = [
     'precision highp float;',
@@ -28,7 +30,9 @@
     '  else if (kind < 6.5 && kind > 5.5) { p = uLoopC + rotZ(p - uLoopC, uT * 0.3); }',
     '  else if (kind < 7.5 && kind > 6.5) { vec3 d = rotY(p - uGlobeC, uT * 0.15); p = uGlobeC + vec3(d.x, d.y * cos(0.35) - d.z * sin(0.35), d.y * sin(0.35) + d.z * cos(0.35)); }',
     '  else if (kind < 8.5 && kind > 7.5) { p += vec3(sin(uT * 0.3 + rnd * 6.28), cos(uT * 0.25 + rnd * 9.0), sin(uT * 0.2 + rnd * 4.0)) * 18.0; }',
-    '  else if (kind > 8.5) { p = uRingC + rotZ(p - uRingC, uT * 0.12); }',
+    '  else if (kind < 9.5 && kind > 8.5) { p = uRingC + rotZ(p - uRingC, uT * 0.12); }',
+    // a screen floats on its own slow swell
+    '  else if (kind > 9.5) { p.y += sin(uT * 0.6 + grp * 1.9) * 12.0; }',
     '  col *= (1.0 + glow * 1.6) * 1.7;',
     '  vec4 v = uView * vec4(p, 1.0); float d = -v.z;',
     '  vec4 clip = uProj * v;',
@@ -50,10 +54,17 @@
   ].join('\n');
   var FS = 'precision mediump float; varying vec3 vC; void main(){ float r = length(gl_PointCoord - 0.5); gl_FragColor = vec4(vC * (1.0 - smoothstep(0.36, 0.5, r)), 1.0); }';
 
-  var PAL = [[0.56, 0.83, 1.0], [1.0, 0.82, 0.54], [0.72, 0.94, 0.79], [1.0, 0.62, 0.69], [1.0, 0.36, 0.33]];
   var TOK = ['#CC0000', '#FFFFFF', '#ECEFF0', '#D4DADD', '#7F878D', '#CFF0DD', '#0C7135', '#A94722', '#E3ECF7'];
-  var Z = [0, -2200, -4400, -6400, -8400, -10400, -12400, -14400, -16400, -18400];
-  var PC = [[-320, 200, -8300], [320, 200, -8500], [-320, -200, -8500], [320, -200, -8300]];
+  // read from the case when the world is built: the chapters' motifs in order (the first is the hero's
+  // open sky), the persona colours then the case's accent, and a station per chapter down −Z
+  var WORLD, PAL, Z;
+  function plan() {
+    var CASE = window.CASE || {};
+    WORLD = CASE.world || ['', 'scatter', 'road', 'streams', 'clusters', 'tiers', 'rings', 'gates', 'loop', 'planet'];
+    PAL = [[0.56, 0.83, 1.0], [1.0, 0.82, 0.54], [0.72, 0.94, 0.79], [1.0, 0.62, 0.69], CASE.accent || [1.0, 0.36, 0.33]];
+    // the first two stations a little further apart
+    Z = WORLD.map(function (_, k) { return k < 2 ? -2200 * k : -4400 - 2000 * (k - 2); });
+  }
 
   var gl, prog, U = {}, buf = {}, count = 0, F = 800, keys = [];
   function hex(h) { return [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255]; }
@@ -73,6 +84,134 @@
     return p1.map(function (_, i) { return 0.5 * ((2 * p1[i]) + (-p0[i] + p2[i]) * t + (2 * p0[i] - 5 * p1[i] + 4 * p2[i] - p3[i]) * t2 + (-p0[i] + 3 * p1[i] - 3 * p2[i] + p3[i]) * t3); });
   }
 
+  // ——— the motifs: each puts its points round its station (z) and says where the camera stands to see it ———
+  var R = Math.random;
+  function sc(c, k) { return [c[0] * k, c[1] * k, c[2] * k]; }
+  var MOTIF = {
+    // the hero: open sky
+    '': function () { return { e: [0, 0, F], t: [0, 0, 0] }; },
+    // things scattered, and the one ring at the end of them
+    scatter: function (z, put, m) {
+      var i;
+      for (i = 0; i < 16000 * m; i++) put((R() - 0.5) * 1900, (R() - 0.5) * 1200, z + (R() - 0.5) * 1400, sc(PAL[Math.floor(R() * 4)], 0.25 + R() * 0.35), 8);
+      for (i = 0; i < 4000 * m; i++) { var a = R() * 6.2832, rr = 380 + (R() - 0.5) * 30; put(Math.cos(a) * rr, Math.sin(a) * rr, z - 700 + (R() - 0.5) * 20, sc(PAL[4], 0.5 + R() * 0.4), 9); }
+      gl.uniform3f(U.uRingC, 0, 0, z - 700);
+      return { e: [0, 60, z + 1300], e2: [0, 0, z - 380], t: [0, 0, z - 700] };
+    },
+    // the road, a station on it per roadmap step; the step being read glows
+    road: function (z, put, m, page) {
+      var n = page.steps, i, k;
+      function road(u) { return [-400 + 800 * u, 240 - 480 * u + Math.sin(u * 6.2832) * 120, z + 500 - 1000 * u + Math.sin(u * 3.1416) * -200]; }
+      for (i = 0; i < 6000 * m; i++) { var q = road(R()); put(q[0] + (R() - 0.5) * 8, q[1] + (R() - 0.5) * 8, q[2], [0.3, 0.32, 0.38], 0); }
+      for (k = 0; k < n; k++) for (i = 0; i < 5400 / n * m; i++) {
+        var c0 = road((k + 0.5) / n), th = R() * 6.2832, ph = Math.acos(2 * R() - 1), r0 = 46 * Math.cbrt(R());
+        put(c0[0] + r0 * Math.sin(ph) * Math.cos(th), c0[1] + r0 * Math.cos(ph), c0[2] + r0 * Math.sin(ph) * Math.sin(th), sc(PAL[4], 0.18 + R() * 0.12), 2, k);
+      }
+      return { e: [-260, 320, z + 1050], t: [0, 0, z] };
+    },
+    // streams, travelling one way
+    streams: function (z, put, m) {
+      for (var i = 0; i < 18000 * m; i++) {
+        var b = Math.floor(R() * 7);
+        put((R() - 0.5) * 1900, -270 + b * 90 + (R() - 0.5) * 18, z + (b - 3) * 90 + (R() - 0.5) * 30, b === 3 ? sc(PAL[4], 0.6) : sc([0.5, 0.55, 0.66], 0.45 + R() * 0.3), 1, 0, 30 + R() * 50);
+      }
+      gl.uniform3f(U.uStreamC, 0, 0, z); gl.uniform1f(U.uStreamSpan, 1900);
+      return { e: [0, 80, z + 820], t: [0, 0, z] };
+    },
+    // a small world per persona group (or research card); the one being read grows and glows
+    clusters: function (z, put, m, page) {
+      var n = Math.max(1, Math.min(4, page.groups)), i, k;
+      var at = n === 4 ? [[-320, 200, 100], [320, 200, -100], [-320, -200, -100], [320, -200, 100]]
+        : n === 3 ? [[-340, 170, 100], [340, 170, -100], [0, -230, 0]]
+        : n === 2 ? [[-300, 0, 60], [300, 0, -60]] : [[0, 0, 0]];
+      var pc = at.map(function (p) { return [p[0], p[1], z + p[2]]; });
+      for (k = 0; k < n; k++) for (i = 0; i < 16800 / n * m; i++) {
+        var th = R() * 6.2832, ph = Math.acos(2 * R() - 1), r = 150 * Math.pow(R(), 0.35);
+        put(pc[k][0] + r * Math.sin(ph) * Math.cos(th), pc[k][1] + r * Math.cos(ph), pc[k][2] + r * Math.sin(ph) * Math.sin(th), sc(PAL[k], 0.2 + R() * 0.25), 3, k);
+      }
+      while (pc.length < 4) pc.push([0, 0, z + 9e4]);
+      gl.uniform3fv(U.uPC0, pc[0]); gl.uniform3fv(U.uPC1, pc[1]); gl.uniform3fv(U.uPC2, pc[2]); gl.uniform3fv(U.uPC3, pc[3]);
+      return { e: [0, 60, z + 1250], t: [0, 0, z] };
+    },
+    // three tiers, each as big as its share of the tokens
+    tiers: function (z, put, m) {
+      var shares = [0.24, 0.07, 0.69], tierY = [200, 0, -200], i, n;
+      for (n = 0; n < 3; n++) for (i = 0; i < 20000 * m * shares[n]; i++) {
+        var a = R() * 6.2832, r = Math.sqrt(R());
+        var tc = n === 0 ? sc(hex(TOK[Math.floor(R() * TOK.length)]), 0.85) : (n === 1 ? sc(hex(TOK[Math.floor(R() * 4)]), 0.5) : sc([0.62, 0.65, 0.72], 0.3 + R() * 0.25));
+        put(Math.cos(a) * 500 * r, tierY[n] + (R() - 0.5) * 6, z + Math.sin(a) * 320 * r, tc, 0);
+      }
+      for (i = 0; i < 1800 * m; i++) put((R() - 0.5) * 900, tierY[0], z + (R() - 0.5) * 500, [0.9, 0.9, 0.95], 4);
+      gl.uniform1f(U.uTierSpan, 400);
+      return { e: [0, 760, z + 1450], t: [0, -30, z] };
+    },
+    // the screens, standing in an arc and facing the camera, each on its own swell
+    screens: function (z, put, m, page) {
+      var n = Math.max(1, Math.min(6, page.screens)), wide = page.wide, i, k;
+      var w = wide ? 300 : 132, h = wide ? 170 : 272, r = wide ? 22 : 26, gap = wide ? 70 : 50;
+      var span = n * w + (n - 1) * gap;
+      for (k = 0; k < n; k++) {
+        var cx = -span / 2 + w / 2 + k * (w + gap), u = cx / (span / 2 || 1), cz = z - u * u * 260, yaw = -u * 0.32;
+        var cy = (k % 2 ? -1 : 1) * (wide ? 40 : 30);
+        var px = function (x, y, d) { return [cx + x * Math.cos(yaw) + d * Math.sin(yaw), cy + y, cz - x * Math.sin(yaw) + d * Math.cos(yaw)]; };
+        var lit = sc([0.78, 0.82, 0.92], 0.55);
+        // the outline, a rounded rectangle
+        for (i = 0; i < 1500 * m; i++) {
+          var s = R() * (2 * (w + h)), x, y;
+          if (s < w) { x = -w / 2 + s; y = h / 2; } else if (s < w + h) { x = w / 2; y = h / 2 - (s - w); } else if (s < 2 * w + h) { x = w / 2 - (s - w - h); y = -h / 2; } else { x = -w / 2; y = -h / 2 + (s - 2 * w - h); }
+          // round the corners
+          var ox = Math.max(0, Math.abs(x) - (w / 2 - r)), oy = Math.max(0, Math.abs(y) - (h / 2 - r));
+          if (ox > 0 && oy > 0) { var l = Math.hypot(ox, oy); x = Math.sign(x) * (w / 2 - r + ox / l * r); y = Math.sign(y) * (h / 2 - r + oy / l * r); }
+          var q = px(x, y, 0); put(q[0], q[1], q[2], lit, 10, k);
+        }
+        // the content: rows of light, the first one the accent
+        var rows = wide ? 5 : 8;
+        for (var j = 0; j < rows; j++) {
+          var ry = h / 2 - r - 8 - j * (h - 2 * r - 16) / (rows - 1), rw = (j === 0 ? 0.5 : 0.35 + R() * 0.5) * (w - 2 * r);
+          for (i = 0; i < 140 * m; i++) { var q2 = px(-w / 2 + r + R() * rw, ry + (R() - 0.5) * 5, 0); put(q2[0], q2[1], q2[2], j === 0 ? sc(PAL[4], 0.7) : sc([0.6, 0.64, 0.74], 0.35 + R() * 0.2), 10, k); }
+        }
+        // and a faint glass
+        for (i = 0; i < 500 * m; i++) { var q3 = px((R() - 0.5) * (w - 8), (R() - 0.5) * (h - 8), 0); put(q3[0], q3[1], q3[2], sc([0.5, 0.55, 0.66], 0.12 + R() * 0.1), 10, k); }
+      }
+      return { e: [0, 30, z + Math.max(1050, span * 0.62)], t: [0, 0, z - 80] };
+    },
+    // two rounds, two rings that overlap
+    rings: function (z, put, m) {
+      for (var i = 0; i < 7000 * m; i++) {
+        var g = R() < 0.5 ? 0 : 1, a = R() * 6.2832, rr = 300 + (R() - 0.5) * 18;
+        var x = Math.cos(a) * rr, y = Math.sin(a) * rr, dz = g ? x * 0.5 : 0;
+        put((g ? 150 : -150) + x * (g ? 0.86 : 1), y, z + dz, sc(g ? PAL[2] : PAL[3], 0.35 + R() * 0.35), 0);
+      }
+      return { e: [0, 0, z + 900], t: [0, 0, z] };
+    },
+    // four gates and the stream through them
+    gates: function (z, put, m) {
+      var i;
+      [600, 200, -200, -600].forEach(function (gz, k) { for (i = 0; i < 1600 * m; i++) { var a = R() * 6.2832, r = 250 + (R() - 0.5) * 14; put(Math.cos(a) * r, Math.sin(a) * r, z + gz, sc(PAL[k], 0.45 + R() * 0.3), 0); } });
+      for (i = 0; i < 7000 * m; i++) { var a2 = R() * 6.2832, r2 = 200 * Math.sqrt(R()); put(Math.cos(a2) * r2, Math.sin(a2) * r2, z + 800, sc([0.75, 0.8, 0.9], 0.3 + R() * 0.3), 5, 0, 120 + R() * 160); }
+      gl.uniform1f(U.uTunnelLen, 1600);
+      return { e: [0, 0, z + 1300], e2: [0, 0, z - 350], t: [0, 0, z - 800] };
+    },
+    // the loop: listen, synthesize, ship, validate
+    loop: function (z, put, m) {
+      var i, n;
+      for (i = 0; i < 6000 * m; i++) { var a = R() * 6.2832, r = 330 + (R() - 0.5) * 22; put(Math.cos(a) * r, Math.sin(a) * r, z + (R() - 0.5) * 22, sc(PAL[Math.floor(a / 1.5708) % 4], 0.3 + R() * 0.25), 6); }
+      for (n = 0; n < 4; n++) for (i = 0; i < 800 * m; i++) { var an = n * 1.5708 + 0.785, th = R() * 6.2832, r2 = 40 * Math.sqrt(R()); put(Math.cos(an) * 330 + Math.cos(th) * r2, Math.sin(an) * 330 + Math.sin(th) * r2, z, sc(PAL[n], 0.4), 6); }
+      gl.uniform3f(U.uLoopC, 0, 0, z);
+      return { e: [0, 140, z + 900], t: [0, 0, z] };
+    },
+    // one planet, the end of the flight
+    planet: function (z, put, m) {
+      var GC = [0, 40, z], n = Math.floor(14000 * m);
+      for (var i = 0; i < n; i++) {
+        var yS = 1 - (i / (n - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, q = yS * 0.5 + 0.5;
+        put(GC[0] + Math.cos(th) * rad * 290, GC[1] + yS * 290, GC[2] + Math.sin(th) * rad * 290, [0.62 + 0.35 * q, 0.84 - 0.4 * q, 0.78 - 0.36 * q], 7);
+      }
+      gl.uniform3fv(U.uGlobeC, GC);
+      return { e: [0, 40, z + 1000], t: [0, 40, z] };
+    }
+  };
+
   window.CaseRenderers = window.CaseRenderers || {};
   window.CaseRenderers.depth = {
     init: function (canvas) {
@@ -89,70 +228,29 @@
     },
     load: function () { return Promise.resolve(); },
     build: function (env) {
-      var W = env.W, H = env.H, R = Math.random, m = env.mobile ? 0.32 : 1;
+      var W = env.W, H = env.H, m = env.mobile ? 0.32 : 1;
       F = H * 0.96;
+      plan();
       var P = [], C = [], I = [];
       function put(x, y, z, c, kind, grp, ex) { P.push(x, y, z); C.push(c[0], c[1], c[2]); I.push(kind, grp || 0, R(), ex || 0); }
-      function sc(c, k) { return [c[0] * k, c[1] * k, c[2] * k]; }
-      var i, n;
-      // stars, the length of the flight
-      for (i = 0; i < 7000 * m; i++) { var l = 0.2 + R() * 0.45; put((R() - 0.5) * 5000, (R() - 0.5) * 3400, 800 - R() * 20500, [l * 0.8, l * 0.88, l], 0); }
-      // 01 — the scatter, and the one ring at the end of it
-      for (i = 0; i < 16000 * m; i++) put((R() - 0.5) * 1900, (R() - 0.5) * 1200, Z[1] + (R() - 0.5) * 1400, sc(PAL[Math.floor(R() * 4)], 0.25 + R() * 0.35), 8);
-      for (i = 0; i < 4000 * m; i++) { var a = R() * 6.2832, rr = 380 + (R() - 0.5) * 30; put(Math.cos(a) * rr, Math.sin(a) * rr, Z[1] - 700 + (R() - 0.5) * 20, sc(PAL[4], 0.5 + R() * 0.4), 9); }
-      // 02 — the road and its six stations
-      function road(u) { return [-400 + 800 * u, 240 - 480 * u + Math.sin(u * 6.2832) * 120, Z[2] + 500 - 1000 * u + Math.sin(u * 3.1416) * -200]; }
-      for (i = 0; i < 6000 * m; i++) { var q = road(R()); put(q[0] + (R() - 0.5) * 8, q[1] + (R() - 0.5) * 8, q[2], [0.3, 0.32, 0.38], 0); }
-      for (n = 0; n < 6; n++) for (i = 0; i < 900 * m; i++) {
-        var c0 = road((n + 0.5) / 6), th = R() * 6.2832, ph = Math.acos(2 * R() - 1), r0 = 46 * Math.cbrt(R());
-        put(c0[0] + r0 * Math.sin(ph) * Math.cos(th), c0[1] + r0 * Math.cos(ph), c0[2] + r0 * Math.sin(ph) * Math.sin(th), sc(PAL[4], 0.18 + R() * 0.12), 2, n);
-      }
-      // 03 — streams, travelling one way
-      for (i = 0; i < 18000 * m; i++) {
-        var b = Math.floor(R() * 7);
-        put((R() - 0.5) * 1900, -270 + b * 90 + (R() - 0.5) * 18, Z[3] + (b - 3) * 90 + (R() - 0.5) * 30, b === 3 ? sc(PAL[4], 0.6) : sc([0.5, 0.55, 0.66], 0.45 + R() * 0.3), 1, 0, 30 + R() * 50);
-      }
-      // 04 — four persona groups, four small worlds
-      for (n = 0; n < 4; n++) for (i = 0; i < 4200 * m; i++) {
-        var th2 = R() * 6.2832, ph2 = Math.acos(2 * R() - 1), r2 = 150 * Math.pow(R(), 0.35);
-        put(PC[n][0] + r2 * Math.sin(ph2) * Math.cos(th2), PC[n][1] + r2 * Math.cos(ph2), PC[n][2] + r2 * Math.sin(ph2) * Math.sin(th2), sc(PAL[n], 0.2 + R() * 0.25), 3, n);
-      }
-      // 05 — three tiers, each as big as its share of the tokens
-      var shares = [0.24, 0.07, 0.69], tierY = [200, 0, -200];
-      for (n = 0; n < 3; n++) for (i = 0; i < 20000 * m * shares[n]; i++) {
-        var a3 = R() * 6.2832, r3 = Math.sqrt(R());
-        var tc = n === 0 ? sc(hex(TOK[Math.floor(R() * TOK.length)]), 0.85) : (n === 1 ? sc(hex(TOK[Math.floor(R() * 4)]), 0.5) : sc([0.62, 0.65, 0.72], 0.3 + R() * 0.25));
-        put(Math.cos(a3) * 500 * r3, tierY[n] + (R() - 0.5) * 6, Z[5] + Math.sin(a3) * 320 * r3, tc, 0);
-      }
-      for (i = 0; i < 1800 * m; i++) put((R() - 0.5) * 900, tierY[0], Z[5] + (R() - 0.5) * 500, [0.9, 0.9, 0.95], 4);
-      // 06 — two sessions, two rings that overlap
-      for (i = 0; i < 7000 * m; i++) {
-        var g = R() < 0.5 ? 0 : 1, a4 = R() * 6.2832, rr4 = 300 + (R() - 0.5) * 18;
-        var x4 = Math.cos(a4) * rr4, y4 = Math.sin(a4) * rr4, z4 = g ? x4 * 0.5 : 0;
-        put((g ? 150 : -150) + x4 * (g ? 0.86 : 1), y4, Z[6] + z4, sc(g ? PAL[2] : PAL[3], 0.35 + R() * 0.35), 0);
-      }
-      // 07 — the hand-off: four gates and the stream through them
-      var gateZ = [-13800, -14200, -14600, -15000];
-      gateZ.forEach(function (gz, k) { for (i = 0; i < 1600 * m; i++) { var a5 = R() * 6.2832, r5 = 250 + (R() - 0.5) * 14; put(Math.cos(a5) * r5, Math.sin(a5) * r5, gz, sc(PAL[k], 0.45 + R() * 0.3), 0); } });
-      for (i = 0; i < 7000 * m; i++) { var a6 = R() * 6.2832, r6 = 200 * Math.sqrt(R()); put(Math.cos(a6) * r6, Math.sin(a6) * r6, -13600, sc([0.75, 0.8, 0.9], 0.3 + R() * 0.3), 5, 0, 120 + R() * 160); }
-      // 08 — the loop: listen, synthesize, ship, validate
-      var LC = [0, 0, Z[8]];
-      for (i = 0; i < 6000 * m; i++) { var a7 = R() * 6.2832, r7 = 330 + (R() - 0.5) * 22; put(Math.cos(a7) * r7, Math.sin(a7) * r7, Z[8] + (R() - 0.5) * 22, sc(PAL[Math.floor(a7 / 1.5708) % 4], 0.3 + R() * 0.25), 6); }
-      for (n = 0; n < 4; n++) for (i = 0; i < 800 * m; i++) { var an = n * 1.5708 + 0.785, th3 = R() * 6.2832, r8 = 40 * Math.sqrt(R()); put(Math.cos(an) * 330 + Math.cos(th3) * r8, Math.sin(an) * 330 + Math.sin(th3) * r8, Z[8], sc(PAL[n], 0.4), 6); }
-      // 09 — one planet, the end of the flight
-      var GC = [0, 40, Z[9]], gN = Math.floor(14000 * m);
-      for (i = 0; i < gN; i++) {
-        var yS = 1 - (i / (gN - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th4 = i * 2.39996323, qq = yS * 0.5 + 0.5;
-        put(GC[0] + Math.cos(th4) * rad * 290, GC[1] + yS * 290, GC[2] + Math.sin(th4) * rad * 290, [0.62 + 0.35 * qq, 0.84 - 0.4 * qq, 0.78 - 0.36 * qq], 7);
-      }
-      count = P.length / 3;
+      // what the page holds, for the motifs that count it
+      var shot = document.querySelector('.gal:not(.one) .shot-f img');
+      var page = {
+        steps: document.querySelectorAll('#steps li').length || 6,
+        groups: document.querySelectorAll('[data-g]').length || 4,
+        screens: document.querySelectorAll('.gal:not(.one) .shot').length || 4,
+        wide: !shot || +shot.getAttribute('width') > +shot.getAttribute('height')
+      };
       gl.useProgram(prog);
+      // stars, the length of the flight
+      var far = Z[Z.length - 1] - 2000;
+      for (var i = 0; i < 7000 * m; i++) { var l = 0.2 + R() * 0.45; put((R() - 0.5) * 5000, (R() - 0.5) * 3400, 800 + R() * (far - 800), [l * 0.8, l * 0.88, l], 0); }
+      // a station per chapter
+      keys = WORLD.map(function (name, k) { return MOTIF[name] ? MOTIF[name](Z[k], put, m, page) : { e: [0, 0, Z[k] + 900], t: [0, 0, Z[k]] }; });
+      count = P.length / 3;
       [['aPos', P, 3], ['aCol', C, 3], ['aInfo', I, 4]].forEach(function (a) {
         gl.bindBuffer(gl.ARRAY_BUFFER, buf[a[0]]); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(a[1]), gl.STATIC_DRAW);
       });
-      gl.uniform3f(U.uStreamC, 0, 0, Z[3]); gl.uniform1f(U.uStreamSpan, 1900); gl.uniform1f(U.uTierSpan, 400); gl.uniform1f(U.uTunnelLen, 1600);
-      gl.uniform3fv(U.uLoopC, LC); gl.uniform3fv(U.uGlobeC, GC); gl.uniform3f(U.uRingC, 0, 0, Z[1] - 700);
-      gl.uniform3fv(U.uPC0, PC[0]); gl.uniform3fv(U.uPC1, PC[1]); gl.uniform3fv(U.uPC2, PC[2]); gl.uniform3fv(U.uPC3, PC[3]);
       gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uDpr, env.dpr); gl.uniform1f(U.uF, F); gl.uniform1f(U.uNear, F * 0.35);
       // where the text column ends
       var col = document.querySelector('.col');
@@ -165,19 +263,6 @@
       var c = gl.canvas;
       c.width = Math.round(W * env.dpr); c.height = Math.round(H * env.dpr);
       gl.viewport(0, 0, c.width, c.height);
-      // a station per chapter; some move while their chapter is read (sub)
-      keys = [
-        { e: [0, 0, F], t: [0, 0, 0] },
-        { e: [0, 60, -900], e2: [0, 0, Z[1] - 380], t: [0, 0, Z[1] - 700] },
-        { e: [-260, 320, Z[2] + 1050], t: [0, 0, Z[2]] },
-        { e: [0, 80, Z[3] + 820], t: [0, 0, Z[3]] },
-        { e: [0, 60, -7150], t: [0, 0, -8400] },
-        { e: [0, 760, Z[5] + 1450], t: [0, -30, Z[5]] },
-        { e: [0, 0, Z[6] + 900], t: [0, 0, Z[6]] },
-        { e: [0, 0, -13100], e2: [0, 0, -14750], t: [0, 0, -15200] },
-        { e: [0, 140, Z[8] + 900], t: [0, 0, Z[8]] },
-        { e: [0, 40, Z[9] + 1000], t: [0, 40, Z[9]] }
-      ];
       this.W = W; this.H = H;
     },
     setDpr: function (env) {
@@ -187,11 +272,12 @@
       gl.useProgram(prog); gl.uniform1f(U.uDpr, env.dpr);
     },
     frame: function (env) {
-      var W = env.W, H = env.H, sc = Math.min(8.9999, env.scene), i = Math.floor(sc), f = sc - i;
+      var W = env.W, H = env.H, last = keys.length - 1, sc = Math.min(last - 0.0001, env.scene), i = Math.floor(sc), f = sc - i;
       f = f * f * (3 - 2 * f);
       var cur = Math.round(env.scene);
+      // some stations move while their chapter is read (sub)
       function key(n) {
-        var k = keys[Math.max(0, Math.min(9, n))];
+        var k = keys[Math.max(0, Math.min(last, n))];
         var e = k.e2 && n === cur ? k.e.map(function (v, j) { return v + (k.e2[j] - v) * env.sub; }) : k.e;
         return { e: e, t: k.t };
       }
