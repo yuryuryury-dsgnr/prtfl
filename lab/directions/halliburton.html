@@ -358,16 +358,18 @@
       .hx-bar.used .hx-go { opacity: 0; }
       @keyframes hx-nudge { 0%, 100% { transform: none; } 45% { transform: translateX(5px); } }
       /* the roadmap on a phone is still a timeline, laid on its side: an axis along the top of the rail
-         (filled up to the step in view), a dot per step on it, each step's words right under its dot */
-      .steps.hx { position: relative; border-left: 0; list-style: none; padding-top: 38px;
+         (filled up to the step in view), a dot per step on it, its number above, its words below */
+      .steps.hx { position: relative; border-left: 0; list-style: none; padding-top: 56px;
         background: linear-gradient(rgba(233,236,242,.6), rgba(233,236,242,.6)) no-repeat, linear-gradient(var(--line), var(--line)) no-repeat;
-        background-size: var(--tl, 0px) 1px, 100% 1px; background-position: 0 18px, 0 18px; background-attachment: local;
+        background-size: var(--tl, 0px) 1px, 100% 1px; background-position: 0 36px, 0 36px; background-attachment: local;
         transition: background-size .5s cubic-bezier(.2,.8,.2,1); }
       .steps.hx { gap: 28px; }
       .steps.hx li { flex-basis: 78%; opacity: 1; padding: 0; }
       .steps.hx li > * { transition: opacity .4s; }
       .steps.hx li:not(.on) > * { opacity: .45; }
       .steps.hx li::before { left: 0; top: -25px; }
+      .steps.hx li > b { position: absolute; left: 0; top: -50px; margin: 0; transition: opacity .4s, color .4s; }
+      .steps.hx li.on > b { color: var(--fg); }
       .steps.hx li.past::before { background: rgba(233,236,242,.6); border-color: rgba(233,236,242,.6); }
       /* a rail inside a card reaches the card's edges, not the screen's */
       .card .hx { margin: 14px -22px 0; padding: 2px 22px 4px; scroll-padding: 0 22px; }
