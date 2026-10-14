@@ -439,7 +439,7 @@
       stepEls.forEach(function (li, i) { li.classList.toggle('on', i === best); li.classList.toggle('past', i < best); });
       stepOn = best;
       // sideways, the axis fills up to the dot of the step in view (read only when the step changes)
-      if (stepRail && stepRail.on) stepRail.el.style.setProperty('--tl', (stepEls[best].offsetLeft + 26) + 'px');
+      if (stepRail && stepRail.on) stepRail.el.style.setProperty('--tl', (stepEls[best].offsetLeft + 5) + 'px');
     }
     env.step = best;
     // and the persona: the hovered one, or the one in view
