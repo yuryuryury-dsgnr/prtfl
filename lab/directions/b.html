@@ -99,11 +99,6 @@
     .tag em { font: normal 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s, transform .3s cubic-bezier(.2,.8,.2,1); }
     .tag.on small { color: rgba(238,240,246,.85); }
     .tag .short { display: none; }
-    .tag-main { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
-    .tag-st { display: flex; gap: 12px; }
-    .tag-st a { font: 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s; }
-    .tag-st a:hover, .tag-st a:focus-visible { color: var(--fg); }
-    @media (max-width: 760px) { .tag-st { display: none; } }
     .tag.on em { color: var(--fg); transform: translateX(4px); }
     @media (max-width: 760px) { .tag small, .tag em, .tag .long { display: none; } .tag .short { display: inline; } .tag b { font-size: 13px; } .tag b i { display: none; } }
 
@@ -218,9 +213,9 @@
   (function () {
     var CASES = [
       { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=matter' },
-      { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669']] },
-      { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353'], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc']] },
-      { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/']] }
+      { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/' },
+      { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/' },
+      { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/' }
     ];
     // top to bottom: what people see, down to what they never do
     var STRATA = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
@@ -237,7 +232,7 @@
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     document.getElementById('fallbackList').innerHTML = CASES.map(function (c) {
-      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a>' + (c.links || []).map(function (l) { return ' <a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</li>';
+      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a></li>';
     }).join('');
 
     var canvas = document.getElementById('gl');
@@ -454,7 +449,7 @@
       var mobile = W < 760;
 
       // the four covers decide N: one point per sampled pixel
-      // on a wide screen they leave room for the section rail on the right
+      // on a wide screen they keep clear of the section rail on the right
       var gw = mobile ? W * 0.92 : Math.min(W * 0.82, W >= 1100 ? W - 340 : W, 1240);
       var gh = mobile ? Math.min(H * 0.6, gw * 1.3) : Math.min(H * 0.64, gw * 0.62);
       var gap = mobile ? 12 : 22, labelH = mobile ? 34 : 54;
@@ -568,23 +563,18 @@
       placeTags();
     }
 
-    // ——— the case labels sit under their covers: the case link, and its store links, as on the live home page ———
-    function tagHtml(c, k) {
-      var st = (c.links || []).map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('');
-      return '<a class="tag-main" href="' + c.href + '"><span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) +
-        '</span></b><small>' + c.line + '</small></span><em>View case →</em></a>' + (st ? '<span class="tag-st">' + st + '</span>' : '');
-    }
+    // ——— the case labels sit under their covers ———
     var capWork = document.getElementById('capWork');
     var hover = -1;
     var tags = CASES.map(function (c, k) {
-      var a = document.createElement('div');
-      a.className = 'tag';
-      a.innerHTML = tagHtml(c, k);
+      var a = document.createElement('a');
+      a.className = 'tag'; a.href = c.href;
+      a.innerHTML = '<span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) + '</span></b><small>' + c.line + '</small></span><em>View case →</em>';
       a.addEventListener('mouseenter', function () { hover = k; });
       a.addEventListener('mouseleave', function () { hover = -1; });
-      a.addEventListener('focusin', function () { hover = k; });
-      a.addEventListener('focusout', function () { hover = -1; });
-      a.querySelector('.tag-main').addEventListener('click', function (e) { e.preventDefault(); go(k); });
+      a.addEventListener('focus', function () { hover = k; });
+      a.addEventListener('blur', function () { hover = -1; });
+      a.addEventListener('click', function (e) { e.preventDefault(); go(k); });
       capWork.appendChild(a);
       return a;
     });

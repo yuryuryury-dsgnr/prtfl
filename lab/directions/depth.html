@@ -66,11 +66,6 @@
     .tag.on small { color: rgba(238,240,246,.85); }
     .tag.on em { color: var(--fg); transform: translateX(4px); }
     .tag .short { display: none; }
-    .tag-main { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
-    .tag-st { display: flex; gap: 12px; }
-    .tag-st a { font: 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s; }
-    .tag-st a:hover, .tag-st a:focus-visible { color: var(--fg); }
-    @media (max-width: 760px) { .tag-st { display: none; } }
     @media (max-width: 760px) { .tag small, .tag em, .tag .long { display: none; } .tag .short { display: inline; } .tag b { font-size: 13px; } .tag b i { display: none; } }
 
     .cap-end { left: 0; right: 0; bottom: clamp(64px, 11vh, 112px); text-align: center; padding: 0 16px; }
@@ -162,7 +157,7 @@
   <script src="switcher.js?v=2"></script>
   <script src="hint.js?v=3"></script>
   <script src="handoff.js?v=6"></script>
-  <script src="bkit.js?v=13"></script>
-  <script src="depth.js?v=8"></script>
+  <script src="bkit.js?v=15"></script>
+  <script src="depth.js?v=9"></script>
 </body>
 </html>
