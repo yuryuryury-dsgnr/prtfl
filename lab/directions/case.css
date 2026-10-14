@@ -320,6 +320,8 @@ ul.plain li:first-child { border-top: 0; }
 /* the live product is the strongest proof on the page, so its buttons are the brightest thing on it */
 .links a { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 14px; font-weight: 600; transition: background .2s, transform .3s cubic-bezier(.2,.8,.2,1); }
 .links a:hover { background: #fff; transform: translateY(-2px); }
+.links .ic { flex: none; width: 16px; height: 16px; margin: -2px 2px 0 -2px; fill: currentColor; }
+.links .ic.web { margin-top: 0; fill: none; stroke: currentColor; stroke-width: 1.7; }
 
 /* a pair the exchanges never show: two prices against the dollar, divided */
 .ratio { margin-top: 32px; padding: 8px 22px; font: 500 clamp(18px, 1.7vw, 22px)/1 var(--mono); }

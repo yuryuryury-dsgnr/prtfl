@@ -352,8 +352,8 @@
         // corners: top left, top right, bottom left, bottom right
         this.cases.push({ center: [0, cy, z], corners: [[x0, ya, z], [x1, ya, z], [x0, yz, z], [x1, yz, z]], w: cw, h: ch });
       }
-      // Matter's dust, in screen px
-      for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put((R() - 0.5) * W, R() * H, 0, 0.7 * dl, 0.8 * dl, 0.95 * dl, 4, 0); }
+      // Matter's dust, in screen px from the top left (Matter counts from the centre), across the whole width
+      for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put(R() * W, R() * H, 0, 0.7 * dl, 0.8 * dl, 0.95 * dl, 4, 0); }
       // the planet at the end
       // the planet hangs below the column, as far down as a screen of scroll carries the camera,
       // a little deeper than the pictures, so it rises into view a little slower than they leave
