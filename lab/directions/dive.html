@@ -40,6 +40,8 @@
     .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.6) 100%); }
 
     .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(16px, 4vw, 40px); font-size: 14px; font-weight: 500; }
+    /* the cases scroll under the bar: a soft dark fade keeps it readable over them */
+    .nav { background: linear-gradient(to bottom, rgba(6,7,10,.9) 0%, rgba(6,7,10,.6) 60%, rgba(6,7,10,0) 100%); padding-bottom: 28px; }
     .nav span { color: var(--muted); font-weight: 400; }
     .nav-links { display: flex; gap: 22px; align-items: center; }
     .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
