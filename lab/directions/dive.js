@@ -1,9 +1,9 @@
 // Dive: Matter's opening and Depth's flight in one world.
 // The greeting is drawn in points on the screen's own plane, crisp, as in Matter, with Matter's
 // dust drifting behind it. The first scroll pours the letters down into a cut-away block of
-// strata, and the camera dives through the block to the work: four wide pictures in a row
-// (a column on a phone). First all four at once, then the camera moves along the row, standing
-// square to each in turn and easing back a little between them. A planet at the end.
+// strata, and the camera dives through the block to the work: four wide pictures in a column.
+// First the top of it, then the camera travels down, standing square to each in turn and easing
+// back a little between them. A planet at the end.
 (function () {
   var CASES = [
     { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth&from=dive' },
@@ -264,16 +264,16 @@
       var extra = mobile ? 7000 : 26000;
       for (i = 0; i < extra; i++) { var sp1 = strataPoint(true); put(sp1.p[0], sp1.p[1], sp1.p[2], sp1.c, 2, sp1.g); }
 
-      // the work: four wide pictures in a row; on a phone a column, read top to bottom
+      // the work: four wide pictures in a column, read top to bottom
       var cw = mobile ? W * 0.84 : Math.min(W * 0.58, H * 0.62 * 1.6, 1100), ch = cw / (mobile ? 1.3 : 1.6);
-      var gap = mobile ? ch * 0.36 : cw * 0.08, dpr = Math.min(2, env.dpr || 1), y0 = mobile ? -H * 0.035 : 0;
-      // the overview stands far enough back that the whole row fills most of the screen
-      var span = 4 * (mobile ? ch : cw) + 3 * gap, dOv = span * F / ((mobile ? H : W) * (mobile ? 0.6 : 0.74));
+      var gap = ch * (mobile ? 0.36 : 0.24), dpr = Math.min(2, env.dpr || 1), y0 = mobile ? -H * 0.035 : 0;
+      // the overview stands back far enough to show the first two whole
+      var dOv = (2 * ch + gap) * F / (H * (mobile ? 0.66 : 0.68));
       this.size = [cw, ch]; this.y0 = y0;
       this.cases = [];
       for (var k = 0; k < 4; k++) {
         var ax = [1, 0, 0], nrm = [0, 0, 1];
-        var c = mobile ? [0, y0 - (k - 1.5) * (ch + gap), Z_ROW] : [(k - 1.5) * (cw + gap), y0, Z_ROW];
+        var c = [0, y0 - k * (ch + gap), Z_ROW];
         // the picture cropped to the plane, at the size it will be seen up close
         var img = images[k], ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
         var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
@@ -330,7 +330,8 @@
         { s: 0, e: [0, 0, F], t: [0, 0, 0], f: F },
         { s: 1, e: [-260, 250, -420], t: [0, -230, -1750], f: 1150 },
         { s: 1.5, e: [30, -232, -1180], t: [0, -236, -2600], f: 520 },
-        { s: ROW, e: [0, y0 - lift, Z_ROW + dOv], t: [0, y0 - lift, Z_ROW], f: dOv }
+        // the overview: the top of the column, the first two pictures
+        { s: ROW, e: [0, y0 - (ch + gap) * 0.5 - lift * 0.6, Z_ROW + dOv], t: [0, y0 - (ch + gap) * 0.5 - lift * 0.6, Z_ROW], f: dOv }
       ];
       this.cases.forEach(function (cs, k) {
         var c2 = cs.center, n = cs.normal;
@@ -351,9 +352,17 @@
       var n = Math.min(LAST - 1, Math.floor(stage)), sE = n + smooth(stage - n);
       var i = 0; while (i < S.length - 2 && S[i + 1].s <= sE) i++;
       var f = Math.max(0, Math.min(1, (sE - S[i].s) / (S[i + 1].s - S[i].s)));
-      function st(m) { return S[Math.max(0, Math.min(S.length - 1, m))]; }
-      var e = catmull(st(i - 1).e, st(i).e, st(i + 1).e, st(i + 2).e, f);
-      var t = catmull(st(i - 1).t, st(i).t, st(i + 1).t, st(i + 2).t, f);
+      // a spline through the dive, ending on the overview (no point past it, so no overshoot);
+      // from there straight from station to station, each eased by its own stage
+      var iRow = 3, e, t;
+      function st(m) { return S[Math.max(0, Math.min(iRow, m))]; }
+      if (i < iRow) {
+        e = catmull(st(i - 1).e, st(i).e, st(i + 1).e, st(i + 2).e, f);
+        t = catmull(st(i - 1).t, st(i).t, st(i + 1).t, st(i + 2).t, f);
+      } else {
+        e = S[i].e.map(function (v, m) { return v + (S[i + 1].e[m] - v) * f; });
+        t = S[i].t.map(function (v, m) { return v + (S[i + 1].t[m] - v) * f; });
+      }
       var focus = st(i).f + (st(i + 1).f - st(i).f) * f;
       if (sE > CASE0 && sE < CASE0 + 3) { var back = Math.sin(Math.PI * (sE - Math.floor(sE))) * this.dist * 0.45; e[2] += back; focus += back; }
       // the greeting gathers by the clock, so a slow phone still gets it in time
