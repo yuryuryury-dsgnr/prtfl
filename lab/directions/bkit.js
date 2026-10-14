@@ -32,7 +32,8 @@
 
     var list = document.getElementById('fallbackList');
     if (list) list.innerHTML = CASES.map(function (c) {
-      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a></li>';
+      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a>' +
+        (c.links || []).map(function (l) { return ' <a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</li>';
     }).join('');
 
     var ok = false;
@@ -41,16 +42,26 @@
 
     // ——— case labels under the covers; the renderer says where ———
     var capWork = document.getElementById('capWork');
+    // a case with a live project (c.links) gets those links beside "View case"; links can't nest,
+    // so then the label is a box holding the case link and the project links
     var tags = CASES.map(function (c, k) {
-      var a = document.createElement('a');
-      a.className = 'tag'; a.href = c.href;
-      a.innerHTML = '<span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) +
+      var inner = '<span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) +
         '</span></b><small>' + c.line + '</small></span><em>View case →</em>';
+      var a, main;
+      if (c.links) {
+        a = document.createElement('div'); a.className = 'tag tag-box';
+        a.innerHTML = '<a class="tag-main" href="' + c.href + '">' + inner + '</a><span class="tag-st">' +
+          c.links.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</span>';
+        main = a.querySelector('.tag-main');
+      } else {
+        a = main = document.createElement('a');
+        a.className = 'tag'; a.href = c.href; a.innerHTML = inner;
+      }
       a.addEventListener('mouseenter', function () { env.hover = k; });
       a.addEventListener('mouseleave', function () { env.hover = -1; });
-      a.addEventListener('focus', function () { env.hover = k; });
-      a.addEventListener('blur', function () { env.hover = -1; });
-      a.addEventListener('click', function (e) { e.preventDefault(); go(k); });
+      a.addEventListener('focusin', function () { env.hover = k; });
+      a.addEventListener('focusout', function () { env.hover = -1; });
+      main.addEventListener('click', function (e) { e.preventDefault(); go(k); });
       capWork.appendChild(a);
       return a;
     });
@@ -63,6 +74,8 @@
       env.tags.forEach(function (r, k) {
         tags[k].style.transform = 'translate(' + r.x + 'px,' + r.y + 'px)';
         tags[k].style.width = r.w + 'px';
+        // under a small picture only the name fits
+        tags[k].classList.toggle('narrow', r.w < (env.mobile ? 220 : 420));
         if (r.o != null) {
           tags[k].style.opacity = r.o;
           tags[k].style.visibility = r.o > 0.01 ? '' : 'hidden';

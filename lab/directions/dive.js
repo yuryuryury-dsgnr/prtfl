@@ -1,14 +1,15 @@
 // Dive: Matter's opening and Depth's flight in one world.
-// The greeting is drawn in points on the screen's own plane, crisp, as in Matter. The first
-// scroll pours the letters down into a cut-away block of strata, and the camera dives through
-// the block into a dark gallery: the four cases hang along the way, on either side, turned
-// towards the path. The camera turns to each in turn and flies on past it. A planet at the end.
+// The greeting is drawn in points on the screen's own plane, crisp, as in Matter, with Matter's
+// dust drifting behind it. The first scroll pours the letters down into a cut-away block of
+// strata, and the camera dives through the block to the work: four wide pictures in a row
+// (a column on a phone). First all four at once, then the camera moves along the row, standing
+// square to each in turn and easing back a little between them. A planet at the end.
 (function () {
   var CASES = [
     { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth&from=dive' },
-    { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/' },
-    { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/' },
-    { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/' }
+    { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669']] },
+    { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353'], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc']] },
+    { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/']] }
   ];
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
   var LABELS = [
@@ -18,14 +19,15 @@
     { layer: 6, x: 0.15, text: 'Research', note: '10 participants across 4 roles' },
     { layer: 7, x: -0.05, text: 'Pipeline', note: 'Figma MCP · live specs' }
   ];
-  // stages: 0 hello · 1 layers · 2–5 the four cases · 6 contact
-  var CASE0 = 2, LAST = 6;
+  // stages: 0 hello · 1 layers · 2 the work, all four · 3–6 each case · 7 contact
+  var ROW = 2, CASE0 = 3, LAST = 7;
   // where things sit along the flight
   var Z_STRATA_FRONT = -1300, Z_STRATA_BACK = -2300, BLOCK_X = 900;
-  var Z_CASE = -4600, CASE_GAP = 2000, Z_GLOBE = Z_CASE - 3 * CASE_GAP - 2600;
+  // where the row hangs
+  var Z_ROW = -5200;
 
   // the scroll track, in screens: a short hold at each stop, longer runs where the flight is long
-  var RUNS = [1.2, 1.7, 1.1, 1.1, 1.1, 1.3], HOLD = 0.45, LEAD = 0.12;
+  var RUNS = [1.2, 1.7, 0.9, 0.8, 0.8, 0.8, 1.3], HOLD = 0.45, LEAD = 0.12;
   var keys = [[0, 0]], stops = [0], pos = LEAD;
   keys.push([pos, 0]);
   RUNS.forEach(function (r, i) {
@@ -34,6 +36,8 @@
     if (i + 1 < LAST) { pos += HOLD; keys.push([pos, i + 1]); }
   });
   var TOTAL = pos;
+  // Matter's dust slides about a screen per screen of its own track; this one is longer
+  var DUST_K = TOTAL / 3.8;
   keys = keys.map(function (k) { return [k[0] / TOTAL, k[1]]; });
   stops = stops.map(function (s, i) { return i === 0 ? 0 : s / TOTAL; });
   // the track is as long as the flight
@@ -42,7 +46,7 @@
   var VS = [
     'precision highp float;',
     'attribute vec3 aPos; attribute vec3 aCol; attribute vec4 aInfo; attribute vec3 aAlt;',
-    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uMaxSize, uIn, uStage, uFly;',
+    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uMaxSize, uIn, uStage, uFly, uScroll;',
     'uniform vec2 uRes, uMouse; uniform vec3 uWave, uGlobe; uniform vec2 uGlobeRot;',
     'varying vec3 vC; varying float vA;',
     'void main(){',
@@ -68,30 +72,42 @@
     '    p.y += sin(p.x * 0.004 + uT * 0.5 + grp) * 5.0;',
     '    a0 = smoothstep(0.35, 0.95, uStage);',
     '  }',
-    '  else {',
+    '  else if (kind < 3.5) {',
+    '    a0 = smoothstep(5.9, 6.5, uStage);',
     '    vec3 d = p - uGlobe; float ga = uGlobeRot.x;',
     '    d = vec3(d.x * cos(ga) + d.z * sin(ga), d.y, -d.x * sin(ga) + d.z * cos(ga));',
     '    float gb = uGlobeRot.y; d = vec3(d.x, d.y * cos(gb) - d.z * sin(gb), d.y * sin(gb) + d.z * cos(gb));',
     '    p = uGlobe + d;',
     '  }',
-    '  vec4 v = uView * vec4(p, 1.0); float d = -v.z;',
-    '  vec4 clip = uProj * v;',
-    // the cursor and a click work on the picture, not the world
-    '  vec2 ndc = clip.xy / clip.w; vec2 s = (ndc * 0.5 + 0.5) * uRes; s.y = uRes.y - s.y;',
-    '  vec2 dm = s - uMouse; float push = smoothstep(130.0, 0.0, length(dm));',
-    '  s += normalize(dm + 0.0001) * push * 28.0;',
+    '  vec4 clip; vec2 s; float size, alpha;',
+    '  if (kind > 3.5) {',
+    // dust, as in Matter: never part of the world, it drifts on the screen and slides with the scroll
+    '    s = aPos.xy;',
+    '    s.x += sin(uT * 0.07 + rnd2 * 6.28) * 24.0;',
+    '    s.y = mod(s.y - uScroll * uRes.y * (0.4 + rnd * 1.2) - uT * (2.0 + fract(rnd * 13.7) * 6.0), uRes.y);',
+    '    col *= 0.5 + 0.5 * sin(uT * (0.6 + rnd2) + rnd * 6.28);',
+    '    size = 1.0 + fract(rnd2 * 7.9) * 1.6; alpha = uIn;',
+    '    clip = vec4(0.0, 0.0, 0.0, 1.0);',
+    '  } else {',
+    '    vec4 v = uView * vec4(p, 1.0); float d = -v.z;',
+    '    clip = uProj * v;',
+    '    vec2 ndc = clip.xy / clip.w; s = (ndc * 0.5 + 0.5) * uRes; s.y = uRes.y - s.y;',
+    // perspective size, plus a disc that opens away from the focus; the letters stay sharp
+    '    float persp = uF / max(d, 1.0), blur = abs(d - uFocus) / uFocus;',
+    '    size = base * persp + blur * blur * 14.0 * bk;',
+    '    alpha = min(1.0, 7.0 / (size * size));',
+    '    alpha *= exp(-max(d - uFocus, 0.0) / 1300.0) * smoothstep(uNear * 0.25, uNear, d) * a0 * intro;',
+    '    size = min(size, uMaxSize);',
+    '  }',
+    // the cursor parts the field and a click sends a ring through it, as in Matter
+    '  vec2 dm = s - uMouse; float push = smoothstep(150.0, 0.0, length(dm));',
+    '  s += normalize(dm + 0.0001) * push * 46.0;',
     '  float age = uT - uWave.z; vec2 dw = s - uWave.xy;',
     '  float ring = exp(-pow((length(dw) - age * 900.0) / 60.0, 2.0)) * max(0.0, 1.0 - age / 1.3);',
-    '  s += normalize(dw + 0.0001) * ring * 34.0;',
+    '  s += normalize(dw + 0.0001) * ring * 38.0;',
     '  clip.xy = (vec2(s.x / uRes.x, 1.0 - s.y / uRes.y) * 2.0 - 1.0) * clip.w;',
-    // perspective size, plus a disc that opens away from the focus; the letters stay sharp
-    '  float persp = uF / max(d, 1.0), blur = abs(d - uFocus) / uFocus;',
-    '  float size = base * persp + blur * blur * 14.0 * bk;',
-    '  float alpha = min(1.0, 7.0 / (size * size));',
-    '  alpha *= exp(-max(d - uFocus, 0.0) / 1300.0) * smoothstep(uNear * 0.25, uNear, d) * a0 * intro;',
-    '  size = min(size, uMaxSize);',
-    '  vC = col * lit * alpha * (1.0 + (push + ring) * 0.5); vA = alpha;',
-    '  gl_PointSize = size * uDpr;',
+    '  vC = (col * lit + (push + ring) * 0.22) * alpha; vA = alpha;',
+    '  gl_PointSize = size * uDpr * (1.0 + push * 0.8 + ring * 0.6);',
     '  gl_Position = clip;',
     '}'
   ].join('\n');
@@ -164,10 +180,13 @@
     });
   }
   function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
-  // a picture comes up out of the dark ahead (the fog does most of it) and lets go once it is behind
-  function shown(stage, k) { var d = stage - (CASE0 + k); return d < 0 ? 1 - smooth((-d - 0.2) / 0.38) : 1 - smooth((d - 0.35) / 0.35); }
-  // and it can be opened while the camera is turned to it
-  function openable(stage, k) { return Math.abs(stage - (CASE0 + k)) < 0.14; }
+  // the row comes up out of the dark after the dive, and lets go after the last case
+  function shown(stage) { return smooth((stage - 1.45) / 0.45) * (1 - smooth((stage - (LAST - 0.7)) / 0.35)); }
+  // how far the camera is from the overview, and from standing square to case k
+  function atRow(stage) { return 1 - smooth((Math.abs(stage - ROW) - 0.08) / 0.2); }
+  function atCase(stage, k) { return 1 - smooth((Math.abs(stage - (CASE0 + k)) - 0.1) / 0.18); }
+  // which case a click can open: any of them in the overview, the one in front of the camera after
+  function openable(stage, k) { return Math.abs(stage - ROW) < 0.12 || Math.abs(stage - (CASE0 + k)) < 0.14; }
 
   var renderer = {
     init: function () {
@@ -185,7 +204,7 @@
         return p;
       }
       prog = link(VS, FS); qprog = link(QVS, QFS);
-      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
+      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uScroll', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
         .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       ['aPos', 'aCol', 'aInfo', 'aAlt'].forEach(function (n) { buffers[n] = gl.createBuffer(); A[n] = gl.getAttribLocation(prog, n); });
       ['uView', 'uProj', 'uNormal', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
@@ -234,9 +253,9 @@
 
       // stars, the length of the flight
       var stars = mobile ? 3000 : 9000;
-      for (i = 0; i < stars; i++) { var l = 0.25 + R() * 0.5; put((R() - 0.5) * 6000, (R() - 0.5) * 3800, 900 - R() * (900 - Z_GLOBE + 1200), [l * 0.8, l * 0.88, l], 0); }
+      for (i = 0; i < stars; i++) { var l = 0.25 + R() * 0.5; put((R() - 0.5) * 7000, (R() - 0.5) * 4200, 900 - R() * 13000, [l * 0.8, l * 0.88, l], 0); }
       // the greeting, each point with a place waiting for it in the strata
-      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = mobile ? 14000 : 40000;
+      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = mobile ? 20000 : 60000;
       for (i = 0; i < names; i++) {
         var j = Math.floor(R() * gn) * 2, sp0 = strataPoint(false);
         put(sp0.p[0], sp0.p[1], sp0.p[2], sp0.c, 1, sp0.g, [g[j] - W / 2 + (R() - 0.5) * 2, H / 2 - g[j + 1] + (R() - 0.5) * 2, 0]);
@@ -245,23 +264,24 @@
       var extra = mobile ? 7000 : 26000;
       for (i = 0; i < extra; i++) { var sp1 = strataPoint(true); put(sp1.p[0], sp1.p[1], sp1.p[2], sp1.c, 2, sp1.g); }
 
-      // the gallery: wide pictures down the flight, on alternate sides, each turned towards the path
-      var cw = mobile ? W * 0.84 : Math.min(W * 0.58, H * 0.62 * 1.6, 1100), ch = cw / (mobile ? 1.2 : 1.6);
-      var dpr = Math.min(2, env.dpr || 1), off = mobile ? W * 0.32 : W * 0.36, turn = mobile ? 0.34 : 0.42;
-      this.size = [cw, ch];
+      // the work: four wide pictures in a row; on a phone a column, read top to bottom
+      var cw = mobile ? W * 0.84 : Math.min(W * 0.58, H * 0.62 * 1.6, 1100), ch = cw / (mobile ? 1.3 : 1.6);
+      var gap = mobile ? ch * 0.36 : cw * 0.08, dpr = Math.min(2, env.dpr || 1), y0 = mobile ? H * 0.02 : 0;
+      // the overview stands far enough back that the whole row fills most of the screen
+      var span = 4 * (mobile ? ch : cw) + 3 * gap, dOv = span * F / ((mobile ? H : W) * (mobile ? 0.7 : 0.74));
+      this.size = [cw, ch]; this.y0 = y0;
       this.cases = [];
       for (var k = 0; k < 4; k++) {
-        var side = k % 2 ? -1 : 1, a = side * turn;
-        var c = [side * off, mobile ? H * 0.04 : 0, Z_CASE - k * CASE_GAP];
-        var ax = [Math.cos(a), 0, Math.sin(a)], nrm = [-Math.sin(a), 0, Math.cos(a)];
-        // the picture cropped to the plane, at the size it will be seen
+        var ax = [1, 0, 0], nrm = [0, 0, 1];
+        var c = mobile ? [0, y0 - (k - 1.5) * (ch + gap), Z_ROW] : [(k - 1.5) * (cw + gap), y0, Z_ROW];
+        // the picture cropped to the plane, at the size it will be seen up close
         var img = images[k], ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
         var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
         var tc = document.createElement('canvas'); tc.width = Math.round(cw * dpr); tc.height = Math.round(ch * dpr);
         tc.getContext('2d').drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - shh) / 2, sw, shh, 0, 0, tc.width, tc.height);
         gl.bindTexture(gl.TEXTURE_2D, planes[k].tex);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tc);
-        // not a power of two, so no mipmaps; the fog hides it before it gets small enough to shimmer
+        // not a power of two, so no mipmaps: linear is enough at the sizes the row is seen at
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -277,7 +297,11 @@
         ]), gl.STATIC_DRAW);
         this.cases.push({ center: c, normal: nrm, corners: corners, w: cw, h: ch });
       }
+      // Matter's dust, in screen px
+      var dust = mobile ? 700 : 2600;
+      for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put((R() - 0.5) * W, R() * H, 0, [0.7 * dl, 0.8 * dl, 0.95 * dl], 4); }
       // the planet at the end
+      var Z_GLOBE = Z_ROW - 3200;
       var globe = mobile ? 7000 : 16000, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, H * 0.12, Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
@@ -301,18 +325,19 @@
       gl.uniform1f(U.uFly, env.reduce ? 0 : 1);
 
       // the flight: a station per stage, and one more inside the block, between its layers.
-      // At a case the camera stands square to it, at the distance that shows it whole
+      // At the work the camera sees the whole row; at a case it stands square to it, at the distance that shows it whole
       var lift = mobile ? H * 0.03 : -H * 0.012, dist = F * (mobile ? 1.05 : 0.9), stations = [
         { s: 0, e: [0, 0, F], t: [0, 0, 0], f: F },
         { s: 1, e: [-260, 250, -420], t: [0, -230, -1750], f: 1150 },
-        { s: 1.5, e: [30, -232, -1180], t: [0, -236, -2600], f: 520 }
+        { s: 1.5, e: [30, -232, -1180], t: [0, -236, -2600], f: 520 },
+        { s: ROW, e: [0, y0 - lift, Z_ROW + dOv], t: [0, y0 - lift, Z_ROW], f: dOv }
       ];
       this.cases.forEach(function (cs, k) {
         var c2 = cs.center, n = cs.normal;
         stations.push({ s: CASE0 + k, e: [c2[0] + n[0] * dist, c2[1] - lift, c2[2] + n[2] * dist], t: [c2[0], c2[1] - lift, c2[2]], f: dist });
       });
       stations.push({ s: LAST, e: [0, 0, Z_GLOBE + F * 1.5], t: [0, 0, Z_GLOBE], f: F * 1.5 });
-      this.stations = stations;
+      this.stations = stations; this.dist = dist;
       this.rot = this.rot || 0;
     },
     setDpr: function (env) {
@@ -330,6 +355,7 @@
       var e = catmull(st(i - 1).e, st(i).e, st(i + 1).e, st(i + 2).e, f);
       var t = catmull(st(i - 1).t, st(i).t, st(i + 1).t, st(i + 2).t, f);
       var focus = st(i).f + (st(i + 1).f - st(i).f) * f;
+      if (sE > CASE0 && sE < CASE0 + 3) { var back = Math.sin(Math.PI * (sE - Math.floor(sE))) * this.dist * 0.45; e[2] += back; focus += back; }
       // the greeting gathers by the clock, so a slow phone still gets it in time
       if (this.introAt == null) this.introAt = performance.now();
       var inn = env.reduce ? 1 : Math.min(1, (performance.now() - this.introAt) / 1800);
@@ -356,6 +382,7 @@
       });
       gl.uniformMatrix4fv(U.uView, false, view);
       gl.uniform1f(U.uT, env.t); gl.uniform1f(U.uFocus, focus); gl.uniform1f(U.uIn, inn); gl.uniform1f(U.uStage, stage);
+      gl.uniform1f(U.uScroll, env.s * DUST_K);
       gl.uniform2f(U.uMouse, env.reduce ? -9999 : env.mouse.x, env.mouse.y);
       gl.uniform3f(U.uWave, env.wave.x, env.wave.y, env.wave.t);
       gl.uniform2f(U.uGlobeRot, this.rot, 0.35 + this.my * 0.4);
@@ -363,10 +390,12 @@
       gl.blendFunc(gl.ONE, gl.ONE);
       gl.drawArrays(gl.POINTS, 0, count);
 
-      // the pictures, laid over the light, farthest first
-      var drew = false, sz = this.size;
-      for (var k = 3; k >= 0; k--) {
-        var q = shown(stage, k);
+      // the pictures, laid over the light. In the overview all four are lit; standing at one, its
+      // neighbours step back. Hovering lifts a picture and lets the others fall back a little,
+      // rather than lighting it up
+      var drew = false, sz = this.size, row = atRow(stage), vis = shown(stage);
+      for (var k = 0; k < 4; k++) {
+        var q = vis;
         // once the hand-off box above the canvas has crossed in, the plane under it goes
         if (env.go === k && env.g > 0.11 && window.Handoff) q = 0;
         if (q < 0.002) continue;
@@ -380,9 +409,11 @@
           drew = true;
         }
         var h = env.hov[k], nm = this.cases[k].normal;
+        var near = Math.max(0, 1 - Math.abs(stage - (CASE0 + k)));
+        var dim = env.mobile ? 0.26 : 0.42, lit = stage <= ROW ? 1 : row + (1 - row) * (dim + (1 - dim) * near);
         gl.uniform3f(QU.uNormal, nm[0], nm[1], nm[2]);
-        gl.uniform1f(QU.uLift, h * 36);
-        gl.uniform1f(QU.uLit, 0.42 + 0.7 * h + (1 - env.any) * 0.58);
+        gl.uniform1f(QU.uLift, h * 22);
+        gl.uniform1f(QU.uLit, lit * (1 - 0.28 * (env.any - h)));
         gl.uniform1f(QU.uAlpha, q);
         gl.bindTexture(gl.TEXTURE_2D, planes[k].tex);
         gl.bindBuffer(gl.ARRAY_BUFFER, planes[k].buf);
@@ -411,7 +442,7 @@
         if (pts.some(function (p) { return !p; })) return null;
         var xs = pts.map(function (p) { return p.x; }), ys = pts.map(function (p) { return p.y; });
         var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-        return { x: x0, y: y0, w: x1 - x0, h: y1 - y0, bl: pts[2], br: pts[3], o: 1 - smooth((Math.abs(stage - (CASE0 + k2)) - 0.1) / 0.18) };
+        return { x: x0, y: y0, w: x1 - x0, h: y1 - y0, bl: pts[2], br: pts[3], o: Math.max(row, atCase(stage, k2)) };
       });
       env.tags = this.rects.map(function (r) {
         return r ? { x: r.bl.x, y: Math.max(r.bl.y, r.br.y), w: r.br.x - r.bl.x, top: r.y, o: r.o } : { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 };
@@ -422,13 +453,15 @@
       var to = up.toFixed(2);
       if (title && title._o !== to) { title._o = to; title.style.opacity = to; }
     },
-    workAt: function (stage) { var k = Math.round(stage) - CASE0; return k >= 0 && k < 4 && openable(stage, k); },
+    workAt: function (stage) { for (var k = 0; k < 4; k++) if (openable(stage, k)) return true; return false; },
     coverRect: function (k) { var r = this.rects[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
     coverImage: function (k) { return images[k]; },
     coverAt: function (x, y) {
-      var k = Math.round(env0.stage) - CASE0, r = this.rects && this.rects[k];
-      if (!r || !openable(env0.stage, k)) return -1;
-      return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h ? k : -1;
+      for (var k = 0; k < 4; k++) {
+        var r = this.rects && this.rects[k];
+        if (r && openable(env0.stage, k) && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
+      }
+      return -1;
     }
   };
 
