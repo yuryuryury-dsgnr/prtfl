@@ -66,7 +66,8 @@
     'void main(){',
     '  float kind = aInfo.x, grp = aInfo.y, rnd = aInfo.z, rnd2 = aInfo.w;',
     '  vec3 p = aPos; vec3 col = aCol; float lit = 1.0, base = 1.6 + rnd * 1.2, bk = 1.0, a0 = 1.0, intro = uIn; vSoft = 0.0;',
-    '  if (kind < 0.5) { lit = 0.55 + 0.45 * sin(uT * (0.5 + rnd * 2.0) + rnd * 30.0); }',
+    // stars: the flight's, so they come in as it starts (the greeting stands on Matter's dust alone)
+    '  if (kind < 0.5) { lit = 0.55 + 0.45 * sin(uT * (0.5 + rnd * 2.0) + rnd * 30.0); a0 = smoothstep(0.1, 0.5, uStage); }',
     '  else if (kind < 1.5) {',
     // the greeting: on load it condenses out of a scatter; the first scroll pours it into the strata
     '    float inn = clamp(uIn * 1.6 - rnd2 * 0.6, 0.0, 1.0); inn = 1.0 - pow(1.0 - inn, 3.0);',
@@ -102,7 +103,7 @@
     '    s.x += sin(uT * 0.07 + rnd2 * 6.28) * 24.0;',
     '    s.y = mod(s.y - uScroll * uRes.y * (0.4 + rnd * 1.2) - uT * (2.0 + fract(rnd * 13.7) * 6.0), uRes.y);',
     '    col *= 0.5 + 0.5 * sin(uT * (0.6 + rnd2) + rnd * 6.28);',
-    '    size = 1.0 + fract(rnd2 * 7.9) * 1.6; alpha = uIn;',
+    '    size = 1.0 + fract(rnd2 * 7.9) * 1.6; alpha = uIn; vSoft = 1.0;',
     '    clip = vec4(0.0, 0.0, 0.0, 1.0);',
     '  } else {',
     '    vec4 v = uView * vec4(p, 1.0); float d = -v.z;',
@@ -125,6 +126,8 @@
     '  vC = (col * lit + (push + ring) * 0.22) * alpha; vA = alpha;',
     '  gl_PointSize = size * uDpr * (1.0 + push * 0.8 + ring * 0.6);',
     '  gl_Position = clip;',
+    // a point that can't be seen costs nothing: off the screen, no pixels drawn
+    '  if (alpha < 0.003) { gl_PointSize = 0.0; gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }',
     '}'
   ].join('\n');
   var FS = [
@@ -199,6 +202,16 @@
     });
   }
   function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+  // how many points Matter (index.html) draws its greeting with: one per pixel sampled from its four
+  // covers, so it depends on the screen. Kept in step with Matter's build()
+  function matterCount(W, H, mobile) {
+    var gw = mobile ? W * 0.92 : Math.min(W * 0.82, W >= 1100 ? W - 340 : W, 1240);
+    var gh = mobile ? Math.min(H * 0.6, gw * 1.3) : Math.min(H * 0.64, gw * 0.62);
+    var gap = mobile ? 12 : 22, labelH = mobile ? 34 : 54;
+    var cw = (gw - gap) / 2, chh = (gh - gap - labelH * 2) / 2;
+    var sp = Math.max(2.2, Math.sqrt((cw * chh * 4) / (mobile ? 32000 : 120000)));
+    return Math.floor(cw / sp) * Math.floor(chh / sp) * 4;
+  }
   // the column comes up out of the dark after the dive, and lets go on the way to the planet
   function shown(stage) { return smooth((stage - 1.45) / 0.45) * (1 - smooth((stage - (END + 0.04)) / 0.16)); }
   // every case can be opened the whole time the column is up
@@ -270,11 +283,12 @@
       // stars, the length of the flight
       var stars = mobile ? 3000 : 9000;
       for (i = 0; i < stars; i++) { var l = 0.25 + R() * 0.5; put((R() - 0.5) * 7000, (R() - 0.5) * 4200, 900 - R() * 13000, [l * 0.8, l * 0.88, l], 0); }
-      // the greeting, each point with a place waiting for it in the strata
-      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = mobile ? 30000 : 110000;
+      // the greeting, each point with a place waiting for it in the strata; exactly as many grains
+      // as Matter draws its greeting with on this screen, scattered as Matter scatters them
+      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = matterCount(W, H, mobile);
       for (i = 0; i < names; i++) {
         var j = Math.floor(R() * gn) * 2, sp0 = strataPoint(false);
-        put(sp0.p[0], sp0.p[1], sp0.p[2], sp0.c, 1, sp0.g, [g[j] - W / 2 + (R() - 0.5) * 2, H / 2 - g[j + 1] + (R() - 0.5) * 2, 0]);
+        put(sp0.p[0], sp0.p[1], sp0.p[2], sp0.c, 1, sp0.g, [g[j] - W / 2 + (R() - 0.5) * 2.4, H / 2 - g[j + 1] + (R() - 0.5) * 2.4, 0]);
       }
       // the rest of the strata, inner surfaces included: the dive passes between them
       var extra = mobile ? 7000 : 26000;
@@ -406,7 +420,7 @@
       gl.uniform2f(U.uMouse, env.reduce ? -9999 : env.mouse.x, env.mouse.y);
       gl.uniform3f(U.uWave, env.wave.x, env.wave.y, env.wave.t);
       gl.uniform2f(U.uGlobeRot, this.rot, 0.35 + this.my * 0.4);
-      gl.clearColor(0.024, 0.027, 0.039, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.clearColor(0.027, 0.031, 0.043, 1); gl.clear(gl.COLOR_BUFFER_BIT);
       gl.blendFunc(gl.ONE, gl.ONE);
       gl.drawArrays(gl.POINTS, 0, count);
 
