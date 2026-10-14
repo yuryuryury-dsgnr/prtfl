@@ -4,7 +4,7 @@
 // so what it looks at is sharp and the rest opens into bokeh.
 (function () {
   var CASES = [
-    { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth' },
+    { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth&from=depth' },
     { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/' },
     { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/' },
     { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/' }
@@ -25,7 +25,7 @@
     'precision highp float;',
     'attribute vec3 aPos; attribute vec3 aCol; attribute vec4 aInfo;',
     'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uSp, uF, uAny, uGo, uGoI, uIn, uNear, uCovVis, uMaxSize;',
-    'uniform vec4 uHov; uniform vec2 uRes, uMouse; uniform vec3 uWave, uGlobe; uniform vec2 uGlobeRot;',
+    'uniform vec4 uHov; uniform vec2 uRes, uMouse; uniform float uMouseOn; uniform vec3 uWave, uGlobe; uniform vec2 uGlobeRot;',
     'varying vec3 vC; varying float vA; varying float vSq;',
     'void main(){',
     '  float kind = aInfo.x, grp = aInfo.y, rnd = aInfo.z;',
@@ -54,7 +54,7 @@
     '  vec2 ndc = clip.xy / clip.w;',
     '  vec2 s = (ndc * 0.5 + 0.5) * uRes; s.y = uRes.y - s.y;',
     '  vec2 dm = s - uMouse; float dist = length(dm);',
-    '  float push = smoothstep(130.0, 0.0, dist) * (1.0 - sq * 0.85);',
+    '  float push = smoothstep(130.0, 0.0, dist) * (1.0 - sq * 0.85) * uMouseOn;',
     '  s += normalize(dm + 0.0001) * push * 28.0;',
     '  float age = uT - uWave.z; vec2 dw = s - uWave.xy; float dwl = length(dw);',
     '  float ring = exp(-pow((dwl - age * 900.0) / 60.0, 2.0)) * max(0.0, 1.0 - age / 1.3) * (1.0 - sq * 0.85);',
@@ -165,7 +165,7 @@
       gl.linkProgram(prog);
       if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
       gl.useProgram(prog);
-      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uSp', 'uF', 'uAny', 'uGo', 'uGoI', 'uIn', 'uNear', 'uCovVis', 'uMaxSize', 'uHov', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
+      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uSp', 'uF', 'uAny', 'uGo', 'uGoI', 'uIn', 'uNear', 'uCovVis', 'uMaxSize', 'uHov', 'uRes', 'uMouse', 'uMouseOn', 'uWave', 'uGlobe', 'uGlobeRot']
         .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       [['aPos', 3], ['aCol', 3], ['aInfo', 4]].forEach(function (a) {
         buffers[a[0]] = gl.createBuffer();
@@ -346,6 +346,7 @@
       gl.uniform1f(U.uAny, env.any); gl.uniform1f(U.uGo, env.g); gl.uniform1f(U.uGoI, env.go >= 0 && !window.Handoff ? env.go : -9);
       gl.uniform4f(U.uHov, env.hov[0], env.hov[1], env.hov[2], env.hov[3]);
       gl.uniform2f(U.uMouse, env.reduce ? -9999 : env.mouse.x, env.mouse.y);
+      gl.uniform1f(U.uMouseOn, env.reduce ? 0 : env.mouse.p);
       gl.uniform3f(U.uWave, env.wave.x, env.wave.y, env.wave.t);
       gl.uniform2f(U.uGlobeRot, this.rot, 0.35 + this.my * 0.4);
 

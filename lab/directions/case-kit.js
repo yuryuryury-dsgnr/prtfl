@@ -13,7 +13,9 @@
   // ——— chrome ———
   // back to the home page the case was opened from
   var from = params.get('from');
-  document.getElementById('home').href = from === 'dive' ? 'dive.html' : style === 'depth' ? 'depth.html' : './';
+  document.getElementById('home').href = from === 'matter' ? 'matter.html' : from === 'depth' ? 'depth.html' : './';
+  // the style pill compares the sandbox's two looks; opened from Dive the case simply is what it is
+  if (from !== 'matter' && from !== 'depth') document.querySelector('.nav .style').style.display = 'none';
   var sM = document.getElementById('sMatter'), sD = document.getElementById('sDepth');
   (style === 'depth' ? sD : sM).setAttribute('aria-current', 'page');
   // switching style keeps your place: it lands on the same chapter
@@ -21,7 +23,7 @@
     a.addEventListener('click', function (e) {
       e.preventDefault();
       var cur = sections[Math.min(sections.length - 1, Math.round(env.scene))];
-      location.href = a.getAttribute('href') + (cur && cur.id && cur.id !== 'top' ? '#' + cur.id : '');
+      location.href = a.getAttribute('href') + (from ? '&from=' + from : '') + (cur && cur.id && cur.id !== 'top' ? '#' + cur.id : '');
     });
   });
 
@@ -413,6 +415,8 @@
   var tx = -9999, ty = -9999, lastMove = 0;
   addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; lastMove = performance.now(); });
   document.addEventListener('pointerleave', function () { tx = ty = -9999; });
+  addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') tx = ty = -9999; });
+  addEventListener('pointercancel', function () { tx = ty = -9999; });
 
   var heroImg = document.getElementById('heroImg'), heroFig = document.getElementById('heroFig');
   var nav = document.getElementById('nav'), progress = document.getElementById('progress');
@@ -458,7 +462,7 @@
     var m = env.mouse, kk = Math.min(1, env.dt / 16.7);
     if (tx < -9000) m.on += (0 - m.on) * 0.08 * kk;
     else {
-      if (m.x < -9000) { m.x = tx; m.y = ty; }
+      if (m.x < -9000 || m.on < 0.05) { m.x = tx; m.y = ty; }
       var nx = m.x + (tx - m.x) * 0.3 * kk, ny = m.y + (ty - m.y) * 0.3 * kk;
       m.vx = nx - m.x; m.vy = ny - m.y; m.x = nx; m.y = ny;
       m.on += ((now - lastMove < 1200 ? 1 : 0.3) - m.on) * 0.08 * kk;

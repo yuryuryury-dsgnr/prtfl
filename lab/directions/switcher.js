@@ -1,12 +1,12 @@
-// The pill pinned to the bottom of the home page, switching between its two
-// styles: Matter is the folder's own page, Depth sits beside it.
+// The sandbox pill, pinned to the bottom of Matter and Depth: the two earlier home pages, kept to
+// compare with. Dive is the folder's own page and carries no pill.
 (function () {
   var pages = [
-    ['', './', 'Материя'],
+    ['matter', 'matter.html', 'Материя'],
     ['depth', 'depth.html', 'Глубина'],
-    ['dive', 'dive.html', 'Погружение']
+    ['', './', 'Погружение']
   ];
-  // the live site serves pages without .html, the local server with it; the folder itself is Matter
+  // the live site serves pages without .html, the local server with it; the folder itself is Dive
   var here = (location.pathname.match(/\/([a-z]+)(?:\.html)?$/) || [])[1] || '';
   if (here === 'index') here = '';
   var nav = document.createElement('nav');

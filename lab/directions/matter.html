@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Portfolio · Matter — Yurii Fokin</title>
+  <meta name="description" content="Yurii Fokin, Lead UX Designer: Halliburton's first unified data platform, an iOS app built and shipped solo, and the systems under them.">
+  <meta name="theme-color" content="#07080B">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="../../assets/images/halliburton/halliburton-hero.webp">
+  <style>
+    :root { --bg: #07080B; --fg: #EEF0F6; --muted: rgba(238,240,246,.55); --mono: 'JetBrains Mono', ui-monospace, monospace; --pad: clamp(16px, 6vw, 88px); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 2px solid #9ED8C8; outline-offset: 4px; border-radius: 4px; }
+    ::selection { background: #9ED8C8; color: #07080B; }
+
+    #gl { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; display: block; }
+    .vignette {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; pointer-events: none;
+      background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.65) 100%);
+    }
+    .grain {
+      position: fixed; inset: -50%; pointer-events: none; opacity: .07;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain 1s steps(6) infinite;
+    }
+    @keyframes grain { 0%{transform:translate(0,0)} 25%{transform:translate(-3%,2%)} 50%{transform:translate(2%,-3%)} 75%{transform:translate(-2%,-1%)} 100%{transform:translate(1%,3%)} }
+
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px clamp(16px, 4vw, 40px); font-size: 14px; font-weight: 500;
+    }
+    .nav span { color: var(--muted); font-weight: 400; }
+    .nav-links { display: flex; gap: 22px; align-items: center; }
+    .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
+    .nav-links a:not(.pill):hover { color: var(--fg); }
+    .pill { border: 1px solid rgba(238,240,246,.25); border-radius: 999px; padding: 7px 15px; transition: background .2s, border-color .2s; }
+    .pill:hover { background: rgba(238,240,246,.08); border-color: rgba(238,240,246,.45); }
+    @media (max-width: 640px) { .nav-links a:not(.pill) { display: none; } .nav > a span { display: none; } }
+
+    .meter {
+      position: fixed; z-index: 20; right: clamp(16px, 4vw, 40px); top: 50%;
+      transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px;
+      text-align: right;
+    }
+    .meter button {
+      background: none; border: 0; cursor: pointer; padding: 5px 0;
+      font: 500 10px/1 var(--mono); color: var(--muted); letter-spacing: .02em;
+      display: flex; gap: 8px; align-items: center; justify-content: flex-end; transition: color .4s;
+    }
+    .meter button::after { content: ''; width: 14px; height: 1px; background: currentColor; transition: width .4s cubic-bezier(.2,.8,.2,1); }
+    .meter button:hover, .meter button.on { color: var(--fg); }
+    .meter button.on::after { width: 28px; }
+    @media (max-width: 760px) { .meter { display: none; } }
+
+    /* the page is scroll distance; everything visible is fixed */
+    .track { height: 480vh; }
+
+    .cap { position: fixed; z-index: 10; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .eyebrow { font: 500 11px/1 var(--mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 14px; display: block; }
+
+    .cap-hero { left: var(--pad); bottom: clamp(72px, 12vh, 120px); max-width: 520px; padding-right: 16px; }
+    .cap-hero p { font-size: clamp(16px, 1.5vw, 19px); color: rgba(238,240,246,.82); }
+    .cap-hero a { border-bottom: 1px solid rgba(238,240,246,.35); }
+
+    .cap-layers { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
+    .cap-layers h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
+    .cap-layers p { margin-top: 14px; color: rgba(238,240,246,.75); font-size: clamp(15px, 1.2vw, 17px); max-width: 540px; }
+
+    /* labels that ride the strata */
+    .strata-labels { position: fixed; inset: 0; z-index: 9; pointer-events: none; }
+    .sl {
+      position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px;
+      font: 500 11px/1 var(--mono); color: var(--fg); white-space: nowrap; opacity: 0; will-change: transform, opacity;
+    }
+    .sl i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(7,8,11,.6), 0 0 16px currentColor; flex: 0 0 auto; }
+    .sl span { color: var(--fg); background: rgba(7,8,11,.62); padding: 5px 8px; border-radius: 5px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .sl b { font-weight: 500; color: var(--muted); }
+    @media (max-width: 760px) { .sl b { display: none; } }
+
+    .cap-work { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+    .cap-work h2 { position: absolute; left: var(--pad); top: 0; font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; letter-spacing: -0.035em; }
+    .tag {
+      position: absolute; pointer-events: auto; padding: 10px 0 0;
+      display: flex; justify-content: space-between; gap: 12px; align-items: baseline;
+    }
+    .tag b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; display: block; }
+    .tag b i { font: normal 500 11px/1 var(--mono); color: var(--muted); margin-right: 8px; }
+    .tag small { font-size: 13px; color: var(--muted); display: block; transition: color .3s; }
+    .tag em { font: normal 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s, transform .3s cubic-bezier(.2,.8,.2,1); }
+    .tag.on small { color: rgba(238,240,246,.85); }
+    .tag .short { display: none; }
+    .tag.on em { color: var(--fg); transform: translateX(4px); }
+    @media (max-width: 760px) { .tag small, .tag em, .tag .long { display: none; } .tag .short { display: inline; } .tag b { font-size: 13px; } .tag b i { display: none; } }
+
+    .cap-end { left: 0; right: 0; bottom: clamp(64px, 11vh, 112px); text-align: center; padding: 0 16px; }
+    .cap-end h2 { font-size: clamp(32px, 5vw, 72px); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
+    .cap-end .row { display: flex; gap: 12px 24px; justify-content: center; flex-wrap: wrap; margin-top: 26px; font-weight: 500; }
+    .cap-end .row a { border-bottom: 1px solid rgba(238,240,246,.35); transition: border-color .2s; }
+    .cap-end .row a:hover { border-color: var(--fg); }
+    .cap-end .top { display: inline-block; margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); background: none; border: 0; cursor: pointer; }
+    .cap-end .top:hover { color: var(--fg); }
+
+    .ring {
+      position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none;
+      width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 50%;
+      border: 1px solid rgba(238,240,246,.5); display: grid; place-items: center;
+      transition: width .4s cubic-bezier(.2,.8,.2,1), height .4s cubic-bezier(.2,.8,.2,1), margin .4s cubic-bezier(.2,.8,.2,1), background .3s, border-color .3s, opacity .3s;
+      opacity: 0;
+    }
+    .ring span { font: 600 11px/1 'Inter'; color: #07080B; opacity: 0; transition: opacity .2s; }
+    .ring.big { width: 76px; height: 76px; margin: -38px 0 0 -38px; background: #EEF0F6; border-color: #EEF0F6; }
+    .ring.big span { opacity: 1; }
+    @media (hover: none), (pointer: coarse) { .ring { display: none; } }
+
+    .loading {
+      position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
+      font: 500 11px/1 var(--mono); color: var(--muted); transition: opacity .7s; pointer-events: none;
+    }
+    .loading b { font-weight: 500; color: var(--fg); }
+
+    /* without WebGL the page is a plain list — the same content, nothing lost */
+    .fallback { display: none; position: relative; z-index: 15; padding: 120px var(--pad) 120px; max-width: 900px; }
+    .no-gl .fallback { display: block; }
+    .no-gl .track, .no-gl .meter, .no-gl .cap, .no-gl #gl, .no-gl .loading { display: none; }
+    .fallback h1 { font-size: clamp(40px, 7vw, 88px); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+    .fallback > p { margin-top: 20px; font-size: 18px; color: rgba(238,240,246,.8); }
+    .fallback ul { list-style: none; margin-top: 56px; border-top: 1px solid rgba(238,240,246,.12); }
+    .fallback li a { display: flex; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(238,240,246,.12); }
+    .fallback li b { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+    .fallback li span { color: var(--muted); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .grain { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="loading" id="loading" aria-hidden="true"><span>sampling <b id="loadPct">0</b>%</span></div>
+  <div class="ring" id="ring"><span>Open</span></div>
+
+  <header class="nav">
+    <a href="#" data-stage="0">Portfolio</a>
+    <nav class="nav-links">
+      <a href="#work" data-stage="2">Work</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+    </nav>
+  </header>
+
+  <nav class="meter" id="meter" aria-label="Sections">
+    <button data-stage="0">00 · Hello</button>
+    <button data-stage="1">01 · Layers</button>
+    <button data-stage="2">02 · Work</button>
+    <button data-stage="3">03 · Contact</button>
+  </nav>
+
+  <section class="cap cap-hero" data-cap="0">
+    <h1 class="sr-only">Hi! I'm Yurii.</h1>
+    <span class="eyebrow">Yurii Fokin · Batumi, GE</span>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=matter&amp;from=matter">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <div data-hint data-mouse="scroll to reshape it|move through it|click anywhere" data-touch="swipe up to reshape it|tap anywhere"></div>
+  </section>
+
+  <section class="cap cap-layers" data-cap="1">
+    <span class="eyebrow">Halliburton · 2025–2026</span>
+    <h2>Data Marketplace</h2>
+    <p>Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.</p>
+  </section>
+  <div class="strata-labels" id="strataLabels" aria-hidden="true"></div>
+
+  <section class="cap cap-work" data-cap="2" id="capWork">
+    <h2 id="workTitle">Selected work</h2>
+  </section>
+
+  <section class="cap cap-end" data-cap="3">
+    <span class="eyebrow">Batumi, GE</span>
+    <h2>Open to senior and<br>lead design roles.</h2>
+    <div class="row">
+      <a href="mailto:yuryuryury@icloud.com">Email</a>
+      <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
+    </div>
+    <button class="top" data-stage="0">back to the start ↑</button>
+  </section>
+
+  <main class="fallback" id="work">
+    <h1>Hi! I'm Yurii.</h1>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <ul id="fallbackList"></ul>
+  </main>
+
+  <div class="track"></div>
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="perf.js?v=11"></script>
+  <script src="switcher.js?v=5"></script>
+  <script src="hint.js?v=4"></script>
+  <script src="handoff.js?v=6"></script>
+  <script>
+  (function () {
+    var CASES = [
+      { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=matter&from=matter' },
+      { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/' },
+      { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/' },
+      { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/' }
+    ];
+    // top to bottom: what people see, down to what they never do
+    var STRATA = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
+    var LABELS = [
+      { layer: 0, x: 0.06, text: 'Interface', note: 'Main, Explore, Detail, Request Access, Admin' },
+      { layer: 2, x: -0.3, text: 'Design system', note: 'Three-tier token architecture' },
+      { layer: 4, x: 0.1, text: 'Information architecture', note: '4 personas · 5 flows · IA' },
+      { layer: 6, x: -0.2, text: 'Research', note: '10 participants across 4 roles' },
+      { layer: 7, x: 0.17, text: 'Pipeline', note: 'Figma MCP · live specs' }
+    ];
+    // plateaus: each shape holds before the next one starts
+    var KEYS = [[0, 0], [0.04, 0], [0.27, 1], [0.33, 1], [0.57, 2], [0.69, 2], [0.94, 3], [1, 3]];
+    var STOPS = [0, 0.30, 0.63, 1];
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.getElementById('fallbackList').innerHTML = CASES.map(function (c) {
+      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a></li>';
+    }).join('');
+
+    var canvas = document.getElementById('gl');
+    var gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'high-performance' });
+    if (!gl) { document.documentElement.classList.add('no-gl'); return; }
+
+    // ——— shaders ———
+    var VS = [
+      'precision highp float;',
+      'attribute vec2 aP0; attribute vec2 aP1; attribute vec2 aP2; attribute vec4 aS;',
+      'attribute vec3 aC0; attribute vec3 aC1; attribute vec3 aC2; attribute vec4 aR;',
+      'uniform float uP; uniform float uT; uniform vec2 uRes; uniform vec2 uMouse; uniform float uDpr;',
+      'uniform float uSp; uniform float uR; uniform vec4 uHov; uniform float uAny; uniform float uFall;',
+      'uniform float uIn; uniform float uDim; uniform vec4 uCenA; uniform vec4 uCenB; uniform vec2 uCov;',
+      'uniform float uGo; uniform float uGoI; uniform float uRotY; uniform float uRotX; uniform float uFly;',
+      'uniform float uScroll; uniform float uPush; uniform vec3 uWave;',
+      'varying vec3 vC; varying float vRound;',
+      'void main(){',
+      '  float idx = aS.w;',
+      // the cursor parts the field, a click sends a ring through it
+      '  vec2 pos; vec3 col; float size; float rnd = 1.0; float img = 0.0;',
+      '  if (idx < -0.5) {',
+      // dust: never part of a shape, drifts behind everything, slides with scroll
+      '    pos = aP0;',
+      '    pos.x += sin(uT * 0.07 + aR.y * 6.28) * 24.0;',
+      '    pos.y = mod(pos.y - uScroll * uRes.y * (0.4 + aR.x * 1.2) - uT * (2.0 + aR.z * 6.0) + uRes.y * 0.5, uRes.y) - uRes.y * 0.5;',
+      '    col = aC0 * (0.5 + 0.5 * sin(uT * (0.6 + aR.w) + aR.y * 6.28));',
+      '    size = 1.0 + aR.z * 1.6;',
+      '  } else {',
+      '    float seg = floor(uP); float f = uP - seg;',
+      '    float t = clamp((f - aR.x * 0.4) / 0.6, 0.0, 1.0);',
+      '    t = t * t * (3.0 - 2.0 * t);',
+      '    vec2 p0 = aP0 + vec2(sin(uT*0.8 + aR.y*6.28), cos(uT*0.7 + aR.z*6.28)) * 1.4;',
+      '    vec2 p1 = aP1; p1.y += sin(p1.x*0.0045 + uT*0.55 + aR.w*0.6) * 7.0 + sin(p1.x*0.011 - uT*0.4) * 3.0;',
+      // covers: the hovered one lifts, the chosen one grows to fill the screen
+      '    vec2 cen = idx < 0.5 ? uCenA.xy : (idx < 1.5 ? uCenA.zw : (idx < 2.5 ? uCenB.xy : uCenB.zw));',
+      '    float h = idx < 0.5 ? uHov.x : (idx < 1.5 ? uHov.y : (idx < 2.5 ? uHov.z : uHov.w));',
+      '    vec2 p2 = cen + (aP2 - cen) * (1.0 + 0.04 * h);',
+      '    float chosen = 1.0 - step(0.5, abs(idx - uGoI));',
+      '    float g = uGo * uGo * (3.0 - 2.0 * uGo);',
+      '    float fill = max(uRes.x / uCov.x, uRes.y / uCov.y) * 1.04;',
+      '    p2 = mix(p2, mix(p2 + (aR.zw - 0.5) * uRes * 2.6, (aP2 - cen) * fill, chosen), g);',
+      // the globe at the end; the cursor turns it
+      '    vec3 s = aS.xyz;',
+      '    float a = uRotY; s = vec3(s.x*cos(a) + s.z*sin(a), s.y, -s.x*sin(a) + s.z*cos(a));',
+      '    float tl = uRotX; s = vec3(s.x, s.y*cos(tl) - s.z*sin(tl), s.y*sin(tl) + s.z*cos(tl));',
+      '    float persp = 1.0 / (1.5 - s.z * 0.5);',
+      '    vec2 p3 = s.xy * uR * persp + vec2(0.0, -uRes.y * 0.12);',
+      '    vec3 c3 = mix(vec3(0.62, 0.84, 0.78), vec3(0.95, 0.66, 0.42), s.y * 0.5 + 0.5) * (0.4 + 0.6 * (s.z * 0.5 + 0.5));',
+      '    vec2 A; vec2 B; vec3 CA; vec3 CB; float sA; float sB; float rA; float rB;',
+      '    float small = 1.7; float pix = uSp * mix(1.0, fill, g * chosen);',
+      '    if (seg < 0.5)      { A = p0; B = p1; CA = aC0; CB = aC1; sA = small; sB = small + aR.y*1.2; rA = 1.0; rB = 1.0; img = 0.0; }',
+      '    else if (seg < 1.5) { A = p1; B = p2; CA = aC1; CB = aC2; sA = small + aR.y*1.2; sB = pix; rA = 1.0; rB = 0.0; img = t; }',
+      '    else               { A = p2; B = p3; CA = aC2; CB = c3; sA = pix; sB = 1.9; rA = 0.0; rB = 1.0; img = 1.0 - t; }',
+      '    pos = mix(A, B, t);',
+      '    float fly = sin(t * 3.14159) * uFly;',
+      '    pos += (aR.zw - 0.5) * 2.0 * 160.0 * fly;',
+      '    pos.y += fly * uFall * aR.y;',
+      // on load the field condenses out of a scatter
+      '    float inn = clamp(uIn * 1.6 - aR.x * 0.6, 0.0, 1.0); inn = 1.0 - pow(1.0 - inn, 3.0);',
+      '    pos = mix(pos + (aR.zw - 0.5) * uRes * 1.3, pos, inn);',
+      '    float lit = mix(1.0, 0.28 + 0.92 * h + (1.0 - uAny) * 0.72, img);',
+      '    lit *= 1.0 - g * (1.0 - chosen) * img;',
+      '    col = mix(CA, CB, t) * lit * mix(uDim, 1.0, img);',
+      '    size = mix(sA, sB, t);',
+      '    rnd = mix(rA, rB, t);',
+      '  }',
+      '  vec2 dm = pos - uMouse; float dist = length(dm);',
+      '  float push = smoothstep(150.0, 0.0, dist) * (1.0 - img * 0.75) * uPush;',
+      '  pos += normalize(dm + 0.0001) * push * 46.0;',
+      '  float age = uT - uWave.z;',
+      '  vec2 dw = pos - uWave.xy; float dwl = length(dw);',
+      '  float ring = exp(-pow((dwl - age * 900.0) / 60.0, 2.0)) * max(0.0, 1.0 - age / 1.3) * (1.0 - img * 0.85);',
+      '  pos += normalize(dw + 0.0001) * ring * 38.0;',
+      '  vC = col + (push + ring) * 0.22;',
+      '  vRound = rnd;',
+      '  gl_PointSize = size * uDpr * (1.0 + push * 0.8 + ring * 0.6);',
+      '  vec2 clip = pos / (uRes * 0.5); clip.y = -clip.y;',
+      '  gl_Position = vec4(clip, 0.0, 1.0);',
+      '}'
+    ].join('\n');
+    var FS = [
+      'precision mediump float;',
+      'varying vec3 vC; varying float vRound;',
+      'void main(){',
+      '  vec2 c = gl_PointCoord - 0.5;',
+      '  float soft = 1.0 - smoothstep(0.2, 0.5, length(c));',
+      '  gl_FragColor = vec4(vC * mix(1.0, soft, vRound), 1.0);',
+      '}'
+    ].join('\n');
+
+    function sh(type, src) {
+      var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+      return s;
+    }
+    var prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+    gl.useProgram(prog);
+    var U = {};
+    ['uP', 'uT', 'uRes', 'uMouse', 'uDpr', 'uSp', 'uR', 'uHov', 'uAny', 'uFall', 'uIn', 'uDim', 'uCenA', 'uCenB', 'uCov',
+     'uGo', 'uGoI', 'uRotY', 'uRotX', 'uFly', 'uScroll', 'uPush', 'uWave'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
+    // eight attributes: the floor WebGL guarantees on every device
+    var ATTR = { aP0: 2, aP1: 2, aP2: 2, aS: 4, aC0: 3, aC1: 3, aC2: 3, aR: 4 };
+    var buffers = {};
+    Object.keys(ATTR).forEach(function (n) { buffers[n] = gl.createBuffer(); });
+    function bindPoints() {
+      gl.useProgram(prog);
+      Object.keys(ATTR).forEach(function (n) {
+        var loc = gl.getAttribLocation(prog, n);
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[n]);
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(loc, ATTR[n], gl.FLOAT, false, 0, 0);
+      });
+    }
+    bindPoints();
+
+    // Once the points have settled into a cover, the real picture fades in over
+    // them, so the work is shown sharp and not as a mosaic. Power-of-two crops,
+    // mipmapped; a quad per cover, moved in step with the points.
+    var QVS = 'attribute vec2 aQ; attribute vec2 aUv; varying vec2 vUv; void main(){ vUv = aUv; gl_Position = vec4(aQ, 0.0, 1.0); }';
+    var QFS = 'precision mediump float; uniform sampler2D uTex; uniform float uA, uLit; varying vec2 vUv;' +
+      'void main(){ gl_FragColor = vec4(texture2D(uTex, vUv).rgb * 0.92 * uLit * uA, uA); }';
+    var qprog = gl.createProgram();
+    gl.attachShader(qprog, sh(gl.VERTEX_SHADER, QVS)); gl.attachShader(qprog, sh(gl.FRAGMENT_SHADER, QFS));
+    gl.linkProgram(qprog);
+    var QU = { aQ: gl.getAttribLocation(qprog, 'aQ'), aUv: gl.getAttribLocation(qprog, 'aUv'),
+      uTex: gl.getUniformLocation(qprog, 'uTex'), uA: gl.getUniformLocation(qprog, 'uA'), uLit: gl.getUniformLocation(qprog, 'uLit') };
+    var qbuf = gl.createBuffer(), qtex = [0, 1, 2, 3].map(function () { return gl.createTexture(); });
+    var aniso = gl.getExtension('EXT_texture_filter_anisotropic');
+    function coverTextures(images) {
+      var TW = W < 760 ? 1024 : 2048, TH = TW / 2, ra = cov.w / cov.h;
+      images.forEach(function (img, k) {
+        var ia = img.naturalWidth / img.naturalHeight;
+        var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
+        var c = document.createElement('canvas'); c.width = TW; c.height = TH;
+        c.getContext('2d').drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - shh) / 2, sw, shh, 0, 0, TW, TH);
+        gl.bindTexture(gl.TEXTURE_2D, qtex[k]);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+      });
+    }
+    function drawCovers(p, g, goK) {
+      // fully in only while the points are fully formed; gone the moment they start to leave.
+      // A phone has no settle to land exactly on the shape, so there the picture comes in earlier
+      var q = Math.max(0, 1 - Math.abs(p - 2) / (window.Perf && Perf.touch ? 0.16 : 0.045));
+      if (q <= 0.001) return;
+      q = q * q * (3 - 2 * q);
+      var ge = g * g * (3 - 2 * g), fill = Math.max(W / cov.w, H / cov.h) * 1.04;
+      gl.useProgram(qprog);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.bindBuffer(gl.ARRAY_BUFFER, qbuf);
+      gl.enableVertexAttribArray(QU.aQ); gl.vertexAttribPointer(QU.aQ, 2, gl.FLOAT, false, 16, 0);
+      gl.enableVertexAttribArray(QU.aUv); gl.vertexAttribPointer(QU.aUv, 2, gl.FLOAT, false, 16, 8);
+      gl.uniform1i(QU.uTex, 0); gl.activeTexture(gl.TEXTURE0);
+      layout.forEach(function (r, k) {
+        var h = hov[k], chosen = goK === k;
+        var cx = r.cx, cy = r.cy, sc = 1 + 0.04 * h, a = q;
+        if (goK >= 0) {
+          // the chosen one is a box above the canvas now (go); the rest are gone before it covers them
+          if (chosen) { if (window.Handoff) return; cx = cx * (1 - ge); cy = cy * (1 - ge); sc = sc + (fill - sc) * ge; }
+          else a *= Math.max(0, 1 - g * 2.5);
+        }
+        if (a <= 0.001) return;
+        var hw = r.w / 2 * sc, hh = r.h / 2 * sc;
+        var x0 = (cx - hw) / (W / 2), x1 = (cx + hw) / (W / 2), y0 = -(cy - hh) / (H / 2), y1 = -(cy + hh) / (H / 2);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([x0, y0, 0, 0, x0, y1, 0, 1, x1, y0, 1, 0, x1, y0, 1, 0, x0, y1, 0, 1, x1, y1, 1, 1]), gl.DYNAMIC_DRAW);
+        gl.uniform1f(QU.uA, a);
+        gl.uniform1f(QU.uLit, Math.min(1.15, 0.28 + 0.92 * h + (1 - any) * 0.72));
+        gl.bindTexture(gl.TEXTURE_2D, qtex[k]);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      });
+      gl.blendFunc(gl.ONE, gl.ONE);
+      bindPoints();
+    }
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE); // additive: overlaps glow, tiled pixels stay true
+
+    // ——— shapes, all in CSS px around the centre of the screen ———
+    var W, H, N = 0, TOTAL = 0, layout = [], cov = { w: 0, h: 0 };
+    function hex(h) { return [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255]; }
+    function coverDraw(ctx, img, w, h) {
+      var r = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+      var dw = img.naturalWidth * r, dh = img.naturalHeight * r;
+      ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    }
+    // the strata centre line, shared by the points and the labels that ride them
+    function strataY(x, L) {
+      var band = H * 0.4 / STRATA.length;
+      return H * 0.02 + L * band + Math.sin(x * 0.0032 + L * 0.9) * H * 0.045 + Math.sin(x * 0.009 + L) * H * 0.012;
+    }
+
+    function setDpr(dpr) {
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      gl.useProgram(prog);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform1f(U.uDpr, dpr);
+    }
+    if (window.Perf) Perf.onChange = setDpr;
+    // style writes only when the value moves: a write per element per frame keeps the phone restyling
+    function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
+
+    function build(images) {
+      W = window.innerWidth; H = window.Perf ? Perf.vh() : window.innerHeight;
+      var mobile = W < 760;
+
+      // the four covers decide N: one point per sampled pixel
+      // on a wide screen they keep clear of the section rail on the right
+      var gw = mobile ? W * 0.92 : Math.min(W * 0.82, W >= 1100 ? W - 340 : W, 1240);
+      var gh = mobile ? Math.min(H * 0.6, gw * 1.3) : Math.min(H * 0.64, gw * 0.62);
+      var gap = mobile ? 12 : 22, labelH = mobile ? 34 : 54;
+      var cw = (gw - gap) / 2, chh = (gh - gap - labelH * 2) / 2;
+      var gx = -gw / 2, gy = -gh / 2 + (mobile ? 16 : 26);
+      // dense enough that a UI screenshot still reads as one
+      var target = mobile ? 32000 : 120000;
+      var sp = Math.max(2.2, Math.sqrt((cw * chh * 4) / target));
+      var cols = Math.floor(cw / sp), rows = Math.floor(chh / sp);
+      cov = { w: cols * sp, h: rows * sp };
+      layout = [];
+      for (var k = 0; k < 4; k++) {
+        var x = gx + (k % 2) * (cw + gap), y = gy + Math.floor(k / 2) * (chh + labelH + gap);
+        layout.push({ x: x, y: y, w: cov.w, h: cov.h, cx: x + cov.w / 2, cy: y + cov.h / 2 });
+      }
+      N = cols * rows * 4;
+      var DUST = mobile ? 700 : 2600;
+      TOTAL = N + DUST;
+
+      var P0 = new Float32Array(TOTAL * 2), P1 = new Float32Array(TOTAL * 2), P2 = new Float32Array(TOTAL * 2);
+      var S = new Float32Array(TOTAL * 4), C0 = new Float32Array(TOTAL * 3), C1 = new Float32Array(TOTAL * 3), C2 = new Float32Array(TOTAL * 3);
+      var R = new Float32Array(TOTAL * 4);
+
+      // shape 2 — covers
+      var off = document.createElement('canvas'); off.width = cols; off.height = rows;
+      var octx = off.getContext('2d', { willReadFrequently: true });
+      var n = 0;
+      for (k = 0; k < 4; k++) {
+        octx.clearRect(0, 0, cols, rows);
+        coverDraw(octx, images[k], cols, rows);
+        var px = octx.getImageData(0, 0, cols, rows).data;
+        for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+          var q = (r * cols + c) * 4;
+          P2[n * 2] = layout[k].x + c * sp + sp / 2;
+          P2[n * 2 + 1] = layout[k].y + r * sp + sp / 2;
+          // the same colour the sharp picture arrives in, so the swap does not jump
+          C2[n * 3] = px[q] / 255 * 0.92;
+          C2[n * 3 + 1] = px[q + 1] / 255 * 0.92;
+          C2[n * 3 + 2] = px[q + 2] / 255 * 0.92;
+          S[n * 4 + 3] = k;
+          n++;
+        }
+      }
+
+      // shape 0 — the name
+      var tc = document.createElement('canvas'); tc.width = W; tc.height = H;
+      var tctx = tc.getContext('2d', { willReadFrequently: true });
+      var lines = mobile ? ['Hi! I’m', 'Yurii'] : ['Hi! I’m Yurii'];
+      tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
+      tctx.fillStyle = '#fff';
+      tctx.font = '700 100px Inter, sans-serif';
+      var widest = Math.max.apply(null, lines.map(function (l) { return tctx.measureText(l).width; }));
+      var fs = Math.min(100 * (W * (mobile ? 0.84 : 0.76)) / widest, H * (mobile ? 0.2 : 0.3));
+      tctx.font = '700 ' + fs + 'px Inter, sans-serif';
+      var lh = fs * 0.98, cy = H * (mobile ? 0.34 : 0.4);
+      lines.forEach(function (l, i) { tctx.fillText(l, W / 2, cy + (i - (lines.length - 1) / 2) * lh); });
+      var td = tctx.getImageData(0, 0, W, H).data, cand = [];
+      for (var yy = 0; yy < H; yy += 2) for (var xx = 0; xx < W; xx += 2) if (td[(yy * W + xx) * 4 + 3] > 128) cand.push(xx, yy);
+      var cn = cand.length / 2;
+
+      for (var i = 0; i < TOTAL; i++) {
+        R[i * 4] = Math.random(); R[i * 4 + 1] = Math.random(); R[i * 4 + 2] = Math.random(); R[i * 4 + 3] = Math.random();
+        if (i >= N) {
+          // dust
+          P0[i * 2] = (Math.random() - 0.5) * W; P0[i * 2 + 1] = (Math.random() - 0.5) * H;
+          var dl = 0.12 + Math.random() * 0.22;
+          C0[i * 3] = 0.7 * dl; C0[i * 3 + 1] = 0.8 * dl; C0[i * 3 + 2] = 0.95 * dl;
+          S[i * 4 + 3] = -1;
+          continue;
+        }
+        var j = Math.floor(Math.random() * cn) * 2;
+        P0[i * 2] = cand[j] - W / 2 + (Math.random() - 0.5) * 2.4;
+        P0[i * 2 + 1] = cand[j + 1] - H / 2 + (Math.random() - 0.5) * 2.4;
+        var b = 0.55 + Math.random() * 0.45;
+        C0[i * 3] = 0.82 * b; C0[i * 3 + 1] = 0.86 * b; C0[i * 3 + 2] = 0.95 * b;
+
+        // shape 1 — strata, thicker at each layer's centre line
+        var L = Math.floor(Math.random() * STRATA.length);
+        var x1 = (Math.random() - 0.5) * W * 1.15;
+        var y1 = strataY(x1, L) + (Math.random() + Math.random() + Math.random() - 1.5) * (H * 0.4 / STRATA.length) * 0.34;
+        P1[i * 2] = x1; P1[i * 2 + 1] = y1;
+        var col = hex(STRATA[L]), lb = 0.35 + Math.random() * 0.4;
+        C1[i * 3] = col[0] * lb; C1[i * 3 + 1] = col[1] * lb; C1[i * 3 + 2] = col[2] * lb;
+
+        // shape 3 — fibonacci sphere
+        var yS = 1 - (i / (N - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323;
+        S[i * 4] = Math.cos(th) * rad; S[i * 4 + 1] = yS; S[i * 4 + 2] = Math.sin(th) * rad;
+      }
+
+      var data = { aP0: P0, aP1: P1, aP2: P2, aS: S, aC0: C0, aC1: C1, aC2: C2, aR: R };
+      Object.keys(data).forEach(function (k2) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[k2]);
+        gl.bufferData(gl.ARRAY_BUFFER, data[k2], gl.STATIC_DRAW);
+      });
+
+      setDpr(window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2));
+      gl.uniform2f(U.uRes, W, H);
+      gl.uniform1f(U.uSp, sp);
+      gl.uniform1f(U.uR, Math.min(W, H) * (mobile ? 0.36 : 0.27));
+      gl.uniform1f(U.uFall, H * 0.12);
+      // more points overlap more; keep the name and the strata from burning out
+      gl.uniform1f(U.uDim, Math.pow(Math.min(1, 40000 / N), 0.75));
+      gl.uniform4f(U.uCenA, layout[0].cx, layout[0].cy, layout[1].cx, layout[1].cy);
+      gl.uniform4f(U.uCenB, layout[2].cx, layout[2].cy, layout[3].cx, layout[3].cy);
+      gl.uniform2f(U.uCov, cov.w, cov.h);
+      coverTextures(images);
+      gl.useProgram(prog);
+      gl.uniform1f(U.uFly, reduce ? 0 : 1);
+      gl.uniform1f(U.uPush, reduce ? 0 : 1);
+
+      placeTags();
+    }
+
+    // ——— the case labels sit under their covers ———
+    var capWork = document.getElementById('capWork');
+    var hover = -1;
+    var tags = CASES.map(function (c, k) {
+      var a = document.createElement('a');
+      a.className = 'tag'; a.href = c.href;
+      a.innerHTML = '<span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) + '</span></b><small>' + c.line + '</small></span><em>View case →</em>';
+      a.addEventListener('mouseenter', function () { hover = k; });
+      a.addEventListener('mouseleave', function () { hover = -1; });
+      a.addEventListener('focus', function () { hover = k; });
+      a.addEventListener('blur', function () { hover = -1; });
+      a.addEventListener('click', function (e) { e.preventDefault(); go(k); });
+      capWork.appendChild(a);
+      return a;
+    });
+    function placeTags() {
+      layout.forEach(function (r, k) {
+        tags[k].style.left = (W / 2 + r.x) + 'px';
+        tags[k].style.top = (H / 2 + r.y + r.h) + 'px';
+        tags[k].style.width = r.w + 'px';
+      });
+      document.getElementById('workTitle').style.top = (H / 2 + layout[0].y - (W < 760 ? 48 : 58)) + 'px';
+    }
+
+    // ——— labels riding the strata ———
+    var slWrap = document.getElementById('strataLabels');
+    var sls = LABELS.map(function (l) {
+      var el = document.createElement('div');
+      el.className = 'sl';
+      el.style.color = STRATA[l.layer];
+      el.innerHTML = '<i></i><span>' + l.text + ' <b>· ' + l.note + '</b></span>';
+      slWrap.appendChild(el);
+      return el;
+    });
+    function strataLabels(stage, t) {
+      var near = Math.max(0, 1 - Math.abs(stage - 1) / 0.35);
+      LABELS.forEach(function (l, i) {
+        var x = l.x * W;
+        if (W < 760) x = (i % 2 ? -0.38 : -0.42) * W;
+        var y = strataY(x, l.layer) + Math.sin(x * 0.0045 + t * 0.55 + 0.3) * 7 + Math.sin(x * 0.011 - t * 0.4) * 3;
+        // each label waits its turn, top layer first
+        var o = Math.max(0, Math.min(1, near * 1.8 - i * 0.16));
+        put(sls[i], 'opacity', o.toFixed(3));
+        if (o > 0) put(sls[i], 'transform', 'translate(' + (W / 2 + x - 3.5).toFixed(1) + 'px,' + (H / 2 + y - 10).toFixed(1) + 'px) translateX(' + ((1 - o) * -12).toFixed(1) + 'px)');
+      });
+    }
+
+    // ——— scroll ———
+    function stageAt(s) {
+      for (var i = 1; i < KEYS.length; i++) if (s <= KEYS[i][0]) {
+        var a = KEYS[i - 1], b = KEYS[i], f = (s - a[0]) / (b[0] - a[0] || 1);
+        return a[1] + (b[1] - a[1]) * f;
+      }
+      return 3;
+    }
+    // read once and on resize, not every frame: a layout read after style writes forces a reflow
+    var maxS;
+    function measureScroll() {
+      maxS = document.documentElement.scrollHeight - innerHeight;
+    }
+    measureScroll();
+    addEventListener('resize', measureScroll);
+    function maxScroll() { return maxS; }
+    // a phone keeps its own scroll: iOS momentum is smoother than anything layered on it
+    var touch = window.Perf && Perf.touch;
+    var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.18 }) : null;
+    function scrollToStage(k, dur) {
+      var y = STOPS[k] * maxScroll();
+      if (lenis) lenis.scrollTo(y, { duration: dur || 1.2, easing: function (x) { return 1 - Math.pow(1 - x, 3); } });
+      else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+    }
+    document.querySelectorAll('[data-stage]').forEach(function (el) {
+      el.addEventListener('click', function (e) { e.preventDefault(); scrollToStage(+el.dataset.stage); });
+    });
+    // never leave the reader mid-morph: once scrolling stops, settle on the nearest shape
+    // (under a wheel only: a phone is left where the thumb put it — see Perf.whenStill)
+    function settleNow() {
+      var p = stageAt((lenis ? lenis.animatedScroll : scrollY) / maxScroll());
+      if (Math.abs(p - Math.round(p)) < 0.02) return;
+      scrollToStage(Math.round(p), 0.7);
+    }
+    var settle, scheduleSettle = window.Perf ? Perf.whenStill(settleNow) : function () { clearTimeout(settle); settle = setTimeout(settleNow, 380); };
+    if (lenis) lenis.on('scroll', scheduleSettle); else addEventListener('scroll', scheduleSettle, { passive: true });
+    addEventListener('keydown', function (e) {
+      if (e.target.closest('input, textarea')) return;
+      var cur = Math.round(stageAt((lenis ? lenis.animatedScroll : scrollY) / maxScroll()));
+      if (['ArrowDown', 'PageDown', ' '].indexOf(e.key) >= 0) { e.preventDefault(); scrollToStage(Math.min(3, cur + 1)); }
+      if (['ArrowUp', 'PageUp'].indexOf(e.key) >= 0) { e.preventDefault(); scrollToStage(Math.max(0, cur - 1)); }
+      if (e.key === 'Home') { e.preventDefault(); scrollToStage(0); }
+      if (e.key === 'End') { e.preventDefault(); scrollToStage(3); }
+    });
+
+    // ——— pointer ———
+    // on: how strongly the cursor (or a finger) parts the field; it fades where the pointer left
+    var mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, vx: 0, on: 0, want: 0 };
+    var ring = document.getElementById('ring'), ringPos = { x: 0, y: 0, tx: 0, ty: 0 };
+    addEventListener('pointermove', function (e) {
+      mouse.tx = e.clientX - W / 2; mouse.ty = e.clientY - H / 2;
+      // back after a lift: start from here, not from where the last touch ended
+      if (mouse.on < 0.05) { mouse.x = mouse.tx; mouse.y = mouse.ty; }
+      mouse.want = 1;
+      ringPos.tx = e.clientX; ringPos.ty = e.clientY;
+      if (e.pointerType === 'mouse' && !goState) ring.style.opacity = 1;
+    });
+    function away() { mouse.want = 0; ring.style.opacity = 0; }
+    document.addEventListener('pointerleave', away);
+    addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') away(); });
+    addEventListener('pointercancel', away);
+
+    var hov = [0, 0, 0, 0], any = 0, stage = 0;
+    function coverAt(x, y) {
+      for (var k = 0; k < layout.length; k++) {
+        var r = layout[k];
+        if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
+      }
+      return -1;
+    }
+    addEventListener('pointermove', function (e) {
+      if (e.target.closest('.tag')) return;
+      var onCover = Math.abs(stage - 2) < 0.15 ? coverAt(e.clientX - W / 2, e.clientY - H / 2) : -1;
+      hover = onCover;
+      var onLink = !!e.target.closest('a, button');
+      ring.classList.toggle('big', onCover >= 0);
+      ring.style.borderColor = onLink && onCover < 0 ? 'rgba(238,240,246,.9)' : '';
+      document.body.style.cursor = onCover >= 0 ? 'pointer' : '';
+    });
+    var wave = { x: 0, y: 0, t: -10 };
+    // a tap rather than a click: iOS sends no click up to the window from a plain block over the canvas
+    var down = null;
+    addEventListener('pointerdown', function (e) { down = { x: e.clientX, y: e.clientY, t: e.timeStamp }; });
+    addEventListener('pointercancel', function () { down = null; });
+    addEventListener('pointerup', function (e) {
+      var d = down; down = null;
+      if (!d || Math.abs(e.clientX - d.x) > 10 || Math.abs(e.clientY - d.y) > 10 || e.timeStamp - d.t > 600) return;
+      if (e.target.closest('a, button, .dir-switch')) return;
+      if (Math.abs(stage - 2) < 0.15) {
+        var k = coverAt(e.clientX - W / 2, e.clientY - H / 2);
+        if (k >= 0) { go(k); return; }
+      }
+      if (!reduce) wave = { x: e.clientX - W / 2, y: e.clientY - H / 2, t: (performance.now() - t0) / 1000 };
+    });
+
+    // ——— into a case: the chosen cover fills the screen, the rest scatter ———
+    var goState = null;
+    function go(k) {
+      if (goState) return;
+      if (Math.abs(stage - 2) > 0.15) { location.href = CASES[k].href; return; }
+      goState = { k: k, start: performance.now() };
+      // the cover leaves the canvas as a box that grows to fill the screen (handoff.js);
+      // drawCovers stops drawing it, and the case page picks up from the last frame
+      var r = layout[k], sc = 1 + 0.04 * hov[k], hw = r.w / 2 * sc, hh = r.h / 2 * sc;
+      if (window.Handoff) Handoff.leave(images[k], { x: W / 2 + r.cx - hw, y: H / 2 + r.cy - hh, w: hw * 2, h: hh * 2 },
+        { lit: Math.min(1.15, 0.28 + 0.92 * hov[k] + (1 - any) * 0.72), done: function () { leaveFor(k); } });
+      hover = k;
+      ring.style.opacity = 0;
+    }
+    // the case page picks up from the last frame: the picture already fills the screen
+    // (only the Halliburton case has the landing so far)
+    function leaveFor(k) {
+      if (!goState || goState.left) return;
+      goState.left = true;
+      if (CASES[k].href.indexOf('halliburton.html') >= 0) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
+      location.href = CASES[k].href;
+    }
+    addEventListener('pageshow', function (e) { if (e.persisted) { goState = null; gl.uniform1f(U.uGo, 0); } });
+    // a handle for checking the page from the console
+    window.__matter = { stage: function () { return stage; }, goState: function () { return goState; }, coverAt: function (x, y) { return coverAt(x - W / 2, y - H / 2); } };
+    if (window.Perf) Perf.info = function () { return 'stage ' + stage.toFixed(2) + '  y ' + Math.round(scrollY) + (goState ? '  go ' + goState.k : ''); };
+
+    var caps = [].slice.call(document.querySelectorAll('[data-cap]'));
+    var meter = [].slice.call(document.querySelectorAll('#meter button'));
+    function captions(p) {
+      caps.forEach(function (el) {
+        var i = +el.dataset.cap, d = Math.abs(p - i);
+        var o = Math.max(0, 1 - d / 0.22);
+        if (goState) o *= 1 - Math.min(1, (performance.now() - goState.start) / 300);
+        put(el, 'opacity', o.toFixed(3));
+        put(el, 'visibility', o > 0.01 ? 'visible' : 'hidden');
+        put(el, 'transform', reduce || o < 0.01 ? '' : 'translateY(' + ((p - i) * -40).toFixed(1) + 'px)');
+        put(el, 'pointerEvents', o > 0.6 ? '' : 'none');
+      });
+      var on = Math.round(p);
+      meter.forEach(function (m, i) { m.classList.toggle('on', i === on); });
+    }
+
+    var t0 = performance.now(), intro = reduce ? 1 : 0, introStart = null, rotY = 0, rotX = 0.35;
+    var lastNow = performance.now();
+    function frame(rafNow) {
+      if (lenis) lenis.raf(rafNow);
+      var now = performance.now(), dt = Math.min(50, now - lastNow);
+      if (window.Perf) Perf.frame(now - lastNow);
+      lastNow = now;
+      var t = (now - t0) / 1000;
+      var max = maxScroll();
+      var s = max > 0 ? Math.min(1, Math.max(0, (lenis ? lenis.animatedScroll : scrollY) / max)) : 0;
+      stage = window.Perf ? Perf.follow(stage, stageAt(s), dt) : stageAt(s);
+      // by the clock, not per frame, so a slow device still finishes it in time
+      if (introStart === null) introStart = now;
+      if (!reduce) intro = Math.min(1, (now - introStart) / 1800);
+      var p = Math.min(2.9999, stage);
+
+      mouse.x += (mouse.tx - mouse.x) * 0.15; mouse.y += (mouse.ty - mouse.y) * 0.15;
+      mouse.on += (mouse.want - mouse.on) * 0.12;
+      ringPos.x += (ringPos.tx - ringPos.x) * 0.22; ringPos.y += (ringPos.ty - ringPos.y) * 0.22;
+      ring.style.transform = 'translate(' + ringPos.x + 'px,' + ringPos.y + 'px)';
+      any = 0;
+      for (var k = 0; k < 4; k++) { hov[k] += ((hover === k ? 1 : 0) - hov[k]) * 0.12; any = Math.max(any, hov[k]); }
+      tags.forEach(function (tg, k) { tg.classList.toggle('on', hover === k); });
+
+      // the globe drifts on its own and leans toward the cursor
+      var mx = mouse.tx < -9000 ? 0 : mouse.tx / W, my = mouse.ty < -9000 ? 0 : mouse.ty / H;
+      rotY += 0.003 + mx * 0.02;
+      rotX += ((0.35 + my * 0.9) - rotX) * 0.05;
+
+      var g = 0;
+      if (goState) {
+        g = Math.min(1, (now - goState.start) / (reduce ? 300 : 1100));
+        // the case page picks up from this frame: the cover already fills the screen
+        if (g >= 1) leaveFor(goState.k);
+      }
+
+      gl.uniform1f(U.uP, p);
+      gl.uniform1f(U.uT, t);
+      gl.uniform2f(U.uMouse, mouse.x, mouse.y); gl.uniform1f(U.uPush, reduce ? 0 : mouse.on);
+      gl.uniform4f(U.uHov, hov[0], hov[1], hov[2], hov[3]);
+      gl.uniform1f(U.uAny, any);
+      gl.uniform1f(U.uIn, intro);
+      gl.uniform1f(U.uRotY, rotY);
+      gl.uniform1f(U.uRotX, rotX);
+      gl.uniform1f(U.uScroll, s);
+      gl.uniform1f(U.uGo, g);
+      // with the hand-off box carrying the picture, the chosen cover's points scatter with the rest
+      gl.uniform1f(U.uGoI, goState && !window.Handoff ? goState.k : -9);
+      gl.uniform3f(U.uWave, wave.x, wave.y, wave.t);
+      gl.clearColor(0.027, 0.031, 0.043, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.POINTS, 0, TOTAL);
+      drawCovers(p, g, goState ? goState.k : -1);
+      captions(stage);
+      strataLabels(stage, t);
+      requestAnimationFrame(frame);
+    }
+
+    // ——— load ———
+    var done = 0, pct = document.getElementById('loadPct');
+    function tick() { done++; pct.textContent = Math.round(done / 5 * 100); }
+    var images = CASES.map(function (c) {
+      var im = new Image(); im.src = c.img;
+      return im;
+    });
+    Promise.all([
+      (document.fonts ? document.fonts.load('700 200px Inter') : Promise.resolve()).then(tick),
+      // load, not decode(): decode() can sit unresolved while the tab is in the background
+      Promise.all(images.map(function (im) {
+        return new Promise(function (res, rej) {
+          if (im.complete && im.naturalWidth) return res();
+          im.onload = res; im.onerror = rej;
+        }).then(tick);
+      }))
+    ]).then(function () {
+      build(images);
+      var l = document.getElementById('loading'); l.style.opacity = 0; setTimeout(function () { l.remove(); }, 800);
+      requestAnimationFrame(frame);
+      // a phone's toolbar sliding away changes the height by a little; only rebuild for a real resize
+      var to, lastW = innerWidth, lastH = innerHeight;
+      addEventListener('resize', function () {
+        if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return;
+        lastW = innerWidth; lastH = innerHeight;
+        clearTimeout(to); to = setTimeout(function () { build(images); }, 200);
+      });
+    }).catch(function () { document.documentElement.classList.add('no-gl'); });
+  })();
+  </script>
+</body>
+</html>

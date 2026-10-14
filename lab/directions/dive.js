@@ -6,7 +6,7 @@
 // clickable the whole way. A planet at the end.
 (function () {
   var CASES = [
-    { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth&from=dive' },
+    { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth' },
     { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669']] },
     { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353'], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc']] },
     { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/']] }
@@ -61,7 +61,7 @@
     'precision highp float;',
     'attribute vec3 aPos; attribute vec3 aCol; attribute vec4 aInfo; attribute vec3 aAlt;',
     'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uMaxSize, uIn, uStage, uFly, uScroll, uDim;',
-    'uniform vec2 uRes, uMouse; uniform vec3 uWave, uGlobe; uniform vec2 uGlobeRot;',
+    'uniform vec2 uRes, uMouse; uniform float uMouseOn; uniform vec3 uWave, uGlobe; uniform vec2 uGlobeRot;',
     'varying vec3 vC; varying float vA; varying float vSoft;',
     'void main(){',
     '  float kind = aInfo.x, grp = aInfo.y, rnd = aInfo.z, rnd2 = aInfo.w;',
@@ -117,7 +117,7 @@
     '    size = min(size, uMaxSize);',
     '  }',
     // the cursor parts the field and a click sends a ring through it, as in Matter
-    '  vec2 dm = s - uMouse; float push = smoothstep(150.0, 0.0, length(dm));',
+    '  vec2 dm = s - uMouse; float push = smoothstep(150.0, 0.0, length(dm)) * uMouseOn;',
     '  s += normalize(dm + 0.0001) * push * 46.0;',
     '  float age = uT - uWave.z; vec2 dw = s - uWave.xy;',
     '  float ring = exp(-pow((length(dw) - age * 900.0) / 60.0, 2.0)) * max(0.0, 1.0 - age / 1.3);',
@@ -233,7 +233,7 @@
         return p;
       }
       prog = link(VS, FS); qprog = link(QVS, QFS);
-      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uScroll', 'uDim', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
+      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uScroll', 'uDim', 'uRes', 'uMouse', 'uMouseOn', 'uWave', 'uGlobe', 'uGlobeRot']
         .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       ['aPos', 'aCol', 'aInfo', 'aAlt'].forEach(function (n) { buffers[n] = gl.createBuffer(); A[n] = gl.getAttribLocation(prog, n); });
       ['uView', 'uProj', 'uNormal', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize', 'uTop'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
@@ -418,6 +418,7 @@
       gl.uniform1f(U.uT, env.t); gl.uniform1f(U.uFocus, focus); gl.uniform1f(U.uIn, inn); gl.uniform1f(U.uStage, stage);
       gl.uniform1f(U.uScroll, env.s * DUST_K);
       gl.uniform2f(U.uMouse, env.reduce ? -9999 : env.mouse.x, env.mouse.y);
+      gl.uniform1f(U.uMouseOn, env.reduce ? 0 : env.mouse.p);
       gl.uniform3f(U.uWave, env.wave.x, env.wave.y, env.wave.t);
       gl.uniform2f(U.uGlobeRot, this.rot, 0.35 + this.my * 0.4);
       gl.clearColor(0.027, 0.031, 0.043, 1); gl.clear(gl.COLOR_BUFFER_BIT);

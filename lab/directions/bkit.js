@@ -24,7 +24,7 @@
       W: innerWidth, H: (window.Perf ? Perf.vh() : innerHeight), mobile: innerWidth < 760, reduce: reduce,
       dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2),
       t: 0, dt: 16.7, s: 0, stage: 0,
-      mouse: { x: -9999, y: -9999, vx: 0, vy: 0, on: 0 },
+      mouse: { p: 0, x: -9999, y: -9999, vx: 0, vy: 0, on: 0 },
       hover: -1, hov: [0, 0, 0, 0], any: 0,
       go: -1, g: 0, wave: { x: 0, y: 0, t: -10 },
       tags: null, cases: CASES
@@ -227,9 +227,11 @@
       env.stage = window.Perf && !(R.free && R.free(target)) ? Perf.follow(env.stage, target, env.dt) : target;
 
       var m = env.mouse, k = Math.min(1, env.dt / 16.7);
+      // p: is a pointer there at all — full while a mouse is on the page or a finger is down, gone soon after a lift
+      m.p += ((tx < -9000 ? 0 : 1) - m.p) * 0.12 * k;
       if (tx < -9000) { m.on += (0 - m.on) * 0.1 * k; }
       else {
-        if (m.x < -9000) { m.x = tx; m.y = ty; }
+        if (m.x < -9000 || m.p < 0.05) { m.x = tx; m.y = ty; }
         var nx = m.x + (tx - m.x) * 0.35 * k, ny = m.y + (ty - m.y) * 0.35 * k;
         m.vx = nx - m.x; m.vy = ny - m.y; m.x = nx; m.y = ny;
         m.on += ((now - lastMove < 1200 ? 1 : 0.4) - m.on) * 0.1 * k;
