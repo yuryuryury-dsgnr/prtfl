@@ -1,9 +1,9 @@
 // Dive: Matter's opening and Depth's flight in one world.
 // The greeting is drawn in points on the screen's own plane, crisp, as in Matter, with Matter's
 // dust drifting behind it. The first scroll pours the letters down into a cut-away block of
-// strata, and the camera dives through the block to the work: four wide pictures in a column.
-// First the top of it, then the camera travels down, standing square to each in turn and easing
-// back a little between them. A planet at the end.
+// strata, and the camera dives through the block to the work: four wide pictures in a column
+// that then scrolls like a page, one to one with the finger or the wheel, every case readable and
+// clickable the whole way. A planet at the end.
 (function () {
   var CASES = [
     { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth&from=dive' },
@@ -19,21 +19,35 @@
     { layer: 6, x: 0.15, text: 'Research', note: '10 participants across 4 roles' },
     { layer: 7, x: -0.05, text: 'Pipeline', note: 'Figma MCP · live specs' }
   ];
-  // stages: 0 hello · 1 layers · 2 the work, all four · 3–6 each case · 7 contact
-  var ROW = 2, CASE0 = 3, LAST = 7;
+  // stages: 0 hello · 1 layers · 2 the top of the work · 3 its bottom · 4 contact.
+  // Between 2 and 3 the column scrolls like a page: no stops, nothing settles there
+  var ROW = 2, END = 3, LAST = 4;
   // where things sit along the flight
   var Z_STRATA_FRONT = -1300, Z_STRATA_BACK = -2300, BLOCK_X = 900;
   // where the row hangs
   var Z_ROW = -5200;
 
-  // the scroll track, in screens: a short hold at each stop, longer runs where the flight is long
-  var RUNS = [1.2, 1.7, 0.9, 0.8, 0.8, 0.8, 1.3], HOLD = 0.45, LEAD = 0.12;
+  // the column's layout, worked out here (before the shell measures the track) so the scroll
+  // through it can be one to one: a screen of scroll moves the column a screen
+  var W0 = innerWidth, H0 = window.Perf ? Perf.vh() : innerHeight, MOB = W0 < 760, F0 = H0 * 0.96;
+  var COL = (function () {
+    var cw = MOB ? W0 * 0.9 : Math.min(W0 * 0.58, H0 * 0.62 * 1.6, 1100), ch = cw / (MOB ? 1.3 : 1.6);
+    var gap = ch * (MOB ? 0.3 : 0.24);
+    // the distance at which a picture takes this much of the screen's width
+    var d = F0 * cw / (W0 * (MOB ? 0.92 : 0.46));
+    var k = F0 / d; // world to screen
+    // the camera's height with the first picture's top at 22% of the screen, and with the last one's bottom at 74%
+    var top = -(H0 * 0.5 - H0 * 0.22) / k + ch / 2, bottom = -3 * (ch + gap) - ch / 2 + (H0 * 0.74 - H0 * 0.5) / k;
+    return { cw: cw, ch: ch, gap: gap, d: d, top: top, bottom: bottom, run: (top - bottom) * k / H0 };
+  })();
+  // the scroll track, in screens: a short hold where a shape is read, none through the column
+  var RUNS = [1.2, 1.7, COL.run, 1.3], HOLDS = [0.45, 0, 0.2], LEAD = 0.12;
   var keys = [[0, 0]], stops = [0], pos = LEAD;
   keys.push([pos, 0]);
   RUNS.forEach(function (r, i) {
     pos += r; keys.push([pos, i + 1]);
     stops.push(pos);
-    if (i + 1 < LAST) { pos += HOLD; keys.push([pos, i + 1]); }
+    if (i + 1 < LAST && HOLDS[i]) { pos += HOLDS[i]; keys.push([pos, i + 1]); }
   });
   var TOTAL = pos;
   // Matter's dust slides about a screen per screen of its own track; this one is longer
@@ -46,12 +60,12 @@
   var VS = [
     'precision highp float;',
     'attribute vec3 aPos; attribute vec3 aCol; attribute vec4 aInfo; attribute vec3 aAlt;',
-    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uMaxSize, uIn, uStage, uFly, uScroll;',
+    'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uMaxSize, uIn, uStage, uFly, uScroll, uDim;',
     'uniform vec2 uRes, uMouse; uniform vec3 uWave, uGlobe; uniform vec2 uGlobeRot;',
-    'varying vec3 vC; varying float vA;',
+    'varying vec3 vC; varying float vA; varying float vSoft;',
     'void main(){',
     '  float kind = aInfo.x, grp = aInfo.y, rnd = aInfo.z, rnd2 = aInfo.w;',
-    '  vec3 p = aPos; vec3 col = aCol; float lit = 1.0, base = 1.6 + rnd * 1.2, bk = 1.0, a0 = 1.0, intro = uIn;',
+    '  vec3 p = aPos; vec3 col = aCol; float lit = 1.0, base = 1.6 + rnd * 1.2, bk = 1.0, a0 = 1.0, intro = uIn; vSoft = 0.0;',
     '  if (kind < 0.5) { lit = 0.55 + 0.45 * sin(uT * (0.5 + rnd * 2.0) + rnd * 30.0); }',
     '  else if (kind < 1.5) {',
     // the greeting: on load it condenses out of a scatter; the first scroll pours it into the strata
@@ -64,8 +78,10 @@
     '    float fly = sin(t * 3.14159) * uFly;',
     '    p.xy += (vec2(rnd, fract(rnd * 7.13 + rnd2)) - 0.5) * 320.0 * fly;',
     '    p.y -= fly * 300.0 * rnd2;',
-    '    col = mix(vec3(0.84, 0.88, 0.97) * (0.72 + 0.28 * rnd), aCol, t);',
-    '    base = mix(1.7, base, t); bk = t; intro = 1.0;',
+    // Matter's letters: fine soft grains, their brightness spread wide
+    // (dimmed by their number, as Matter does, so many overlapping grains stay grey rather than burn white)
+    '    col = mix(vec3(0.82, 0.86, 0.95) * (0.55 + 0.45 * rnd) * uDim, aCol, t);',
+    '    base = mix(1.7, base, t); bk = t; intro = 1.0; vSoft = 1.0 - t;',
     '  }',
     '  else if (kind < 2.5) {',
     // the rest of the strata fills in as the letters land
@@ -73,7 +89,7 @@
     '    a0 = smoothstep(0.35, 0.95, uStage);',
     '  }',
     '  else if (kind < 3.5) {',
-    '    a0 = smoothstep(5.9, 6.5, uStage);',
+    '    a0 = smoothstep(3.08, 3.55, uStage);',
     '    vec3 d = p - uGlobe; float ga = uGlobeRot.x;',
     '    d = vec3(d.x * cos(ga) + d.z * sin(ga), d.y, -d.x * sin(ga) + d.z * cos(ga));',
     '    float gb = uGlobeRot.y; d = vec3(d.x, d.y * cos(gb) - d.z * sin(gb), d.y * sin(gb) + d.z * cos(gb));',
@@ -113,9 +129,10 @@
   ].join('\n');
   var FS = [
     'precision mediump float;',
-    'varying vec3 vC; varying float vA;',
+    'varying vec3 vC; varying float vA; varying float vSoft;',
     'void main(){',
-    '  float m = 1.0 - smoothstep(0.36, 0.5, length(gl_PointCoord - 0.5));',
+    '  float r = length(gl_PointCoord - 0.5);',
+    '  float m = mix(1.0 - smoothstep(0.36, 0.5, r), 1.0 - smoothstep(0.2, 0.5, r), vSoft);',
     '  gl_FragColor = vec4(vC * m, vA * m);',
     '}'
   ].join('\n');
@@ -180,13 +197,10 @@
     });
   }
   function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
-  // the row comes up out of the dark after the dive, and lets go after the last case
-  function shown(stage) { return smooth((stage - 1.45) / 0.45) * (1 - smooth((stage - (LAST - 0.7)) / 0.35)); }
-  // how far the camera is from the overview, and from standing square to case k
-  function atRow(stage) { return 1 - smooth((Math.abs(stage - ROW) - 0.08) / 0.2); }
-  function atCase(stage, k) { return 1 - smooth((Math.abs(stage - (CASE0 + k)) - 0.1) / 0.18); }
-  // which case a click can open: any of them in the overview, the one in front of the camera after
-  function openable(stage, k) { return Math.abs(stage - ROW) < 0.12 || Math.abs(stage - (CASE0 + k)) < 0.14; }
+  // the column comes up out of the dark after the dive, and lets go on the way to the planet
+  function shown(stage) { return smooth((stage - 1.45) / 0.45) * (1 - smooth((stage - (END + 0.04)) / 0.16)); }
+  // every case can be opened the whole time the column is up
+  function openable(stage) { return shown(stage) > 0.9; }
 
   var renderer = {
     init: function () {
@@ -204,7 +218,7 @@
         return p;
       }
       prog = link(VS, FS); qprog = link(QVS, QFS);
-      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uScroll', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
+      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uScroll', 'uDim', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
         .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       ['aPos', 'aCol', 'aInfo', 'aAlt'].forEach(function (n) { buffers[n] = gl.createBuffer(); A[n] = gl.getAttribLocation(prog, n); });
       ['uView', 'uProj', 'uNormal', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
@@ -255,7 +269,7 @@
       var stars = mobile ? 3000 : 9000;
       for (i = 0; i < stars; i++) { var l = 0.25 + R() * 0.5; put((R() - 0.5) * 7000, (R() - 0.5) * 4200, 900 - R() * 13000, [l * 0.8, l * 0.88, l], 0); }
       // the greeting, each point with a place waiting for it in the strata
-      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = mobile ? 20000 : 60000;
+      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = mobile ? 30000 : 110000;
       for (i = 0; i < names; i++) {
         var j = Math.floor(R() * gn) * 2, sp0 = strataPoint(false);
         put(sp0.p[0], sp0.p[1], sp0.p[2], sp0.c, 1, sp0.g, [g[j] - W / 2 + (R() - 0.5) * 2, H / 2 - g[j + 1] + (R() - 0.5) * 2, 0]);
@@ -265,15 +279,12 @@
       for (i = 0; i < extra; i++) { var sp1 = strataPoint(true); put(sp1.p[0], sp1.p[1], sp1.p[2], sp1.c, 2, sp1.g); }
 
       // the work: four wide pictures in a column, read top to bottom
-      var cw = mobile ? W * 0.84 : Math.min(W * 0.58, H * 0.62 * 1.6, 1100), ch = cw / (mobile ? 1.3 : 1.6);
-      var gap = ch * (mobile ? 0.36 : 0.24), dpr = Math.min(2, env.dpr || 1), y0 = mobile ? -H * 0.035 : 0;
-      // the overview stands back far enough to show the first two whole
-      var dOv = (2 * ch + gap) * F / (H * (mobile ? 0.66 : 0.68));
-      this.size = [cw, ch]; this.y0 = y0;
+      var cw = COL.cw, ch = COL.ch, gap = COL.gap, dpr = Math.min(2, env.dpr || 1);
+      this.size = [cw, ch];
       this.cases = [];
       for (var k = 0; k < 4; k++) {
         var ax = [1, 0, 0], nrm = [0, 0, 1];
-        var c = [0, y0 - k * (ch + gap), Z_ROW];
+        var c = [0, -k * (ch + gap), Z_ROW];
         // the picture cropped to the plane, at the size it will be seen up close
         var img = images[k], ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
         var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
@@ -323,22 +334,19 @@
       gl.uniform1f(U.uNear, F * 0.35);
       gl.uniform3f(U.uGlobe, gc[0], gc[1], gc[2]);
       gl.uniform1f(U.uFly, env.reduce ? 0 : 1);
+      gl.uniform1f(U.uDim, Math.pow(Math.min(1, 40000 / names), 0.75));
 
-      // the flight: a station per stage, and one more inside the block, between its layers.
-      // At the work the camera sees the whole row; at a case it stands square to it, at the distance that shows it whole
-      var lift = mobile ? H * 0.03 : -H * 0.012, dist = F * (mobile ? 1.05 : 0.9), stations = [
+      // the flight: a station per stage, and one more inside the block, between its layers;
+      // through the work the camera only slides down the column
+      var stations = [
         { s: 0, e: [0, 0, F], t: [0, 0, 0], f: F },
         { s: 1, e: [-260, 250, -420], t: [0, -230, -1750], f: 1150 },
         { s: 1.5, e: [30, -232, -1180], t: [0, -236, -2600], f: 520 },
-        // the overview: the top of the column, the first two pictures
-        { s: ROW, e: [0, y0 - (ch + gap) * 0.5 - lift * 0.6, Z_ROW + dOv], t: [0, y0 - (ch + gap) * 0.5 - lift * 0.6, Z_ROW], f: dOv }
+        { s: ROW, e: [0, COL.top, Z_ROW + COL.d], t: [0, COL.top, Z_ROW], f: COL.d },
+        { s: END, e: [0, COL.bottom, Z_ROW + COL.d], t: [0, COL.bottom, Z_ROW], f: COL.d },
+        { s: LAST, e: [0, 0, Z_GLOBE + F * 1.5], t: [0, 0, Z_GLOBE], f: F * 1.5 }
       ];
-      this.cases.forEach(function (cs, k) {
-        var c2 = cs.center, n = cs.normal;
-        stations.push({ s: CASE0 + k, e: [c2[0] + n[0] * dist, c2[1] - lift, c2[2] + n[2] * dist], t: [c2[0], c2[1] - lift, c2[2]], f: dist });
-      });
-      stations.push({ s: LAST, e: [0, 0, Z_GLOBE + F * 1.5], t: [0, 0, Z_GLOBE], f: F * 1.5 });
-      this.stations = stations; this.dist = dist;
+      this.stations = stations;
       this.rot = this.rot || 0;
     },
     setDpr: function (env) {
@@ -349,7 +357,8 @@
     frame: function (env) {
       var W = env.W, H = env.H, S = this.stations, stage = Math.min(LAST, env.stage);
       // eased within each stage, then straight through any station inside it
-      var n = Math.min(LAST - 1, Math.floor(stage)), sE = n + smooth(stage - n);
+      // eased into and out of every station, except through the column, which moves with the scroll
+      var n = Math.min(LAST - 1, Math.floor(stage)), sE = n === ROW ? stage : n + smooth(stage - n);
       var i = 0; while (i < S.length - 2 && S[i + 1].s <= sE) i++;
       var f = Math.max(0, Math.min(1, (sE - S[i].s) / (S[i + 1].s - S[i].s)));
       // a spline through the dive, ending on the overview (no point past it, so no overshoot);
@@ -364,7 +373,6 @@
         t = S[i].t.map(function (v, m) { return v + (S[i + 1].t[m] - v) * f; });
       }
       var focus = st(i).f + (st(i + 1).f - st(i).f) * f;
-      if (sE > CASE0 && sE < CASE0 + 3) { var back = Math.sin(Math.PI * (sE - Math.floor(sE))) * this.dist * 0.45; e[2] += back; focus += back; }
       // the greeting gathers by the clock, so a slow phone still gets it in time
       if (this.introAt == null) this.introAt = performance.now();
       var inn = env.reduce ? 1 : Math.min(1, (performance.now() - this.introAt) / 1800);
@@ -399,10 +407,9 @@
       gl.blendFunc(gl.ONE, gl.ONE);
       gl.drawArrays(gl.POINTS, 0, count);
 
-      // the pictures, laid over the light. In the overview all four are lit; standing at one, its
-      // neighbours step back. Hovering lifts a picture and lets the others fall back a little,
-      // rather than lighting it up
-      var drew = false, sz = this.size, row = atRow(stage), vis = shown(stage);
+      // the pictures, laid over the light, all equally lit. Hovering lifts a picture and lets the
+      // others fall back a little, rather than lighting it up
+      var drew = false, sz = this.size, vis = shown(stage);
       for (var k = 0; k < 4; k++) {
         var q = vis;
         // once the hand-off box above the canvas has crossed in, the plane under it goes
@@ -418,11 +425,9 @@
           drew = true;
         }
         var h = env.hov[k], nm = this.cases[k].normal;
-        var near = Math.max(0, 1 - Math.abs(stage - (CASE0 + k)));
-        var dim = env.mobile ? 0.26 : 0.42, lit = stage <= ROW ? 1 : row + (1 - row) * (dim + (1 - dim) * near);
         gl.uniform3f(QU.uNormal, nm[0], nm[1], nm[2]);
         gl.uniform1f(QU.uLift, h * 22);
-        gl.uniform1f(QU.uLit, lit * (1 - 0.28 * (env.any - h)));
+        gl.uniform1f(QU.uLit, 1 - 0.28 * (env.any - h));
         gl.uniform1f(QU.uAlpha, q);
         gl.bindTexture(gl.TEXTURE_2D, planes[k].tex);
         gl.bindBuffer(gl.ARRAY_BUFFER, planes[k].buf);
@@ -451,24 +456,25 @@
         if (pts.some(function (p) { return !p; })) return null;
         var xs = pts.map(function (p) { return p.x; }), ys = pts.map(function (p) { return p.y; });
         var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-        return { x: x0, y: y0, w: x1 - x0, h: y1 - y0, bl: pts[2], br: pts[3], o: Math.max(row, atCase(stage, k2)) };
+        return { x: x0, y: y0, w: x1 - x0, h: y1 - y0, bl: pts[2], br: pts[3], o: vis };
       });
       env.tags = this.rects.map(function (r) {
         return r ? { x: r.bl.x, y: Math.max(r.bl.y, r.br.y), w: r.br.x - r.bl.x, top: r.y, o: r.o } : { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 };
       });
-      var up = 0;
-      for (var m2 = 0; m2 < 4; m2++) up = Math.max(up, this.rects[m2] ? this.rects[m2].o : 0);
+      // the section title belongs to the top of the column and leaves as it scrolls on
       var title = this.title || (this.title = document.querySelector('.work-title'));
-      var to = up.toFixed(2);
+      var to = (vis * (1 - smooth((stage - ROW - 0.02) / 0.1))).toFixed(2);
       if (title && title._o !== to) { title._o = to; title.style.opacity = to; }
     },
-    workAt: function (stage) { for (var k = 0; k < 4; k++) if (openable(stage, k)) return true; return false; },
+    workAt: function (stage) { return openable(stage); },
+    // through the column the scroll is a page's: nothing settles it and the picture keeps up with it
+    free: function (stage) { return stage > ROW - 0.03 && stage < END + 0.03; },
     coverRect: function (k) { var r = this.rects[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
     coverImage: function (k) { return images[k]; },
     coverAt: function (x, y) {
       for (var k = 0; k < 4; k++) {
         var r = this.rects && this.rects[k];
-        if (r && openable(env0.stage, k) && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
+        if (r && openable(env0.stage) && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
       }
       return -1;
     }

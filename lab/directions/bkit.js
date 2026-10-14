@@ -128,6 +128,8 @@
     // (under a wheel only: a phone is left where the thumb put it — see Perf.whenStill)
     function settleNow() {
       var p = stageAt(scrollPos() / maxScroll());
+      // a stretch the renderer scrolls like a page is left where it is
+      if (R.free && R.free(p)) return;
       if (Math.abs(p - Math.round(p)) < 0.02) return;
       scrollToStage(Math.round(p), 0.7);
     }
@@ -220,7 +222,9 @@
       env.t = (now - t0) / 1000;
       var max = maxScroll();
       env.s = max > 0 ? Math.min(1, Math.max(0, scrollPos() / max)) : 0;
-      env.stage = window.Perf ? Perf.follow(env.stage, stageAt(env.s), env.dt) : stageAt(env.s);
+      // on a phone a shape takes its time to catch up with a flick; a stretch scrolled like a page keeps up
+      var target = stageAt(env.s);
+      env.stage = window.Perf && !(R.free && R.free(target)) ? Perf.follow(env.stage, target, env.dt) : target;
 
       var m = env.mouse, k = Math.min(1, env.dt / 16.7);
       if (tx < -9000) { m.on += (0 - m.on) * 0.1 * k; }
