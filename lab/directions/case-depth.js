@@ -1,8 +1,7 @@
 // Depth, for a case page: one long 3D world with a station per chapter,
-// and the camera flies it as the text scrolls. The hero picture is a real
-// plane that first sits exactly under the picture on the page, then is left
-// behind. On a wide screen the lens is shifted so the world hangs to the
-// right of the text.
+// and the camera flies it as the text scrolls. The hero picture stays on the
+// page and scrolls away with it. On a wide screen the lens is shifted so the
+// world hangs to the right of the text.
 (function () {
   var VS = [
     'precision highp float;',
@@ -50,15 +49,13 @@
     '}'
   ].join('\n');
   var FS = 'precision mediump float; varying vec3 vC; void main(){ float r = length(gl_PointCoord - 0.5); gl_FragColor = vec4(vC * (1.0 - smoothstep(0.36, 0.5, r)), 1.0); }';
-  var QVS = 'attribute vec3 aPos; attribute vec2 aUv; uniform mat4 uView, uProj; varying vec2 vUv; void main(){ vUv = aUv; gl_Position = uProj * uView * vec4(aPos, 1.0); }';
-  var QFS = 'precision mediump float; uniform sampler2D uTex; uniform float uA; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(uTex, vUv).rgb * uA, uA); }';
 
   var PAL = [[0.56, 0.83, 1.0], [1.0, 0.82, 0.54], [0.72, 0.94, 0.79], [1.0, 0.62, 0.69], [1.0, 0.36, 0.33]];
   var TOK = ['#CC0000', '#FFFFFF', '#ECEFF0', '#D4DADD', '#7F878D', '#CFF0DD', '#0C7135', '#A94722', '#E3ECF7'];
   var Z = [0, -2200, -4400, -6400, -8400, -10400, -12400, -14400, -16400, -18400];
   var PC = [[-320, 200, -8300], [320, 200, -8500], [-320, -200, -8500], [320, -200, -8300]];
 
-  var gl, prog, qprog, U = {}, QU = {}, buf = {}, qbuf, qtex, count = 0, F = 800, keys = [], heroWorld = null, img;
+  var gl, prog, U = {}, buf = {}, count = 0, F = 800, keys = [];
   function hex(h) { return [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255]; }
   function perspective(fovy, aspect, near, far, shift) {
     var f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
@@ -83,33 +80,14 @@
       if (!gl) return false;
       function sh(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
       function link(vs, fs) { var p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; }
-      prog = link(VS, FS); qprog = link(QVS, QFS);
+      prog = link(VS, FS);
       ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uStep', 'uPersona', 'uIn', 'uMaxSize', 'uRes', 'uMouse', 'uMouseOn', 'uTextR', 'uStreamC', 'uStreamSpan', 'uTierSpan', 'uTunnelLen',
        'uLoopC', 'uGlobeC', 'uRingC', 'uPC0', 'uPC1', 'uPC2', 'uPC3'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
-      ['uView', 'uProj', 'uTex', 'uA'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
-      QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
       ['aPos', 'aCol', 'aInfo'].forEach(function (n) { buf[n] = gl.createBuffer(); });
-      qbuf = gl.createBuffer(); qtex = gl.createTexture();
       gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND);
       return true;
     },
-    load: function () {
-      return new Promise(function (res, rej) {
-        img = new Image(); img.src = document.getElementById('heroImg').src;
-        img.onload = res; img.onerror = rej;
-        if (img.complete && img.naturalWidth) res();
-      }).then(function () {
-        // power-of-two, so it can be mipmapped as it falls away into the distance
-        var c = document.createElement('canvas'); c.width = 2048; c.height = 1024;
-        c.getContext('2d').drawImage(img, 0, 0, 2048, 1024);
-        gl.bindTexture(gl.TEXTURE_2D, qtex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
-        gl.generateMipmap(gl.TEXTURE_2D);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      });
-    },
+    load: function () { return Promise.resolve(); },
     build: function (env) {
       var W = env.W, H = env.H, R = Math.random, m = env.mobile ? 0.32 : 1;
       F = H * 0.96;
@@ -231,30 +209,6 @@
       var view = lookAt(e, t);
 
       gl.clearColor(0.024, 0.027, 0.039, 1); gl.clear(gl.COLOR_BUFFER_BIT);
-
-      // the hero plane: matches the picture on the page until the flight starts, then stays where it was
-      if (env.scene < 0.001 || !heroWorld) {
-        var r = env.heroRect;
-        heroWorld = [[r.x - W / 2, H / 2 - r.y], [r.x + r.w - W / 2, H / 2 - r.y], [r.x - W / 2, H / 2 - r.y - r.h], [r.x + r.w - W / 2, H / 2 - r.y - r.h]];
-      }
-      var ha = 1 - Math.min(1, Math.max(0, (env.scene - 0.9) / 0.5));
-      // under a thumb the page scrolls ahead of the canvas, so the plane can't sit behind the picture: the picture just fades
-      if (window.Perf && Perf.touch) ha = 0;
-      if (ha > 0.001) {
-        var hw = heroWorld;
-        gl.useProgram(qprog);
-        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        gl.uniformMatrix4fv(QU.uView, false, view); gl.uniformMatrix4fv(QU.uProj, false, proj);
-        gl.uniform1f(QU.uA, ha); gl.uniform1i(QU.uTex, 0);
-        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, qtex);
-        gl.bindBuffer(gl.ARRAY_BUFFER, qbuf);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-          hw[0][0], hw[0][1], 0, 0, 0, hw[2][0], hw[2][1], 0, 0, 1, hw[1][0], hw[1][1], 0, 1, 0,
-          hw[1][0], hw[1][1], 0, 1, 0, hw[2][0], hw[2][1], 0, 0, 1, hw[3][0], hw[3][1], 0, 1, 1]), gl.DYNAMIC_DRAW);
-        gl.enableVertexAttribArray(QU.aPos); gl.vertexAttribPointer(QU.aPos, 3, gl.FLOAT, false, 20, 0);
-        gl.enableVertexAttribArray(QU.aUv); gl.vertexAttribPointer(QU.aUv, 2, gl.FLOAT, false, 20, 12);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      }
 
       gl.useProgram(prog);
       gl.blendFunc(gl.ONE, gl.ONE);

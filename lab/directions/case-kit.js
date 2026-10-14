@@ -447,12 +447,12 @@
     env.persona = pOn; env.inRes = inRes;
 
     env.heroRect = { x: heroAbs.x, y: heroAbs.y - y, w: heroAbs.w, h: heroAbs.h };
-    // the picture gives way to the scene as soon as the next chapter starts to take over;
-    // on a phone it sits below the fold, so there it stays until it scrolls off the top
-    env.heroVis = env.mobile
+    // the picture scrolls away with the page and fades as it leaves the top (the figure whole, its dark
+    // ground too); in the Matter look on a wide screen it gives way to the scene, which takes it apart
+    env.heroVis = env.mobile || style === 'depth'
       ? Math.max(0, Math.min(1, (heroAbs.y - y + heroAbs.h * 0.5) / (vh * 0.3)))
       : 1 - Math.max(0, Math.min(1, (sc - 0.02) / 0.16));
-    put(heroImg, 'opacity', env.heroVis.toFixed(3));
+    put(style === 'depth' ? heroFig : heroImg, 'opacity', env.heroVis.toFixed(3));
 
     put(progress, 'transform', 'scaleX(' + (y / maxS).toFixed(4) + ')');
     var solid = y > 24;
