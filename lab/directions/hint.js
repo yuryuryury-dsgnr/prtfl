@@ -51,9 +51,11 @@
       var out = '';
       for (var k = 0; k < n; k++) {
         var settle = 5 + k * 0.7;
-        if (f >= settle) out += to[k] || '';
-        else if (f >= settle - 5 && k < to.length) out += to[k] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
-        else out += from[k] || '';
+        // past the end of the new words the old letters clear to blanks, so nothing shifts while it runs
+        if (k >= to.length) out += f >= settle - 5 ? ' ' : (from[k] || '');
+        else if (f >= settle) out += to[k];
+        else if (f >= settle - 5) out += to[k] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        else out += from[k] || ' ';
       }
       // glyphs plain while they run, the verb lit once they land
       if (f < 5 + n * 0.7) { t.textContent = out; requestAnimationFrame(step); }
