@@ -118,7 +118,7 @@
     var ring = document.getElementById('ring'), rx = 0, ry = 0;
     addEventListener('pointermove', function (e) {
       tx = e.clientX; ty = e.clientY; lastMove = performance.now();
-      if (ring && e.pointerType === 'mouse') ring.style.opacity = 1;
+      if (ring && e.pointerType === 'mouse' && env.go < 0) ring.style.opacity = 1;
       var onCover = Math.abs(env.stage - 2) < 0.15 && !e.target.closest('.tag') ? R.coverAt(e.clientX, e.clientY) : -1;
       if (!e.target.closest('.tag')) env.hover = onCover;
       if (ring) ring.classList.toggle('big', onCover >= 0);
@@ -149,8 +149,18 @@
       if (env.go >= 0) return;
       if (Math.abs(env.stage - 2) > 0.15) { location.href = CASES[k].href; return; }
       env.go = k; env.hover = k; goStart = performance.now();
+      // the cover crosses into a box that grows to fill the screen (handoff.js); the camera still flies in under it
+      if (window.Handoff && R.coverRect) Handoff.leave(R.coverImage(k), R.coverRect(k), { lit: Math.min(1.15, 0.3 + 0.9 * env.hov[k] + (1 - env.any) * 0.7), fade: true, done: function () { leaveFor(k); } });
+      if (ring) ring.style.opacity = 0;
     }
-    addEventListener('pageshow', function (e) { if (e.persisted) { env.go = -1; env.g = 0; } });
+    // the case page picks up from the last frame (only the Halliburton case has the landing so far)
+    function leaveFor(k) {
+      if (env.left) return;
+      env.left = true;
+      if (CASES[k].href.indexOf('halliburton.html') >= 0) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
+      location.href = CASES[k].href;
+    }
+    addEventListener('pageshow', function (e) { if (e.persisted) { env.go = -1; env.g = 0; env.left = false; } });
 
     // ——— captions and rail ———
     function put(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
@@ -197,7 +207,7 @@
 
       if (env.go >= 0) {
         env.g = Math.min(1, (now - goStart) / (reduce ? 300 : 1100));
-        if (env.g >= 1 && !env.left) { env.left = true; if (CASES[env.go].href.indexOf('halliburton.html') >= 0) { try { sessionStorage.setItem('land', '1'); } catch (e) {} } location.href = CASES[env.go].href; }
+        if (env.g >= 1) leaveFor(env.go);
       }
 
       R.frame(env);

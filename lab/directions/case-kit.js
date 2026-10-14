@@ -267,26 +267,7 @@
     }
   }
 
-  // ——— arriving from the home page: the cover lands in its place ———
-  function land() {
-    var from = null;
-    try { from = sessionStorage.getItem('land'); sessionStorage.removeItem('land'); } catch (e) {}
-    if (!from || reduce) return;
-    var r = heroFig.getBoundingClientRect();
-    var ov = document.createElement('img');
-    ov.src = heroImg.src; ov.alt = '';
-    ov.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100vh;object-fit:cover;z-index:60;border-radius:0;pointer-events:none';
-    document.body.appendChild(ov);
-    heroImg.style.visibility = 'hidden';
-    // on a phone the picture's place is below the fold: it sinks toward it and fades rather than vanish off the edge
-    var below = r.top > innerHeight - 80;
-    ov.animate([
-      { left: '0px', top: '0px', width: innerWidth + 'px', height: innerHeight + 'px', borderRadius: '0px', opacity: 1 },
-      { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: '18px', opacity: below ? 0 : 1 }
-    ], { duration: 1100, easing: 'cubic-bezier(.7,0,.2,1)', fill: 'forwards', delay: 150 }).onfinish = function () {
-      heroImg.style.visibility = ''; ov.remove();
-    };
-  }
+  // (arriving from the home page, the cover lands in the hero's place: handoff.js, called from the page itself)
 
   // ——— run ———
   var R = (window.CaseRenderers || {})[style];
@@ -303,7 +284,6 @@
   }
   measure();
   if (location.hash) { var target = document.querySelector(location.hash); if (target) setTimeout(function () { if (lenis) lenis.scrollTo(target, { immediate: true, offset: -20 }); else target.scrollIntoView(); measure(); }, 60); }
-  land();
   requestAnimationFrame(frame);
   if (R && window.Perf) Perf.onChange = function (d) { env.dpr = d; if (running) { if (R.setDpr) R.setDpr(env); else R.build(env); } };
   if (R) {

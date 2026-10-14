@@ -98,8 +98,6 @@
     .nda i { font: normal 500 10px/1 var(--mono); border: 1px solid var(--line); border-radius: 4px; padding: 4px 5px; }
     .hero-fig { margin: 7vh 0 0; border-radius: 18px; overflow: hidden; aspect-ratio: 2425 / 1364; max-width: 1240px; background: #1a1c22; will-change: opacity, transform; }
     .hero-fig img { width: 100%; height: 100%; object-fit: cover; }
-    /* arriving from the home page: the cover lands in its place */
-    .landing .hero-fig { position: relative; z-index: 50; }
 
     /* problem */
     .pg { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: baseline; }
@@ -235,6 +233,8 @@
     }
     @media (max-width: 860px) and (prefers-reduced-motion: reduce) { .hx-bar .hx-go::after { animation: none; } }
   </style>
+  <script src="handoff.js?v=6"></script>
+  <script>Handoff.expect();</script>
 </head>
 <body>
   <canvas id="gl" aria-hidden="true"></canvas>
@@ -266,6 +266,7 @@
       </dl>
       <p class="nda rv"><i>NDA</i>Sensitive data and metadata are under NDA. All values are placeholders; process and design are shown in full.</p>
       <figure class="hero-fig" id="heroFig"><img id="heroImg" src="../../assets/images/halliburton/halliburton-hero.webp" alt="Data Marketplace — screens across desktop and mobile"></figure>
+      <script>Handoff.land(document.getElementById('heroFig'), document.getElementById('heroImg'), { radius: 18 });</script>
     </section>
 
     <!-- 01 -->
@@ -552,7 +553,7 @@
   <!-- versioned, so a phone that saw an older build doesn't keep it -->
   <script src="perf.js?v=11"></script>
   <script src="case-matter.js?v=3"></script>
-  <script src="case-depth.js?v=4"></script>
-  <script src="case-kit.js?v=9"></script>
+  <script src="case-depth.js?v=5"></script>
+  <script src="case-kit.js?v=11"></script>
 </body>
 </html>

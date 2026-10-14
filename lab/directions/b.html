@@ -208,6 +208,7 @@
   <script src="perf.js?v=11"></script>
   <script src="switcher.js?v=2"></script>
   <script src="hint.js?v=3"></script>
+  <script src="handoff.js?v=6"></script>
   <script>
   (function () {
     var CASES = [
@@ -383,8 +384,9 @@
       });
     }
     function drawCovers(p, g, goK) {
-      // fully in only while the points are fully formed; gone the moment they start to leave
-      var q = Math.max(0, 1 - Math.abs(p - 2) / 0.045);
+      // fully in only while the points are fully formed; gone the moment they start to leave.
+      // A phone has no settle to land exactly on the shape, so there the picture comes in earlier
+      var q = Math.max(0, 1 - Math.abs(p - 2) / (window.Perf && Perf.touch ? 0.16 : 0.045));
       if (q <= 0.001) return;
       q = q * q * (3 - 2 * q);
       var ge = g * g * (3 - 2 * g), fill = Math.max(W / cov.w, H / cov.h) * 1.04;
@@ -398,8 +400,9 @@
         var h = hov[k], chosen = goK === k;
         var cx = r.cx, cy = r.cy, sc = 1 + 0.04 * h, a = q;
         if (goK >= 0) {
-          if (chosen) { cx = cx * (1 - ge); cy = cy * (1 - ge); sc = sc + (fill - sc) * ge; }
-          else a *= 1 - ge;
+          // the chosen one is a box above the canvas now (go); the rest are gone before it covers them
+          if (chosen) { if (window.Handoff) return; cx = cx * (1 - ge); cy = cy * (1 - ge); sc = sc + (fill - sc) * ge; }
+          else a *= Math.max(0, 1 - g * 2.5);
         }
         if (a <= 0.001) return;
         var hw = r.w / 2 * sc, hh = r.h / 2 * sc;
@@ -657,7 +660,7 @@
     addEventListener('pointermove', function (e) {
       mouse.tx = e.clientX - W / 2; mouse.ty = e.clientY - H / 2;
       ringPos.tx = e.clientX; ringPos.ty = e.clientY;
-      if (e.pointerType === 'mouse') ring.style.opacity = 1;
+      if (e.pointerType === 'mouse' && !goState) ring.style.opacity = 1;
     });
     function away() { mouse.tx = mouse.ty = -9999; ring.style.opacity = 0; }
     document.addEventListener('pointerleave', away);
@@ -703,7 +706,21 @@
       if (goState) return;
       if (Math.abs(stage - 2) > 0.15) { location.href = CASES[k].href; return; }
       goState = { k: k, start: performance.now() };
+      // the cover leaves the canvas as a box that grows to fill the screen (handoff.js);
+      // drawCovers stops drawing it, and the case page picks up from the last frame
+      var r = layout[k], sc = 1 + 0.04 * hov[k], hw = r.w / 2 * sc, hh = r.h / 2 * sc;
+      if (window.Handoff) Handoff.leave(images[k], { x: W / 2 + r.cx - hw, y: H / 2 + r.cy - hh, w: hw * 2, h: hh * 2 },
+        { lit: Math.min(1.15, 0.28 + 0.92 * hov[k] + (1 - any) * 0.72), done: function () { leaveFor(k); } });
       hover = k;
+      ring.style.opacity = 0;
+    }
+    // the case page picks up from the last frame: the picture already fills the screen
+    // (only the Halliburton case has the landing so far)
+    function leaveFor(k) {
+      if (!goState || goState.left) return;
+      goState.left = true;
+      if (CASES[k].href.indexOf('halliburton.html') >= 0) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
+      location.href = CASES[k].href;
     }
     addEventListener('pageshow', function (e) { if (e.persisted) { goState = null; gl.uniform1f(U.uGo, 0); } });
     // a handle for checking the page from the console
@@ -758,7 +775,7 @@
       if (goState) {
         g = Math.min(1, (now - goState.start) / (reduce ? 300 : 1100));
         // the case page picks up from this frame: the cover already fills the screen
-        if (g >= 1 && !goState.left) { goState.left = true; if (CASES[goState.k].href.indexOf('halliburton.html') >= 0) { try { sessionStorage.setItem('land', '1'); } catch (e) {} } location.href = CASES[goState.k].href; }
+        if (g >= 1) leaveFor(goState.k);
       }
 
       gl.uniform1f(U.uP, p);
@@ -771,7 +788,8 @@
       gl.uniform1f(U.uRotX, rotX);
       gl.uniform1f(U.uScroll, s);
       gl.uniform1f(U.uGo, g);
-      gl.uniform1f(U.uGoI, goState ? goState.k : -9);
+      // with the hand-off box carrying the picture, the chosen cover's points scatter with the rest
+      gl.uniform1f(U.uGoI, goState && !window.Handoff ? goState.k : -9);
       gl.uniform3f(U.uWave, wave.x, wave.y, wave.t);
       gl.clearColor(0.027, 0.031, 0.043, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);

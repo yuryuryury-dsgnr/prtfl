@@ -343,7 +343,7 @@
       gl.uniformMatrix4fv(U.uView, false, view);
       gl.uniform1f(U.uT, env.t); gl.uniform1f(U.uFocus, focus); gl.uniform1f(U.uIn, Math.min(1, inn * 1.6));
       gl.uniform1f(U.uCovVis, Math.max(0, Math.min(1, 1.6 - Math.abs(env.stage - 2) * 1.8)));
-      gl.uniform1f(U.uAny, env.any); gl.uniform1f(U.uGo, env.g); gl.uniform1f(U.uGoI, env.go >= 0 ? env.go : -9);
+      gl.uniform1f(U.uAny, env.any); gl.uniform1f(U.uGo, env.g); gl.uniform1f(U.uGoI, env.go >= 0 && !window.Handoff ? env.go : -9);
       gl.uniform4f(U.uHov, env.hov[0], env.hov[1], env.hov[2], env.hov[3]);
       gl.uniform2f(U.uMouse, env.reduce ? -9999 : env.mouse.x, env.mouse.y);
       gl.uniform3f(U.uWave, env.wave.x, env.wave.y, env.wave.t);
@@ -365,7 +365,8 @@
           var h = env.hov[k], chosen = env.go === k ? 1 : 0;
           gl.uniform1f(QU.uLift, h * 46);
           gl.uniform1f(QU.uLit, (0.3 + 0.9 * h + (1 - env.any) * 0.7) * (1 - env.g * (1 - chosen)));
-          gl.uniform1f(QU.uAlpha, covVis * Math.min(1, inn * 1.6));
+          // once the box above the canvas has crossed in (handoff.js), the plane under it goes
+          gl.uniform1f(QU.uAlpha, covVis * Math.min(1, inn * 1.6) * (chosen && env.g > 0.11 && window.Handoff ? 0 : 1));
           gl.bindTexture(gl.TEXTURE_2D, quads[k].tex);
           gl.bindBuffer(gl.ARRAY_BUFFER, quads[k].buf);
           gl.enableVertexAttribArray(QU.aPos); gl.vertexAttribPointer(QU.aPos, 3, gl.FLOAT, false, 20, 0);
@@ -416,6 +417,9 @@
       gl.viewport(0, 0, c.width, c.height);
       gl.uniform1f(U.uDpr, env.dpr);
     },
+    // where cover k is on screen now, and its picture, for the hand-off box
+    coverRect: function (k) { var r = layout[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
+    coverImage: function (k) { return images[k]; },
     coverAt: function (x, y) {
       for (var k = 0; k < layout.length; k++) {
         var r = layout[k];

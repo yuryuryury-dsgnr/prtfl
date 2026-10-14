@@ -8,7 +8,7 @@
     'precision highp float;',
     'attribute vec3 aPos; attribute vec3 aCol; attribute vec4 aInfo;',
     'uniform mat4 uView, uProj; uniform float uT, uDpr, uFocus, uF, uNear, uStep, uPersona, uIn, uMaxSize;',
-    'uniform vec2 uRes, uMouse; uniform float uMouseOn;',
+    'uniform vec2 uRes, uMouse; uniform float uMouseOn, uTextR;',
     'uniform vec3 uStreamC; uniform float uStreamSpan, uTierSpan, uTunnelLen;',
     'uniform vec3 uLoopC, uGlobeC, uRingC; uniform vec3 uPC0, uPC1, uPC2, uPC3;',
     'varying vec3 vC;',
@@ -40,8 +40,11 @@
     '  float persp = uF / max(d, 1.0), blur = abs(d - uFocus) / uFocus;',
     '  float size = (1.5 + rnd * 1.2) * persp + blur * blur * 12.0;',
     '  float a = min(1.0, 7.0 / (size * size));',
-    '  a *= exp(-max(d - uFocus, 0.0) / 1500.0) * smoothstep(uNear * 0.2, uNear, d) * uIn;',
-    '  vC = col * a * (1.0 + push * 0.4);',
+    // the next station shows only as a hint: past the focus, light falls away fast
+    '  a *= exp(-max(d - uFocus, 0.0) / 650.0) * smoothstep(uNear * 0.2, uNear, d) * uIn;',
+    // behind the column of text the world steps back, so the copy stays readable
+    '  float behind = 1.0 - smoothstep(uTextR - 40.0, uTextR + 160.0, s.x);',
+    '  vC = col * a * (1.0 + push * 0.4) * (1.0 - behind * 0.82);',
     '  gl_PointSize = min(size, uMaxSize) * uDpr;',
     '  gl_Position = clip;',
     '}'
@@ -81,7 +84,7 @@
       function sh(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
       function link(vs, fs) { var p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; }
       prog = link(VS, FS); qprog = link(QVS, QFS);
-      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uStep', 'uPersona', 'uIn', 'uMaxSize', 'uRes', 'uMouse', 'uMouseOn', 'uStreamC', 'uStreamSpan', 'uTierSpan', 'uTunnelLen',
+      ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uStep', 'uPersona', 'uIn', 'uMaxSize', 'uRes', 'uMouse', 'uMouseOn', 'uTextR', 'uStreamC', 'uStreamSpan', 'uTierSpan', 'uTunnelLen',
        'uLoopC', 'uGlobeC', 'uRingC', 'uPC0', 'uPC1', 'uPC2', 'uPC3'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       ['uView', 'uProj', 'uTex', 'uA'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
       QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
@@ -173,6 +176,9 @@
       gl.uniform3fv(U.uLoopC, LC); gl.uniform3fv(U.uGlobeC, GC); gl.uniform3f(U.uRingC, 0, 0, Z[1] - 700);
       gl.uniform3fv(U.uPC0, PC[0]); gl.uniform3fv(U.uPC1, PC[1]); gl.uniform3fv(U.uPC2, PC[2]); gl.uniform3fv(U.uPC3, PC[3]);
       gl.uniform2f(U.uRes, W, H); gl.uniform1f(U.uDpr, env.dpr); gl.uniform1f(U.uF, F); gl.uniform1f(U.uNear, F * 0.35);
+      // where the text column ends; on a phone the text spans the screen and the whole scene is dimmed instead
+      var col = document.querySelector('.col');
+      gl.uniform1f(U.uTextR, env.mobile || !col ? -1e4 : col.getBoundingClientRect().right);
       // big bokeh discs are what a phone's GPU pays for
       gl.uniform1f(U.uMaxSize, env.mobile ? 16 : 64);
 
