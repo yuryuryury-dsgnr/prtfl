@@ -375,6 +375,7 @@
         t = S[i].t.map(function (v, m) { return v + (S[i + 1].t[m] - v) * f; });
       }
       var focus = st(i).f + (st(i + 1).f - st(i).f) * f;
+      var camY = e[1];
       // the greeting gathers by the clock, so a slow phone still gets it in time
       if (this.introAt == null) this.introAt = performance.now();
       var inn = env.reduce ? 1 : Math.min(1, (performance.now() - this.introAt) / 1800);
@@ -470,10 +471,15 @@
         var y = Math.max(r.bl.y, r.br.y);
         return { x: r.bl.x, y: y, w: r.br.x - r.bl.x, top: r.y, o: r.o * smooth((y - bar0) / (bar1 - bar0)) };
       });
-      // the section title belongs to the top of the column and leaves as it scrolls on
+      // the section title is the top of the column: it scrolls away with it, fading out under the bar
       var title = this.title || (this.title = document.querySelector('.work-title'));
-      var to = (vis * (1 - smooth((stage - ROW - 0.02) / 0.1))).toFixed(2);
-      if (title && title._o !== to) { title._o = to; title.style.opacity = to; }
+      if (title) {
+        if (this.titleY == null) this.titleY = title.offsetTop + title.offsetHeight; // its bottom edge
+        var shift = stage > ROW ? Math.max(0, (COL.top - camY) * F / COL.d) : 0;
+        var to = (vis * smooth((this.titleY - shift - bar0) / (bar1 - bar0))).toFixed(2), tt = 'translateY(' + (-shift).toFixed(1) + 'px)';
+        if (title._o !== to) { title._o = to; title.style.opacity = to; }
+        if (title._t !== tt) { title._t = tt; title.style.transform = tt; }
+      }
     },
     workAt: function (stage) { return openable(stage); },
     // through the column the scroll is a page's: nothing settles it and the picture keeps up with it
