@@ -1,4 +1,4 @@
-// The scroll hint on the Matter and Depth pages: a small gesture that plays by itself (a wheel
+// The scroll hint on the home pages: a small gesture that plays by itself (a wheel
 // for a mouse, a swipe for a thumb) and words that decode from one to the next, like the data
 // around them. The element carries both sets of words; the device picks one:
 //   <div data-hint data-mouse="scroll to …|click anywhere" data-touch="swipe up to …|tap anywhere"></div>

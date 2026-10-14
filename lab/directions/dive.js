@@ -143,10 +143,10 @@
   // corners; far off it is lost in the dark, and it fades as it slips past the camera
   var QVS = [
     'attribute vec3 aPos; attribute vec2 aUv;',
-    'uniform mat4 uView, uProj; uniform vec3 uNormal; uniform float uLift, uNear, uFocus;',
+    'uniform mat4 uView, uProj; uniform float uLift, uNear, uFocus;',
     'varying vec2 vUv; varying float vFog;',
     'void main(){',
-    '  vec3 p = aPos + uNormal * uLift;',
+    '  vec3 p = aPos; p.z += uLift;',
     '  vec4 v = uView * vec4(p, 1.0); float d = -v.z;',
     '  vFog = exp(-max(d - uFocus, 0.0) / 1500.0) * smoothstep(uNear * 0.3, uNear * 0.9, d);',
     '  vUv = aUv; gl_Position = uProj * v;',
@@ -168,39 +168,50 @@
 
   var gl, prog, qprog, U = {}, QU = {}, A = {}, buffers = {}, count = 0, F = 800, images = [], planes = [], labels = [];
   var view = new Float32Array(16), proj = new Float32Array(16);
+  var ATTRS = [['aPos', 3], ['aCol', 3], ['aInfo', 4], ['aAlt', 3]];
+  var PAL = PALETTE.map(function (h) { return BKit.hex(h); });
+  // what each frame works out, kept from frame to frame rather than made anew sixty times a second
+  var E = [0, 0, 0], T = [0, 0, 0], PT = { x: 0, y: 0 };
+  var rects = [0, 1, 2, 3].map(function () { return { ok: false, x: 0, y: 0, w: 0, h: 0, o: 0 }; });
+  var tags = [0, 1, 2, 3].map(function () { return { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 }; });
 
   function perspective(fovy, aspect, near, far) {
     var f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
     return new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0]);
   }
-  function lookAt(e, t) {
-    var z = [e[0] - t[0], e[1] - t[1], e[2] - t[2]], zl = Math.hypot(z[0], z[1], z[2]);
-    z = [z[0] / zl, z[1] / zl, z[2] / zl];
-    var x = [z[2], 0, -z[0]], xl = Math.hypot(x[0], x[1], x[2]);
-    x = [x[0] / xl, x[1] / xl, x[2] / xl];
-    var y = [z[1] * x[2] - z[2] * x[1], z[2] * x[0] - z[0] * x[2], z[0] * x[1] - z[1] * x[0]];
-    return new Float32Array([x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0,
-      -(x[0] * e[0] + x[1] * e[1] + x[2] * e[2]), -(y[0] * e[0] + y[1] * e[1] + y[2] * e[2]), -(z[0] * e[0] + z[1] * e[1] + z[2] * e[2]), 1]);
+  // the camera at e looking at t, written into m (world up is +y)
+  function lookAt(m, e, t) {
+    var zx = e[0] - t[0], zy = e[1] - t[1], zz = e[2] - t[2], zl = Math.hypot(zx, zy, zz);
+    zx /= zl; zy /= zl; zz /= zl;
+    var xx = zz, xz = -zx, xl = Math.hypot(xx, xz);
+    xx /= xl; xz /= xl;
+    var yx = zy * xz, yy = zz * xx - zx * xz, yz = -zy * xx;
+    m[0] = xx; m[1] = yx; m[2] = zx; m[3] = 0;
+    m[4] = 0; m[5] = yy; m[6] = zy; m[7] = 0;
+    m[8] = xz; m[9] = yz; m[10] = zz; m[11] = 0;
+    m[12] = -(xx * e[0] + xz * e[2]); m[13] = -(yx * e[0] + yy * e[1] + yz * e[2]); m[14] = -(zx * e[0] + zy * e[1] + zz * e[2]); m[15] = 1;
   }
-  function project(p, W, H) {
+  // a world point to the screen, into PT; false when it is behind the camera
+  function project(x, y, z, W, H) {
     var v = view, q = proj;
-    var vx = v[0] * p[0] + v[4] * p[1] + v[8] * p[2] + v[12];
-    var vy = v[1] * p[0] + v[5] * p[1] + v[9] * p[2] + v[13];
-    var vz = v[2] * p[0] + v[6] * p[1] + v[10] * p[2] + v[14];
-    var cw = -vz;
-    if (cw <= 1) return null;
-    return { x: (q[0] * vx / cw * 0.5 + 0.5) * W, y: (1 - (q[5] * vy / cw * 0.5 + 0.5)) * H, d: cw };
+    var vx = v[0] * x + v[4] * y + v[8] * z + v[12];
+    var vy = v[1] * x + v[5] * y + v[9] * z + v[13];
+    var cw = -(v[2] * x + v[6] * y + v[10] * z + v[14]);
+    if (cw <= 1) return false;
+    PT.x = (q[0] * vx / cw * 0.5 + 0.5) * W; PT.y = (1 - (q[5] * vy / cw * 0.5 + 0.5)) * H;
+    return true;
   }
   // the strata's layer boundaries, shared by the points and the labels pinned to them
   function yb(L, x, z) {
     return -80 - L * 44 + Math.sin(x * 0.004 + L * 0.7) * 16 + Math.sin(z * 0.005 + L) * 12 + Math.cos((x + z) * 0.002) * 9;
   }
-  function catmull(p0, p1, p2, p3, t) {
+  function catmull(out, p0, p1, p2, p3, t) {
     var t2 = t * t, t3 = t2 * t;
-    return p1.map(function (_, i) {
-      return 0.5 * ((2 * p1[i]) + (-p0[i] + p2[i]) * t + (2 * p0[i] - 5 * p1[i] + 4 * p2[i] - p3[i]) * t2 + (-p0[i] + 3 * p1[i] - 3 * p2[i] + p3[i]) * t3);
-    });
+    for (var i = 0; i < 3; i++) out[i] = 0.5 * ((2 * p1[i]) + (-p0[i] + p2[i]) * t + (2 * p0[i] - 5 * p1[i] + 4 * p2[i] - p3[i]) * t2 + (-p0[i] + 3 * p1[i] - 3 * p2[i] + p3[i]) * t3);
   }
+  function lerp3(out, a, b, f) { for (var i = 0; i < 3; i++) out[i] = a[i] + (b[i] - a[i]) * f; }
+  // a style written only when it changes
+  function css(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
   function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
   // how many points Matter (index.html) draws its greeting with: one per pixel sampled from its four
   // covers, so it depends on the screen. Kept in step with Matter's build()
@@ -236,7 +247,7 @@
       ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uScroll', 'uDim', 'uRes', 'uMouse', 'uMouseOn', 'uWave', 'uGlobe', 'uGlobeRot']
         .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       ['aPos', 'aCol', 'aInfo', 'aAlt'].forEach(function (n) { buffers[n] = gl.createBuffer(); A[n] = gl.getAttribLocation(prog, n); });
-      ['uView', 'uProj', 'uNormal', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize', 'uTop'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
+      ['uView', 'uProj', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize', 'uTop'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
       QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
       for (var k = 0; k < 4; k++) planes.push({ buf: gl.createBuffer(), tex: gl.createTexture() });
       gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND);
@@ -248,96 +259,104 @@
       });
       return true;
     },
+    // the greeting needs only its font; the pictures come in behind it, long before the column is reached
     load: function (tick) {
-      var fonts = document.fonts ? document.fonts.load('700 100px Inter') : Promise.resolve();
-      return fonts.then(function () { tick(0.2); return BKit.loadImages(CASES.map(function (c) { return c.img; }), tick, 1, 5); })
-        .then(function (imgs) { images = imgs; });
+      var self = this;
+      images = CASES.map(function (c, k) {
+        var im = new Image();
+        im.onload = function () { if (self.size) self.picture(k); };
+        im.src = c.img;
+        return im;
+      });
+      return (document.fonts ? document.fonts.load('700 100px Inter') : Promise.resolve()).then(function () { tick(1); });
+    },
+    // a case's picture, cropped to its plane at the size it is seen up close, onto the GPU
+    picture: function (k) {
+      var img = images[k];
+      if (!img.complete || !img.naturalWidth) return;
+      var cw = this.size[0], ch = this.size[1], dpr = this.texDpr;
+      var ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
+      var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
+      var tc = document.createElement('canvas'); tc.width = Math.round(cw * dpr); tc.height = Math.round(ch * dpr);
+      tc.getContext('2d').drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - shh) / 2, sw, shh, 0, 0, tc.width, tc.height);
+      gl.bindTexture(gl.TEXTURE_2D, planes[k].tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tc);
+      // not a power of two, so no mipmaps: linear is enough at the sizes the column is seen at
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      planes[k].ready = true;
     },
     build: function (env) {
       var W = env.W, H = env.H, mobile = env.mobile, R = Math.random, i;
       F = H * 0.96;
-      var P = [], C = [], I = [], L2 = [];
-      function put(x, y, z, c, kind, grp, alt) {
-        P.push(x, y, z); C.push(c[0], c[1], c[2]); I.push(kind, grp || 0, R(), R());
-        L2.push(alt ? alt[0] : 0, alt ? alt[1] : 0, alt ? alt[2] : 0);
-      }
-      function layerCol(L, k) { var c = BKit.hex(PALETTE[L]); return [c[0] * k, c[1] * k, c[2] * k]; }
-      // a point somewhere on the block: its front face, the sides, the top, or a faint inner surface
-      function strataPoint(inner) {
-        var u = R(), x, z, L = Math.floor(R() * PALETTE.length), zf = Z_STRATA_FRONT, zb = Z_STRATA_BACK;
-        if (u < 0.46) { x = (R() - 0.5) * 2 * BLOCK_X; z = zf; }
-        else if (u < 0.62) { x = R() < 0.5 ? -BLOCK_X : BLOCK_X; z = zf + (zb - zf) * R(); }
-        if (u < 0.62) {
-          var y0 = yb(L, x, z), y1 = yb(L + 1, x, z);
-          return { p: [x, y1 + (y0 - y1) * R(), z], c: layerCol(L, 0.5 + R() * 0.45), g: L * 0.9 };
-        }
-        if (u < 0.88 || !inner) {
-          x = (R() - 0.5) * 2 * BLOCK_X; z = zf + (zb - zf) * R();
-          return { p: [x, yb(0, x, z), z], c: layerCol(0, 0.45 + R() * 0.4), g: 0 };
-        }
-        var Li = 2 + Math.floor(R() * 3) * 2;
-        x = (R() - 0.5) * 2 * BLOCK_X; z = zf + (zb - zf) * R();
-        return { p: [x, yb(Li, x, z), z], c: layerCol(Li, 0.18 + R() * 0.12), g: Li * 0.9 };
-      }
-
-      // stars, the length of the flight
-      var stars = mobile ? 3000 : 9000;
-      for (i = 0; i < stars; i++) { var l = 0.25 + R() * 0.5; put((R() - 0.5) * 7000, (R() - 0.5) * 4200, 900 - R() * 13000, [l * 0.8, l * 0.88, l], 0); }
       // the greeting, each point with a place waiting for it in the strata; exactly as many grains
       // as Matter draws its greeting with on this screen, scattered as Matter scatters them
       var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = matterCount(W, H, mobile);
+      var stars = mobile ? 3000 : 9000, extra = mobile ? 7000 : 26000, dust = mobile ? 700 : 2600, globe = mobile ? 7000 : 16000;
+      count = stars + names + extra + dust + globe;
+      // straight into the arrays the GPU takes, no lists growing on the way
+      var P = new Float32Array(count * 3), C = new Float32Array(count * 3), I = new Float32Array(count * 4), L2 = new Float32Array(count * 3), n = 0;
+      function put(x, y, z, r, gg, b, kind, grp) {
+        var j = n * 3;
+        P[j] = x; P[j + 1] = y; P[j + 2] = z; C[j] = r; C[j + 1] = gg; C[j + 2] = b;
+        j = n * 4; I[j] = kind; I[j + 1] = grp; I[j + 2] = R(); I[j + 3] = R();
+        return n++;
+      }
+      // a point somewhere on the block: its front face, the sides, the top, or a faint inner surface
+      function strata(kind) {
+        var u = R(), x, y, z, k, L = Math.floor(R() * PALETTE.length), zf = Z_STRATA_FRONT, zb = Z_STRATA_BACK;
+        if (u < 0.62) {
+          if (u < 0.46) { x = (R() - 0.5) * 2 * BLOCK_X; z = zf; }
+          else { x = R() < 0.5 ? -BLOCK_X : BLOCK_X; z = zf + (zb - zf) * R(); }
+          var y0 = yb(L, x, z), y1 = yb(L + 1, x, z);
+          y = y1 + (y0 - y1) * R(); k = 0.5 + R() * 0.45;
+        } else {
+          x = (R() - 0.5) * 2 * BLOCK_X; z = zf + (zb - zf) * R();
+          if (u < 0.88 || kind === 1) { L = 0; k = 0.45 + R() * 0.4; }
+          else { L = 2 + Math.floor(R() * 3) * 2; k = 0.18 + R() * 0.12; }
+          y = yb(L, x, z);
+        }
+        var c = PAL[L];
+        return put(x, y, z, c[0] * k, c[1] * k, c[2] * k, kind, L * 0.9);
+      }
+
+      // stars, the length of the flight
+      for (i = 0; i < stars; i++) { var l = 0.25 + R() * 0.5; put((R() - 0.5) * 7000, (R() - 0.5) * 4200, 900 - R() * 13000, l * 0.8, l * 0.88, l, 0, 0); }
       for (i = 0; i < names; i++) {
-        var j = Math.floor(R() * gn) * 2, sp0 = strataPoint(false);
-        put(sp0.p[0], sp0.p[1], sp0.p[2], sp0.c, 1, sp0.g, [g[j] - W / 2 + (R() - 0.5) * 2.4, H / 2 - g[j + 1] + (R() - 0.5) * 2.4, 0]);
+        var j = Math.floor(R() * gn) * 2, m = strata(1) * 3;
+        L2[m] = g[j] - W / 2 + (R() - 0.5) * 2.4; L2[m + 1] = H / 2 - g[j + 1] + (R() - 0.5) * 2.4;
       }
       // the rest of the strata, inner surfaces included: the dive passes between them
-      var extra = mobile ? 7000 : 26000;
-      for (i = 0; i < extra; i++) { var sp1 = strataPoint(true); put(sp1.p[0], sp1.p[1], sp1.p[2], sp1.c, 2, sp1.g); }
+      for (i = 0; i < extra; i++) strata(2);
 
       // the work: four wide pictures in a column, read top to bottom
-      var cw = COL.cw, ch = COL.ch, gap = COL.gap, dpr = Math.min(2, env.dpr || 1);
-      this.size = [cw, ch];
+      var cw = COL.cw, ch = COL.ch, gap = COL.gap;
+      this.size = [cw, ch]; this.texDpr = Math.min(2, env.dpr || 1);
       this.cases = [];
       for (var k = 0; k < 4; k++) {
-        var ax = [1, 0, 0], nrm = [0, 0, 1];
-        var c = [0, -k * (ch + gap), Z_ROW];
-        // the picture cropped to the plane, at the size it will be seen up close
-        var img = images[k], ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
-        var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
-        var tc = document.createElement('canvas'); tc.width = Math.round(cw * dpr); tc.height = Math.round(ch * dpr);
-        tc.getContext('2d').drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - shh) / 2, sw, shh, 0, 0, tc.width, tc.height);
-        gl.bindTexture(gl.TEXTURE_2D, planes[k].tex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tc);
-        // not a power of two, so no mipmaps: linear is enough at the sizes the row is seen at
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        var corners = [[-cw / 2, ch / 2], [cw / 2, ch / 2], [-cw / 2, -ch / 2], [cw / 2, -ch / 2]].map(function (l2) {
-          return [c[0] + ax[0] * l2[0], c[1] + l2[1], c[2] + ax[2] * l2[0]];
-        });
-        var tl = corners[0], tr = corners[1], bl = corners[2], br = corners[3];
+        var cy = -k * (ch + gap), z = Z_ROW, x0 = -cw / 2, x1 = cw / 2, ya = cy + ch / 2, yz = cy - ch / 2;
+        this.picture(k);
         gl.bindBuffer(gl.ARRAY_BUFFER, planes[k].buf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-          tl[0], tl[1], tl[2], 0, 0, bl[0], bl[1], bl[2], 0, 1, tr[0], tr[1], tr[2], 1, 0,
-          tr[0], tr[1], tr[2], 1, 0, bl[0], bl[1], bl[2], 0, 1, br[0], br[1], br[2], 1, 1
+          x0, ya, z, 0, 0, x0, yz, z, 0, 1, x1, ya, z, 1, 0,
+          x1, ya, z, 1, 0, x0, yz, z, 0, 1, x1, yz, z, 1, 1
         ]), gl.STATIC_DRAW);
-        this.cases.push({ center: c, normal: nrm, corners: corners, w: cw, h: ch });
+        // corners: top left, top right, bottom left, bottom right
+        this.cases.push({ center: [0, cy, z], corners: [[x0, ya, z], [x1, ya, z], [x0, yz, z], [x1, yz, z]], w: cw, h: ch });
       }
       // Matter's dust, in screen px
-      var dust = mobile ? 700 : 2600;
-      for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put((R() - 0.5) * W, R() * H, 0, [0.7 * dl, 0.8 * dl, 0.95 * dl], 4); }
+      for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put((R() - 0.5) * W, R() * H, 0, 0.7 * dl, 0.8 * dl, 0.95 * dl, 4, 0); }
       // the planet at the end
-      var Z_GLOBE = Z_ROW - 3200;
-      var globe = mobile ? 7000 : 16000, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, H * 0.12, Z_GLOBE];
+      var Z_GLOBE = Z_ROW - 3200, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, H * 0.12, Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
-        put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, [0.62 + 0.33 * qq, 0.84 - 0.18 * qq, 0.78 - 0.36 * qq], 3);
+        put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 0.62 + 0.33 * qq, 0.84 - 0.18 * qq, 0.78 - 0.36 * qq, 3, 0);
       }
-      count = P.length / 3;
       gl.useProgram(prog);
-      [['aPos', P], ['aCol', C], ['aInfo', I], ['aAlt', L2]].forEach(function (b) {
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[b[0]]); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(b[1]), gl.STATIC_DRAW);
+      [['aPos', P], ['aCol', C], ['aInfo', I], ['aAlt', L2]].forEach(function (bf) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[bf[0]]); gl.bufferData(gl.ARRAY_BUFFER, bf[1], gl.STATIC_DRAW);
       });
 
       var canvas = gl.canvas;
@@ -371,24 +390,18 @@
       gl.useProgram(prog); gl.viewport(0, 0, c.width, c.height); gl.uniform1f(U.uDpr, env.dpr);
     },
     frame: function (env) {
-      var W = env.W, H = env.H, S = this.stations, stage = Math.min(LAST, env.stage);
-      // eased within each stage, then straight through any station inside it
+      var W = env.W, H = env.H, S = this.stations, stage = Math.min(LAST, env.stage), k;
       // eased into and out of every station, except through the column, which moves with the scroll
       var n = Math.min(LAST - 1, Math.floor(stage)), sE = n === ROW ? stage : n + smooth(stage - n);
       var i = 0; while (i < S.length - 2 && S[i + 1].s <= sE) i++;
       var f = Math.max(0, Math.min(1, (sE - S[i].s) / (S[i + 1].s - S[i].s)));
       // a spline through the dive, ending on the overview (no point past it, so no overshoot);
       // from there straight from station to station, each eased by its own stage
-      var iRow = 3, e, t;
-      function st(m) { return S[Math.max(0, Math.min(iRow, m))]; }
-      if (i < iRow) {
-        e = catmull(st(i - 1).e, st(i).e, st(i + 1).e, st(i + 2).e, f);
-        t = catmull(st(i - 1).t, st(i).t, st(i + 1).t, st(i + 2).t, f);
-      } else {
-        e = S[i].e.map(function (v, m) { return v + (S[i + 1].e[m] - v) * f; });
-        t = S[i].t.map(function (v, m) { return v + (S[i + 1].t[m] - v) * f; });
-      }
-      var focus = st(i).f + (st(i + 1).f - st(i).f) * f;
+      var iRow = 3, e = E, t = T;
+      var s0 = S[Math.max(0, i - 1)], s1 = S[Math.min(iRow, i)], s2 = S[Math.min(iRow, i + 1)], s3 = S[Math.min(iRow, i + 2)];
+      if (i < iRow) { catmull(e, s0.e, s1.e, s2.e, s3.e, f); catmull(t, s0.t, s1.t, s2.t, s3.t, f); }
+      else { lerp3(e, S[i].e, S[i + 1].e, f); lerp3(t, S[i].t, S[i + 1].t, f); }
+      var focus = s1.f + (s2.f - s1.f) * f;
       var camY = e[1];
       // the greeting gathers by the clock, so a slow phone still gets it in time
       if (this.introAt == null) this.introAt = performance.now();
@@ -400,20 +413,20 @@
       if (!env.reduce && stage > 0.2) { var lk = Math.min(1, stage - 0.2); e[0] += this.mx * 50 * lk; e[1] -= this.my * 32 * lk; t[0] += this.mx * 12 * lk; t[1] -= this.my * 8 * lk; }
       // opening a case flies square into its picture, under the hand-off box
       if (env.go >= 0) {
-        var cs = this.cases[env.go], gg = smooth(env.g);
+        var cs = this.cases[env.go], gg = smooth(env.g), cc = cs.center;
         var dFill = F * Math.min(cs.w / W, cs.h / H) * 0.98;
-        var ge = [cs.center[0] + cs.normal[0] * dFill, cs.center[1], cs.center[2] + cs.normal[2] * dFill];
-        e = e.map(function (v, m) { return v + (ge[m] - v) * gg; });
-        t = t.map(function (v, m) { return v + (cs.center[m] - v) * gg; });
+        e[0] += (cc[0] - e[0]) * gg; e[1] += (cc[1] - e[1]) * gg; e[2] += (cc[2] + dFill - e[2]) * gg;
+        lerp3(t, t, cc, gg);
         focus += (dFill - focus) * gg;
       }
-      view = lookAt(e, t);
+      lookAt(view, e, t);
       this.rot += 0.0025 + this.mx * 0.01;
 
       gl.useProgram(prog);
-      [['aPos', 3], ['aCol', 3], ['aInfo', 4], ['aAlt', 3]].forEach(function (b) {
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[b[0]]); gl.enableVertexAttribArray(A[b[0]]); gl.vertexAttribPointer(A[b[0]], b[1], gl.FLOAT, false, 0, 0);
-      });
+      for (k = 0; k < ATTRS.length; k++) {
+        var at = ATTRS[k];
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[at[0]]); gl.enableVertexAttribArray(A[at[0]]); gl.vertexAttribPointer(A[at[0]], at[1], gl.FLOAT, false, 0, 0);
+      }
       gl.uniformMatrix4fv(U.uView, false, view);
       gl.uniform1f(U.uT, env.t); gl.uniform1f(U.uFocus, focus); gl.uniform1f(U.uIn, inn); gl.uniform1f(U.uStage, stage);
       gl.uniform1f(U.uScroll, env.s * DUST_K);
@@ -428,14 +441,14 @@
       // the pictures, laid over the light, all equally lit. Hovering lifts a picture and lets the
       // others fall back a little, rather than lighting it up
       var drew = false, sz = this.size, vis = shown(stage);
-      for (var k = 0; k < 4; k++) {
+      for (k = 0; k < 4; k++) {
         var q = vis;
         // once the hand-off box above the canvas has crossed in, the plane under it goes
         if (env.go === k && env.g > 0.11 && window.Handoff) q = 0;
-        if (q < 0.002) continue;
+        if (q < 0.002 || !planes[k].ready) continue;
         if (!drew) {
           gl.useProgram(qprog); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-          ['aPos', 'aCol', 'aInfo', 'aAlt'].forEach(function (n2) { gl.disableVertexAttribArray(A[n2]); });
+          for (var a2 = 0; a2 < ATTRS.length; a2++) gl.disableVertexAttribArray(A[ATTRS[a2][0]]);
           gl.uniformMatrix4fv(QU.uView, false, view); gl.uniformMatrix4fv(QU.uProj, false, proj);
           gl.uniform1i(QU.uTex, 0); gl.activeTexture(gl.TEXTURE0);
           gl.uniform1f(QU.uNear, F * 0.35); gl.uniform1f(QU.uFocus, focus);
@@ -445,8 +458,7 @@
           gl.uniform3f(QU.uTop, gl.canvas.height, (env.mobile ? 58 : 64) * dp, (env.mobile ? 118 : 132) * dp);
           drew = true;
         }
-        var h = env.hov[k], nm = this.cases[k].normal;
-        gl.uniform3f(QU.uNormal, nm[0], nm[1], nm[2]);
+        var h = env.hov[k];
         gl.uniform1f(QU.uLift, h * 22);
         gl.uniform1f(QU.uLit, 1 - 0.28 * (env.any - h));
         gl.uniform1f(QU.uAlpha, q);
@@ -458,53 +470,59 @@
       }
       if (drew) { gl.disableVertexAttribArray(QU.aPos); gl.disableVertexAttribArray(QU.aUv); }
 
-      // labels pinned to the front face of the block
+      // labels pinned to the front face of the block; once they have faded they are left alone
       var near = Math.max(0, 1 - Math.abs(stage - 1) / 0.35);
-      LABELS.forEach(function (l, m) {
-        var x = l.x * BLOCK_X * 2 * (env.mobile ? 0.3 : 1);
-        var y = (yb(l.layer, x, Z_STRATA_FRONT) + yb(l.layer + 1, x, Z_STRATA_FRONT)) / 2;
-        var s = project([x, y, Z_STRATA_FRONT + 2], W, H), el = labels[m];
-        el.style.opacity = s ? Math.max(0, Math.min(1, near * 1.8 - m * 0.16)) : 0;
-        if (!s) return;
-        if (!el._w) el._w = el.offsetWidth;
-        el.style.transform = 'translate(' + Math.max(12, Math.min(s.x - 3.5, W - el._w - 12)) + 'px,' + (s.y - 10) + 'px)';
-      });
+      if (near > 0 || this.labelsUp) {
+        this.labelsUp = near > 0;
+        for (k = 0; k < LABELS.length; k++) {
+          var lb = LABELS[k], el = labels[k];
+          var lx = lb.x * BLOCK_X * 2 * (env.mobile ? 0.3 : 1);
+          var ly = (yb(lb.layer, lx, Z_STRATA_FRONT) + yb(lb.layer + 1, lx, Z_STRATA_FRONT)) / 2;
+          var seen = project(lx, ly, Z_STRATA_FRONT + 2, W, H);
+          css(el, 'opacity', seen ? Math.max(0, Math.min(1, near * 1.8 - k * 0.16)).toFixed(3) : '0');
+          if (!seen) continue;
+          if (!el._w) el._w = el.offsetWidth;
+          css(el, 'transform', 'translate(' + Math.max(12, Math.min(PT.x - 3.5, W - el._w - 12)).toFixed(1) + 'px,' + (PT.y - 10).toFixed(1) + 'px)');
+        }
+      }
 
       // where each case is on screen now, for the hit test, the hand-off and its label;
-      // the label shows only while the camera is turned to its picture
-      this.rects = this.cases.map(function (cs2, k2) {
-        var pts = cs2.corners.map(function (c) { return project(c, W, H); });
-        if (pts.some(function (p) { return !p; })) return null;
-        var xs = pts.map(function (p) { return p.x; }), ys = pts.map(function (p) { return p.y; });
-        var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-        return { x: x0, y: y0, w: x1 - x0, h: y1 - y0, bl: pts[2], br: pts[3], o: vis };
-      });
       // a label fades out under the bar, as its picture does
       var bar0 = env.mobile ? 58 : 64, bar1 = env.mobile ? 104 : 120;
-      env.tags = this.rects.map(function (r) {
-        if (!r) return { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 };
-        var y = Math.max(r.bl.y, r.br.y);
-        return { x: r.bl.x, y: y, w: r.br.x - r.bl.x, top: r.y, o: r.o * smooth((y - bar0) / (bar1 - bar0)) };
-      });
+      for (k = 0; k < 4; k++) {
+        var cn = this.cases[k].corners, r = rects[k], tg = tags[k];
+        var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, blx = 0, bly = 0, brx = 0, bry = 0;
+        r.ok = true;
+        for (var c = 0; c < 4 && r.ok; c++) {
+          r.ok = project(cn[c][0], cn[c][1], cn[c][2], W, H);
+          x0 = Math.min(x0, PT.x); x1 = Math.max(x1, PT.x); y0 = Math.min(y0, PT.y); y1 = Math.max(y1, PT.y);
+          if (c === 2) { blx = PT.x; bly = PT.y; } else if (c === 3) { brx = PT.x; bry = PT.y; }
+        }
+        if (!r.ok) { tg.x = tg.y = -1e4; tg.w = tg.top = tg.o = 0; continue; }
+        r.x = x0; r.y = y0; r.w = x1 - x0; r.h = y1 - y0; r.o = vis;
+        // the label hangs from the picture's bottom edge
+        var by = Math.max(bly, bry);
+        tg.x = blx; tg.y = by; tg.w = brx - blx; tg.top = y0; tg.o = vis * smooth((by - bar0) / (bar1 - bar0));
+      }
+      env.tags = tags;
       // the section title is the top of the column: it scrolls away with it, fading out under the bar
       var title = this.title || (this.title = document.querySelector('.work-title'));
       if (title) {
         if (this.titleY == null) this.titleY = title.offsetTop + title.offsetHeight; // its bottom edge
         var shift = stage > ROW ? Math.max(0, (COL.top - camY) * F / COL.d) : 0;
         var to = (vis * smooth((this.titleY - shift - bar0) / (bar1 - bar0))).toFixed(2), tt = 'translateY(' + (-shift).toFixed(1) + 'px)';
-        if (title._o !== to) { title._o = to; title.style.opacity = to; }
-        if (title._t !== tt) { title._t = tt; title.style.transform = tt; }
+        css(title, 'opacity', to); css(title, 'transform', tt);
       }
     },
     workAt: function (stage) { return openable(stage); },
     // through the column the scroll is a page's: nothing settles it and the picture keeps up with it
     free: function (stage) { return stage > ROW - 0.03 && stage < END + 0.03; },
-    coverRect: function (k) { var r = this.rects[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
+    coverRect: function (k) { var r = rects[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
     coverImage: function (k) { return images[k]; },
     coverAt: function (x, y) {
       for (var k = 0; k < 4; k++) {
-        var r = this.rects && this.rects[k];
-        if (r && openable(env0.stage) && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
+        var r = rects[k];
+        if (r.ok && openable(env0.stage) && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
       }
       return -1;
     }

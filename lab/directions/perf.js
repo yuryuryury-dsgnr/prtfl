@@ -1,4 +1,4 @@
-// What a phone needs to stay smooth, shared by the Matter and Depth pages:
+// What a phone needs to stay smooth, shared by every lab page (Dive, the sandbox, the case):
 //   · touch devices keep the browser's own scroll (no smoothing layer, no settling)
 //   · the canvas starts at 2× on a phone, not its native 3×
 //   · if frames still come in slow, the resolution steps down on its own

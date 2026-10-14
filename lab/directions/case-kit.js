@@ -410,7 +410,7 @@
   var env = {
     W: innerWidth, H: (window.Perf ? Perf.vh() : innerHeight), dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2), mobile: innerWidth < 860, reduce: reduce,
     t: 0, dt: 16, scene: 0, sub: 0, step: 0, persona: 0, heroRect: { x: 0, y: 0, w: 1, h: 1 }, heroVis: 1,
-    mouse: { x: -9999, y: -9999, vx: 0, vy: 0, on: 0 }
+    mouse: { x: -9999, y: -9999, on: 0 }
   };
   var tx = -9999, ty = -9999, lastMove = 0;
   addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; lastMove = performance.now(); });
@@ -463,8 +463,7 @@
     if (tx < -9000) m.on += (0 - m.on) * 0.08 * kk;
     else {
       if (m.x < -9000 || m.on < 0.05) { m.x = tx; m.y = ty; }
-      var nx = m.x + (tx - m.x) * 0.3 * kk, ny = m.y + (ty - m.y) * 0.3 * kk;
-      m.vx = nx - m.x; m.vy = ny - m.y; m.x = nx; m.y = ny;
+      m.x += (tx - m.x) * 0.3 * kk; m.y += (ty - m.y) * 0.3 * kk;
       m.on += ((now - lastMove < 1200 ? 1 : 0.3) - m.on) * 0.08 * kk;
     }
   }

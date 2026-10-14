@@ -1,5 +1,5 @@
-// The shell every B-family page shares: scroll mapped to stages (four by
-// default), captions and the rail, keys, the pointer, hovering and opening a
+// The shell Dive (and the Depth sandbox) runs on: scroll mapped to stages (four
+// by default), captions and the rail, keys, the pointer, hovering and opening a
 // cover, loading and the frame loop. A page brings only its renderer:
 //
 //   BKit({ cases, keys?, stops?, last?, renderer: { init(env) -> bool, load(tick) -> Promise,
@@ -24,7 +24,7 @@
       W: innerWidth, H: (window.Perf ? Perf.vh() : innerHeight), mobile: innerWidth < 760, reduce: reduce,
       dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2),
       t: 0, dt: 16.7, s: 0, stage: 0,
-      mouse: { p: 0, x: -9999, y: -9999, vx: 0, vy: 0, on: 0 },
+      mouse: { p: 0, x: -9999, y: -9999, on: 0 },
       hover: -1, hov: [0, 0, 0, 0], any: 0,
       go: -1, g: 0, wave: { x: 0, y: 0, t: -10 },
       tags: null, cases: CASES
@@ -65,25 +65,24 @@
       capWork.appendChild(a);
       return a;
     });
-    var lastTagKey = '';
+    // each label is written only where it changed (style writes cost a recalculation)
+    var workTitle = document.getElementById('workTitle');
     function placeTags() {
       if (!env.tags) return;
-      var key = env.tags.map(function (r) { return (r.x | 0) + ',' + (r.y | 0) + ',' + (r.w | 0) + ',' + (r.o == null ? '' : (r.o * 50 | 0)); }).join(';');
-      if (key === lastTagKey) return;
-      lastTagKey = key;
-      env.tags.forEach(function (r, k) {
-        tags[k].style.transform = 'translate(' + r.x + 'px,' + r.y + 'px)';
-        tags[k].style.width = r.w + 'px';
+      for (var k = 0; k < env.tags.length; k++) {
+        var r = env.tags[k], el = tags[k];
+        put(el, 'transform', 'translate(' + r.x.toFixed(1) + 'px,' + r.y.toFixed(1) + 'px)');
+        put(el, 'width', r.w.toFixed(1) + 'px');
         // under a small picture only the name fits
-        tags[k].classList.toggle('narrow', r.w < (env.mobile ? 220 : 420));
+        var narrow = r.w < (env.mobile ? 220 : 420);
+        if (el._narrow !== narrow) { el._narrow = narrow; el.classList.toggle('narrow', narrow); }
         if (r.o != null) {
-          tags[k].style.opacity = r.o;
-          tags[k].style.visibility = r.o > 0.01 ? '' : 'hidden';
-          tags[k].style.pointerEvents = r.o > 0.6 ? '' : 'none';
+          put(el, 'opacity', r.o.toFixed(3));
+          put(el, 'visibility', r.o > 0.01 ? '' : 'hidden');
+          put(el, 'pointerEvents', r.o > 0.6 ? '' : 'none');
         }
-      });
-      var title = document.getElementById('workTitle');
-      if (title && env.tags[0]) title.style.transform = 'translateY(' + (env.tags[0].top - (env.mobile ? 48 : 58)) + 'px)';
+      }
+      if (workTitle && env.tags[0]) put(workTitle, 'transform', 'translateY(' + (env.tags[0].top - (env.mobile ? 48 : 58)).toFixed(1) + 'px)');
     }
 
     // ——— scroll ———
@@ -146,9 +145,10 @@
 
     // ——— pointer ———
     var tx = -9999, ty = -9999, lastMove = 0;
-    var ring = document.getElementById('ring'), rx = 0, ry = 0;
+    var ring = document.getElementById('ring'), rx = 0, ry = 0, mouseSeen = false;
     addEventListener('pointermove', function (e) {
       tx = e.clientX; ty = e.clientY; lastMove = performance.now();
+      if (e.pointerType === 'mouse') mouseSeen = true;
       if (ring && e.pointerType === 'mouse' && env.go < 0) ring.style.opacity = 1;
       var onCover = inWork() && !e.target.closest('.tag') ? R.coverAt(e.clientX, e.clientY) : -1;
       if (!e.target.closest('.tag')) env.hover = onCover;
@@ -213,7 +213,7 @@
     }
 
     // ——— frame ———
-    var t0 = performance.now(), prev = t0;
+    var t0 = performance.now(), prev = t0, litTag = null;
     function frame(rafNow) {
       if (lenis) lenis.raf(rafNow);
       var now = performance.now();
@@ -232,15 +232,14 @@
       if (tx < -9000) { m.on += (0 - m.on) * 0.1 * k; }
       else {
         if (m.x < -9000 || m.p < 0.05) { m.x = tx; m.y = ty; }
-        var nx = m.x + (tx - m.x) * 0.35 * k, ny = m.y + (ty - m.y) * 0.35 * k;
-        m.vx = nx - m.x; m.vy = ny - m.y; m.x = nx; m.y = ny;
+        m.x += (tx - m.x) * 0.35 * k; m.y += (ty - m.y) * 0.35 * k;
         m.on += ((now - lastMove < 1200 ? 1 : 0.4) - m.on) * 0.1 * k;
       }
-      if (ring) { rx += (tx - rx) * 0.22; ry += (ty - ry) * 0.22; ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)'; }
+      if (ring && mouseSeen && tx > -9000) { rx += (tx - rx) * 0.22; ry += (ty - ry) * 0.22; put(ring, 'transform', 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px)'); }
 
       env.any = 0;
       for (var i = 0; i < 4; i++) { env.hov[i] += ((env.hover === i ? 1 : 0) - env.hov[i]) * 0.12 * k; env.any = Math.max(env.any, env.hov[i]); }
-      tags.forEach(function (tg, i) { tg.classList.toggle('on', env.hover === i); });
+      if (env.hover !== litTag) { litTag = env.hover; tags.forEach(function (tg, i) { tg.classList.toggle('on', litTag === i); }); }
 
       if (env.go >= 0) {
         env.g = Math.min(1, (now - goStart) / (reduce ? 300 : 1100));
@@ -271,7 +270,6 @@
         clearTimeout(to);
         to = setTimeout(function () {
           env.W = innerWidth; env.H = (window.Perf ? Perf.vh() : innerHeight); env.mobile = innerWidth < 760;
-          lastTagKey = '';
           R.build(env);
         }, 200);
       });
@@ -292,12 +290,7 @@
       }).then(function (img) { done++; tick(done / total); return img; });
     }));
   };
-  BKit.coverDraw = function (ctx, img, w, h) {
-    var r = Math.max(w / img.naturalWidth, h / img.naturalHeight);
-    var dw = img.naturalWidth * r, dh = img.naturalHeight * r;
-    ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
-  };
-  // the four covers on a 2×2 grid, sized by the screen; shared so every variant hangs them alike
+  // the four covers on a 2×2 grid, sized by the screen (the Depth sandbox hangs them so)
   BKit.coverLayout = function (W, H, mobile) {
     // on a wide screen they keep clear of the section rail on the right
     var gw = mobile ? W * 0.92 : Math.min(W * 0.82, W >= 1100 ? W - 340 : W, 1240);
