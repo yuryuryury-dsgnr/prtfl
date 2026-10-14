@@ -11,7 +11,9 @@
   root.classList.add('style-' + style);
 
   // ——— chrome ———
-  document.getElementById('home').href = style === 'depth' ? 'depth.html' : './';
+  // back to the home page the case was opened from
+  var from = params.get('from');
+  document.getElementById('home').href = from === 'dive' ? 'dive.html' : style === 'depth' ? 'depth.html' : './';
   var sM = document.getElementById('sMatter'), sD = document.getElementById('sDepth');
   (style === 'depth' ? sD : sM).setAttribute('aria-current', 'page');
   // switching style keeps your place: it lands on the same chapter

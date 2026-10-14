@@ -3,7 +3,8 @@
 (function () {
   var pages = [
     ['', './', 'Материя'],
-    ['depth', 'depth.html', 'Глубина']
+    ['depth', 'depth.html', 'Глубина'],
+    ['dive', 'dive.html', 'Погружение']
   ];
   // the live site serves pages without .html, the local server with it; the folder itself is Matter
   var here = (location.pathname.match(/\/([a-z]+)(?:\.html)?$/) || [])[1] || '';

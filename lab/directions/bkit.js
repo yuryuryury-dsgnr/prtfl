@@ -1,9 +1,11 @@
-// The shell every B-family page shares: scroll mapped to four stages,
-// captions and the rail, keys, the pointer, hovering and opening a cover,
-// loading and the frame loop. A page brings only its renderer:
+// The shell every B-family page shares: scroll mapped to stages (four by
+// default), captions and the rail, keys, the pointer, hovering and opening a
+// cover, loading and the frame loop. A page brings only its renderer:
 //
-//   BKit({ cases, renderer: { init(env) -> bool, load(tick) -> Promise,
-//          build(env), frame(env), coverAt(x, y) -> k | -1 } })
+//   BKit({ cases, keys?, stops?, last?, renderer: { init(env) -> bool, load(tick) -> Promise,
+//          build(env), frame(env), coverAt(x, y) -> k | -1, workAt?(stage) -> bool } })
+//
+// A caption names its stage (data-cap="1") or a run of them (data-cap="2-5").
 //
 // Everything the renderer is handed is in screen CSS px, origin top-left.
 (function () {
@@ -12,6 +14,9 @@
     // plateaus are only as wide as reading needs; the settle does the rest
     var KEYS = opt.keys || [[0, 0], [0.04, 0], [0.27, 1], [0.33, 1], [0.57, 2], [0.69, 2], [0.94, 3], [1, 3]];
     var STOPS = opt.stops || [0, 0.30, 0.63, 1];
+    var LAST = opt.last || 3;
+    // where the covers can be hovered and opened: by default the one stage that shows them all
+    function inWork() { return R.workAt ? R.workAt(env.stage) : Math.abs(env.stage - 2) < 0.15; }
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var root = document.documentElement;
 
@@ -52,13 +57,17 @@
     var lastTagKey = '';
     function placeTags() {
       if (!env.tags) return;
-      var key = env.tags.map(function (r) { return (r.x | 0) + ',' + (r.y | 0) + ',' + (r.w | 0); }).join(';');
+      var key = env.tags.map(function (r) { return (r.x | 0) + ',' + (r.y | 0) + ',' + (r.w | 0) + ',' + (r.o == null ? '' : (r.o * 50 | 0)); }).join(';');
       if (key === lastTagKey) return;
       lastTagKey = key;
       env.tags.forEach(function (r, k) {
         tags[k].style.transform = 'translate(' + r.x + 'px,' + r.y + 'px)';
         tags[k].style.width = r.w + 'px';
-        if (r.o != null) tags[k].style.opacity = r.o;
+        if (r.o != null) {
+          tags[k].style.opacity = r.o;
+          tags[k].style.visibility = r.o > 0.01 ? '' : 'hidden';
+          tags[k].style.pointerEvents = r.o > 0.6 ? '' : 'none';
+        }
       });
       var title = document.getElementById('workTitle');
       if (title && env.tags[0]) title.style.transform = 'translateY(' + (env.tags[0].top - (env.mobile ? 48 : 58)) + 'px)';
@@ -70,7 +79,7 @@
         var a = KEYS[i - 1], b = KEYS[i], f = (s - a[0]) / (b[0] - a[0] || 1);
         return a[1] + (b[1] - a[1]) * f;
       }
-      return 3;
+      return LAST;
     }
     // read once and on resize: a layout read after the frame's style writes forces a reflow
     var maxS;
@@ -84,7 +93,14 @@
     var touch = window.Perf && Perf.touch;
     var lenis = window.Lenis && !reduce && !touch ? new Lenis({ lerp: 0.18 }) : null;
     // a handle for poking at it from the console
-    window.__bkit = { env: env, lenis: lenis, toStage: function (k) { if (lenis) lenis.scrollTo(STOPS[k] * maxScroll(), { immediate: true }); else scrollTo(0, STOPS[k] * maxScroll()); } };
+    window.__bkit = { env: env, lenis: lenis, toStage: function (k) { if (lenis) lenis.scrollTo(STOPS[k] * maxScroll(), { immediate: true }); else scrollTo(0, STOPS[k] * maxScroll()); },
+      // the scroll position that shows a given stage (for checking any moment of the flight)
+      yAt: function (st) {
+        for (var i = 1; i < KEYS.length; i++) if (st <= KEYS[i][1] && KEYS[i][1] > KEYS[i - 1][1]) {
+          var a = KEYS[i - 1], b = KEYS[i]; return (a[0] + (b[0] - a[0]) * (st - a[1]) / (b[1] - a[1])) * maxScroll();
+        }
+        return maxScroll();
+      } };
     function scrollPos() { return lenis ? lenis.animatedScroll : scrollY; }
     if (window.Perf) Perf.info = function () { return 'stage ' + env.stage.toFixed(2) + '  y ' + Math.round(scrollPos()); };
     function scrollToStage(k, dur) {
@@ -107,10 +123,10 @@
     addEventListener('keydown', function (e) {
       if (e.target.closest('input, textarea') || e.metaKey || e.ctrlKey) return;
       var cur = Math.round(stageAt(scrollPos() / maxScroll()));
-      if (['ArrowDown', 'PageDown', ' '].indexOf(e.key) >= 0) { e.preventDefault(); scrollToStage(Math.min(3, cur + 1)); }
+      if (['ArrowDown', 'PageDown', ' '].indexOf(e.key) >= 0) { e.preventDefault(); scrollToStage(Math.min(LAST, cur + 1)); }
       if (['ArrowUp', 'PageUp'].indexOf(e.key) >= 0) { e.preventDefault(); scrollToStage(Math.max(0, cur - 1)); }
       if (e.key === 'Home') { e.preventDefault(); scrollToStage(0); }
-      if (e.key === 'End') { e.preventDefault(); scrollToStage(3); }
+      if (e.key === 'End') { e.preventDefault(); scrollToStage(LAST); }
     });
 
     // ——— pointer ———
@@ -119,7 +135,7 @@
     addEventListener('pointermove', function (e) {
       tx = e.clientX; ty = e.clientY; lastMove = performance.now();
       if (ring && e.pointerType === 'mouse' && env.go < 0) ring.style.opacity = 1;
-      var onCover = Math.abs(env.stage - 2) < 0.15 && !e.target.closest('.tag') ? R.coverAt(e.clientX, e.clientY) : -1;
+      var onCover = inWork() && !e.target.closest('.tag') ? R.coverAt(e.clientX, e.clientY) : -1;
       if (!e.target.closest('.tag')) env.hover = onCover;
       if (ring) ring.classList.toggle('big', onCover >= 0);
       document.body.style.cursor = onCover >= 0 ? 'pointer' : '';
@@ -136,7 +152,7 @@
       var d = down; down = null;
       if (!d || Math.abs(e.clientX - d.x) > 10 || Math.abs(e.clientY - d.y) > 10 || e.timeStamp - d.t > 600) return;
       if (e.target.closest('a, button, .dir-switch')) return;
-      if (Math.abs(env.stage - 2) < 0.15) {
+      if (inWork()) {
         var k = R.coverAt(e.clientX, e.clientY);
         if (k >= 0) { go(k); return; }
       }
@@ -147,7 +163,7 @@
     var goStart = 0;
     function go(k) {
       if (env.go >= 0) return;
-      if (Math.abs(env.stage - 2) > 0.15) { location.href = CASES[k].href; return; }
+      if (!inWork()) { location.href = CASES[k].href; return; }
       env.go = k; env.hover = k; goStart = performance.now();
       // the cover crosses into a box that grows to fill the screen (handoff.js); the camera still flies in under it
       if (window.Handoff && R.coverRect) Handoff.leave(R.coverImage(k), R.coverRect(k), { lit: Math.min(1.15, 0.3 + 0.9 * env.hov[k] + (1 - env.any) * 0.7), fade: true, done: function () { leaveFor(k); } });
@@ -168,15 +184,17 @@
     var meter = [].slice.call(document.querySelectorAll('#meter button'));
     function captions(p) {
       caps.forEach(function (el) {
-        var i = +el.dataset.cap, d = Math.abs(p - i);
+        var r = el._r || (el._r = el.dataset.cap.split('-').map(Number));
+        var off = p - Math.max(r[0], Math.min(r[r.length - 1], p)), d = Math.abs(off);
         var o = Math.max(0, 1 - d / 0.22) * (1 - env.g * 3 > 0 ? 1 - env.g * 3 : 0);
         put(el, 'opacity', o.toFixed(3));
         put(el, 'visibility', o > 0.01 ? 'visible' : 'hidden');
-        put(el, 'transform', reduce || o < 0.01 ? '' : 'translateY(' + ((p - i) * -40).toFixed(1) + 'px)');
+        put(el, 'transform', reduce || o < 0.01 ? '' : 'translateY(' + (off * -40).toFixed(1) + 'px)');
         put(el, 'pointerEvents', o > 0.6 ? '' : 'none');
       });
-      var on = Math.round(p);
-      meter.forEach(function (m, i) { m.classList.toggle('on', i === on); });
+      var on = Math.round(p), lit = -1;
+      meter.forEach(function (m, i) { if (+m.dataset.stage <= on) lit = i; });
+      meter.forEach(function (m, i) { m.classList.toggle('on', i === lit); });
     }
 
     // ——— frame ———
