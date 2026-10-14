@@ -22,7 +22,7 @@
     html { -webkit-font-smoothing: antialiased; background: var(--bg); }
     body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.6; font-size: 16px; }
     a { color: inherit; text-decoration: none; }
-    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     a:focus-visible, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; border-radius: 6px; }
     ::selection { background: var(--fg); color: var(--bg); }
     img { display: block; max-width: 100%; }
@@ -726,7 +726,7 @@
   <!-- versioned, so a phone that saw an older build doesn't keep it -->
   <script src="perf.js?v=12"></script>
   <script src="case-matter.js?v=4"></script>
-  <script src="case-depth.js?v=6"></script>
+  <script src="case-depth.js?v=7"></script>
   <script>
     // the case's own material, word for word from the live case page
     window.CASE = {
