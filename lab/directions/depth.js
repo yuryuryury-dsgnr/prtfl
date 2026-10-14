@@ -4,18 +4,18 @@
 // so what it looks at is sharp and the rest opens into bokeh.
 (function () {
   var CASES = [
-    { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Data search: from weeks to under five minutes', href: 'halliburton.html?v=depth' },
-    { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Designed and built solo, concept to App Store', href: '../../cases/rebalancer/' },
-    { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Time to booking cut 40% in usability tests', href: '../../cases/dobrodoc/' },
-    { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero in 2020, earning since', href: '../../cases/dopas/' }
+    { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=depth' },
+    { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669']] },
+    { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353'], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc']] },
+    { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/']] }
   ];
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
   var LABELS = [
-    { layer: 0, x: -0.2, text: 'Interface', note: 'what people actually touch' },
-    { layer: 2, x: 0.25, text: 'Design system', note: 'tokens, components' },
-    { layer: 4, x: -0.35, text: 'Information architecture', note: '4 personas, 5 flows' },
-    { layer: 6, x: 0.15, text: 'Research', note: '10 people across 4 roles' },
-    { layer: 7, x: -0.05, text: 'Pipeline', note: 'Figma → MCP → IDE' }
+    { layer: 0, x: -0.2, text: 'Interface', note: 'Main, Explore, Detail, Request Access, Admin' },
+    { layer: 2, x: 0.25, text: 'Design system', note: 'Three-tier token architecture' },
+    { layer: 4, x: -0.35, text: 'Information architecture', note: '4 personas · 5 flows · IA' },
+    { layer: 6, x: 0.15, text: 'Research', note: '10 participants across 4 roles' },
+    { layer: 7, x: -0.05, text: 'Pipeline', note: 'Figma MCP · live specs' }
   ];
   // where things sit along the flight
   var Z_STRATA_FRONT = -1300, Z_STRATA_BACK = -2300, Z_COVERS = -3400, Z_GLOBE = -5200;

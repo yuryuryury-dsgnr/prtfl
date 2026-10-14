@@ -66,6 +66,11 @@
     .tag.on small { color: rgba(238,240,246,.85); }
     .tag.on em { color: var(--fg); transform: translateX(4px); }
     .tag .short { display: none; }
+    .tag-main { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .tag-st { display: flex; gap: 12px; }
+    .tag-st a { font: 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s; }
+    .tag-st a:hover, .tag-st a:focus-visible { color: var(--fg); }
+    @media (max-width: 760px) { .tag-st { display: none; } }
     @media (max-width: 760px) { .tag small, .tag em, .tag .long { display: none; } .tag .short { display: inline; } .tag b { font-size: 13px; } .tag b i { display: none; } }
 
     .cap-end { left: 0; right: 0; bottom: clamp(64px, 11vh, 112px); text-align: center; padding: 0 16px; }
@@ -105,7 +110,7 @@
     <a href="#" data-stage="0">Portfolio</a>
     <nav class="nav-links">
       <a href="#work" data-stage="2">Work</a>
-      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
       <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
     </nav>
   </header>
@@ -120,33 +125,33 @@
   <section class="cap cap-hero" data-cap="0">
     <h1 class="sr-only">Hi! I'm Yurii.</h1>
     <span class="eyebrow">Yurii Fokin · Batumi, GE</span>
-    <p>Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=depth">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=depth">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
     <div data-hint data-mouse="scroll to fly through it|move the cursor to look around|click anywhere" data-touch="swipe up to fly through it|tap anywhere"></div>
   </section>
 
   <section class="cap cap-streams" data-cap="1">
-    <span class="eyebrow">Under the surface</span>
-    <h2>Most of the work is in the layers nobody sees.</h2>
-    <p>On Halliburton's first unified data platform I'm the sole designer — from the research at the bottom to the pipeline that hands design to code.</p>
+    <span class="eyebrow">Halliburton · 2025–2026</span>
+    <h2>Data Marketplace</h2>
+    <p>Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.</p>
   </section>
   <div class="depth-labels" id="depthLabels" aria-hidden="true"></div>
 
   <section class="cap cap-work" data-cap="2" id="capWork"><h2 id="workTitle">Selected work</h2></section>
 
   <section class="cap cap-end" data-cap="3">
-    <span class="eyebrow">Batumi, GE · UTC+4</span>
+    <span class="eyebrow">Batumi, GE</span>
     <h2>Open to senior and<br>lead design roles.</h2>
     <div class="row">
-      <a href="mailto:yuryuryury@icloud.com">yuryuryury@icloud.com</a>
-      <a href="https://www.linkedin.com/in/yuryury/">LinkedIn ↗</a>
-      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <a href="mailto:yuryuryury@icloud.com">Email</a>
+      <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
     </div>
     <button class="top" data-stage="0">back to the start ↑</button>
   </section>
 
   <main class="fallback" id="work">
     <h1>Hi! I'm Yurii.</h1>
-    <p>Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
     <ul id="fallbackList"></ul>
   </main>
 
@@ -157,7 +162,7 @@
   <script src="switcher.js?v=2"></script>
   <script src="hint.js?v=3"></script>
   <script src="handoff.js?v=6"></script>
-  <script src="bkit.js?v=11"></script>
-  <script src="depth.js?v=7"></script>
+  <script src="bkit.js?v=13"></script>
+  <script src="depth.js?v=8"></script>
 </body>
 </html>

@@ -27,7 +27,7 @@
 
     var list = document.getElementById('fallbackList');
     if (list) list.innerHTML = CASES.map(function (c) {
-      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a></li>';
+      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a>' + (c.links || []).map(function (l) { return ' <a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</li>';
     }).join('');
 
     var ok = false;
@@ -37,15 +37,14 @@
     // ——— case labels under the covers; the renderer says where ———
     var capWork = document.getElementById('capWork');
     var tags = CASES.map(function (c, k) {
-      var a = document.createElement('a');
-      a.className = 'tag'; a.href = c.href;
-      a.innerHTML = '<span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) +
-        '</span></b><small>' + c.line + '</small></span><em>View case →</em>';
+      var a = document.createElement('div');
+      a.className = 'tag';
+      a.innerHTML = BKit.tagHtml(c, k);
       a.addEventListener('mouseenter', function () { env.hover = k; });
       a.addEventListener('mouseleave', function () { env.hover = -1; });
-      a.addEventListener('focus', function () { env.hover = k; });
-      a.addEventListener('blur', function () { env.hover = -1; });
-      a.addEventListener('click', function (e) { e.preventDefault(); go(k); });
+      a.addEventListener('focusin', function () { env.hover = k; });
+      a.addEventListener('focusout', function () { env.hover = -1; });
+      a.querySelector('.tag-main').addEventListener('click', function (e) { e.preventDefault(); go(k); });
       capWork.appendChild(a);
       return a;
     });
@@ -261,8 +260,15 @@
     ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
   };
   // the four covers on a 2×2 grid, sized by the screen; shared so every variant hangs them alike
+  // a case's label under its cover: the case link, and beside it its store links, as on the live home page
+  BKit.tagHtml = function (c, k) {
+    var st = (c.links || []).map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('');
+    return '<a class="tag-main" href="' + c.href + '"><span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) +
+      '</span></b><small>' + c.line + '</small></span><em>View case →</em></a>' + (st ? '<span class="tag-st">' + st + '</span>' : '');
+  };
   BKit.coverLayout = function (W, H, mobile) {
-    var gw = Math.min(W * (mobile ? 0.92 : 0.82), 1240);
+    // on a wide screen they leave room for the section rail on the right
+    var gw = mobile ? W * 0.92 : Math.min(W * 0.82, W >= 1100 ? W - 340 : W, 1240);
     var gh = mobile ? Math.min(H * 0.6, gw * 1.3) : Math.min(H * 0.64, gw * 0.62);
     var gap = mobile ? 12 : 22, labelH = mobile ? 34 : 54;
     var cw = (gw - gap) / 2, ch = (gh - gap - labelH * 2) / 2;

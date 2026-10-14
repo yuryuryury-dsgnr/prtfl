@@ -99,6 +99,11 @@
     .tag em { font: normal 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s, transform .3s cubic-bezier(.2,.8,.2,1); }
     .tag.on small { color: rgba(238,240,246,.85); }
     .tag .short { display: none; }
+    .tag-main { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .tag-st { display: flex; gap: 12px; }
+    .tag-st a { font: 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s; }
+    .tag-st a:hover, .tag-st a:focus-visible { color: var(--fg); }
+    @media (max-width: 760px) { .tag-st { display: none; } }
     .tag.on em { color: var(--fg); transform: translateX(4px); }
     @media (max-width: 760px) { .tag small, .tag em, .tag .long { display: none; } .tag .short { display: inline; } .tag b { font-size: 13px; } .tag b i { display: none; } }
 
@@ -155,7 +160,7 @@
     <a href="#" data-stage="0">Portfolio</a>
     <nav class="nav-links">
       <a href="#work" data-stage="2">Work</a>
-      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
       <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
     </nav>
   </header>
@@ -170,14 +175,14 @@
   <section class="cap cap-hero" data-cap="0">
     <h1 class="sr-only">Hi! I'm Yurii.</h1>
     <span class="eyebrow">Yurii Fokin · Batumi, GE</span>
-    <p>Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=matter">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=matter">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
     <div data-hint data-mouse="scroll to reshape it|move through it|click anywhere" data-touch="swipe up to reshape it|tap anywhere"></div>
   </section>
 
   <section class="cap cap-layers" data-cap="1">
-    <span class="eyebrow">Under the surface</span>
-    <h2>Most of the work is in the layers nobody sees.</h2>
-    <p>On Halliburton's first unified data platform I'm the sole designer — from the research at the bottom to the pipeline that hands design to code.</p>
+    <span class="eyebrow">Halliburton · 2025–2026</span>
+    <h2>Data Marketplace</h2>
+    <p>Shipping Halliburton's first unified data platform through an AI-native design-to-code pipeline.</p>
   </section>
   <div class="strata-labels" id="strataLabels" aria-hidden="true"></div>
 
@@ -186,19 +191,19 @@
   </section>
 
   <section class="cap cap-end" data-cap="3">
-    <span class="eyebrow">Batumi, GE · UTC+4</span>
+    <span class="eyebrow">Batumi, GE</span>
     <h2>Open to senior and<br>lead design roles.</h2>
     <div class="row">
-      <a href="mailto:yuryuryury@icloud.com">yuryuryury@icloud.com</a>
-      <a href="https://www.linkedin.com/in/yuryury/">LinkedIn ↗</a>
-      <a href="../../assets/CV_Yurii_Designer.pdf">CV ↓</a>
+      <a href="mailto:yuryuryury@icloud.com">Email</a>
+      <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
     </div>
     <button class="top" data-stage="0">back to the start ↑</button>
   </section>
 
   <main class="fallback" id="work">
     <h1>Hi! I'm Yurii.</h1>
-    <p>Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
     <ul id="fallbackList"></ul>
   </main>
 
@@ -212,19 +217,19 @@
   <script>
   (function () {
     var CASES = [
-      { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Data search: from weeks to under five minutes', href: 'halliburton.html?v=matter' },
-      { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Designed and built solo, concept to App Store', href: '../../cases/rebalancer/' },
-      { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Time to booking cut 40% in usability tests', href: '../../cases/dobrodoc/' },
-      { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero in 2020, earning since', href: '../../cases/dopas/' }
+      { img: '../../assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'halliburton.html?v=matter' },
+      { img: '../../assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: '../../cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669']] },
+      { img: '../../assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: '../../cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353'], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc']] },
+      { img: '../../assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: '../../cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/']] }
     ];
     // top to bottom: what people see, down to what they never do
     var STRATA = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
     var LABELS = [
-      { layer: 0, x: 0.06, text: 'Interface', note: 'what people actually touch' },
-      { layer: 2, x: -0.3, text: 'Design system', note: 'tokens, components' },
-      { layer: 4, x: 0.1, text: 'Information architecture', note: '4 personas, 5 flows' },
-      { layer: 6, x: -0.2, text: 'Research', note: '10 people across 4 roles' },
-      { layer: 7, x: 0.17, text: 'Pipeline', note: 'Figma → MCP → IDE' }
+      { layer: 0, x: 0.06, text: 'Interface', note: 'Main, Explore, Detail, Request Access, Admin' },
+      { layer: 2, x: -0.3, text: 'Design system', note: 'Three-tier token architecture' },
+      { layer: 4, x: 0.1, text: 'Information architecture', note: '4 personas · 5 flows · IA' },
+      { layer: 6, x: -0.2, text: 'Research', note: '10 participants across 4 roles' },
+      { layer: 7, x: 0.17, text: 'Pipeline', note: 'Figma MCP · live specs' }
     ];
     // plateaus: each shape holds before the next one starts
     var KEYS = [[0, 0], [0.04, 0], [0.27, 1], [0.33, 1], [0.57, 2], [0.69, 2], [0.94, 3], [1, 3]];
@@ -232,7 +237,7 @@
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     document.getElementById('fallbackList').innerHTML = CASES.map(function (c) {
-      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a></li>';
+      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a>' + (c.links || []).map(function (l) { return ' <a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</li>';
     }).join('');
 
     var canvas = document.getElementById('gl');
@@ -449,7 +454,8 @@
       var mobile = W < 760;
 
       // the four covers decide N: one point per sampled pixel
-      var gw = Math.min(W * (mobile ? 0.92 : 0.82), 1240);
+      // on a wide screen they leave room for the section rail on the right
+      var gw = mobile ? W * 0.92 : Math.min(W * 0.82, W >= 1100 ? W - 340 : W, 1240);
       var gh = mobile ? Math.min(H * 0.6, gw * 1.3) : Math.min(H * 0.64, gw * 0.62);
       var gap = mobile ? 12 : 22, labelH = mobile ? 34 : 54;
       var cw = (gw - gap) / 2, chh = (gh - gap - labelH * 2) / 2;
@@ -562,18 +568,23 @@
       placeTags();
     }
 
-    // ——— the case labels sit under their covers ———
+    // ——— the case labels sit under their covers: the case link, and its store links, as on the live home page ———
+    function tagHtml(c, k) {
+      var st = (c.links || []).map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('');
+      return '<a class="tag-main" href="' + c.href + '"><span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) +
+        '</span></b><small>' + c.line + '</small></span><em>View case →</em></a>' + (st ? '<span class="tag-st">' + st + '</span>' : '');
+    }
     var capWork = document.getElementById('capWork');
     var hover = -1;
     var tags = CASES.map(function (c, k) {
-      var a = document.createElement('a');
-      a.className = 'tag'; a.href = c.href;
-      a.innerHTML = '<span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) + '</span></b><small>' + c.line + '</small></span><em>View case →</em>';
+      var a = document.createElement('div');
+      a.className = 'tag';
+      a.innerHTML = tagHtml(c, k);
       a.addEventListener('mouseenter', function () { hover = k; });
       a.addEventListener('mouseleave', function () { hover = -1; });
-      a.addEventListener('focus', function () { hover = k; });
-      a.addEventListener('blur', function () { hover = -1; });
-      a.addEventListener('click', function (e) { e.preventDefault(); go(k); });
+      a.addEventListener('focusin', function () { hover = k; });
+      a.addEventListener('focusout', function () { hover = -1; });
+      a.querySelector('.tag-main').addEventListener('click', function (e) { e.preventDefault(); go(k); });
       capWork.appendChild(a);
       return a;
     });

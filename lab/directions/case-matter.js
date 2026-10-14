@@ -141,7 +141,7 @@
     // on a phone the scene sits behind the text, so it steps back
     // more points overlap more: keep the dense scenes from burning out
     '  c *= mix(uDim, 1.0, sq);',
-    '  c *= mix(1.0, 0.6, uMobile * (1.0 - sq));',
+    '  c *= mix(1.0, 0.42, uMobile * (1.0 - sq));',
     '  vC = c; vR = 1.0 - sq;',
     '  gl_PointSize = mix(sA, sB, t) * uDpr;',
     '  gl_Position = vec4(pos.x / uRes.x * 2.0 - 1.0, 1.0 - pos.y / uRes.y * 2.0, 0.0, 1.0);',
