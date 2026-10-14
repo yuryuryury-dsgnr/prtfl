@@ -21,11 +21,11 @@
   ];
   // stages: 0 hello · 1 layers · 2 the top of the work · 3 its bottom · 4 contact.
   // Between 2 and 3 the column scrolls like a page: no stops, nothing settles there
-  var ROW = 2, END = 3, LAST = 4;
+  var TOP = 2, END = 3, LAST = 4;
   // where things sit along the flight
   var Z_STRATA_FRONT = -1300, Z_STRATA_BACK = -2300, BLOCK_X = 900;
-  // where the row hangs
-  var Z_ROW = -5200;
+  // where the column hangs
+  var Z_COL = -5200;
 
   // the column's layout, worked out here (before the shell measures the track) so the scroll
   // through it can be one to one: a screen of scroll moves the column a screen
@@ -213,7 +213,7 @@
   // a style written only when it changes
   function css(el, k, v) { var c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
   function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
-  // how many points Matter (index.html) draws its greeting with: one per pixel sampled from its four
+  // how many points Matter (matter.html) draws its greeting with: one per pixel sampled from its four
   // covers, so it depends on the screen. Kept in step with Matter's build()
   function matterCount(W, H, mobile) {
     var gw = mobile ? W * 0.92 : Math.min(W * 0.82, W >= 1100 ? W - 340 : W, 1240);
@@ -336,7 +336,7 @@
       this.size = [cw, ch]; this.texDpr = Math.min(2, env.dpr || 1);
       this.cases = [];
       for (var k = 0; k < 4; k++) {
-        var cy = -k * (ch + gap), z = Z_ROW, x0 = -cw / 2, x1 = cw / 2, ya = cy + ch / 2, yz = cy - ch / 2;
+        var cy = -k * (ch + gap), z = Z_COL, x0 = -cw / 2, x1 = cw / 2, ya = cy + ch / 2, yz = cy - ch / 2;
         this.picture(k);
         gl.bindBuffer(gl.ARRAY_BUFFER, planes[k].buf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -349,7 +349,7 @@
       // Matter's dust, in screen px
       for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put((R() - 0.5) * W, R() * H, 0, 0.7 * dl, 0.8 * dl, 0.95 * dl, 4, 0); }
       // the planet at the end
-      var Z_GLOBE = Z_ROW - 3200, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, H * 0.12, Z_GLOBE];
+      var Z_GLOBE = Z_COL - 3200, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, H * 0.12, Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
         put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 0.62 + 0.33 * qq, 0.84 - 0.18 * qq, 0.78 - 0.36 * qq, 3, 0);
@@ -377,8 +377,8 @@
         { s: 0, e: [0, 0, F], t: [0, 0, 0], f: F },
         { s: 1, e: [-260, 250, -420], t: [0, -230, -1750], f: 1150 },
         { s: 1.5, e: [30, -232, -1180], t: [0, -236, -2600], f: 520 },
-        { s: ROW, e: [0, COL.top, Z_ROW + COL.d], t: [0, COL.top, Z_ROW], f: COL.d },
-        { s: END, e: [0, COL.bottom, Z_ROW + COL.d], t: [0, COL.bottom, Z_ROW], f: COL.d },
+        { s: TOP, e: [0, COL.top, Z_COL + COL.d], t: [0, COL.top, Z_COL], f: COL.d },
+        { s: END, e: [0, COL.bottom, Z_COL + COL.d], t: [0, COL.bottom, Z_COL], f: COL.d },
         { s: LAST, e: [0, 0, Z_GLOBE + F * 1.5], t: [0, 0, Z_GLOBE], f: F * 1.5 }
       ];
       this.stations = stations;
@@ -392,7 +392,7 @@
     frame: function (env) {
       var W = env.W, H = env.H, S = this.stations, stage = Math.min(LAST, env.stage), k;
       // eased into and out of every station, except through the column, which moves with the scroll
-      var n = Math.min(LAST - 1, Math.floor(stage)), sE = n === ROW ? stage : n + smooth(stage - n);
+      var n = Math.min(LAST - 1, Math.floor(stage)), sE = n === TOP ? stage : n + smooth(stage - n);
       var i = 0; while (i < S.length - 2 && S[i + 1].s <= sE) i++;
       var f = Math.max(0, Math.min(1, (sE - S[i].s) / (S[i + 1].s - S[i].s)));
       // a spline through the dive, ending on the overview (no point past it, so no overshoot);
@@ -509,14 +509,14 @@
       var title = this.title || (this.title = document.querySelector('.work-title'));
       if (title) {
         if (this.titleY == null) this.titleY = title.offsetTop + title.offsetHeight; // its bottom edge
-        var shift = stage > ROW ? Math.max(0, (COL.top - camY) * F / COL.d) : 0;
+        var shift = stage > TOP ? Math.max(0, (COL.top - camY) * F / COL.d) : 0;
         var to = (vis * smooth((this.titleY - shift - bar0) / (bar1 - bar0))).toFixed(2), tt = 'translateY(' + (-shift).toFixed(1) + 'px)';
         css(title, 'opacity', to); css(title, 'transform', tt);
       }
     },
     workAt: function (stage) { return openable(stage); },
     // through the column the scroll is a page's: nothing settles it and the picture keeps up with it
-    free: function (stage) { return stage > ROW - 0.03 && stage < END + 0.03; },
+    free: function (stage) { return stage > TOP - 0.03 && stage < END + 0.03; },
     coverRect: function (k) { var r = rects[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
     coverImage: function (k) { return images[k]; },
     coverAt: function (x, y) {
