@@ -40,8 +40,6 @@
     .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.6) 100%); }
 
     .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(16px, 4vw, 40px); font-size: 14px; font-weight: 500; }
-    /* the cases scroll under the bar: a soft dark fade keeps it readable over them */
-    .nav { background: linear-gradient(to bottom, rgba(6,7,10,.9) 0%, rgba(6,7,10,.6) 60%, rgba(6,7,10,0) 100%); padding-bottom: 28px; }
     .nav span { color: var(--muted); font-weight: 400; }
     .nav-links { display: flex; gap: 22px; align-items: center; }
     .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
@@ -92,6 +90,18 @@
     .tag.narrow small, .tag.narrow em, .tag.narrow .tag-st, .tag.narrow .long { display: none; }
     .tag.narrow .short { display: inline; }
     .tag.narrow b { font-size: 13px; }
+    /* on a phone the label keeps everything the live site's card says: name, line, the case, the product */
+    @media (max-width: 760px) {
+      .tag:not(.narrow) { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: baseline; padding-top: 12px; }
+      .tag:not(.narrow) .tag-main { display: contents; }
+      .tag:not(.narrow) > span:not(.tag-st), .tag:not(.narrow) .tag-main > span { grid-column: 1 / -1; }
+      .tag:not(.narrow) small { display: block; margin-top: 3px; }
+      .tag:not(.narrow) em { display: inline; }
+      .tag:not(.narrow) .long { display: inline; }
+      .tag:not(.narrow) .short { display: none; }
+      .tag:not(.narrow) b { font-size: 15px; }
+      .tag-st { margin-left: 0; }
+    }
     @media (max-width: 760px) { .tag small, .tag em, .tag .long { display: none; } .tag .short { display: inline; } .tag b { font-size: 13px; } .tag b i { display: none; } .tag-st { gap: 12px; } }
 
     .cap-end { left: 0; right: 0; bottom: clamp(64px, 11vh, 112px); text-align: center; padding: 0 16px; }
@@ -185,6 +195,6 @@
   <script src="hint.js?v=4"></script>
   <script src="handoff.js?v=6"></script>
   <script src="bkit.js?v=20"></script>
-  <script src="dive.js?v=23"></script>
+  <script src="dive.js?v=25"></script>
 </body>
 </html>

@@ -32,7 +32,7 @@
   var W0 = innerWidth, H0 = window.Perf ? Perf.vh() : innerHeight, MOB = W0 < 760, F0 = H0 * 0.96;
   var COL = (function () {
     var cw = MOB ? W0 * 0.9 : Math.min(W0 * 0.58, H0 * 0.62 * 1.6, 1100), ch = cw / (MOB ? 1.3 : 1.6);
-    var gap = ch * (MOB ? 0.3 : 0.24);
+    var gap = ch * (MOB ? 0.46 : 0.24);
     // the distance at which a picture takes this much of the screen's width
     var d = F0 * cw / (W0 * (MOB ? 0.92 : 0.46));
     var k = F0 / d; // world to screen
@@ -151,12 +151,14 @@
   ].join('\n');
   var QFS = [
     'precision mediump float;',
-    'uniform sampler2D uTex; uniform float uAlpha, uLit, uRad; uniform vec2 uSize;',
+    'uniform sampler2D uTex; uniform float uAlpha, uLit, uRad; uniform vec2 uSize; uniform vec3 uTop;',
     'varying vec2 vUv; varying float vFog;',
     'void main(){',
     '  vec2 q = abs((vUv - 0.5) * uSize) - (uSize * 0.5 - uRad);',
     '  float sd = length(max(q, 0.0)) - uRad;',
-    '  float a = uAlpha * vFog * (1.0 - smoothstep(-1.0, 1.0, sd));',
+    // scrolling up under the bar, a picture dissolves into the dark rather than show through it
+    '  float fromTop = uTop.x - gl_FragCoord.y;',
+    '  float a = uAlpha * vFog * (1.0 - smoothstep(-1.0, 1.0, sd)) * smoothstep(uTop.y, uTop.z, fromTop);',
     '  gl_FragColor = vec4(texture2D(uTex, vUv).rgb * uLit * a, a);',
     '}'
   ].join('\n');
@@ -221,7 +223,7 @@
       ['uView', 'uProj', 'uT', 'uDpr', 'uFocus', 'uF', 'uNear', 'uMaxSize', 'uIn', 'uStage', 'uFly', 'uScroll', 'uDim', 'uRes', 'uMouse', 'uWave', 'uGlobe', 'uGlobeRot']
         .forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
       ['aPos', 'aCol', 'aInfo', 'aAlt'].forEach(function (n) { buffers[n] = gl.createBuffer(); A[n] = gl.getAttribLocation(prog, n); });
-      ['uView', 'uProj', 'uNormal', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
+      ['uView', 'uProj', 'uNormal', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize', 'uTop'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
       QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
       for (var k = 0; k < 4; k++) planes.push({ buf: gl.createBuffer(), tex: gl.createTexture() });
       gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND);
@@ -422,6 +424,9 @@
           gl.uniform1i(QU.uTex, 0); gl.activeTexture(gl.TEXTURE0);
           gl.uniform1f(QU.uNear, F * 0.35); gl.uniform1f(QU.uFocus, focus);
           gl.uniform2f(QU.uSize, sz[0], sz[1]); gl.uniform1f(QU.uRad, env.mobile ? 12 : 18);
+          // in device px: the canvas height, and the band under the bar where pictures fade out
+          var dp = gl.canvas.height / H;
+          gl.uniform3f(QU.uTop, gl.canvas.height, (env.mobile ? 58 : 64) * dp, (env.mobile ? 118 : 132) * dp);
           drew = true;
         }
         var h = env.hov[k], nm = this.cases[k].normal;
@@ -458,8 +463,12 @@
         var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
         return { x: x0, y: y0, w: x1 - x0, h: y1 - y0, bl: pts[2], br: pts[3], o: vis };
       });
+      // a label fades out under the bar, as its picture does
+      var bar0 = env.mobile ? 58 : 64, bar1 = env.mobile ? 104 : 120;
       env.tags = this.rects.map(function (r) {
-        return r ? { x: r.bl.x, y: Math.max(r.bl.y, r.br.y), w: r.br.x - r.bl.x, top: r.y, o: r.o } : { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 };
+        if (!r) return { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 };
+        var y = Math.max(r.bl.y, r.br.y);
+        return { x: r.bl.x, y: y, w: r.br.x - r.bl.x, top: r.y, o: r.o * smooth((y - bar0) / (bar1 - bar0)) };
       });
       // the section title belongs to the top of the column and leaves as it scrolls on
       var title = this.title || (this.title = document.querySelector('.work-title'));
