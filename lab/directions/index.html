@@ -53,6 +53,11 @@
     .cap-hero { left: var(--pad); bottom: clamp(72px, 12vh, 120px); max-width: 520px; padding-right: 16px; }
     .cap-hero p { font-size: clamp(16px, 1.5vw, 19px); color: rgba(238,240,246,.82); }
     .cap-hero a { border-bottom: 1px solid rgba(238,240,246,.35); }
+    /* the scroll hint: where you are on the way down, shown whenever the page comes to rest */
+    .scroll-hint[data-hint] { position: fixed; z-index: 12; left: var(--pad); bottom: clamp(26px, 5vh, 48px); margin: 0;
+      padding: 7px 12px 7px 9px; border-radius: 999px; background: rgba(6,7,10,.66); pointer-events: none; opacity: 0; transition: opacity .6s; }
+    .no-gl .scroll-hint { display: none; }
+    .scroll-hint .hint-t { min-width: 14ch; } /* the pill keeps its width as the words change */
 
     .cap-layers { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
     .cap-layers h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
@@ -147,8 +152,8 @@
   <section class="cap cap-hero" data-cap="0">
     <h1 class="sr-only">Hi! I'm Yurii.</h1>
     <p>I'm a Lead UX Designer at DXC Luxoft, on <a href="halliburton.html?v=depth">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
-    <div data-hint data-mouse="scroll to dive in|move through it|click anywhere" data-touch="swipe up to dive in|tap anywhere"></div>
   </section>
+  <div class="scroll-hint" data-hint data-drive data-mouse="scroll down|keep scrolling|scroll back" data-touch="swipe up|keep swiping|swipe back"></div>
 
   <section class="cap cap-layers" data-cap="1">
     <span class="eyebrow">Under the surface</span>
@@ -179,9 +184,9 @@
 
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script src="perf.js?v=12"></script>
-  <script src="hint.js?v=5"></script>
+  <script src="hint.js?v=6"></script>
   <script src="handoff.js?v=6"></script>
   <script src="bkit.js?v=22"></script>
-  <script src="dive.js?v=37"></script>
+  <script src="dive.js?v=38"></script>
 </body>
 </html>

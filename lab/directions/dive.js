@@ -225,6 +225,10 @@
     var sp = Math.max(2.2, Math.sqrt((cw * chh * 4) / (mobile ? 32000 : 120000)));
     return Math.floor(cw / sp) * Math.floor(chh / sp) * 4;
   }
+  // the scroll hint rests while the page moves
+  var lastScroll = -1e9, hintAt = -1;
+  addEventListener('scroll', function () { lastScroll = performance.now(); }, { passive: true });
+
   // the column comes up out of the dark after the dive; from then on it scrolls away like a page
   function shown(stage) { return smooth((stage - 1.45) / 0.45); }
   // every case can be opened the whole time the column is up
@@ -514,6 +518,15 @@
       // the closing words ride up with the planet, as one block of the page (translate: the shell owns transform)
       var capEnd = this.capEnd || (this.capEnd = document.querySelector('.cap-end'));
       if (capEnd) css(capEnd, 'translate', '0 ' + (stage > END ? Math.max(0, (camY - this.yEnd) / 1.5) : 0).toFixed(1) + 'px');
+      // the scroll hint: at the top, on the way, at the bottom; it shows once the page is still, and not
+      // over the cases where they fill a narrow screen
+      var hint = window.Hint;
+      if (hint) {
+        var at = stage < 0.05 ? 0 : stage > LAST - 0.02 ? 2 : 1;
+        if (at !== hintAt) { hintAt = at; hint.say(at); hint.el.classList.toggle('is-back', at === 2); }
+        var overCases = W < 1000 && stage > 1.6 && stage < END + 0.4;
+        css(hint.el, 'opacity', performance.now() - lastScroll > 900 && env.go < 0 && !overCases ? '1' : '0');
+      }
       // the section title is the top of the column: it scrolls away with it, fading out under the bar
       var title = this.title || (this.title = document.querySelector('.work-title'));
       if (title) {

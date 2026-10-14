@@ -2,6 +2,8 @@
 // for a mouse, a swipe for a thumb) and words that decode from one to the next, like the data
 // around them. The element carries both sets of words; the device picks one:
 //   <div data-hint data-mouse="scroll to …|click anywhere" data-touch="swipe up to …|tap anywhere"></div>
+// With data-drive the words don't cycle: the page picks them with Hint.say(i), and a class of
+// is-back on the element turns the gesture the other way.
 (function () {
   var el = document.querySelector('[data-hint]');
   if (!el) return;
@@ -25,6 +27,7 @@
     '.is-touch .hint-g i{position:absolute;left:-3px;bottom:-4px;width:8px;height:8px;border-radius:50%;background:var(--fg);box-shadow:0 0 14px rgba(233,236,242,.8);animation:hint-dot 2.2s cubic-bezier(.5,0,.15,1) infinite}',
     '@keyframes hint-trail{0%,12%{transform:scaleY(0);opacity:1}70%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}',
     '@keyframes hint-dot{0%{transform:translateY(0) scale(.4);opacity:0}12%{transform:translateY(0) scale(1);opacity:1}70%{transform:translateY(-30px) scale(1);opacity:1}100%{transform:translateY(-30px) scale(.4);opacity:0}}',
+    '.hint-g{transition:transform .5s cubic-bezier(.2,.8,.2,1)}.is-back .hint-g{transform:scaleY(-1)}',
     '@media (prefers-reduced-motion: reduce){.hint-g i,.hint-g::before{animation:none!important}}'
   ].join('');
   document.head.appendChild(css);
@@ -32,21 +35,18 @@
   el.classList.add(touch ? 'is-touch' : 'is-mouse');
   el.innerHTML = '<span class="hint-g" aria-hidden="true"><i></i></span><span class="hint-t" aria-hidden="true"></span><span class="sr-only"></span>';
   var t = el.querySelector('.hint-t');
-  el.querySelector('.sr-only').textContent = words.join(' · ');
+  var sr = el.querySelector('.sr-only'), drive = el.hasAttribute('data-drive');
+  sr.textContent = drive ? words[0] : words.join(' · ');
   // the verb is what to do, so it is the bright part
   function render(s) { var k = s.indexOf(' '); t.innerHTML = k < 0 ? '<b>' + s + '</b>' : '<b>' + s.slice(0, k) + '</b>' + s.slice(k); }
   render(words[0]);
-  if (reduce || words.length < 2) return;
 
   // each character runs through data glyphs and settles, left to right
-  var GLYPHS = '01·:/<>+=#';
-  var i = 0;
-  // only while its caption is on screen (a hidden tab pauses the frames that run it anyway)
-  var cap = el.closest('.cap') || el;
-  setInterval(function () {
-    if (+(cap.style.opacity || 1) < 0.1) return;
-    var from = words[i], to = words[i = (i + 1) % words.length], n = Math.max(from.length, to.length), f = 0;
+  var GLYPHS = '01·:/<>+=#', run = 0;
+  function decode(from, to) {
+    var n = Math.max(from.length, to.length), f = 0, me = ++run;
     (function step() {
+      if (me !== run) return; // a newer word took over
       f++;
       var out = '';
       for (var k = 0; k < n; k++) {
@@ -61,5 +61,24 @@
       if (f < 5 + n * 0.7) { t.textContent = out; requestAnimationFrame(step); }
       else render(to);
     })();
+  }
+
+  var i = 0;
+  window.Hint = {
+    el: el,
+    say: function (k) {
+      if (k === i || !words[k]) return;
+      var from = words[i]; i = k; sr.textContent = words[k];
+      if (reduce) render(words[k]); else decode(from, words[k]);
+    }
+  };
+  if (drive || reduce || words.length < 2) return;
+
+  // only while its caption is on screen (a hidden tab pauses the frames that run it anyway)
+  var cap = el.closest('.cap') || el;
+  setInterval(function () {
+    if (+(cap.style.opacity || 1) < 0.1) return;
+    var from = words[i]; i = (i + 1) % words.length;
+    decode(from, words[i]);
   }, 3400);
 })();
