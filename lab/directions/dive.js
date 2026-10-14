@@ -40,8 +40,10 @@
     var top = -(H0 * 0.5 - H0 * 0.22) / k + ch / 2, bottom = -3 * (ch + gap) - ch / 2 + (H0 * 0.74 - H0 * 0.5) / k;
     return { cw: cw, ch: ch, gap: gap, d: d, top: top, bottom: bottom, run: (top - bottom) * k / H0 };
   })();
-  // the scroll track, in screens: a short hold where a shape is read, none through the column
-  var RUNS = [1.2, 1.7, COL.run, 1.3], HOLDS = [0.45, 0, 0.2], LEAD = 0.12;
+  // past the last case the page keeps scrolling the same way, one to one, down to the planet below it
+  var END_RUN = 1;
+  // the scroll track, in screens: a short hold where a shape is read, none from the column on
+  var RUNS = [1.2, 1.7, COL.run, END_RUN], HOLDS = [0.45, 0, 0], LEAD = 0.12;
   var keys = [[0, 0]], stops = [0], pos = LEAD;
   keys.push([pos, 0]);
   RUNS.forEach(function (r, i) {
@@ -90,7 +92,7 @@
     '    a0 = smoothstep(0.35, 0.95, uStage);',
     '  }',
     '  else if (kind < 3.5) {',
-    '    a0 = smoothstep(3.08, 3.55, uStage);',
+    '    a0 = smoothstep(2.95, 3.35, uStage);',
     '    vec3 d = p - uGlobe; float ga = uGlobeRot.x;',
     '    d = vec3(d.x * cos(ga) + d.z * sin(ga), d.y, -d.x * sin(ga) + d.z * cos(ga));',
     '    float gb = uGlobeRot.y; d = vec3(d.x, d.y * cos(gb) - d.z * sin(gb), d.y * sin(gb) + d.z * cos(gb));',
@@ -223,8 +225,8 @@
     var sp = Math.max(2.2, Math.sqrt((cw * chh * 4) / (mobile ? 32000 : 120000)));
     return Math.floor(cw / sp) * Math.floor(chh / sp) * 4;
   }
-  // the column comes up out of the dark after the dive, and lets go on the way to the planet
-  function shown(stage) { return smooth((stage - 1.45) / 0.45) * (1 - smooth((stage - (END + 0.04)) / 0.16)); }
+  // the column comes up out of the dark after the dive; from then on it scrolls away like a page
+  function shown(stage) { return smooth((stage - 1.45) / 0.45); }
   // every case can be opened the whole time the column is up
   function openable(stage) { return shown(stage) > 0.9; }
 
@@ -349,7 +351,10 @@
       // Matter's dust, in screen px
       for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put((R() - 0.5) * W, R() * H, 0, 0.7 * dl, 0.8 * dl, 0.95 * dl, 4, 0); }
       // the planet at the end
-      var Z_GLOBE = Z_COL - 3200, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, H * 0.12, Z_GLOBE];
+      // the planet hangs below the column, as far down as a screen of scroll carries the camera,
+      // a little deeper than the pictures, so it rises into view a little slower than they leave
+      var zCam = Z_COL + COL.d, yEnd = COL.bottom - END_RUN * H * COL.d / F;
+      var Z_GLOBE = zCam - F * 1.5, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, yEnd + H * 0.12, Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
         put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 0.62 + 0.33 * qq, 0.84 - 0.18 * qq, 0.78 - 0.36 * qq, 3, 0);
@@ -379,9 +384,10 @@
         { s: 1.5, e: [30, -232, -1180], t: [0, -236, -2600], f: 520 },
         { s: TOP, e: [0, COL.top, Z_COL + COL.d], t: [0, COL.top, Z_COL], f: COL.d },
         { s: END, e: [0, COL.bottom, Z_COL + COL.d], t: [0, COL.bottom, Z_COL], f: COL.d },
-        { s: LAST, e: [0, 0, Z_GLOBE + F * 1.5], t: [0, 0, Z_GLOBE], f: F * 1.5 }
+        { s: LAST, e: [0, yEnd, zCam], t: [0, yEnd, Z_GLOBE], f: F * 1.5 }
       ];
       this.stations = stations;
+      this.yEnd = yEnd;
       this.rot = this.rot || 0;
     },
     setDpr: function (env) {
@@ -391,8 +397,8 @@
     },
     frame: function (env) {
       var W = env.W, H = env.H, S = this.stations, stage = Math.min(LAST, env.stage), k;
-      // eased into and out of every station, except through the column, which moves with the scroll
-      var n = Math.min(LAST - 1, Math.floor(stage)), sE = n === TOP ? stage : n + smooth(stage - n);
+      // eased into and out of every station, except from the column on, where the camera moves with the scroll
+      var n = Math.min(LAST - 1, Math.floor(stage)), sE = n >= TOP ? stage : n + smooth(stage - n);
       var i = 0; while (i < S.length - 2 && S[i + 1].s <= sE) i++;
       var f = Math.max(0, Math.min(1, (sE - S[i].s) / (S[i + 1].s - S[i].s)));
       // a spline through the dive, ending on the overview (no point past it, so no overshoot);
@@ -505,6 +511,9 @@
         tg.x = blx; tg.y = by; tg.w = brx - blx; tg.top = y0; tg.o = vis * smooth((by - bar0) / (bar1 - bar0));
       }
       env.tags = tags;
+      // the closing words ride up with the planet, as one block of the page (translate: the shell owns transform)
+      var capEnd = this.capEnd || (this.capEnd = document.querySelector('.cap-end'));
+      if (capEnd) css(capEnd, 'translate', '0 ' + (stage > END ? Math.max(0, (camY - this.yEnd) / 1.5) : 0).toFixed(1) + 'px');
       // the section title is the top of the column: it scrolls away with it, fading out under the bar
       var title = this.title || (this.title = document.querySelector('.work-title'));
       if (title) {
@@ -515,8 +524,8 @@
       }
     },
     workAt: function (stage) { return openable(stage); },
-    // through the column the scroll is a page's: nothing settles it and the picture keeps up with it
-    free: function (stage) { return stage > TOP - 0.03 && stage < END + 0.03; },
+    // from the column to the end the scroll is a page's: nothing settles it and the picture keeps up with it
+    free: function (stage) { return stage > TOP - 0.03; },
     coverRect: function (k) { var r = rects[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
     coverImage: function (k) { return images[k]; },
     coverAt: function (x, y) {
