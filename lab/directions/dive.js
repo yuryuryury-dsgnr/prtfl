@@ -165,7 +165,7 @@
   }
   function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
   // a picture comes up out of the dark ahead (the fog does most of it) and lets go once it is behind
-  function shown(stage, k) { var d = stage - (CASE0 + k); return d < 0 ? 1 - smooth((-d - 0.8) / 0.5) : 1 - smooth((d - 0.35) / 0.35); }
+  function shown(stage, k) { var d = stage - (CASE0 + k); return d < 0 ? 1 - smooth((-d - 0.55) / 0.4) : 1 - smooth((d - 0.35) / 0.35); }
   // and it can be opened while the camera is turned to it
   function openable(stage, k) { return Math.abs(stage - (CASE0 + k)) < 0.14; }
 
