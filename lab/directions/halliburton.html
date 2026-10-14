@@ -357,12 +357,20 @@
       .hx-bar .hx-go::after { content: '→'; animation: hx-nudge 1.6s cubic-bezier(.5,0,.2,1) infinite; }
       .hx-bar.used .hx-go { opacity: 0; }
       @keyframes hx-nudge { 0%, 100% { transform: none; } 45% { transform: translateX(5px); } }
-      /* the roadmap as cards, its dot riding each card's corner */
-      .steps.hx { border-left: 0; list-style: none; }
-      .steps.hx li { padding: 22px 22px 24px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; transition: opacity .4s, border-color .4s; }
+      /* the roadmap on a phone is still a timeline, laid on its side: an axis along the top of the rail
+         (filled up to the step in view), a dot per step on it, each card hanging from its dot */
+      .steps.hx { position: relative; border-left: 0; list-style: none; padding-top: 38px;
+        background: linear-gradient(rgba(233,236,242,.6), rgba(233,236,242,.6)) no-repeat, linear-gradient(var(--line), var(--line)) no-repeat;
+        background-size: var(--tl, 0px) 1px, 100% 1px; background-position: 0 18px, 0 18px; background-attachment: local;
+        transition: background-size .5s cubic-bezier(.2,.8,.2,1); }
+      .steps.hx li { opacity: 1; padding: 22px 22px 24px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; transition: border-color .4s; }
+      .steps.hx li > * { transition: opacity .4s; }
+      .steps.hx li:not(.on) > * { opacity: .5; }
       .steps.hx li.on { border-color: rgba(233,236,242,.3); }
-      .steps.hx li::before { left: 22px; top: 23px; }
-      .steps.hx b { padding-left: 20px; }
+      .steps.hx li::before { left: 22px; top: -25px; }
+      .steps.hx li::after { content: ''; position: absolute; left: 26px; top: -15px; width: 1px; height: 15px; background: var(--line); transition: background .4s; }
+      .steps.hx li.past::before { background: rgba(233,236,242,.6); border-color: rgba(233,236,242,.6); }
+      .steps.hx li.on::after, .steps.hx li.past::after { background: rgba(233,236,242,.45); }
       /* a rail inside a card reaches the card's edges, not the screen's */
       .card .hx { margin: 14px -22px 0; padding: 2px 22px 4px; scroll-padding: 0 22px; }
     }
@@ -738,6 +746,6 @@
       }
     };
   </script>
-  <script src="case-kit.js?v=21"></script>
+  <script src="case-kit.js?v=22"></script>
 </body>
 </html>
