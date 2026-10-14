@@ -13,7 +13,7 @@
   // ——— chrome ———
   // back to the home page the case was opened from
   var from = params.get('from');
-  document.getElementById('home').href = from === 'matter' ? 'matter.html' : from === 'depth' ? 'depth.html' : './';
+  document.getElementById('home').href = from === 'matter' ? '../../lab/directions/matter.html' : from === 'depth' ? '../../lab/directions/depth.html' : '../../';
   // the style pill compares the sandbox's two looks; opened from Dive the case simply is what it is
   var pill = document.querySelector('.nav .style');
   if (pill && from !== 'matter' && from !== 'depth') pill.style.display = 'none';

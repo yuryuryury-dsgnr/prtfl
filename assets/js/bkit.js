@@ -215,11 +215,11 @@
       if (window.Handoff && R.coverRect) Handoff.leave(R.coverImage(k), R.coverRect(k), { lit: Math.min(1.15, 0.3 + 0.9 * env.hov[k] + (1 - env.any) * 0.7), fade: true, done: function () { leaveFor(k); } });
       if (ring) ring.style.opacity = 0;
     }
-    // the case page picks up from the last frame (the lab's own case pages; the live ones have no landing)
+    // the case page picks up from the last frame
     function leaveFor(k) {
       if (env.left) return;
       env.left = true;
-      if (/\.html/.test(CASES[k].href)) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
+      if (/cases\/|\.html/.test(CASES[k].href)) { try { sessionStorage.setItem('land', '1'); } catch (e) {} }
       location.href = CASES[k].href;
     }
     // back from the case: the page comes back as it was before the click, nothing still lifted
@@ -296,6 +296,9 @@
       R.build(env);
       if (loading) { loading.style.opacity = 0; setTimeout(function () { loading.remove(); }, 800); }
       requestAnimationFrame(frame);
+      // an address that names a stage (/#work) opens on it
+      var named = location.hash && document.querySelector('[data-stage][href="' + location.hash.replace(/"/g, '') + '"]');
+      if (named) scrollTo(0, yAt(+named.dataset.stage));
       // a phone's toolbar sliding away changes the height a little; only rebuild for a real resize
       var to, lastW = innerWidth, lastH = innerHeight;
       addEventListener('resize', function () {

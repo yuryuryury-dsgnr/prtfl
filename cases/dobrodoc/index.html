@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DobroDoc+ — Yurii Fokin</title>
   <meta name="description" content="Mobile redesign of a Ukrainian healthcare app. Research with 285 participants, a rebuilt booking flow, and a 40% cut in time-to-booking in usability tests.">
   <link rel="canonical" href="https://yuryury.com/cases/dobrodoc/">
-  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Yurii Fokin">
   <meta property="og:title" content="DobroDoc+">
@@ -17,1546 +15,203 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#07080B">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F0F1F7; }
-    a { color: inherit; text-decoration: none; }
-
-    .uf-vars {
-      --uf-screen-bg:   #E8EDF3;  --uf-screen-bd:   #BDCBDC;
-      --uf-action-bg:   #E7EEE8;  --uf-action-bd:   #BECFC1;
-      --uf-system-bg:   #EFECF5;  --uf-system-bd:   #C5BED5;
-      --uf-decision-bg: #F2EBDF;  --uf-decision-bd: #D6C7AF;
-      --uf-end-bg:      #F7EBE9;  --uf-end-bd:      #D7BCB7;
-      --uf-neutral-bd:  rgba(0,0,0,0.28);
-      --uf-stage-bg:    #E7E7E7;
-    }
-    .uf-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
-    .uf-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #666666; }
-    .uf-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
-    .uf-key-mark--screen { background: var(--uf-screen-bg); border: 1px solid var(--uf-screen-bd); }
-    .uf-key-mark--action { background: var(--uf-action-bg); border: 1px solid var(--uf-action-bd); border-radius: 100px; }
-    .uf-key-mark--system { background: var(--uf-system-bg); border: 1px dotted var(--uf-system-bd); }
-    .uf-key-mark--decision { background: var(--uf-decision-bd); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
-    .uf-key-mark--end { background: var(--uf-end-bg); border: 1px solid var(--uf-end-bd); border-radius: 100px; }
-    .uf-key-mark--outside { background: transparent; border: 1px dashed var(--uf-neutral-bd); }
-
-    .uf-who {
-      margin: 18px 0 0; font-size: 11px; font-weight: 500;
-      letter-spacing: 0.06em; text-transform: uppercase; color: #666666;
-    }
-
-    .uf-stage {
-      margin-top: 14px; padding: 4px 0 10px;
-      background: var(--uf-stage-bg); border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
-    }
-    /* A drawn scrollbar rather than the native one: macOS resolves scrollbars
-       to overlays that reserve no space and fade when idle, so the one
-       affordance this area exists to give would be invisible exactly when it
-       is needed. This one is always on, and draggable. */
-    .uf-stage-bar {
-      position: relative; height: 6px; margin: 2px 14px 4px;
-      border-radius: 100px; background: rgba(0,0,0,0.09);
-      cursor: grab; touch-action: none; overflow: hidden;
-    }
-    .uf-stage-bar[hidden] { display: none; }
-    .uf-stage-bar:active { cursor: grabbing; }
-    .uf-stage-bar-thumb {
-      position: absolute; top: 0; left: 0; height: 100%; min-width: 28px;
-      border-radius: 100px; background: rgba(0,0,0,0.30);
-      transition: background 150ms ease;
-    }
-    .uf-stage-bar:hover .uf-stage-bar-thumb { background: rgba(0,0,0,0.44); }
-
-    .uf-flow {
-      margin-top: 0; padding: 0 14px 10px; max-width: 100%; min-width: 0;
-      overflow-x: auto; overflow-y: hidden;
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    .uf-flow::-webkit-scrollbar { display: none; }
-    .uf-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    /* 20 top clears the boundary label that hangs above the lane */
-    .uf-track { display: flex; align-items: center; width: max-content; padding: 20px 20px 14px 2px; }
-
-    .uf-link { flex: 0 0 30px; position: relative; height: 1px; background: rgba(0,0,0,0.22); }
-    .uf-link::after {
-      content: ''; position: absolute; right: 0; top: 50%;
-      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
-      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
-    }
-
-    .uf-branches { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 48px; flex: 0 0 auto; }
-    .uf-branches::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.24); }
-    .uf-branches::after { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
-    .uf-branch { position: relative; display: flex; align-items: center; }
-    .uf-branch::before { content: ''; position: absolute; left: -24px; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
-    /* these trim the spine above the first branch and below the last by
-       painting over it, so they match what is behind the rail — the stage */
-    .uf-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
-    .uf-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: var(--uf-stage-bg); }
-    .uf-branch-label {
-      flex: 0 0 auto; max-width: 118px; margin-right: 12px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
-      color: #666666; line-height: 1.35;
-    }
-
-    /* The step marker is an arrow like every other connector, with the step
-       named above it. It used to be a dashed lane crossing the track, which
-       drew a wall across a path that does not actually stop there — the flow
-       runs straight through a step change. */
-    /* wide enough for the longest step name to sit over it without the
-       label's background painting across the nodes on either side */
-    .uf-bound { position: relative; flex: 0 0 208px; height: 1px; margin: 0 10px; background: rgba(0,0,0,0.22); }
-    .uf-bound::after {
-      content: ''; position: absolute; right: 0; top: 50%;
-      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
-      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
-    }
-    .uf-bound-label {
-      position: absolute; left: 50%; bottom: 11px; transform: translateX(-50%);
-      white-space: nowrap; background: var(--uf-stage-bg); padding: 0 8px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;
-    }
-
-    .uf-step {
-      display: inline-flex; flex-direction: column; gap: 3px;
-      flex: 0 0 196px; width: 196px; padding: 11px 15px;
-      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
-      position: relative;
-    }
-    .uf-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #666666; }
-    .uf-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
-    .uf-step-line { font-size: 12px; color: #666666; line-height: 1.45; }
-    .uf-step--screen { background: var(--uf-screen-bg); border-color: var(--uf-screen-bd); }
-    .uf-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--uf-action-bg); border-color: var(--uf-action-bd); }
-    .uf-step--system { border-style: dotted; background: var(--uf-system-bg); border-color: var(--uf-system-bd); }
-    .uf-step--outside { border-style: dashed; border-color: var(--uf-neutral-bd); background: transparent; }
-    .uf-step--outside .uf-step-title { color: #666666; }
-    .uf-step--end {
-      background: var(--uf-end-bg); border-color: var(--uf-end-bd);
-      border-radius: 100px; padding-left: 19px; padding-right: 19px;
-    }
-    /* decision: a hexagon built from two clipped layers, so the outer one
-       shows through as a 1px outline and the shape reads as stroked */
-    .uf-dec { display: inline-block; padding: 1px; background: var(--uf-decision-bd); flex: 0 0 auto; }
-    .uf-dec, .uf-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
-    .uf-dec-in { background: var(--uf-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; width: 190px; }
-
-    /* ——— PAGE WASH ———
-       The same three colours as every other page, in deck placement C
-       — blue right of centre. Moving the blobs is what keeps the cases related without
-       repeating one another. A fixed layer rather than a body background,
-       which would scroll away with the page, and rather than
-       background-attachment: fixed, which stutters on iOS. */
-    .pagewash {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      /* Home's own two blooms — the near-white cool and the near-white warm —
-         in this page's own arrangement. Each case swaps where they sit; none of
-         them changes what they are. An earlier pass reached for a separate,
-         more saturated palette here, which put the warm bloom at R-B 15 against
-         home's 2: seven times the cast, and it read as a yellow stain rather
-         than as the same page. Measured on the painted pixels. */
-      background:
-        radial-gradient(115% 120% at 12% 20%, #FEFDFB 0%, rgba(254,253,251,0) 54%),
-        radial-gradient(110% 130% at 98% 44%, #FDFDFF 0%, rgba(253,253,255,0) 56%),
-        radial-gradient(100% 110% at 4% 76%, #FEFDFB 0%, rgba(254,253,251,0) 52%),
-        #F0F1F7;
-      /* the two bands that carry text on this layer are the very top, before
-         the header scrolls away, and the very bottom */
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
-              mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
-    }
-    .pagewash::before {
-      content: '';
-      position: absolute;
-      inset: -25%;
-      background: radial-gradient(46% 44% at 72% 52%, rgba(253,253,255,0.9), transparent 62%);
-    }
-    /* grain is what stops a gradient this large reading as plastic */
-    .pagewash::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      opacity: 0.42;
-      mix-blend-mode: multiply;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    }
-    /* ——— STICKY HEADER ——— */
-    .case-header {
-      position: sticky; top: 0; z-index: 130;
-      /* It stays put while the page scrolls under it, so it cannot be
-         transparent — the copy would sit on whatever passes beneath. A
-         translucent ground with a blur keeps the wash readable through it and
-         the header legible over anything. */
-      background: rgba(240,241,247,0.93);
-      -webkit-backdrop-filter: blur(12px);
-              backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      padding: 16px 24px;
-    }
-    .case-header-inner {
-      max-width: 760px; margin: 0 auto;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .case-header-back { font-size: 14px; font-weight: 500; color: #1A1A1A; }
-    .case-header-back:hover { color: #666666; }
-    .case-header-name { font-size: 14px; color: #666666; }
-
-    /* ——— CONTAINER ——— */
-    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
-
-    /* ——— HERO ——— */
-    /* the top gap shrinks on a phone: 80px above the title is a third of
-       a small screen before a word is read. Same curve as the other cases. */
-    .case-hero { padding: clamp(32px, 8vw, 80px) 0 48px; }
-    .case-hero h1 { font-size: 48px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
-    .case-hero-meta { font-size: 14px; color: #666666; margin-bottom: 8px; }
-    .case-hero-role { font-size: 14px; color: #666666; margin-bottom: 4px; }
-    .case-hero-result { font-size: 14px; color: #666666; font-style: italic; margin-bottom: 32px; }
-
-    /* The markup runs title, line, image, details — which is the phone order.
-       On a desktop the details go back above the image, so the order is a
-       layout decision rather than two different documents. Flex ordering
-       rather than duplicated markup: one DOM, one reading order for a screen
-       reader, and the visual order set per breakpoint. */
-    .case-hero { display: flex; flex-direction: column; }
-    .case-hero h1 { order: 1; }
-    .case-hero-hook, .case-hero-meta { order: 2; }
-    /* on a phone the store links belong above the cover: they are the one
-       thing on the page you can act on, and under the image they fell below
-       the fold. On desktop they stay where they read, after the facts. */
-    .case-hero .cta-row { order: 3; }
-    .case-hero-image { order: 4; }
-    .case-hero-detail { order: 5; }
-    @media (min-width: 769px) {
-      .case-hero-detail { order: 3; }
-      .case-hero .cta-row { order: 4; }
-      .case-hero-image { order: 5; }
-    }
-
-    /* flex does not collapse margins, so each gap is set on one side only */
-    .case-hero-hook, .case-hero-meta { margin-top: 0; margin-bottom: 0; }
-    .case-hero-image { margin-top: 48px; }
-    .case-hero-detail { margin-top: 36px; }
-    .case-hero .cta-row { margin-top: 24px; }
-
-    /* The image comes first now: a case is a thing you look at before you read
-       who was on the team. Everything factual — role, team, dates, the NDA
-       line — sits under it. */
-    .case-hero-detail { margin-top: 36px; }
-    .case-hero-detail > *:first-child { margin-top: 0; }
-    .case-hero-image {
-      width: calc(100% + 160px);
-      margin-left: -80px;
-      /* a white mat, 6px, with the inner radius at 24 minus the mat so
-         the two curves stay concentric */
-      padding: 6px;
-      background: #FCFCFC;
-      border-radius: 24px;
-      margin-top: 48px;
-      position: relative;
-      overflow: hidden;
-      /* Two shadows, not one: a tight contact shadow so the mat sits on the
-         page rather than floating, and a wide soft one underneath it for the
-         actual lift. The lift is offset down, the contact shadow barely at
-         all — which is what makes it read as height instead of a blur. */
-      box-shadow:
-        0 1px 2px rgba(20,22,28,0.05),
-        0 16px 36px -14px rgba(20,22,28,0.16);
-      /* the tilt happens here, so nothing above it has to know about 3D */
-      transform: perspective(1400px);
-      transform-style: preserve-3d;
-      will-change: transform;
-      transition: transform 500ms cubic-bezier(.2,.8,.3,1),
-                  box-shadow 500ms cubic-bezier(.2,.8,.3,1);
-    }
-    /* while the pointer is on it the transform must track, not lag */
-    .case-hero-image.is-tilting {
-      transition: box-shadow 300ms ease;
-    }
-    .case-hero-image.is-tilting {
-      box-shadow:
-        0 2px 4px rgba(20,22,28,0.06),
-        0 30px 60px -18px rgba(20,22,28,0.22);
-    }
-
-    /* Wide screens: the hero grows past the text column in two steps. The cap
-       is 200px a side because 1280px leaves 284px outside the column and the
-       frame must not reach the viewport edge. */
-    @media (min-width: 1025px) {
-      .case-hero-image { width: calc(100% + 240px); margin-left: -120px; }
-    }
-    @media (min-width: 1280px) {
-      .case-hero-image { width: calc(100% + 400px); margin-left: -200px; }
-    }
-    .case-hero-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 18px;
-    }
-    .case-hero-image-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #C3C3C3;
-      font-size: 14px;
-    }
-
-    /* ——— SECTIONS ——— */
-    .case-section { padding: 88px 0 0; }
-    /* Whatever a section ends on, the space to the next one is the section
-       rhythm and nothing else: a trailing bottom margin escapes the section
-       box and silently adds itself to the gap. */
-    .case-section > *:last-child { margin-bottom: 0; }
-    /* the number rides on the heading line now, at the heading's own size.
-       The space before the title is a real one — without it a screen reader
-       announces "01Roadmap" as a single word — so the margin carries only
-       the remainder: 0.18em + the space measures the same 15.2px at 38px
-       and 12.8px at 32px that the bare 0.4em margin did. */
-    .section-heading {
-      font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
-      line-height: 1.2; margin-bottom: 24px;
-    }
-
-    /* ——— THE HANGING ORDINAL ———
-       Above 1200 the page gutter is wide enough to hold the number outside the
-       column, so the heading's own name starts on the same vertical line as
-       every paragraph under it and only the ordinal sits further left. Below
-       that the gutter is 24px and the number would fall off the page, so it
-       stays inline. The leading space in the markup is trimmed at the start of
-       the line, which is what keeps the name flush. */
-    .section-text { color: #666666; margin-bottom: 16px; max-width: 640px; }
-
-    /* ——— TIMELINE ——— */
-    .timeline { display: flex; gap: 0; margin-top: 24px; position: relative; }
-    .timeline::before { content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08); }
-    .timeline-step { flex: 1; position: relative; padding-top: 48px; padding-right: 16px; }
-    .timeline-step::before {
-      content: ''; position: absolute; top: 18px; left: 0;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F0F1F7;
-    }
-    .timeline-number { font-size: 12px; font-weight: 500; color: #666666; margin-bottom: 4px; }
-    .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .timeline-desc { font-size: 12px; color: #666666; line-height: 1.5; margin-bottom: 8px; }
-    .timeline-tag { display: inline-block; font-size: 11px; color: #666666; background: #E9E9E9; padding: 3px 8px; border-radius: 4px; }
-
-    /* ——— CARD GRIDS ——— */
-    .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-    
-    .card { background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; }
-    /* Card type scale, shared site-wide with the persona cards on the
-       Data Marketplace case: label 11/500 uppercase · title 15/500/1.3 ·
-       body 13/1.6 · tag 11/500. */
-    .card-number { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #666666; margin-bottom: 8px; }
-    .card-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 8px; }
-    .card-desc { font-size: 13px; color: #666666; line-height: 1.6; margin-bottom: 12px; }
-    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .card-tag { font-size: 11px; font-weight: 500; color: #666666; background: #EFEFEF; padding: 3px 8px; border-radius: 4px; }
-
-    /* ——— TABLE ——— */
-
-    /* ——— USABILITY ROUNDS ——— */
-    .usability-round { background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 24px; margin-top: 24px; }
-    .round-title { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 20px; }
-    .round-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-    .round-col-title { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #666666; margin-bottom: 12px; }
-    .round-list { list-style: none; }
-    .round-list li { font-size: 13px; color: #666666; line-height: 1.6; padding: 6px 0; padding-left: 16px; position: relative; }
-    .round-list li::before { content: ''; position: absolute; left: 0; top: 13px; width: 6px; height: 6px; border-radius: 50%; }
-    .round-list.findings li::before { background: #dc2626; }
-    .round-list.changes li::before { background: #16a34a; }
-
-
-    /* ——— WIREFRAMES ——— */
-    
-
-    /* ——— iPHONE 16 FRAME ——— */
-    @media (min-width: 1080px) {
-      .phone-strip { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
-    }
-
-    /* The exports carry their own device frame, so the page draws no chrome of
-       its own — the same call the Rebalancer case makes. One drifting row at
-       every width, the component ported from there: the drift moves scrollLeft
-       rather than a transform, so the row stays a real scroller. */
-    .phone-strip {
-      margin-top: 32px;
-      cursor: grab;
-      overflow-x: auto; overflow-y: hidden;
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    .phone-strip.is-dragging { cursor: grabbing; user-select: none; }
-    .phone-strip.is-dragging img { pointer-events: none; }
-    .phone-strip::-webkit-scrollbar { display: none; }
-    .phone-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    /* Every export is 640 wide with the phone body at 70..509 and its shadow
-       running to 618 — a third of each file is transparent field, and not
-       evenly split. Laying the files out edge to edge therefore left 104px
-       between two phones where the gap should have been. So the item box is
-       the body, and the picture hangs out of it by exactly the slack it
-       carries: the gap below is then the gap you actually see. All absolute,
-       no percentages — the track is width: max-content and a percentage has
-       nothing definite to resolve against. */
-    .phone-track {
-      --shot-w: min(300px, 66vw);
-      --body-w: calc(var(--shot-w) * 439 / 640);
-      --slack-l: calc(var(--shot-w) * 70 / 640);
-      --slack-r: calc(var(--shot-w) * 131 / 640);
-      --slack-b: calc(var(--shot-w) * 112 / 640);
-      display: flex; align-items: flex-start; gap: 28px; width: max-content;
-      /* give the first and last shadows somewhere to land, or the scroller
-         clips them at its two ends */
-      padding-left: var(--slack-l); padding-right: var(--slack-r);
-    }
-    /* an absolute basis, never a percentage: the track is width: max-content,
-       so a percentage has nothing definite to resolve against and the items
-       stop being a row at all */
-    .phone-track > .phone-figure { flex: 0 0 var(--body-w); display: flex; flex-direction: column; align-items: center; gap: 0; }
-    .phone-shot {
-      display: block; width: var(--shot-w); height: auto; border-radius: 4px;
-      margin-left: calc(-1 * var(--slack-l)); margin-right: calc(-1 * var(--slack-r));
-    }
-    .phone-caption {
-      font-size: 13px;
-      color: #666666;
-      text-align: center;
-      /* the picture ends 112/640 above its own bottom edge; take that back so
-         the caption sits 28px under the phone rather than 82px */
-      margin-top: calc(28px - var(--slack-b));
-      line-height: 1.5;
-    }
-    
-
-    @media (max-width: 520px) {
-      .phone-track { gap: 18px; }
-    }
-
-    /* ——— BEFORE / AFTER ——— */
-
-    /* ——— OUTCOME ——— */
-    .outcome-text { color: #666666; margin-bottom: 24px; max-width: 640px; }
-    /* the live product is the proof, so it sits in the hero rather than at the
-       foot of the page — same place the Rebalancer case puts its store link */
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
-    .cta-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 14px; font-weight: 500;
-      padding: 10px 24px; border: 1.5px solid #1A1A1A;
-      border-radius: 100px; transition: all 200ms ease;
-    }
-    /* currentColor, so the mark flips to white with the label on hover */
-    .cta-pill svg {
-      width: auto; height: 16px; flex: 0 0 auto;
-      position: relative; top: -1px;   /* optical: the mark reads high against the cap line */
-    }
-    .cta-pill:hover { background: #1A1A1A; color: #FCFCFC; }
-
-    /* ——— REFLECTION ——— */
-
-    /* ——— NEXT CASE ——— */
-    .next-case {
-      margin-top: 80px; padding: 32px 0;
-      border-top: 1px solid rgba(0,0,0,0.08);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .next-case-label { font-size: 14px; color: #666666; }
-    .next-case-name { font-size: 14px; font-weight: 500; }
-    .next-case-name:hover { color: #666666; }
-
-    /* ——— FOOTER ——— */
-    .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
-    .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-    .footer-name { font-weight: 500; }
-    .footer-role { color: #666666; }
-    .footer-right { display: flex; gap: 24px; color: #666666; }
-    .footer-right a { position: relative; }
-    .footer-right a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #666666; transition: width 200ms ease; }
-    .footer-right a:hover::after { width: 100%; }
-
-    /* ——— FLOATING TOC PILL ———
-       Shared component across the case pages: a fixed pill naming the section
-       you are in, opening the full list on click. Shown at every width — it is
-       the table of contents, not a mobile stand-in for a sidebar. */
-    /* the section pill belongs to the page, not to the menu on top of it */
-    body.nav-open .toc-pill { opacity: 0; pointer-events: none; }
-    .toc-pill { display: flex; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; transition: opacity 240ms ease; }
-    .toc-pill-trigger {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(26,26,26,0.92);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      color: #fff; border: none; border-radius: 100px;
-      padding: 10px 18px 10px 14px;
-      font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
-    }
-    .toc-pill-num { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; }
-    .toc-pill-chevron { width: 14px; height: 14px; transition: transform 0.2s; opacity: 0.6; }
-    .toc-pill.open .toc-pill-chevron { transform: rotate(180deg); }
-    .toc-pill-menu {
-      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-      background: rgba(26,26,26,0.96);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border-radius: 16px; padding: 8px; min-width: 210px; display: none;
-      max-height: 70vh; overflow-y: auto;
-    }
-    .toc-pill.open .toc-pill-menu { display: block; }
-    .toc-pill-menu a {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px; border-radius: 10px; font-size: 13px;
-      color: rgba(255,255,255,0.6); transition: background 0.15s, color 0.15s;
-    }
-    .toc-pill-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
-    .toc-pill-menu .pill-num { font-size: 11px; color: rgba(255,255,255,0.62); flex-shrink: 0; }
-    .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.85); }
-
-    /* ——— RESPONSIVE ——— */
-    /* Collapse the hero bleed before the viewport gets narrower than the
-       gutters it borrows: below this the -80px pull runs past the screen
-       edge and drags the page sideways. */
-    @media (max-width: 1024px) {
-      .case-hero-image { width: 100%; margin-left: 0; }
-    }
-    @media (max-width: 768px) {
-      /* one gap under the header and the same one before the image, so the
-         hero reads as three even steps rather than a small one and a big one */
-      /* the hero's own bottom padding and the next section's top padding
-         were stacking to 96px between the last hero line and the first
-         heading; the section supplies that gap on its own */
-      /* body copy runs one step down on a phone; 1.7 leading is kept, so
-         the line box goes 27.2 -> 23.8 */
-      .section-text, .outcome-text { font-size: 14px; }
-      /* one step tighter than desktop the whole way down the hero */
-      .case-hero { padding-top: 24px; padding-bottom: 0; }
-      .case-hero .cta-row { margin-top: 24px; }
-      .case-hero-image { margin-top: 24px; }
-      .case-hero-detail { margin-top: 24px; }
-      .case-hero h1 { font-size: 36px; margin-bottom: 12px; }
-      .section-heading { font-size: 32px; }
-      .card-grid-3 { grid-template-columns: 1fr; }
-      
-      
-      .round-columns { grid-template-columns: 1fr; }
-      /* Mobile: the process stays a horizontal rail and scrolls, instead of
-         unrolling into a tall vertical list. The container rail can't be used
-         here — an absolutely positioned ::before on a scroll container stops
-         at the visible edge, not the scroll width — so each step carries its
-         own segment of the rail via ::after and the dot is lifted above it. */
-      .timeline {
-        flex-direction: row;
-        gap: 0;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scroll-snap-type: x proximity;
-        padding-left: 0;
-      }
-      .timeline::-webkit-scrollbar { display: none; }
-      .timeline:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-      .timeline::before { display: none; }
-      .timeline-step {
-        flex: 0 0 72%;
-        scroll-snap-align: start;
-        padding-top: 48px;
-        padding-left: 0;
-        padding-right: 16px;
-        padding-bottom: 0;
-      }
-      .timeline-step::after {
-        content: ''; position: absolute; top: 24px; left: 0; right: 0;
-        height: 2px; background: rgba(0,0,0,0.08);
-      }
-      .timeline-step::before { top: 18px; left: 0; z-index: 1; }
-      .next-case { flex-direction: column; gap: 8px; text-align: center; }
-      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
-      .footer-right { flex-wrap: wrap; justify-content: center; }
-      /* 64px between sections is a desktop measure standing on a phone */
-      .case-section { padding: 40px 0 0; }
-    }
-      /* Visible only when focused: a keyboard user should not have to tab
-       through the header on every page to reach the case. */
-    .skip-link {
-      position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F8F8F8; font-size: 14px; font-weight: 500;
-      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
-    }
-    .skip-link:focus { top: 12px; }
-  
-    /* Honour the system setting: the site animates a cursor loop, reveal-on-
-       scroll, a staggered timeline and smooth scrolling. */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-      .timeline-step { opacity: 1 !important; transform: none !important; }
-      
-    }
-      /* Below 760px the 900-unit viewBox scales the 9-10px labels down to about
-       3.5 CSS px — the diagram becomes a grey smudge. Let it keep its real
-       width and scroll instead, the pattern the Rebalancer flows already use. */
-    @media (max-width: 760px) {
-    }
-  
-    /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ———
-       Same pattern as the Data Marketplace case, so a card set behaves the
-       same way whichever case you are reading. */
-    @media (max-width: 600px) {
-      .card-grid-3 {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: stretch;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scroll-snap-type: x proximity;
-      }
-      .card-grid-3::-webkit-scrollbar { display: none; }
-      .card-grid-3:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-      .card-grid-3 > .card { scroll-snap-align: start; }
-      .card-grid-3 > .card { flex: 0 0 80%; }
-    }
-
-
-    /* ——— EDGE FADE ———
-       A scrollable row dissolves on whichever side still holds content, so it
-       says "there is more this way" before you touch it. Conditional, never
-       decorative: the attribute is only there while something is actually left
-       in that direction, so the fade cannot claim more where the row ends.
-
-       :focus-within drops the mask — otherwise a keyboard user tabbing to the
-       last visible card watches their own focus ring dissolve. */
-    [data-fade] {
-      /* 34px is right on a phone, where the row is 342px wide; on a 1028px
-         sheet the same 34px is a third of the proportion and barely registers,
-         so it grows with the viewport and stops before it eats a column */
-      --fade-edge: clamp(34px, 6vw, 72px);
-    }
-    [data-fade="right"] {
-      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
-              mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
-    }
-    [data-fade="left"] {
-      -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
-              mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
-    }
-    [data-fade="both"] {
-      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
-              mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
-    }
-    [data-fade]:focus-within {
-      -webkit-mask-image: none;
-              mask-image: none;
-    }
-    /* ——— FULL-SCREEN MENU ———
-       Two bars rather than three: with three links behind it, three bars would
-       just repeat the count. Closed they are parallel; open each rotates from
-       its own centre into the X, the second 40ms behind the first — that
-       offset is what makes it read as a movement rather than a state change.
-
-       The panel is a curtain: clip-path from the top edge, on a symmetric
-       expo curve so it leaves and arrives decisively instead of easing out
-       into nothing. The links do not fade in behind it — each one sits in its
-       own overflow box and rises out of it, which is why they read as arriving
-       rather than appearing. 80ms apart, and the first waits for the curtain
-       to be most of the way down. */
-    .navburger {
-      display: inline-flex; position: relative; z-index: 120;
-      /* a flex sibling will squeeze this below the 44px touch floor */
-      flex: 0 0 44px;
-      width: 44px; height: 44px; margin-right: -10px;
-      align-items: center; justify-content: center;
-      background: none; border: 0; padding: 0; cursor: pointer;
-      color: #1A1A1A;
-    }
-    .navburger-box { position: relative; display: block; width: 22px; height: 12px; }
-    .navburger-box i {
-      position: absolute; left: 0; width: 100%; height: 1.5px;
-      background: currentColor; border-radius: 2px;
-      transform-origin: 50% 50%;
-      transition: transform 420ms cubic-bezier(.2,.9,.3,1.25);
-    }
-    .navburger-box i:nth-child(1) { top: 0; }
-    .navburger-box i:nth-child(2) { bottom: 0; transition-delay: 40ms; }
-    body.nav-open .navburger-box i:nth-child(1) { transform: translateY(5.25px) rotate(45deg); }
-    body.nav-open .navburger-box i:nth-child(2) { transform: translateY(-5.25px) rotate(-45deg); }
-    .navburger:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 2px; border-radius: 6px; }
-
-    .navoverlay {
-      position: fixed; inset: 0; z-index: 110;
-      background: #F0F1F7;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 104px 24px 28px;
-      clip-path: inset(0 0 100% 0);
-      visibility: hidden;
-      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 640ms;
-    }
-    body.nav-open .navoverlay {
-      clip-path: inset(0 0 0 0);
-      visibility: visible;
-      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 0s;
-    }
-    body.nav-open { overflow: hidden; }
-
-    .navoverlay-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
-    .navitem {
-      display: flex; align-items: baseline; gap: 16px;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      color: #1A1A1A;
-    }
-    .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
-    .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
-      font-variant-numeric: tabular-nums;
-    }
-    /* the box the line rises out of */
-    .navitem-mask { display: block; overflow: hidden; padding-bottom: 2px; }
-    .navitem-text {
-      display: block;
-      font-size: clamp(32px, 9vw, 52px); font-weight: 600;
-      line-height: 1.06; letter-spacing: -0.035em;
-      transform: translateY(112%);
-      transition: transform 640ms cubic-bezier(.76,0,.24,1);
-    }
-    body.nav-open .navitem-text { transform: translateY(0); }
-    body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
-    body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #666666; }
-    .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
-    /* the panel takes focus on open only to move the reading position; it is a
-       container, not a control, so it draws no ring — every link inside keeps
-       its own */
-    .navoverlay:focus, .navoverlay:focus-visible { outline: none; }
-
-    .navoverlay-foot {
-      width: 100%; max-width: 1100px; margin: 40px auto 0;
-      display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #666666;
-      opacity: 0; transform: translateY(8px);
-      transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
-    }
-    body.nav-open .navoverlay-foot { opacity: 1; transform: none; }
-    .navoverlay-foot a:hover { color: #1A1A1A; }
-
-    @media (min-width: 769px) {
-      .navburger, .navoverlay { display: none; }
-    }
-
-    /* Present for screen readers and the document outline, not on screen. */
-    .visually-hidden {
-      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="../../assets/images/dobrodoc/dobrodoc-cover-v3.webp">
+  <link rel="stylesheet" href="../../assets/css/case.css?v=9">
+  <script src="../../assets/js/handoff.js?v=7"></script>
+  <script>document.documentElement.classList.add('js'); Handoff.expect();</script>
 </head>
 <body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="shade"></div>
+  <div class="progress" id="progress"></div>
 
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- HEADER -->
-  <div class="pagewash" aria-hidden="true"></div>
-
-  <header class="case-header">
-    <div class="case-header-inner">
-      <a href="../../" class="case-header-back">← Back</a>
-      <span class="case-header-name">DobroDoc+</span>
-      <button class="navburger" type="button" id="navburger" aria-expanded="false" aria-controls="navOverlay">
-        <span class="visually-hidden">Menu</span>
-        <span class="navburger-box" aria-hidden="true"><i></i><i></i></span>
-      </button>
+  <header class="nav" id="nav">
+    <a class="back" id="home" href="../../">← Portfolio <span>· DobroDoc+</span></a>
+    <div class="nav-r">
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
     </div>
   </header>
 
-  <div class="navoverlay" id="navOverlay" aria-hidden="true" tabindex="-1">
-      <nav class="navoverlay-inner" aria-label="Menu">
-        <a class="navitem" href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf"><span class="navitem-num">01</span><span class="navitem-mask"><span class="navitem-text">Download CV &#8595;</span></span></a>
-        <a class="navitem" href="mailto:yuryuryury@icloud.com"><span class="navitem-num">02</span><span class="navitem-mask"><span class="navitem-text">Get in touch &#8594;</span></span></a>
-      </nav>
-      <div class="navoverlay-foot">
-        <span>Batumi, Georgia</span>
-        <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn &#8599;</a>
-      </div>
-  </div>
+  <nav class="rail" id="rail" aria-label="Chapters"></nav>
 
-  <main id="main">
-
-  <!-- HERO -->
-  <div class="container">
-    <section class="case-hero">
-      <h1>DobroDoc+</h1>
-      <p class="case-hero-meta">Mobile app · 2020</p>
-      <div class="case-hero-image">
-        <img src="../../assets/images/dobrodoc/dobrodoc-cover-v3.webp" alt="DobroDoc+ — onboarding screens" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1920" height="1080" fetchpriority="high">
-        <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
-      </div>
-      <div class="case-hero-detail">
-        <p class="case-hero-role">UX Designer — user interviews, IA, mobile prototyping</p>
-        <p class="case-hero-result">Redesign cut time-to-booking by 40% in usability tests</p>
-      </div>
-      <div class="cta-row">
-        <a href="https://apps.apple.com/app/id1483029353" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>App Store &#8599;</a>
-        <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" class="cta-pill" target="_blank" rel="noopener" aria-label="Google Play (opens in new tab)"><svg viewBox="0 0 512 566" fill="currentColor" aria-hidden="true"><path d="M13 9C5 18 0 31 0 49v468c0 18 5 31 13 40l2 2 262-262v-6L15 7l-2 2z"/><path d="M365 385l-87-88v-6l87-88 2 1 104 59c30 17 30 45 0 62l-104 59-2 1z"/><path d="M367 384l-89-89L15 558c10 10 26 12 44 1l308-175"/><path d="M367 182L59 7C41-4 25-2 15 8l263 263 89-89z"/></svg>Google Play &#8599;</a>
-      </div>
-    
+  <main>
+    <!-- 00 -->
+    <section class="sec hero" data-scene="0" id="top">
+      <span class="num rv">Case 03 · DobroDoc+ · 2020</span>
+      <h1 class="rv">DobroDoc+</h1>
+      <p class="lead rv">Redesign cut time-to-booking by 40% in usability tests.</p>
+      <dl class="meta rv">
+        <div><dt>Role</dt><dd>UX Designer — user interviews, IA, mobile prototyping</dd></div>
+        <div><dt>Platform</dt><dd>Mobile app</dd></div>
+        <div><dt>Year</dt><dd>2020</dd></div>
+      </dl>
+      <div class="links rv"><a href="https://apps.apple.com/app/id1483029353" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>App Store ↗</a><a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></svg>Google Play ↗</a></div>
+      <figure class="hero-fig" id="heroFig" style="--ar:1920/1080"><img id="heroImg" src="../../assets/images/dobrodoc/dobrodoc-cover-v3.webp" alt="DobroDoc+ — onboarding screens"></figure>
+      <script>Handoff.land(document.getElementById('heroFig'), document.getElementById('heroImg'), { radius: 18 });</script>
     </section>
 
-    <!-- 01 — PROBLEM & CONTEXT -->
-    <section id="section-01" class="case-section">
-      <h2 class="section-heading">Problem &amp; Context</h2>
-      <p class="section-text">DobroDoc+ already existed — but the original app was outdated and frustrating to use. Booking a doctor's appointment required more effort than the illness itself.</p>
-      <p class="section-text">The core pain: when you're sick, the last thing you want is to navigate a broken interface or travel to a clinic just to get in the queue. Busy adults needed a way to see a doctor without leaving home.</p>
-      <p class="section-text">The goal was a full redesign — faster booking, clearer navigation, and an experience that works when you feel your worst.</p>
-    </section>
-
-    <!-- 02 — PROCESS -->
-    <section id="section-02" class="case-section">
-      <h2 class="section-heading">Roadmap</h2>
-      <div class="timeline" tabindex="0" role="group" aria-label="Process, seven phases — scrollable">
-        <div class="timeline-step">
-          <p class="timeline-number">1.0</p>
-          <p class="timeline-title">UX Audit</p>
-          <p class="timeline-desc">Analysed existing app — broken flows, inconsistent patterns, key drop-off points.</p>
-          <span class="timeline-tag">Audit report</span>
-        </div>
-        <div class="timeline-step">
-          <p class="timeline-number">2.0</p>
-          <p class="timeline-title">User Research</p>
-          <p class="timeline-desc">Interviewed busy adults about medical apps and clinic visits.</p>
-          <span class="timeline-tag">Interview notes</span>
-        </div>
-        <div class="timeline-step">
-          <p class="timeline-number">3.0</p>
-          <p class="timeline-title">UX Strategy</p>
-          <p class="timeline-desc">Defined redesign priorities. Goal: booking under 3 taps, eliminate redundant screens.</p>
-          <span class="timeline-tag">Strategy doc</span>
-        </div>
-        <div class="timeline-step">
-          <p class="timeline-number">4.0</p>
-          <p class="timeline-title">Wireframes</p>
-          <p class="timeline-desc">Redesigned core flows — booking, doctor search, medical history.</p>
-          <span class="timeline-tag">Lo-fi wireframes</span>
-        </div>
-        <div class="timeline-step">
-          <p class="timeline-number">5.0</p>
-          <p class="timeline-title">Usability Study</p>
-          <p class="timeline-desc">Two rounds — lo-fi and hi-fi — with busy adults.</p>
-          <span class="timeline-tag">Usability report</span>
-        </div>
-        <div class="timeline-step">
-          <p class="timeline-number">6.0</p>
-          <p class="timeline-title">Mockups & Hi-fi</p>
-          <p class="timeline-desc">Full visual redesign with new component library.</p>
-          <span class="timeline-tag">Hi-fi prototype</span>
-        </div>
-        <div class="timeline-step">
-          <p class="timeline-number">7.0</p>
-          <p class="timeline-title">Hand-off</p>
-          <p class="timeline-desc">Specs, annotations, component documentation.</p>
-          <span class="timeline-tag">Figma handoff</span>
+    <!-- 01 -->
+    <section class="sec" data-scene="1" id="problem" data-title="Problem">
+      <div class="col">
+        <span class="num rv">01</span>
+        <h2 class="rv">Problem &amp; Context</h2>
+        <p class="lead rv">DobroDoc+ already existed — but the original app was outdated and frustrating to use. Booking a doctor's appointment required more effort than the illness itself.</p>
+        <div class="stack">
+          <div class="card rv"><span class="eyebrow">Problem</span><p style="margin-top:8px">The core pain: when you're sick, the last thing you want is to navigate a broken interface or travel to a clinic just to get in the queue. Busy adults needed a way to see a doctor without leaving home.</p></div>
+          <div class="arrow rv" aria-hidden="true">↓</div>
+          <div class="card rv"><span class="eyebrow">Goal</span><p style="margin-top:8px">The goal was a full redesign — faster booking, clearer navigation, and an experience that works when you feel your worst.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- 03 — RESEARCH & DISCOVERY -->
-    <section id="section-04" class="case-section">
-      <h2 class="section-heading">Research</h2>
-      <div class="card-grid-3" tabindex="0" role="group" aria-label="Research activities — scrollable">
-        <div class="card">
-          <p class="card-number">01</p>
-          <p class="card-title">Stakeholder interviews</p>
-          <p class="card-desc">7 stakeholders: Medical Director, COO, Head of Product, Compliance Officer.</p>
-          <div class="card-tags">
-            <span class="card-tag">7 interviews</span>
-            <span class="card-tag">business alignment</span>
-          </div>
-        </div>
-        <div class="card">
-          <p class="card-number">02</p>
-          <p class="card-title">Surveys</p>
-          <p class="card-desc">250 patients and 35 healthcare providers. 84% wanted online consultations. 73% found traditional booking inconvenient.</p>
-          <div class="card-tags">
-            <span class="card-tag">285 participants</span>
-            <span class="card-tag">quantitative</span>
-          </div>
-        </div>
-        <div class="card">
-          <p class="card-number">03</p>
-          <p class="card-title">User interviews</p>
-          <p class="card-desc">15 patients + 8 doctors, 60-min sessions.</p>
-          <div class="card-tags">
-            <span class="card-tag">23 sessions</span>
-            <span class="card-tag">qualitative</span>
-          </div>
+    <!-- 02 -->
+    <section class="sec" data-scene="2" id="roadmap" data-title="Roadmap">
+      <div class="col">
+        <span class="num rv">02</span>
+        <h2 class="rv">Roadmap</h2>
+        <ol class="steps hx" id="steps">
+          <li class="rv"><b>1.0</b><h3>UX Audit</h3><p>Analysed existing app — broken flows, inconsistent patterns, key drop-off points.</p><span class="tag">Audit report</span></li>
+          <li class="rv"><b>2.0</b><h3>User Research</h3><p>Interviewed busy adults about medical apps and clinic visits.</p><span class="tag">Interview notes</span></li>
+          <li class="rv"><b>3.0</b><h3>UX Strategy</h3><p>Defined redesign priorities. Goal: booking under 3 taps, eliminate redundant screens.</p><span class="tag">Strategy doc</span></li>
+          <li class="rv"><b>4.0</b><h3>Wireframes</h3><p>Redesigned core flows — booking, doctor search, medical history.</p><span class="tag">Lo-fi wireframes</span></li>
+          <li class="rv"><b>5.0</b><h3>Usability Study</h3><p>Two rounds — lo-fi and hi-fi — with busy adults.</p><span class="tag">Usability report</span></li>
+          <li class="rv"><b>6.0</b><h3>Mockups &amp; Hi-fi</h3><p>Full visual redesign with new component library.</p><span class="tag">Hi-fi prototype</span></li>
+          <li class="rv"><b>7.0</b><h3>Hand-off</h3><p>Specs, annotations, component documentation.</p><span class="tag">Figma handoff</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="sec" data-scene="3" id="research" data-title="Research">
+      <div class="col">
+        <span class="num rv">03</span>
+        <h2 class="rv">Research</h2>
+        <div class="stack hx" id="personas">
+          <div class="card persona stat rv" data-g="0"><b>7<small>interviews</small></b><h3>Stakeholder interviews</h3><p>7 stakeholders: Medical Director, COO, Head of Product, Compliance Officer.</p><div class="chips"><span>business alignment</span></div></div>
+          <div class="card persona stat rv" data-g="1"><b>285<small>participants</small></b><h3>Surveys</h3><p>250 patients and 35 healthcare providers. 84% wanted online consultations. 73% found traditional booking inconvenient.</p><div class="chips"><span>quantitative</span></div></div>
+          <div class="card persona stat rv" data-g="2"><b>23<small>sessions</small></b><h3>User interviews</h3><p>15 patients + 8 doctors, 60-min sessions.</p><div class="chips"><span>qualitative</span></div></div>
         </div>
       </div>
     </section>
 
-    <!-- 03C — USER FLOW -->
-    <section id="section-05" class="case-section">
-      <h2 class="section-heading">User flows</h2>
-      <p class="section-text">One path, end to end: first run, the symptom, the med card, the doctor, the format the consultation takes, and what it leaves behind.</p>
-      <div class="uf-vars">
-        <div class="uf-stage">
-          <div class="uf-flow" tabindex="0" role="group" aria-label="End-to-end flow, from first run to the filed conclusion &mdash; scrollable">
-            <div class="uf-track">
-                <div class="uf-step uf-step--end">
-                  <span class="uf-step-kind">Start</span>
-                  <span class="uf-step-title">Opens the app</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Onboarding</span>
-                  <span class="uf-step-line">Book the way that suits you</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Onboarding</span>
-                  <span class="uf-step-line">A medical record for you and your family</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Onboarding</span>
-                  <span class="uf-step-line">Conclusion and prescription after the visit</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--action">
-                  <span class="uf-step-kind">Action</span>
-                  <span class="uf-step-title">Signs up</span>
-                </div>
-                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 2 &middot; What worries you</span></div>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Home</span>
-                  <span class="uf-step-line">Ask a doctor, or open the med card</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--action">
-                  <span class="uf-step-kind">Action</span>
-                  <span class="uf-step-title">Describes what worries them</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--system">
-                  <span class="uf-step-kind">System</span>
-                  <span class="uf-step-title">Matches a speciality</span>
-                  <span class="uf-step-line">The answers point at who to see</span>
-                </div>
-                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 3 &middot; The med card</span></div>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Medical cards</span>
-                  <span class="uf-step-line">One per family member</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--action">
-                  <span class="uf-step-kind">Action</span>
-                  <span class="uf-step-title">Fills the card in, or picks whose it is</span>
-                </div>
-                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 4 &middot; Pick a doctor</span></div>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Specialist</span>
-                  <span class="uf-step-line">Consultation type, what they treat, the price</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--action">
-                  <span class="uf-step-kind">Action</span>
-                  <span class="uf-step-title">Picks a slot and pays</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--system">
-                  <span class="uf-step-kind">System</span>
-                  <span class="uf-step-title">Notifications</span>
-                  <span class="uf-step-line">The visit starts in five minutes</span>
-                </div>
-                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 5 &middot; The consultation</span></div>
-                <div class="uf-dec"><div class="uf-dec-in">
-                  <span class="uf-step-kind">Decision</span>
-                  <span class="uf-step-title">Which format?</span>
-                </div></div>
-                <div class="uf-branches">
-                  <div class="uf-branch">
-                    <span class="uf-branch-label">Chat</span>
-                    <div class="uf-step">
-                      <span class="uf-step-kind">Screen</span>
-                      <span class="uf-step-title">Chat</span>
-                      <span class="uf-step-line">The consultation itself, in writing</span>
-                    </div>
-                  </div>
-                  <div class="uf-branch">
-                    <span class="uf-branch-label">Video</span>
-                    <div class="uf-step">
-                      <span class="uf-step-kind">Screen</span>
-                      <span class="uf-step-title">Video consultation</span>
-                    </div>
-                  </div>
-                  <div class="uf-branch">
-                    <span class="uf-branch-label">Voice</span>
-                    <div class="uf-step">
-                      <span class="uf-step-kind">Screen</span>
-                      <span class="uf-step-title">Audio call</span>
-                    </div>
-                  </div>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-bound" aria-hidden="true"><span class="uf-bound-label">Step 6 &middot; After the visit</span></div>
-                <div class="uf-step uf-step--system">
-                  <span class="uf-step-kind">System</span>
-                  <span class="uf-step-title">Conclusion written up</span>
-                  <span class="uf-step-line">The diagnosis and what was prescribed</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Med card</span>
-                  <span class="uf-step-line">The visit, filed against the right family member</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step">
-                  <span class="uf-step-kind">Screen</span>
-                  <span class="uf-step-title">Visit history</span>
-                  <span class="uf-step-line">Every past consultation, with its conclusion</span>
-                </div>
-                <span class="uf-link" aria-hidden="true"></span>
-                <div class="uf-step uf-step--end">
-                  <span class="uf-step-kind">End</span>
-                  <span class="uf-step-title">Treated, with a record of it</span>
-                </div>
-            </div>
-          </div>
-          <div class="uf-stage-bar"><span class="uf-stage-bar-thumb"></span></div>
+    <!-- 04 -->
+    <section class="sec" data-scene="4" id="flows" data-title="User flows">
+      <div class="col">
+        <span class="num rv">04</span>
+        <h2 class="rv">User flows</h2>
+        <p class="lead rv">One path, end to end: first run, the symptom, the med card, the doctor, the format the consultation takes, and what it leaves behind.</p>
+        <div class="card uf rv" style="margin-top:32px">
+          <ol class="fl">
+            <li><div class="fn" data-k="end"><i>Start</i>Opens the app</div></li>
+            <li class="fs"><span>Step 1 · First run</span></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Onboarding<small>Book the way that suits you</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Onboarding<small>A medical record for you and your family</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Onboarding<small>Conclusion and prescription after the visit</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Signs up</div></li>
+            <li class="fs"><span>Step 2 · What worries you</span></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Home<small>Ask a doctor, or open the med card</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Describes what worries them</div></li>
+            <li><div class="fn" data-k="system"><i>System</i>Matches a speciality<small>The answers point at who to see</small></div></li>
+            <li class="fs"><span>Step 3 · The med card</span></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Medical cards<small>One per family member</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Fills the card in, or picks whose it is</div></li>
+            <li class="fs"><span>Step 4 · Pick a doctor</span></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Specialist<small>Consultation type, what they treat, the price</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Picks a slot and pays</div></li>
+            <li><div class="fn" data-k="system"><i>System</i>Notifications<small>The visit starts in five minutes</small></div></li>
+            <li class="fs"><span>Step 5 · The consultation</span></li>
+            <li><div class="fn" data-k="decision"><i>Decision</i>Which format?</div></li>
+            <li class="fbr" style="--b:3">
+              <div class="fb"><span class="fb-l">Chat</span><ol class="fl"><li><div class="fn" data-k="screen"><i>Screen</i>Chat<small>The consultation itself, in writing</small></div></li></ol></div>
+              <div class="fb"><span class="fb-l">Video</span><ol class="fl"><li><div class="fn" data-k="screen"><i>Screen</i>Video consultation</div></li></ol></div>
+              <div class="fb"><span class="fb-l">Voice</span><ol class="fl"><li><div class="fn" data-k="screen"><i>Screen</i>Audio call</div></li></ol></div>
+            </li>
+            <li class="fs"><span>Step 6 · After the visit</span></li>
+            <li><div class="fn" data-k="system"><i>System</i>Conclusion written up<small>The diagnosis and what was prescribed</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Med card<small>The visit, filed against the right family member</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Visit history<small>Every past consultation, with its conclusion</small></div></li>
+            <li><div class="fn" data-k="end"><i>End</i>Treated, with a record of it</div></li>
+          </ol>
         </div>
-        <div class="uf-key" aria-hidden="true">
-          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--screen"></span>Screen</span>
-          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--action"></span>Action</span>
-          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--system"></span>System</span>
-          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--decision"></span>Decision</span>
-          <span class="uf-key-item"><span class="uf-key-mark uf-key-mark--end"></span>Start / End</span>
+        <div class="fkey" aria-hidden="true"><span data-k="screen">Screen</span><span data-k="action">Action</span><span data-k="system">System</span><span data-k="decision">Decision</span><span data-k="end">Start / End</span></div>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section class="sec" data-scene="5" id="mockups" data-title="Mockups">
+      <div class="col">
+        <span class="num rv">05</span>
+        <h2 class="rv">Mockups</h2>
+        <p class="lead rv">Eleven screens from the shipped app — onboarding, the med card, picking a specialist, and the consultation itself in chat, video and voice.</p>
+      </div>
+      <div class="gal phones" id="screens" style="--cols:4">
+        <div class="gal-bar rv"><span class="eyebrow">Mockups · 11 screens</span></div>
+        <div class="gal-grid hx">
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="0" style="--sr:640/1106" aria-label="Onboarding — open full size"><img src="../../assets/images/dobrodoc/dd-onboarding-appointment-v3.webp" alt="Onboarding — book the way that suits you" loading="lazy" width="640" height="1106"></button><figcaption><span>01</span><b>Onboarding</b> — book the way that suits you</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="1" style="--sr:640/1106" aria-label="Onboarding — open full size"><img src="../../assets/images/dobrodoc/dd-onboarding-record-v3.webp" alt="Onboarding — a medical record for you and your family" loading="lazy" width="640" height="1106"></button><figcaption><span>02</span><b>Onboarding</b> — a medical record for you and your family</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="2" style="--sr:640/1106" aria-label="Onboarding — open full size"><img src="../../assets/images/dobrodoc/dd-onboarding-results-v3.webp" alt="Onboarding — conclusion and prescription after the visit" loading="lazy" width="640" height="1106"></button><figcaption><span>03</span><b>Onboarding</b> — conclusion and prescription after the visit</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="3" style="--sr:640/1106" aria-label="Home — open full size"><img src="../../assets/images/dobrodoc/dd-home-v3.webp" alt="Home — ask a doctor, or open the med card" loading="lazy" width="640" height="1106"></button><figcaption><span>04</span><b>Home</b> — ask a doctor, or open the med card</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="4" style="--sr:640/1106" aria-label="Medical cards — open full size"><img src="../../assets/images/dobrodoc/dd-medical-cards-v3.webp" alt="Medical cards — one per family member" loading="lazy" width="640" height="1106"></button><figcaption><span>05</span><b>Medical cards</b> — one per family member</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="5" style="--sr:640/1115" aria-label="Specialist — open full size"><img src="../../assets/images/dobrodoc/dd-specialist-v3.webp" alt="Specialist — consultation type, what they treat, the price" loading="lazy" width="640" height="1115"></button><figcaption><span>06</span><b>Specialist</b> — consultation type, what they treat, the price</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="6" style="--sr:640/1115" aria-label="Notifications — open full size"><img src="../../assets/images/dobrodoc/dd-notifications-v3.webp" alt="Notifications — the visit starts in five minutes" loading="lazy" width="640" height="1115"></button><figcaption><span>07</span><b>Notifications</b> — the visit starts in five minutes</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="7" style="--sr:640/1115" aria-label="Chat — open full size"><img src="../../assets/images/dobrodoc/dd-chat-v3.webp" alt="Chat — the consultation itself" loading="lazy" width="640" height="1115"></button><figcaption><span>08</span><b>Chat</b> — the consultation itself</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="8" style="--sr:640/1115" aria-label="Video consultation — open full size"><img src="../../assets/images/dobrodoc/dd-video-call-v3.webp" alt="Video consultation" loading="lazy" width="640" height="1115"></button><figcaption><span>09</span><b>Video consultation</b></figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="9" style="--sr:640/1115" aria-label="Audio call — open full size"><img src="../../assets/images/dobrodoc/dd-audio-call-v3.webp" alt="Audio call" loading="lazy" width="640" height="1115"></button><figcaption><span>10</span><b>Audio call</b></figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="10" style="--sr:640/1115" aria-label="Account — open full size"><img src="../../assets/images/dobrodoc/dd-account-v3.webp" alt="Account" loading="lazy" width="640" height="1115"></button><figcaption><span>11</span><b>Account</b></figcaption></figure>
         </div>
       </div>
     </section>
 
-    <!-- 04 — MOCKUPS -->
-    <section id="section-06" class="case-section">
-      <h2 class="section-heading">Mockups</h2>
-      <p class="section-text">Eleven screens from the shipped app &mdash; onboarding, the med card, picking a specialist, and the consultation itself in chat, video and voice.</p>
-
-      <div class="phone-strip" tabindex="0" role="group" aria-label="App screens, eleven &mdash; drag or scroll">
-        <div class="phone-track">
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-record-v3.webp" alt="Onboarding — a medical record for you and your family" loading="lazy" width="640" height="1106">
-          <p class="phone-caption">Onboarding &mdash; a medical record for you and your family</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-home-v3.webp" alt="Home — ask a doctor, or open the med card" loading="lazy" width="640" height="1106">
-          <p class="phone-caption">Home &mdash; ask a doctor, or open the med card</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-medical-cards-v3.webp" alt="Medical cards — one per family member" loading="lazy" width="640" height="1106">
-          <p class="phone-caption">Medical cards &mdash; one per family member</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-appointment-v3.webp" alt="Onboarding — book the way that suits you" loading="lazy" width="640" height="1106">
-          <p class="phone-caption">Onboarding &mdash; book the way that suits you</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-specialist-v3.webp" alt="Specialist — consultation type, what they treat, the price" loading="lazy" width="640" height="1115">
-          <p class="phone-caption">Specialist &mdash; consultation type, what they treat, the price</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-chat-v3.webp" alt="Chat — the consultation itself" loading="lazy" width="640" height="1115">
-          <p class="phone-caption">Chat &mdash; the consultation itself</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-onboarding-results-v3.webp" alt="Onboarding — conclusion and prescription after the visit" loading="lazy" width="640" height="1106">
-          <p class="phone-caption">Onboarding &mdash; conclusion and prescription after the visit</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-video-call-v3.webp" alt="Video consultation" loading="lazy" width="640" height="1115">
-          <p class="phone-caption">Video consultation</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-audio-call-v3.webp" alt="Audio call" loading="lazy" width="640" height="1115">
-          <p class="phone-caption">Audio call</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-notifications-v3.webp" alt="Notifications — the visit starts in five minutes" loading="lazy" width="640" height="1115">
-          <p class="phone-caption">Notifications &mdash; the visit starts in five minutes</p>
-        </div>
-        <div class="phone-figure">
-          <img class="phone-shot" src="../../assets/images/dobrodoc/dd-account-v3.webp" alt="Account" loading="lazy" width="640" height="1115">
-          <p class="phone-caption">Account</p>
-        </div>
+    <!-- 06 -->
+    <section class="sec" data-scene="6" id="testing" data-title="Usability testing">
+      <div class="col">
+        <span class="num rv">06</span>
+        <h2 class="rv">Usability testing</h2>
+        <div class="stack hx">
+          <div class="card rv"><span class="eyebrow">Round 1</span><h3 style="margin-top:8px">Lo-fi prototype</h3>
+            <dl class="fc fc2">
+              <div class="f"><dt>Findings</dt><dd><ul class="plain"><li>Users wanted doctor availability before clicking profiles</li><li>Symptom checker felt untrustworthy — no disclaimers</li><li>Family profile switching was confusing</li></ul></dd></div>
+              <div class="c"><dt>Changes made</dt><dd><ul class="plain"><li>Availability indicators added on doctor cards</li><li>Symptom checker redesigned with disclaimer + emergency warnings</li><li>Persistent family switcher added at top of screens</li></ul></dd></div>
+            </dl></div>
+          <div class="card rv"><span class="eyebrow">Round 2</span><h3 style="margin-top:8px">Hi-fi prototype</h3>
+            <dl class="fc fc2">
+              <div class="f"><dt>Findings</dt><dd><ul class="plain"><li>Users wanted connection status before video call</li><li>100% of users loved digital prescription feature</li><li>Users wanted appointment reminders before consultations</li></ul></dd></div>
+              <div class="c"><dt>Changes made</dt><dd><ul class="plain"><li>Connection quality indicator + test call added</li><li>Push notifications with reminders + checklist</li><li>Post-consultation summary auto-sent to email</li></ul></dd></div>
+            </dl></div>
         </div>
       </div>
     </section>
 
-    <!-- 05 — USABILITY FINDINGS -->
-    <section id="section-07" class="case-section">
-      <h2 class="section-heading">Usability testing</h2>
-
-      <div class="usability-round">
-        <p class="round-title">Round 1 — Lo-fi prototype</p>
-        <div class="round-columns">
-          <div>
-            <p class="round-col-title">Findings</p>
-            <ul class="round-list findings">
-              <li>Users wanted doctor availability before clicking profiles</li>
-              <li>Symptom checker felt untrustworthy — no disclaimers</li>
-              <li>Family profile switching was confusing</li>
-            </ul>
-          </div>
-          <div>
-            <p class="round-col-title">Changes made</p>
-            <ul class="round-list changes">
-              <li>Availability indicators added on doctor cards</li>
-              <li>Symptom checker redesigned with disclaimer + emergency warnings</li>
-              <li>Persistent family switcher added at top of screens</li>
-            </ul>
-          </div>
-        </div>
+    <!-- 07 -->
+    <section class="sec" data-scene="7" id="outcome" data-title="Outcome & reflection">
+      <div class="col">
+        <span class="num rv">07 — Outcome</span>
+        <p class="big rv">Launched late 2020. Time-to-booking dropped 40% in usability tests.</p>
+        <p class="lead rv">Digital prescriptions and visit summaries drew the most praise. Live on both platforms today.</p>
+        <span class="num rv" style="margin-top:12vh">08 — Reflection</span>
+        <blockquote class="rv">I’d start with a design system on day one — component drift cost cleanup before handoff.</blockquote>
+        <blockquote class="rv">Two rounds of testing found different things: lo-fi structural, hi-fi trust. Healthcare needs both.</blockquote>
       </div>
-
-      <div class="usability-round">
-        <p class="round-title">Round 2 — Hi-fi prototype</p>
-        <div class="round-columns">
-          <div>
-            <p class="round-col-title">Findings</p>
-            <ul class="round-list findings">
-              <li>Users wanted connection status before video call</li>
-              <li>100% of users loved digital prescription feature</li>
-              <li>Users wanted appointment reminders before consultations</li>
-            </ul>
-          </div>
-          <div>
-            <p class="round-col-title">Changes made</p>
-            <ul class="round-list changes">
-              <li>Connection quality indicator + test call added</li>
-              <li>Push notifications with reminders + checklist</li>
-              <li>Post-consultation summary auto-sent to email</li>
-            </ul>
-          </div>
-        </div>
+      <div class="next rv">
+        <a class="n" href="../dopas/"><small>Next case →</small>dopas.dp.ua</a>
+        <div class="ct"><a href="mailto:yuryuryury@icloud.com">Email</a><a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a><a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a></div>
       </div>
     </section>
-
-
-    <!-- 07 — OUTCOME -->
-    <section id="section-09" class="case-section">
-      <h2 class="section-heading">Outcome</h2>
-      <p class="outcome-text">Launched late 2020. Time-to-booking dropped 40% in usability tests.</p>
-      <p class="outcome-text">Digital prescriptions and visit summaries drew the most praise. Live on both platforms today.</p>
-    </section>
-
-    <!-- 08 — REFLECTION -->
-    <section id="section-10" class="case-section">
-      <h2 class="section-heading">Reflection</h2>
-      <p class="section-text">I&rsquo;d start with a design system on day one &mdash; component drift cost cleanup before handoff.</p>
-      <p class="section-text">Two rounds of testing found different things: lo-fi structural, hi-fi trust. Healthcare needs both.</p>
-    </section>
-
-    <!-- NEXT CASE -->
-    <a href="../dopas/" class="next-case">
-      <span class="next-case-label">Next case →</span>
-      <span class="next-case-name">dopas.dp.ua — Bus Ticket Booking</span>
-    </a>
-  </div>
-
-  <div class="toc-pill" id="tocPill">
-    <nav class="toc-pill-menu" id="tocPillMenu" aria-label="Sections">
-      <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
-      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Roadmap</a>
-      <a href="#section-04" data-section="section-04"><span class="pill-num">03</span> Research</a>
-      <a href="#section-05" data-section="section-05"><span class="pill-num">04</span> User flows</a>
-      <a href="#section-06" data-section="section-06"><span class="pill-num">05</span> Mockups</a>
-      <a href="#section-07" data-section="section-07"><span class="pill-num">06</span> Usability</a>
-      <a href="#section-09" data-section="section-09"><span class="pill-num">07</span> Outcome</a>
-      <a href="#section-10" data-section="section-10"><span class="pill-num">08</span> Reflection</a>
-    </nav>
-    <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
-      <span class="toc-pill-num" id="tocPillNum">01</span>
-      <span id="tocPillLabel">Problem</span>
-      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
-    </button>
-  </div>
-
-  <!-- FOOTER -->
   </main>
 
-  <footer class="footer">
-    <div class="footer-inner">
-      <div><span class="footer-name">Yurii Fokin</span> · <span class="footer-role">Lead UX Designer</span></div>
-      <div class="footer-right">
-        <a href="mailto:yuryuryury@icloud.com">Email</a>
-        <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
-        <span>Batumi, GE</span>
-      </div>
-    </div>
-  </footer>
-
+  <!-- versioned, so a phone that saw an older build doesn't keep it -->
+  <script src="../../assets/js/perf.js?v=13"></script>
   <script>
-    // ——— FULL-SCREEN MENU ———
-    // State lives on <body> so the burger, the curtain and the lines can all
-    // key off one class. The panel stays in the DOM (a curtain cannot animate
-    // out of display:none) and is taken out of the a11y tree instead.
-    (function () {
-      var btn = document.getElementById('navburger');
-      var overlay = document.getElementById('navOverlay');
-      if (!btn || !overlay) return;
-      var lastFocus = null;
-
-      function setOpen(on) {
-        document.body.classList.toggle('nav-open', on);
-        btn.setAttribute('aria-expanded', on ? 'true' : 'false');
-        overlay.setAttribute('aria-hidden', on ? 'false' : 'true');
-        if (on) {
-          lastFocus = document.activeElement;
-          // Move the reading position into the panel without ringing a control.
-          // This used to focus the first link, which made Safari on iOS paint
-          // its focus-visible outline around "Download CV" the instant the menu
-          // opened — a scripted .focus() counts as focus-visible, so a pointer
-          // tap produced a keyboard-style ring. The panel carries tabindex="-1"
-          // and takes the focus itself: VoiceOver and Tab still start inside it,
-          // and nothing draws a box.
-          setTimeout(function () { overlay.focus(); }, 360);
-        } else if (lastFocus) {
-          lastFocus.focus();
-        }
-      }
-      var isOpen = function () { return document.body.classList.contains('nav-open'); };
-
-      btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!isOpen()); });
-      overlay.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
-
-      document.addEventListener('keydown', function (e) {
-        if (!isOpen()) return;
-        if (e.key === 'Escape') { setOpen(false); return; }
-        // a full-screen panel that lets Tab wander behind it is a trap of its
-        // own kind — the loop keeps focus on what is actually on screen
-        if (e.key !== 'Tab') return;
-        var items = [btn].concat([].slice.call(overlay.querySelectorAll('a')));
-        var i = items.indexOf(document.activeElement);
-        // focus starts on the panel itself, which is not one of the stops
-        if (i === -1) { e.preventDefault(); items[e.shiftKey ? items.length - 1 : 0].focus(); return; }
-        var next = e.shiftKey ? (i - 1 + items.length) % items.length : (i + 1) % items.length;
-        e.preventDefault();
-        items[next].focus();
-      });
-
-      window.addEventListener('resize', function () {
-        if (window.innerWidth > 768 && isOpen()) setOpen(false);
-      });
-    })();
-
-    // ——— TOC PILL: scroll spy + toggle ———
-    // Labels are read from the menu links, so renaming a section is one edit.
-    (function () {
-      var HEADER_OFFSET = 76;   // sticky header is 57px; the rest is breathing room
-      var pill = document.getElementById('tocPill');
-      if (!pill) return;
-      var trigger = document.getElementById('tocPillTrigger');
-      var num = document.getElementById('tocPillNum');
-      var label = document.getElementById('tocPillLabel');
-      var links = [].slice.call(pill.querySelectorAll('.toc-pill-menu a[data-section]'));
-      var entries = links.map(function (a) {
-        var n = a.querySelector('.pill-num');
-        return {
-          link: a,
-          el: document.getElementById(a.dataset.section),
-          num: n ? n.textContent.trim() : '',
-          text: a.textContent.replace(n ? n.textContent : '', '').trim()
-        };
-      }).filter(function (e) { return e.el; });
-      if (!entries.length) return;
-
-      function sync() {
-        var y = window.scrollY + 120, active = entries[0];
-        entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
-        // A short last section starts below the furthest the page will ever
-        // scroll, so its own top never crosses the line and it could never
-        // become active. Once the reader is at the bottom, it is the one.
-        if (window.scrollY >= document.documentElement.scrollHeight - window.innerHeight - 2)
-          active = entries[entries.length - 1];
-        entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
-        num.textContent = active.num;
-        label.textContent = active.text;
-      }
-      window.addEventListener('scroll', sync, { passive: true });
-      window.addEventListener('resize', sync);
-      sync();
-
-      function setOpen(on) {
-        pill.classList.toggle('open', on);
-        trigger.setAttribute('aria-expanded', on ? 'true' : 'false');
-      }
-      trigger.addEventListener('click', function () { setOpen(!pill.classList.contains('open')); });
-      links.forEach(function (a) {
-        a.addEventListener('click', function (ev) {
-          var el = document.getElementById(a.dataset.section);
-          if (el) {
-            // scrollTo rather than the hash, so the offset is explicit and the
-            // sticky header never covers the section head
-            ev.preventDefault();
-            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET, behavior: 'smooth' });
-            if (history.replaceState) history.replaceState(null, '', '#' + a.dataset.section);
-          }
-          setOpen(false);
-        });
-      });
-      document.addEventListener('click', function (e) { if (!pill.contains(e.target)) setOpen(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
-    })();
-
-  
-  
-    // ——— SCREENS: a drifting row ———
-    // Ported from the Rebalancer case. The position is carried in a variable
-    // rather than read back off the element: 22px/s is 0.35px a frame and
-    // scrollLeft rounds to integers, so reading it back rounded every step to
-    // zero and the row never moved.
-    (function () {
-      var strip = document.querySelector('.phone-strip');
-      var track = strip && strip.querySelector('.phone-track');
-      if (!strip || !track) return;
-
-      // A second copy makes the wrap seamless: past the halfway mark we
-      // subtract it and the pixels under the pointer do not change.
-      [].slice.call(track.children).forEach(function (node) {
-        var copy = node.cloneNode(true);
-        copy.setAttribute('aria-hidden', 'true');
-        [].forEach.call(copy.querySelectorAll('img'), function (im) { im.setAttribute('loading', 'lazy'); });
-        track.appendChild(copy);
-      });
-
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      var SPEED = 22;
-      var half = 0, paused = false, userUntil = 0, mine = -1, last = 0, pos = 0;
-      function measure() { half = track.scrollWidth / 2; }
-      measure();
-      window.addEventListener('resize', measure);
-      if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
-
-      var dragging = false, startX = 0, startScroll = 0;
-      strip.addEventListener('pointerenter', function () { paused = true; });
-      strip.addEventListener('pointerleave', function () { if (!dragging) paused = false; });
-
-      // Mouse only: touch already pans the row with momentum.
-      strip.addEventListener('pointerdown', function (e) {
-        if (e.pointerType !== 'mouse' || e.button !== 0) return;
-        dragging = true; startX = e.clientX; startScroll = strip.scrollLeft;
-        strip.classList.add('is-dragging');
-        strip.setPointerCapture(e.pointerId);
-        e.preventDefault();
-      });
-      strip.addEventListener('pointermove', function (e) {
-        if (!dragging) return;
-        var next = startScroll - (e.clientX - startX);
-        if (half > 0) {
-          if (next < 0) { next += half; startScroll += half; }
-          else if (next >= half) { next -= half; startScroll -= half; }
-        }
-        strip.scrollLeft = next; pos = next; mine = strip.scrollLeft;
-      });
-      function endDrag(e) {
-        if (!dragging) return;
-        dragging = false;
-        strip.classList.remove('is-dragging');
-        if (e && e.pointerId != null && strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
-        userUntil = performance.now() + 1500;
-      }
-      strip.addEventListener('pointerup', endDrag);
-      strip.addEventListener('pointercancel', endDrag);
-      strip.addEventListener('focusin',  function () { paused = true; });
-      strip.addEventListener('focusout', function () { paused = false; });
-      strip.addEventListener('scroll', function () {
-        if (Math.abs(strip.scrollLeft - mine) > 1.5) {
-          userUntil = performance.now() + 1500;
-          pos = strip.scrollLeft;
-        }
-      }, { passive: true });
-
-      function step(now) {
-        var dt = last ? Math.min(now - last, 50) : 16;
-        last = now;
-        if (half > 0) {
-          if (dragging) { /* the pointer owns the position */ }
-          else if (!paused && now > userUntil) {
-            pos += SPEED * dt / 1000;
-            if (pos >= half) pos -= half;
-            strip.scrollLeft = pos; mine = strip.scrollLeft;
-          } else if (strip.scrollLeft >= half) {
-            pos = strip.scrollLeft - half;
-            strip.scrollLeft = pos; mine = strip.scrollLeft;
-          }
-        }
-        requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    })();
-
-    // ——— HERO TILT ———
-    // The mat turns toward the pointer: at the top edge the top recedes and
-    // the bottom comes forward, and the same on the other axis. Five degrees
-    // is the whole range — enough to read as depth, small enough that the
-    // image never stops being a flat thing you are looking at.
-    //
-    // The transform lives on the element and nothing else moves, so the bleed,
-    // the margins and the page width are all untouched by it.
-    (function () {
-      var el = document.querySelector('.case-hero-image');
-      if (!el) return;
-      // a finger has no hover, and a coarse pointer would fire this on tap
-      if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      var MAX = 5;            // degrees, per axis
-      var LIFT = 6;           // px toward the viewer at the centre
-      var frame = null, tx = 0, ty = 0;
-
-      function draw() {
-        frame = null;
-        el.style.transform =
-          'perspective(1400px) rotateX(' + tx.toFixed(2) + 'deg) rotateY(' + ty.toFixed(2) + 'deg) translateZ(' + LIFT + 'px)';
-      }
-
-      el.addEventListener('pointermove', function (e) {
-        if (e.pointerType !== 'mouse') return;
-        var r = el.getBoundingClientRect();
-        // -1 at the left/top edge, +1 at the right/bottom
-        var x = (e.clientX - r.left) / r.width * 2 - 1;
-        var y = (e.clientY - r.top) / r.height * 2 - 1;
-        // pointer at the top -> top away, bottom forward; pointer at the left
-        // -> left away, right forward
-        tx = -y * MAX;
-        ty = x * MAX;
-        el.classList.add('is-tilting');
-        if (!frame) frame = requestAnimationFrame(draw);
-      });
-
-      el.addEventListener('pointerleave', function () {
-        if (frame) { cancelAnimationFrame(frame); frame = null; }
-        el.classList.remove('is-tilting');
-        el.style.transform = 'perspective(1400px)';
-      });
-    })();
-
-    // ——— EDGE FADE ———
-    // Finds the containers that actually scroll sideways and marks which side
-    // still has content. No selector list to keep in sync: it asks the layout,
-    // so a row that only scrolls under a breakpoint is marked exactly when it
-    // does, and unmarked when it stops.
-    (function () {
-      var updates = [];
-
-      function attach(el) {
-        if (el.dataset.faded) return;
-        el.dataset.faded = '1';
-        function update() {
-          var left = el.scrollLeft > 4;
-          var right = el.scrollWidth - el.scrollLeft - el.clientWidth > 4;
-          // a sheet with a sticky row-header rail must never fade its left edge
-          if (el.getAttribute('data-fade-sides') === 'right') left = false;
-          var side = left && right ? 'both' : right ? 'right' : left ? 'left' : '';
-          if (side) el.setAttribute('data-fade', side);
-          else el.removeAttribute('data-fade');
-        }
-        el.addEventListener('scroll', update, { passive: true });
-        updates.push(update);
-        update();
-      }
-
-      function scan() {
-        var all = document.querySelectorAll('*');
-        for (var i = 0; i < all.length; i++) {
-          var ox = getComputedStyle(all[i]).overflowX;
-          if ((ox === 'auto' || ox === 'scroll') && all[i].scrollWidth - all[i].clientWidth > 2) attach(all[i]);
-        }
-        for (var j = 0; j < updates.length; j++) updates[j]();
-      }
-
-      scan();
-      var t;
-      function later() { clearTimeout(t); t = setTimeout(scan, 120); }
-      window.addEventListener('resize', later);
-      // a panel behind a tab has no width until shown, so re-check after a click
-      document.addEventListener('click', later, true);
-    })();
-    // ——— USER FLOW: the drawn scrollbar ———
-    // Ported with the component from the Rebalancer case. macOS overlay
-    // scrollbars reserve no space and fade when idle, so the affordance this
-    // wide diagram most needs would be invisible exactly when it is needed.
-    // This rail is always on, mirrors the flow's position, and is draggable.
-    (function () {
-      var bars = [].slice.call(document.querySelectorAll('.uf-stage-bar'));
-      if (!bars.length) return;
-      bars.forEach(function (bar) {
-        var flow = bar.previousElementSibling;
-        if (!flow || !flow.classList.contains('uf-flow')) return;
-        var thumb = bar.querySelector('.uf-stage-bar-thumb');
-
-        function draw() {
-          var max = flow.scrollWidth - flow.clientWidth;
-          if (max <= 4) { bar.hidden = true; return; }
-          bar.hidden = false;
-          var ratio = flow.clientWidth / flow.scrollWidth;
-          var w = Math.min(bar.clientWidth, Math.max(28, bar.clientWidth * ratio));
-          thumb.style.width = w + 'px';
-          thumb.style.transform =
-            'translateX(' + (flow.scrollLeft / max) * (bar.clientWidth - w) + 'px)';
-        }
-
-        function scrollTo(clientX) {
-          var r = bar.getBoundingClientRect();
-          var w = thumb.offsetWidth;
-          var travel = r.width - w;
-          if (travel <= 0) return;
-          var x = Math.min(Math.max(clientX - r.left - w / 2, 0), travel);
-          flow.scrollLeft = (x / travel) * (flow.scrollWidth - flow.clientWidth);
-        }
-
-        var dragging = false;
-        bar.addEventListener('pointerdown', function (e) {
-          dragging = true;
-          bar.setPointerCapture(e.pointerId);
-          scrollTo(e.clientX);
-          e.preventDefault();
-        });
-        bar.addEventListener('pointermove', function (e) { if (dragging) scrollTo(e.clientX); });
-        bar.addEventListener('pointerup', function () { dragging = false; });
-        bar.addEventListener('pointercancel', function () { dragging = false; });
-
-        flow.addEventListener('scroll', draw, { passive: true });
-        window.addEventListener('resize', draw);
-        draw();
-      });
-    })();
+    // the world behind the chapters: a motif per chapter, and the case's accent
+    window.CASE = { world: ['', 'scatter', 'road', 'clusters', 'streams', 'screens', 'rings', 'planet'], accent: [0.36, 0.7, 1.0] };
   </script>
+  <script src="../../assets/js/case-depth.js?v=10"></script>
+  <script src="../../assets/js/case-kit.js?v=25"></script>
 </body>
 </html>

@@ -1,14 +1,26 @@
 # The CV asset was renamed; the old URL is already out in sent applications.
 /assets/CV_Yurii_Fokin.pdf  /assets/CV_Yurii_Designer.pdf  301
 
-# The lab's page is the folder itself (Dive); Matter and Depth stay beside it as the sandbox.
-/lab/directions/dive  /lab/directions/  301
-/lab/directions/dive.html  /lab/directions/  301
+# The home page and the cases left the lab for the site itself; the old site is at /old.
+# What stays in the lab is the sandbox: Matter and Depth.
+/lab/directions  /  301
+/lab/directions/  /  301
+/lab/directions/index.html  /  301
+/lab/directions/halliburton  /cases/halliburton/  301
+/lab/directions/halliburton.html  /cases/halliburton/  301
+/lab/directions/rebalancer  /cases/rebalancer/  301
+/lab/directions/rebalancer.html  /cases/rebalancer/  301
+/lab/directions/dobrodoc  /cases/dobrodoc/  301
+/lab/directions/dobrodoc.html  /cases/dobrodoc/  301
+/lab/directions/dopas  /cases/dopas/  301
+/lab/directions/dopas.html  /cases/dopas/  301
+/lab/directions/dive  /  301
+/lab/directions/dive.html  /  301
 /lab/directions/b  /lab/directions/matter  301
-/lab/directions/a  /lab/directions/  301
-/lab/directions/c  /lab/directions/  301
-/lab/directions/d  /lab/directions/  301
-/lab/directions/flow  /lab/directions/  301
-/lab/directions/signal  /lab/directions/  301
-/lab/directions/gallery  /lab/directions/  301
-/lab/directions/gravity  /lab/directions/  301
+/lab/directions/a  /  301
+/lab/directions/c  /  301
+/lab/directions/d  /  301
+/lab/directions/flow  /  301
+/lab/directions/signal  /  301
+/lab/directions/gallery  /  301
+/lab/directions/gravity  /  301

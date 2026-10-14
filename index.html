@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portfolio — Yurii Fokin</title>
   <meta name="description" content="Portfolio of Yurii Fokin, Lead UX Designer: an enterprise data platform at Halliburton, an iOS app built and shipped solo, and the design systems under them.">
   <link rel="canonical" href="https://yuryury.com/">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Yurii Fokin">
   <meta property="og:title" content="Yurii Fokin — Lead UX Designer">
@@ -17,975 +15,188 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#06070A">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/images/halliburton/halliburton-card.webp"
-        fetchpriority="high">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: #1A1A1A;
-      background-color: #F0F1F7;
-    }
-
-    /* ——— PAGE WASH ———
-       Three soft radials over the ground, plus film grain — study 04. It sits
-       in its own fixed layer, not on <body>: a background on the body scrolls
-       away with the page, and background-attachment: fixed is the thing that
-       stutters on iOS. Nothing animates, nothing loads.
-       The case pages deliberately do not get this. The eleven DobroDoc phone
-       exports are flattened onto flat #F2F2F2, so a gradient behind them would
-       show each one as a light rectangle. */
-    .pagewash {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      /* The colour is weighted to the right and the bottom-right, away from the
-         two places text actually sits on this layer — the hero, which is
-         left-aligned, and the footer. The cards never see it: they paint their
-         own #FCFCFC. Measured against the painted pixels, not the CSS. */
-      /* The Warely palette with 94% of its chroma taken out and the base pulled
-         toward neutral — study 27. The blobs sit above the base in lightness,
-         so each reads as a bloom rather than a stain, and what is left of the
-         brand is a direction rather than a colour. */
-      background:
-        radial-gradient(115% 115% at 24% 20%, #FDFDFF 0%, rgba(253,253,255,0) 56%),
-        radial-gradient(120% 120% at 84% 86%, #FEFDFB 0%, rgba(254,253,251,0) 58%),
-        radial-gradient(100% 100% at 92% 12%, #FEFDFB 0%, rgba(254,253,251,0) 48%),
-        #F0F1F7;
-      /* The two bands of the screen that carry text on this layer are the very
-         top (the nav, before it scrolls away) and the very bottom (the footer).
-         Fading the layer out at both edges leaves those on flat ground, which
-         lets the middle keep the strength the study had. Measured on the
-         painted pixels: the nav sits at 3-8% of the screen and the footer link
-         at 94%, so the layer is fully out by 92% and fully in by 14%. Chasing
-         the same result by thinning the whole gradient cost it its colour and
-         still left the footer link 0.02 short. */
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
-              mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
-    }
-    /* grain is what stops a gradient this large reading as plastic; one inline
-       SVG, no request, no motion */
-    /* A fourth bloom, held still. It used to drift; at 94% of the chroma
-       removed the movement was not readable, so it buys nothing and the
-       layer no longer needs to stay on the compositor. */
-    .pagewash::before {
-      content: '';
-      position: absolute;
-      inset: -25%;
-      background: radial-gradient(46% 44% at 54% 48%, rgba(253,253,255,0.9), transparent 62%);
-    }
-    .pagewash::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      opacity: 0.42;
-      mix-blend-mode: multiply;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    }
-
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* ——— TOP NAV ——— */
-    /* Stacking order, once, for every page: the curtain is 110 and the bar that
-       carries the X sits at 130 above it. .case-header is sticky and therefore
-       its own stacking context, so a z-index on the button alone was trapped
-       underneath the curtain and the X could not be reached. */
-    /* transparent, so the wash runs under it instead of being cut by a flat
-       band; the full-screen menu curtain paints its own ground */
-    .topnav { padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.08);
-              position: relative; z-index: 130; }
-    .topnav-inner { display: flex; justify-content: space-between; align-items: center; }
-    .topnav-logo { font-size: 15px; font-weight: 500; color: #1A1A1A; letter-spacing: -0.01em; }
-    .topnav-links { display: flex; gap: 24px; align-items: center; }
-    .topnav-link { font-size: 14px; font-weight: 500; color: #1A1A1A; }
-    .topnav-link:hover { color: #666666; }
-    /* Contact is the primary action, so it carries the same button treatment as
-       .hero-link--primary; the CV link steps back to grey. On desktop the pill
-       stays last, where a right-aligned row puts its most prominent item. */
-    .topnav-link--primary {
-      border: 1px solid rgba(0,0,0,0.2);
-      border-radius: 6px;
-      padding: 7px 15px;
-      transition: border-color 200ms ease, background 200ms ease, color 200ms ease;
-    }
-    .topnav-link--primary:hover {
-      color: #1A1A1A;
-      border-color: rgba(0,0,0,0.36);
-      background: rgba(0,0,0,0.025);
-    }
-    .topnav-link--secondary { color: #666666; }
-    .topnav-link--secondary:hover { color: #1A1A1A; }
-
-    /* ——— FULL-SCREEN MENU ———
-       Two bars rather than three: with three links behind it, three bars would
-       just repeat the count. Closed they are parallel; open each rotates from
-       its own centre into the X, the second 40ms behind the first — that
-       offset is what makes it read as a movement rather than a state change.
-
-       The panel is a curtain: clip-path from the top edge, on a symmetric
-       expo curve so it leaves and arrives decisively instead of easing out
-       into nothing. The links do not fade in behind it — each one sits in its
-       own overflow box and rises out of it, which is why they read as arriving
-       rather than appearing. 80ms apart, and the first waits for the curtain
-       to be most of the way down. */
-    .navburger {
-      display: inline-flex; position: relative; z-index: 120;
-      /* a flex sibling will squeeze this below the 44px touch floor */
-      flex: 0 0 44px;
-      width: 44px; height: 44px; margin-right: -10px;
-      align-items: center; justify-content: center;
-      background: none; border: 0; padding: 0; cursor: pointer;
-      color: #1A1A1A;
-    }
-    .navburger-box { position: relative; display: block; width: 22px; height: 12px; }
-    .navburger-box i {
-      position: absolute; left: 0; width: 100%; height: 1.5px;
-      background: currentColor; border-radius: 2px;
-      transform-origin: 50% 50%;
-      transition: transform 420ms cubic-bezier(.2,.9,.3,1.25);
-    }
-    .navburger-box i:nth-child(1) { top: 0; }
-    .navburger-box i:nth-child(2) { bottom: 0; transition-delay: 40ms; }
-    body.nav-open .navburger-box i:nth-child(1) { transform: translateY(5.25px) rotate(45deg); }
-    body.nav-open .navburger-box i:nth-child(2) { transform: translateY(-5.25px) rotate(-45deg); }
-    .navburger:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 2px; border-radius: 6px; }
-
-    .navoverlay {
-      position: fixed; inset: 0; z-index: 110;
-      background: #F2F2F2;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 104px 24px 28px;
-      clip-path: inset(0 0 100% 0);
-      visibility: hidden;
-      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 640ms;
-    }
-    body.nav-open .navoverlay {
-      clip-path: inset(0 0 0 0);
-      visibility: visible;
-      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 0s;
-    }
-    body.nav-open { overflow: hidden; }
-
-    .navoverlay-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
-    .navitem {
-      display: flex; align-items: baseline; gap: 16px;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      color: #1A1A1A;
-    }
-    .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
-    .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
-      font-variant-numeric: tabular-nums;
-    }
-    /* the box the line rises out of */
-    .navitem-mask { display: block; overflow: hidden; padding-bottom: 2px; }
-    .navitem-text {
-      display: block;
-      font-size: clamp(32px, 9vw, 52px); font-weight: 600;
-      line-height: 1.06; letter-spacing: -0.035em;
-      transform: translateY(112%);
-      transition: transform 640ms cubic-bezier(.76,0,.24,1);
-    }
-    body.nav-open .navitem-text { transform: translateY(0); }
-    body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
-    body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #666666; }
-    .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
-    /* the panel takes focus on open only to move the reading position; it is a
-       container, not a control, so it draws no ring — every link inside keeps
-       its own */
-    .navoverlay:focus, .navoverlay:focus-visible { outline: none; }
-
-    .navoverlay-foot {
-      width: 100%; max-width: 1100px; margin: 40px auto 0;
-      display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #666666;
-      opacity: 0; transform: translateY(8px);
-      transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
-    }
-    body.nav-open .navoverlay-foot { opacity: 1; transform: none; }
-    .navoverlay-foot a:hover { color: #1A1A1A; }
-
-    /* The two live side by side: the inline row is the desktop nav, the burger
-       and its panel are the mobile one. Each has to hide where the other
-       serves — stripping the old sheet rules left both on screen at once. */
-    @media (min-width: 769px) {
-      .navburger, .navoverlay { display: none; }
-    }
-    @media (max-width: 768px) {
-      .topnav-links { display: none; }
-    }
-
-    /* ——— CUSTOM CURSOR ——— */
-    .cursor-dot {
-      position: fixed;
-      top: 0; left: 0;
-      width: 8px; height: 8px;
-      background: #1A1A1A;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transition: width 0.3s cubic-bezier(0.23,1,0.32,1),
-                  height 0.3s cubic-bezier(0.23,1,0.32,1),
-                  background 0.3s ease,
-                  opacity 0.3s ease;
-      mix-blend-mode: difference;
-      will-change: transform;
-    }
-    .cursor-ring {
-      position: fixed;
-      top: 0; left: 0;
-      width: 36px; height: 36px;
-      border: 1.5px solid rgba(26,26,26,0.25);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transition: width 0.4s cubic-bezier(0.23,1,0.32,1),
-                  height 0.4s cubic-bezier(0.23,1,0.32,1),
-                  border-color 0.3s ease,
-                  opacity 0.3s ease;
-      will-change: transform;
-    }
-    .cursor-dot.hover {
-      width: 48px; height: 48px;
-      background: rgba(26,26,26,0.08);
-      mix-blend-mode: normal;
-    }
-    .cursor-ring.hover {
-      width: 48px; height: 48px;
-      border-color: rgba(26,26,26,0.12);
-    }
-    .cursor-dot.text-hover {
-      width: 3px; height: 28px;
-      border-radius: 2px;
-      mix-blend-mode: difference;
-    }
-    .cursor-ring.text-hover {
-      opacity: 0;
-    }
-    @media (pointer: coarse) {
-      .cursor-dot, .cursor-ring { display: none; }
-    }
-
-    /* ——— HERO ——— */
-    .hero {
-      padding: 56px 0 48px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    
-
-    .hero-name {
-      /* A greeting is a short line, and a short line at 34px left the first
-         screen empty: "Leading UX design." painted 301px of the 720 measure,
-         "Hi! I'm Yurii." only 216. The size goes up so the ink stays. */
-      font-size: 48px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      max-width: 720px;
-      margin-bottom: 12px;
-    }
-
-    
-
-    
-
-    /* 620 rather than 520: the role line names the employer and the client, and
-       at 520 it broke after "on" and left "data platform." hanging alone. */
-    .hero-bio-hook {
-      font-size: 16px;
-      color: #666666;
-      max-width: 620px;
-      margin-bottom: 0;
-    }
-
-    /* Two sentences, not two paragraphs: the role and the method read as one
-       block, so they sit closer than the block sits to anything else. */
-    .hero-bio-hook + .hero-bio-hook {
-      margin-top: 6px;
-    }
-
-    .hero-bio-hook strong {
-      font-weight: 500;
-    }
-
-    /* The employer is the one proper noun in the hero that leads somewhere, so
-       it takes the ink the grey sentence around it does not. */
-    .hero-bio-hook a {
-      color: #1A1A1A;
-      text-decoration: underline;
-      text-underline-offset: 0.18em;
-      text-decoration-thickness: 1px;
-    }
-
-    .hero-bio-hook a:hover { color: #666666; }
-
-    /* 32 below, so the band from the last hero line to the first card stays the
-       80 it was when the meta table closed the hero. */
-    .hero-jump {
-      display: flex;
-      gap: 28px;
-      margin: 24px 0 32px;
-      font-size: 14px;
-    }
-
-    .hero-jump-link {
-      font-weight: 500;
-      color: #1A1A1A;
-    }
-
-    .hero-jump-link:hover { color: #666666; }
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    /* ——— ABOUT ——— */
-    /* ——— CASES ——— */
-    .cases {
-      padding: 0 0 120px;
-    }
-
-    .cases-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-
-    .case-card {
-      background: #FCFCFC;
-      border: 1px solid rgba(0,0,0,0.08);
-      /* One inset for everything: the thumb and the copy both sit 20px in, so
-         the left edge of the image and the left edge of the title are the same
-         line. The copy came in from 28 and the image went out from 12 to meet
-         there. The card's radius follows from it — 20 + the thumb's canonical
-         12 — which is what keeps the two curves concentric. */
-      border-radius: 32px;
-      padding: 20px;
-      transition: transform 200ms ease, border-color 200ms ease;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .case-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      border-radius: 12px;
-      background: #EDEDED;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .case-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      /* .case-thumb already clips and object-fit: cover already fills it, so
-         the image has somewhere to grow without the frame moving. Slower than
-         the card's own lift: the card rises in 200ms and the image keeps going
-         after it, which reads as one gesture rather than two. */
-      transition: transform 700ms cubic-bezier(.2,.8,.3,1);
-    }
-    /* only where there is a real pointer: on a touch screen :hover sticks
-       after a tap and the image would stay zoomed */
-    @media (hover: hover) and (pointer: fine) {
-      .case-card:hover .case-thumb img { transform: scale(1.045); }
-    }
-
-    .case-thumb-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #C3C3C3;
-      font-size: 13px;
-      letter-spacing: 0.02em;
-    }
-
-    .case-body {
-      /* The card's own 20px inset is the reference: the band above the image,
-         the band between image and title, and the band under the last line
-         are all that same number. The 4px tail here used to make the bottom
-         band read 25 against the top's 20. */
-      padding: 20px 0 0;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .case-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0,0,0,0.16);
-    }
-
-    
-
-    .case-name {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      /* every other heading on the site is 1.1-1.3; without this it inherited
-         the body's 1.7 and a wrapped card title read as loose body text */
-      line-height: 1.3;
-      margin-bottom: 6px;
-    }
-
-    .case-result {
-      font-size: 14px;
-      color: #666666;
-      margin-bottom: 20px;
-    }
-
-    .case-link {
-      font-size: 14px;
-      font-weight: 500;
-      margin-top: auto;
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 0;
-      width: fit-content;
-    }
-
-    .case-link .case-link-arrow {
-      display: inline-block;
-      transition: transform 200ms ease;
-    }
-
-    .case-link:hover .case-link-arrow {
-      transform: translateX(3px);
-    }
-
-    .case-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #1A1A1A;
-      transition: width 200ms ease;
-    }
-
-    .case-link:hover::after {
-      width: 100%;
-    }
-
-    /* ——— Cards that carry a live link beside "View case": the tile link is
-       stretched under the body so the outbound links stay independently
-       clickable, rather than nested inside one anchor ——— */
-    .case-card-stretch {
-      position: absolute;
-      inset: 0;
-      z-index: 1;               /* above the position:relative .case-thumb so the whole tile is clickable */
-    }
-    .case-links-row {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;      /* DobroDoc carries three; they wrap rather than overflow */
-      gap: 8px 16px;
-    }
-    .case-links-row .case-link {
-      margin-top: 0;
-      z-index: 2;                /* above .case-card-stretch, which would
-                                    otherwise take every hover on this card */
-    }
-    .case-store-link {
-      position: relative;
-      z-index: 2;               /* above the stretch so it stays independently clickable */
-      font-size: 14px;
-      font-weight: 500;
-      color: #666666;
-    }
-    .case-store-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #1A1A1A;
-      transition: width 200ms ease;
-    }
-
-    .case-store-link:hover { color: #1A1A1A; }
-
-    /* keyed to its own hover, not the card's — the two links in this card are
-       independent, so underlining both at once would misread as one target */
-    .case-store-link:hover::after { width: 100%; }
-
-    /* ——— FOOTER ——— */
-    .footer {
-      border-top: 1px solid rgba(0,0,0,0.08);
-      padding: 40px 0;
-    }
-
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-left {
-      font-size: 14px;
-    }
-
-    .footer-name {
-      font-weight: 500;
-    }
-
-    .footer-role {
-      color: #666666;
-    }
-
-    .footer-right {
-      display: flex;
-      gap: 24px;
-      font-size: 14px;
-      color: #666666;
-    }
-
-    /* The one line in the footer that is a statement rather than a link, so it
-       takes the ink the links reserve for themselves and the row keeps its grey. */
-    .footer-open { color: #1A1A1A; }
-
-    .footer-right a {
-      position: relative;
-    }
-
-    .footer-right a::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #666666;
-      transition: width 200ms ease;
-    }
-
-    .footer-right a:hover::after {
-      width: 100%;
-    }
-
-    /* ——— RESPONSIVE ——— */
-    @media (max-width: 768px) {
-      /* 20px is right when the card is 500px wide; on a 342px card it eats a
-         tenth of the width on each side. 12 here, and the radius follows the
-         same rule it does on desktop — the inset plus the thumb's 12 — so the
-         curves stay concentric at 24 instead of 32. */
-      .case-card { padding: 12px; border-radius: 24px; }
-      /* the bands track the smaller inset */
-      .case-body { padding-top: 12px; }
-      .case-result { margin-bottom: 12px; }
-      /* title and result sit tighter still on a phone, where the two lines
-         are closer to each other in width and read as one block anyway */
-      .case-name { margin-bottom: 4px; }
-
-      /* the pill supplies its own vertical air, so the nav no longer needs
-         24px of it on top of that */
-      .topnav { padding: 16px 0; }
-      .topnav-link--primary { padding: 0 16px; }
-
-      /* The row is left-aligned here, so the prominent slot is the first one —
-         the opposite of the right-aligned desktop row. Bare text lines are also
-         too small to hit with a thumb, hence the 44px floor. */
-      .topnav-link { min-height: 44px; display: inline-flex; align-items: center; }
-      .topnav-link--primary:active {
-        border-color: rgba(0,0,0,0.36);
-        background: rgba(0,0,0,0.025);
-      }
-
-      /* 56px of nothing above the name and 80px between the last hero line
-         and the first card are desktop measurements standing on a phone screen */
-      /* The jump link is the last line in the hero, so it carries the zero: the
-         band to the first card stays the 16 + 16 it has always been. */
-      .hero { padding: 32px 0 16px; }
-      .hero-jump { margin: 20px 0 0; }
-      .hero-name {
-        font-size: 32px;
-      }
-
-      .cases-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .cases {
-        padding: 16px 0 80px;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        gap: 16px;
-        text-align: center;
-      }
-
-      .footer-right {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      /* Wrapping puts the statement and the first link on one line, which reads
-         as a pair they are not. A full-width basis gives the sentence its own
-         row and leaves the three links as the row under it. */
-      .footer-open {
-        flex-basis: 100%;
-      }
-    }
-      /* Visible only when focused: a keyboard user should not have to tab
-       through the header on every page to reach the case. */
-    .skip-link {
-      position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F8F8F8; font-size: 14px; font-weight: 500;
-      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
-    }
-    .skip-link:focus { top: 12px; }
-  
-    /* Honour the system setting: the site animates a cursor loop, reveal-on-
-       scroll, a staggered timeline and smooth scrolling. */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-      .cursor-dot, .cursor-ring { display: none !important; }
-    }
-      /* Present for screen readers and the document outline, not on screen. */
-    .visually-hidden {
-      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-    }
+    :root { --bg: #06070A; --fg: #EEF0F6; --muted: rgba(238,240,246,.55); --mono: 'JetBrains Mono', ui-monospace, monospace; --pad: clamp(16px, 6vw, 88px); --accent: #8FD3FF; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+    ::selection { background: var(--accent); color: var(--bg); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    #gl { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; display: block; }
+    /* Matter's film grain over the whole page */
+    .grain {
+      position: fixed; inset: -50%; pointer-events: none; opacity: .07; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain 1s steps(6) infinite;
+    }
+    @keyframes grain { 0%{transform:translate(0,0)} 25%{transform:translate(-3%,2%)} 50%{transform:translate(2%,-3%)} 75%{transform:translate(-2%,-1%)} 100%{transform:translate(1%,3%)} }
+    @media (prefers-reduced-motion: reduce) { .grain { animation: none; } }
+    .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.65) 100%); }
+
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(16px, 4vw, 40px); font-size: 14px; font-weight: 500; }
+    .nav-links { display: flex; gap: 22px; align-items: center; }
+    .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
+    .nav-links a:not(.pill):hover { color: var(--fg); }
+    .pill { border: 1px solid rgba(238,240,246,.25); border-radius: 999px; padding: 7px 15px; transition: background .2s, border-color .2s; }
+    .pill:hover { background: rgba(238,240,246,.08); border-color: rgba(238,240,246,.45); }
+    @media (max-width: 640px) { .nav-links a:not(.pill) { display: none; } }
+
+    .meter { position: fixed; z-index: 20; right: clamp(16px, 4vw, 40px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; }
+    .meter button { background: none; border: 0; cursor: pointer; padding: 5px 0; font: 500 10px/1 var(--mono); color: var(--muted); display: flex; gap: 8px; align-items: center; justify-content: flex-end; transition: color .4s; }
+    .meter button::after { content: ''; width: 14px; height: 1px; background: currentColor; transition: width .4s cubic-bezier(.2,.8,.2,1); }
+    .meter button:hover, .meter button.on { color: var(--fg); }
+    .meter button.on::after { width: 28px; }
+    @media (max-width: 760px) { .meter { display: none; } }
+
+    .track { height: 480vh; }
+    .cap { position: fixed; z-index: 10; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+    .eyebrow { font: 500 11px/1 var(--mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 14px; display: block; }
+    .cap-hero { left: var(--pad); bottom: clamp(72px, 12vh, 120px); max-width: 520px; padding-right: 16px; }
+    .cap-hero p { font-size: clamp(16px, 1.5vw, 19px); color: rgba(238,240,246,.82); }
+    .cap-hero a { border-bottom: 1px solid rgba(238,240,246,.35); }
+    /* the scroll hint: where you are on the way down, shown whenever the page comes to rest */
+    .scroll-hint[data-hint] { position: fixed; z-index: 12; left: var(--pad); bottom: clamp(26px, 5vh, 48px); margin: 0;
+      padding: 7px 12px 7px 9px; border-radius: 999px; background: rgba(6,7,10,.66); pointer-events: none; opacity: 0; transition: opacity .6s; }
+    .no-gl .scroll-hint { display: none; }
+    .scroll-hint .hint-t { min-width: 14ch; } /* the pill keeps its width as the words change */
+
+    .cap-layers { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
+    .cap-layers h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
+    .cap-layers p { margin-top: 14px; color: rgba(238,240,246,.75); font-size: clamp(15px, 1.2vw, 17px); max-width: 540px; }
+    /* on a phone the words sit higher, clear of the top of the strata */
+    @media (max-width: 760px) { .cap-layers { top: 78px; } .cap-layers p { margin-top: 10px; } }
+    .dive-labels { position: fixed; inset: 0; z-index: 9; pointer-events: none; }
+    .fl { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; font: 500 11px/1 var(--mono); white-space: nowrap; opacity: 0; will-change: transform, opacity; }
+    .fl i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(6,7,10,.6), 0 0 16px currentColor; flex: 0 0 auto; }
+    .fl span { color: var(--fg); background: rgba(6,7,10,.62); padding: 5px 8px; border-radius: 5px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .fl b { font-weight: 500; color: var(--muted); }
+    @media (max-width: 760px) { .fl b { display: none; } }
+
+    .cap-work { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+    .cap-work .work-title { position: absolute; left: var(--pad); top: clamp(76px, 11vh, 104px); font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; letter-spacing: -0.035em; }
+    .tag { position: absolute; left: 0; top: 0; pointer-events: auto; padding: 10px 0 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .tag b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; display: block; }
+    .tag b i { font: normal 500 11px/1 var(--mono); color: var(--muted); margin-right: 8px; }
+    .tag small { font-size: 13px; color: var(--muted); display: block; transition: color .3s; }
+    .tag em { font: normal 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s, transform .3s cubic-bezier(.2,.8,.2,1); }
+    .tag.on small { color: rgba(238,240,246,.85); }
+    .tag.on em { color: var(--fg); transform: translateX(4px); }
+    .tag .short { display: none; }
+    .tag-main { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .tag-st { display: flex; gap: 14px; margin-left: 14px; }
+    .tag-st a { font: 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s; }
+    .tag-st a:hover, .tag-st a:focus-visible { color: var(--fg); }
+    .tag.on .tag-st a { color: rgba(238,240,246,.8); }
+    .tag.narrow small, .tag.narrow em, .tag.narrow .tag-st, .tag.narrow .long { display: none; }
+    .tag.narrow .short { display: inline; }
+    .tag.narrow b { font-size: 13px; }
+    /* on a phone the label keeps everything the live site's card says: name, line, the case, the product */
+    @media (max-width: 760px) {
+      .tag:not(.narrow) { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: baseline; padding-top: 12px; }
+      .tag:not(.narrow) .tag-main { display: contents; }
+      .tag:not(.narrow) > span:not(.tag-st), .tag:not(.narrow) .tag-main > span { grid-column: 1 / -1; }
+      .tag:not(.narrow) small { margin-top: 3px; }
+      .tag b i { display: none; }
+      .tag-st { margin-left: 0; gap: 12px; }
+    }
+
+    .cap-end { left: 0; right: 0; bottom: clamp(64px, 11vh, 112px); text-align: center; padding: 0 16px; }
+    .cap-end h2 { font-size: clamp(32px, 5vw, 72px); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
+    .cap-end .row { display: flex; gap: 12px 24px; justify-content: center; flex-wrap: wrap; margin-top: 26px; font-weight: 500; }
+    .cap-end .row a { border-bottom: 1px solid rgba(238,240,246,.35); transition: border-color .2s; }
+    .cap-end .row a:hover { border-color: var(--fg); }
+    .cap-end .top { display: inline-block; margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); background: none; border: 0; cursor: pointer; }
+
+    .ring { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 50%; border: 1px solid rgba(238,240,246,.5); display: grid; place-items: center; opacity: 0; transition: width .4s cubic-bezier(.2,.8,.2,1), height .4s cubic-bezier(.2,.8,.2,1), margin .4s cubic-bezier(.2,.8,.2,1), background .3s, border-color .3s, opacity .3s; }
+    .ring span { font: 600 11px/1 'Inter'; color: #06070A; opacity: 0; transition: opacity .2s; }
+    .ring.big { width: 76px; height: 76px; margin: -38px 0 0 -38px; background: #EEF0F6; border-color: #EEF0F6; }
+    .ring.big span { opacity: 1; }
+    @media (hover: none), (pointer: coarse) { .ring { display: none; } }
+
+    .loading { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; font: 500 11px/1 var(--mono); color: var(--muted); transition: opacity .7s; pointer-events: none; }
+    .loading b { font-weight: 500; color: var(--fg); }
+
+    /* the page in plain words: what a screen reader (and a search engine) reads; it is the page itself without WebGL */
+    .fallback { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .no-gl .fallback { position: relative; z-index: 15; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; padding: 120px var(--pad); max-width: 900px; }
+    .no-gl .track, .no-gl .meter, .no-gl .cap, .no-gl #gl, .no-gl .loading, .no-gl .dive-labels { display: none; }
+    .fallback h1 { font-size: clamp(40px, 7vw, 88px); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+    .fallback > p { margin-top: 20px; font-size: 18px; color: rgba(238,240,246,.8); }
+    .fallback ul { list-style: none; margin-top: 56px; border-top: 1px solid rgba(238,240,246,.12); }
+    .fallback li a { display: flex; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(238,240,246,.12); }
+    .fallback li b { font-size: 20px; font-weight: 600; }
+    .fallback li span { color: var(--muted); }
   </style>
 </head>
 <body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <div class="loading" id="loading" aria-hidden="true"><span>gathering <b id="loadPct">0</b>%</span></div>
+  <div class="ring" id="ring" aria-hidden="true"><span>Open</span></div>
 
-  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="nav">
+    <a href="#" data-stage="0">Portfolio</a>
+    <nav class="nav-links">
+      <a href="#work" data-stage="2">Work</a>
+      <a href="assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+    </nav>
+  </header>
 
-  <!-- TOP NAV -->
-  <div class="pagewash" aria-hidden="true"></div>
-
-  <nav class="topnav">
-    <div class="container topnav-inner">
-      <a href="/" class="topnav-logo">Portfolio</a>
-      <button class="navburger" type="button" id="navburger" aria-expanded="false" aria-controls="navOverlay">
-        <span class="visually-hidden">Menu</span>
-        <span class="navburger-box" aria-hidden="true"><i></i><i></i></span>
-      </button>
-      <div class="topnav-links">
-        <a href="assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf" class="topnav-link topnav-link--secondary">Download CV ↓</a>
-        <a href="mailto:yuryuryury@icloud.com" class="topnav-link topnav-link--primary">Get in touch →</a>
-      </div>
-    </div>
+  <nav class="meter" id="meter" aria-label="Sections">
+    <button data-stage="0">00 · Hello</button>
+    <button data-stage="1">01 · Layers</button>
+    <button data-stage="2">02 · Work</button>
+    <button data-stage="4">03 · Contact</button>
   </nav>
 
-  <div class="navoverlay" id="navOverlay" aria-hidden="true" tabindex="-1">
-      <nav class="navoverlay-inner" aria-label="Menu">
-        <a class="navitem" href="assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf"><span class="navitem-num">01</span><span class="navitem-mask"><span class="navitem-text">Download CV &#8595;</span></span></a>
-        <a class="navitem" href="mailto:yuryuryury@icloud.com"><span class="navitem-num">02</span><span class="navitem-mask"><span class="navitem-text">Get in touch &#8594;</span></span></a>
-      </nav>
-      <div class="navoverlay-foot">
-        <span>Batumi, Georgia</span>
-        <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn &#8599;</a>
-      </div>
-  </div>
+  <section class="cap cap-hero" data-cap="0">
+    <h1 class="sr-only">Hi! I'm Yurii.</h1>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on <a href="cases/halliburton/">Halliburton</a>'s data platform. Currently building through an AI-native design-to-code pipeline.</p>
+  </section>
+  <div class="scroll-hint" data-hint data-drive data-mouse="scroll down|keep scrolling|scroll back" data-touch="swipe up|keep swiping|swipe back"></div>
 
-  <main id="main">
+  <section class="cap cap-layers" data-cap="1">
+    <span class="eyebrow">Under the surface</span>
+    <h2>Most of the work is in the layers nobody sees.</h2>
+    <p>On Halliburton's first unified data platform I'm the sole designer — from the research at the bottom to the pipeline that hands design to code.</p>
+  </section>
+  <div class="dive-labels" id="diveLabels" aria-hidden="true"></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container hero-content">
-      <h1 class="hero-name">Hi! I'm Yurii.</h1>
-      <p class="hero-bio-hook">I'm a Lead UX Designer at DXC Luxoft, on <a href="cases/halliburton/">Halliburton</a>'s data platform.</p>
-      <p class="hero-bio-hook">Currently building through an <strong>AI-native design-to-code pipeline</strong>.</p>
-      <div class="hero-jump"><a href="#work" class="hero-jump-link">Selected work <span aria-hidden="true">&rarr;</span></a></div>
+  <section class="cap cap-work" data-cap="2-4" id="capWork"><h2 class="work-title">Selected work</h2></section>
+
+  <section class="cap cap-end" data-cap="4">
+    <h2>Open to senior and<br>lead design roles.</h2>
+    <div class="row">
+      <a href="mailto:yuryuryury@icloud.com">Email</a>
+      <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a>
     </div>
+    <button class="top" data-stage="0">back to the start ↑</button>
   </section>
 
-  <!-- CASES -->
-  <section class="cases" id="work">
-    <div class="container">
-      <h2 class="visually-hidden">Selected work</h2>
-      <div class="cases-grid">
-
-        <!-- Card 1: Data Marketplace -->
-        <a href="cases/halliburton/" class="case-card">
-          <div class="case-thumb">
-            <img src="assets/images/halliburton/halliburton-card.webp" alt="Data Marketplace · Halliburton" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1120" height="630" fetchpriority="high">
-            <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
-          </div>
-          <div class="case-body">
-            <h3 class="case-name">Data Marketplace · Halliburton</h3>
-            <p class="case-result">Cut data search from weeks to minutes</p>
-            <span class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></span>
-          </div>
-        </a>
-
-        <!-- Card 2: Rebalancer -->
-        <div class="case-card">
-          <a href="cases/rebalancer/" class="case-card-stretch" aria-label="View Rebalancer case"></a>
-          <div class="case-thumb">
-            <img src="assets/images/rebalancer/rebalancer-hero.webp" alt="Rebalancer" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1440" height="900">
-            <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
-          </div>
-          <div class="case-body">
-            <h3 class="case-name">Rebalancer</h3>
-            <p class="case-result">Built solo, shipped to App Store</p>
-            <div class="case-links-row">
-              <a href="cases/rebalancer/" class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></a>
-              <a href="https://apps.apple.com/app/id6767200669" class="case-store-link" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)">App Store ↗</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3: DobroDoc+ -->
-        <div class="case-card">
-          <a href="cases/dobrodoc/" class="case-card-stretch" aria-label="View DobroDoc+ case"></a>
-          <div class="case-thumb">
-            <img src="assets/images/dobrodoc/dobrodoc-cover-v3.webp" alt="DobroDoc+" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1920" height="1080">
-            <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
-          </div>
-          <div class="case-body">
-            <h3 class="case-name">DobroDoc+</h3>
-            <p class="case-result">Cut booking time 40% in usability tests</p>
-            <div class="case-links-row">
-              <a href="cases/dobrodoc/" class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></a>
-              <a href="https://apps.apple.com/app/id1483029353" class="case-store-link" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)">App Store ↗</a>
-              <a href="https://play.google.com/store/apps/details?id=domus.dobrodoc" class="case-store-link" target="_blank" rel="noopener" aria-label="Google Play (opens in new tab)">Google Play ↗</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4: dopas.dp.ua -->
-        <div class="case-card">
-          <a href="cases/dopas/" class="case-card-stretch" aria-label="View dopas.dp.ua case"></a>
-          <div class="case-thumb">
-            <img src="assets/images/dopas/dopas-cover-v3.webp" alt="dopas.dp.ua" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="2400" height="1525">
-            <span class="case-thumb-placeholder" style="display:none">Image coming soon</span>
-          </div>
-          <div class="case-body">
-            <h3 class="case-name">dopas.dp.ua</h3>
-            <p class="case-result">Launched from zero, now generating revenue</p>
-            <div class="case-links-row">
-              <a href="cases/dopas/" class="case-link">View case <span class="case-link-arrow">&nbsp;→</span></a>
-              <a href="https://www.dopas.dp.ua/" class="case-store-link" target="_blank" rel="noopener" aria-label="dopas.dp.ua (opens in new tab)">Website ↗</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
+  <main class="fallback" id="work">
+    <h1>Hi! I'm Yurii.</h1>
+    <p>I'm a Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
+    <ul id="fallbackList"></ul>
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-left">
-          <span class="footer-name">Portfolio</span> · <span class="footer-role">Yurii Fokin</span>
-        </div>
-        <div class="footer-right">
-          <span class="footer-open">Open to senior and lead design roles</span>
-          <a href="mailto:yuryuryury@icloud.com">Email</a>
-          <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
-          <span>Batumi, GE</span>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <div class="track"></div>
 
-  <div class="cursor-dot"></div>
-  <div class="cursor-ring"></div>
-
-  <script>
-    // ——— FULL-SCREEN MENU ———
-    // State lives on <body> so the burger, the curtain and the lines can all
-    // key off one class. The panel stays in the DOM (a curtain cannot animate
-    // out of display:none) and is taken out of the a11y tree instead.
-    (function () {
-      var btn = document.getElementById('navburger');
-      var overlay = document.getElementById('navOverlay');
-      if (!btn || !overlay) return;
-      var lastFocus = null;
-
-      function setOpen(on) {
-        document.body.classList.toggle('nav-open', on);
-        btn.setAttribute('aria-expanded', on ? 'true' : 'false');
-        overlay.setAttribute('aria-hidden', on ? 'false' : 'true');
-        if (on) {
-          lastFocus = document.activeElement;
-          // Move the reading position into the panel without ringing a control.
-          // This used to focus the first link, which made Safari on iOS paint
-          // its focus-visible outline around "Download CV" the instant the menu
-          // opened — a scripted .focus() counts as focus-visible, so a pointer
-          // tap produced a keyboard-style ring. The panel carries tabindex="-1"
-          // and takes the focus itself: VoiceOver and Tab still start inside it,
-          // and nothing draws a box.
-          setTimeout(function () { overlay.focus(); }, 360);
-        } else if (lastFocus) {
-          lastFocus.focus();
-        }
-      }
-      var isOpen = function () { return document.body.classList.contains('nav-open'); };
-
-      btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!isOpen()); });
-      overlay.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
-
-      document.addEventListener('keydown', function (e) {
-        if (!isOpen()) return;
-        if (e.key === 'Escape') { setOpen(false); return; }
-        // a full-screen panel that lets Tab wander behind it is a trap of its
-        // own kind — the loop keeps focus on what is actually on screen
-        if (e.key !== 'Tab') return;
-        var items = [btn].concat([].slice.call(overlay.querySelectorAll('a')));
-        var i = items.indexOf(document.activeElement);
-        // focus starts on the panel itself, which is not one of the stops
-        if (i === -1) { e.preventDefault(); items[e.shiftKey ? items.length - 1 : 0].focus(); return; }
-        var next = e.shiftKey ? (i - 1 + items.length) % items.length : (i + 1) % items.length;
-        e.preventDefault();
-        items[next].focus();
-      });
-
-      window.addEventListener('resize', function () {
-        if (window.innerWidth > 768 && isOpen()) setOpen(false);
-      });
-    })();
-
-    // ——— CUSTOM CURSOR ———
-    (function() {
-      if (window.matchMedia('(pointer: coarse)').matches) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      const dot = document.querySelector('.cursor-dot');
-      const ring = document.querySelector('.cursor-ring');
-      if (!dot || !ring) return;
-
-      let mouseX = -100, mouseY = -100;
-      let dotX = -100, dotY = -100;
-      let ringX = -100, ringY = -100;
-
-      document.addEventListener('mousemove', function(e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      });
-
-      // Hide when mouse leaves window
-      document.addEventListener('mouseleave', function() {
-        dot.style.opacity = '0';
-        ring.style.opacity = '0';
-      });
-      document.addEventListener('mouseenter', function() {
-        dot.style.opacity = '1';
-        ring.style.opacity = '1';
-      });
-
-      // Hover detection
-      function addHoverListeners() {
-        var interactives = document.querySelectorAll('a, button, .card, .hero-link');
-        interactives.forEach(function(el) {
-          el.addEventListener('mouseenter', function() {
-            dot.classList.add('hover');
-            ring.classList.add('hover');
-          });
-          el.addEventListener('mouseleave', function() {
-            dot.classList.remove('hover');
-            ring.classList.remove('hover');
-          });
-        });
-
-        // Text cursor for paragraphs and headings
-        // a case card is an <a> wrapping an h3 and a <p>, so without this the
-        // text caret wins over the link ring on the page's only clickable element
-        var textEls = Array.prototype.filter.call(
-          document.querySelectorAll('p, h1, h2, h3'),
-          function (el) { return !el.closest('a, button'); }
-        );
-        textEls.forEach(function(el) {
-          el.addEventListener('mouseenter', function() {
-            dot.classList.add('text-hover');
-            ring.classList.add('text-hover');
-          });
-          el.addEventListener('mouseleave', function() {
-            dot.classList.remove('text-hover');
-            ring.classList.remove('text-hover');
-          });
-        });
-      }
-      addHoverListeners();
-
-      // Hide default cursor
-      // The system pointer stays: hiding it leaves anyone who relies on it — a
-      // magnifier, a trackpad user tracking a small target — with an 8px dot
-      // that lags behind where they actually are.
-
-      // Animation loop — dot follows tight, ring follows with lag
-      function animate() {
-        dotX += (mouseX - dotX) * 0.2;
-        dotY += (mouseY - dotY) * 0.2;
-        ringX += (mouseX - ringX) * 0.08;
-        ringY += (mouseY - ringY) * 0.08;
-
-        dot.style.transform = 'translate(' + (dotX - dot.offsetWidth/2) + 'px,' + (dotY - dot.offsetHeight/2) + 'px)';
-        ring.style.transform = 'translate(' + (ringX - ring.offsetWidth/2) + 'px,' + (ringY - ring.offsetHeight/2) + 'px)';
-
-        requestAnimationFrame(animate);
-      }
-      animate();
-    })();
-  </script>
-
+  <script src="assets/js/perf.js?v=13"></script>
+  <script src="assets/js/hint.js?v=6"></script>
+  <script src="assets/js/handoff.js?v=7"></script>
+  <script src="assets/js/bkit.js?v=25"></script>
+  <script src="assets/js/dive.js?v=41"></script>
 </body>
 </html>

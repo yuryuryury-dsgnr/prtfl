@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rebalancer — Yurii Fokin</title>
   <meta name="description" content="A crypto ratio-pair tracker designed and built solo — product design, iOS app, backend and push notifications — and shipped to the App Store in 31 locales.">
   <link rel="canonical" href="https://yuryury.com/cases/rebalancer/">
-  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Yurii Fokin">
   <meta property="og:title" content="Rebalancer">
@@ -17,2153 +15,295 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#07080B">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 400; line-height: 1.7; color: #1A1A1A; background: #F0F1F7; }
-    a { color: inherit; text-decoration: none; }
-
-    /* ——— PAGE WASH ———
-       The same three colours as every other page, in deck placement B
-       — blue top-right, warm bottom-left. Moving the blobs is what keeps the cases related without
-       repeating one another. A fixed layer rather than a body background,
-       which would scroll away with the page, and rather than
-       background-attachment: fixed, which stutters on iOS. */
-    .pagewash {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      /* Home's own two blooms — the near-white cool and the near-white warm —
-         in this page's own arrangement. Each case swaps where they sit; none of
-         them changes what they are. An earlier pass reached for a separate,
-         more saturated palette here, which put the warm bloom at R-B 15 against
-         home's 2: seven times the cast, and it read as a yellow stain rather
-         than as the same page. Measured on the painted pixels. */
-      background:
-        radial-gradient(120% 125% at 10% 22%, #FEFDFB 0%, rgba(254,253,251,0) 56%),
-        radial-gradient(115% 120% at 90% 24%, #FDFDFF 0%, rgba(253,253,255,0) 54%),
-        radial-gradient(100% 105% at 6% 78%, #FEFDFB 0%, rgba(254,253,251,0) 52%),
-        #F0F1F7;
-      /* the two bands that carry text on this layer are the very top, before
-         the header scrolls away, and the very bottom */
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
-              mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 76%, transparent 92%);
-    }
-    .pagewash::before {
-      content: '';
-      position: absolute;
-      inset: -25%;
-      background: radial-gradient(46% 44% at 66% 40%, rgba(253,253,255,0.9), transparent 62%);
-    }
-    /* grain is what stops a gradient this large reading as plastic */
-    .pagewash::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      opacity: 0.42;
-      mix-blend-mode: multiply;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    }
-    /* ——— STICKY HEADER ——— */
-    .case-header {
-      position: sticky; top: 0; z-index: 130;
-      /* It stays put while the page scrolls under it, so it cannot be
-         transparent — the copy would sit on whatever passes beneath. A
-         translucent ground with a blur keeps the wash readable through it and
-         the header legible over anything. */
-      background: rgba(240,241,247,0.93);
-      -webkit-backdrop-filter: blur(12px);
-              backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      padding: 16px 24px;
-    }
-    .case-header-inner {
-      max-width: 760px; margin: 0 auto;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .case-header-back {
-      font-size: 14px; font-weight: 500; color: #1A1A1A;
-    }
-    .case-header-back:hover { color: #666666; }
-    .case-header-name {
-      font-size: 14px; color: #666666;
-    }
-
-    /* ——— CONTAINER ——— */
-    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
-
-    /* ——— HERO ——— */
-    /* the top gap shrinks on a phone: 80px above the title is a third of
-       a small screen before a word is read. Same curve as the other cases. */
-    .case-hero { padding: clamp(32px, 8vw, 80px) 0 48px; }
-    .case-hero h1 {
-      font-size: 48px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px;
-    }
-    .case-hero-meta { font-size: 14px; color: #666666; margin-bottom: 8px; }
-    .case-hero-role { font-size: 14px; color: #666666; margin-bottom: 4px; }
-    .case-hero-result { font-size: 14px; color: #666666; font-style: italic; margin-bottom: 32px; }
-
-    /* The markup runs title, line, image, details — which is the phone order.
-       On a desktop the details go back above the image, so the order is a
-       layout decision rather than two different documents. Flex ordering
-       rather than duplicated markup: one DOM, one reading order for a screen
-       reader, and the visual order set per breakpoint. */
-    .case-hero { display: flex; flex-direction: column; }
-    .case-hero h1 { order: 1; }
-    .case-hero-hook, .case-hero-meta { order: 2; }
-    /* on a phone the store links belong above the cover: they are the one
-       thing on the page you can act on, and under the image they fell below
-       the fold. On desktop they stay where they read, after the facts. */
-    .case-hero .cta-row { order: 3; }
-    .case-hero-image { order: 4; }
-    .case-hero-detail { order: 5; }
-    @media (min-width: 769px) {
-      .case-hero-detail { order: 3; }
-      .case-hero .cta-row { order: 4; }
-      .case-hero-image { order: 5; }
-    }
-
-    /* flex does not collapse margins, so each gap is set on one side only */
-    .case-hero-hook, .case-hero-meta { margin-top: 0; margin-bottom: 0; }
-    .case-hero-image { margin-top: 48px; }
-    .case-hero-detail { margin-top: 36px; }
-    .case-hero .cta-row { margin-top: 24px; }
-
-    /* The image comes first now: a case is a thing you look at before you read
-       who was on the team. Everything factual — role, team, dates, the NDA
-       line — sits under it. */
-    .case-hero-detail { margin-top: 36px; }
-    .case-hero-detail > *:first-child { margin-top: 0; }
-    .case-hero-image {
-      width: calc(100% + 160px);
-      margin-left: -80px;
-      /* a white mat, 6px, with the inner radius at 24 minus the mat so
-         the two curves stay concentric */
-      padding: 6px;
-      background: #FCFCFC;
-      border-radius: 24px;
-      margin-top: 48px;
-      position: relative;
-      overflow: hidden;
-      /* Two shadows, not one: a tight contact shadow so the mat sits on the
-         page rather than floating, and a wide soft one underneath it for the
-         actual lift. The lift is offset down, the contact shadow barely at
-         all — which is what makes it read as height instead of a blur. */
-      box-shadow:
-        0 1px 2px rgba(20,22,28,0.05),
-        0 16px 36px -14px rgba(20,22,28,0.16);
-      /* the tilt happens here, so nothing above it has to know about 3D */
-      transform: perspective(1400px);
-      transform-style: preserve-3d;
-      will-change: transform;
-      transition: transform 500ms cubic-bezier(.2,.8,.3,1),
-                  box-shadow 500ms cubic-bezier(.2,.8,.3,1);
-    }
-    /* while the pointer is on it the transform must track, not lag */
-    .case-hero-image.is-tilting {
-      transition: box-shadow 300ms ease;
-    }
-    .case-hero-image.is-tilting {
-      box-shadow:
-        0 2px 4px rgba(20,22,28,0.06),
-        0 30px 60px -18px rgba(20,22,28,0.22);
-    }
-
-    /* Wide screens: the hero grows past the text column in two steps. The cap
-       is 200px a side because 1280px leaves 284px outside the column and the
-       frame must not reach the viewport edge. */
-    @media (min-width: 1025px) {
-      .case-hero-image { width: calc(100% + 240px); margin-left: -120px; }
-    }
-    @media (min-width: 1280px) {
-      .case-hero-image { width: calc(100% + 400px); margin-left: -200px; }
-    }
-    .case-hero-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 18px;
-    }
-    .case-hero-image-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #C3C3C3;
-      font-size: 14px;
-    }
-
-    /* ——— SECTIONS ——— */
-    .case-section { padding: 88px 0 0; }
-    /* the number rides on the heading line now, at the heading's own size.
-       The space before the title is a real one — without it a screen reader
-       announces "01Roadmap" as a single word — so the margin carries only
-       the remainder: 0.18em + the space measures the same 15.2px at 38px
-       and 12.8px at 32px that the bare 0.4em margin did. */
-    .section-heading {
-      font-size: 38px; font-weight: 600; letter-spacing: -0.02em;
-      line-height: 1.2; margin-bottom: 24px;
-    }
-
-    /* ——— THE HANGING ORDINAL ———
-       Above 1200 the page gutter is wide enough to hold the number outside the
-       column, so the heading's own name starts on the same vertical line as
-       every paragraph under it and only the ordinal sits further left. Below
-       that the gutter is 24px and the number would fall off the page, so it
-       stays inline. The leading space in the markup is trimmed at the start of
-       the line, which is what keeps the name flush. */
-    /* one level under .section-heading, above body text — same component the
-       Halliburton case uses, at this page's lighter weight. The big top margin
-       is what keeps a long section from reading as one pile. */
-    .subsection-heading {
-      font-size: 28px; font-weight: 600; letter-spacing: -0.015em; color: #1A1A1A;
-      line-height: 1.3; margin: 56px 0 14px;
-    }
-    .subsection-heading:first-of-type { margin-top: 32px; }
-    .section-text { color: #666666; margin-bottom: 16px; max-width: 640px; }
-    /* a section that ends on prose (§01) would otherwise add its paragraph's
-       16px to the next section's 80px top padding and sit 96px apart */
-    /* Whatever a section ends on, the space to the next one is the section
-       rhythm and nothing else: a trailing bottom margin escapes the section
-       box and silently adds itself to the gap. */
-    .case-section > *:last-child { margin-bottom: 0; }
-    
-
-    /* ——— CTA PILL ——— */
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
-    .cta-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 14px; font-weight: 500;
-      padding: 10px 24px; border: 1.5px solid #1A1A1A;
-      border-radius: 100px; transition: all 200ms ease;
-    }
-    /* currentColor, so the mark flips to white with the label on hover */
-    .cta-pill svg {
-      width: auto; height: 16px; flex: 0 0 auto;
-      position: relative; top: -1px;   /* optical: the mark reads high against the cap line */
-    }
-    .cta-pill:hover { background: #1A1A1A; color: #FCFCFC; }
-
-    /* ——— REFLECTION ——— */
-
-    /* ——— NEXT CASE ——— */
-    .next-case {
-      margin-top: 80px; padding: 32px 0;
-      border-top: 1px solid rgba(0,0,0,0.08);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .next-case-label { font-size: 14px; color: #666666; }
-    .next-case-name { font-size: 14px; font-weight: 500; }
-    .next-case-name:hover { color: #666666; }
-
-    /* ——— FOOTER ——— */
-    .footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 40px 0; margin-top: 80px; }
-    .footer-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-    .footer-name { font-weight: 500; }
-    .footer-role { color: #666666; }
-    .footer-right { display: flex; gap: 24px; color: #666666; }
-    .footer-right a { position: relative; }
-    .footer-right a::after {
-      content: ''; position: absolute; bottom: -2px; left: 0;
-      width: 0; height: 1px; background: #666666; transition: width 200ms ease;
-    }
-    .footer-right a:hover::after { width: 100%; }
-
-    /* ═══ PHASE 3 ADDITIONS ═══ */
-
-
-
-    /* iPhone mockups (§05). The screenshots already carry the device frame —
-       bezel, side buttons and Dynamic Island are part of the image — so the
-       page draws no chrome of its own. .phone-frame is only an aspect-ratio
-       box (450/920, the mockup's own ratio) that reserves the slot while the
-       image loads, so nothing reflows when it arrives. The image keeps its
-       alpha, so the rounded corners outside the device stay transparent. */
-    /* The four screens used to be three layouts behind two breakpoints — a
-       2x2 grid, a bleeding row, then a snap scroller. This is one row at every
-       width, drifting on its own, the same component the Halliburton case uses
-       for its mockups. The drift moves scrollLeft rather than a transform, so
-       the row stays a real scroller: swipe, trackpad, shift-wheel and Tab all
-       work, and the edge fade finds it like every other row on the site. */
-    .phone-strip {
-      margin-top: 32px;
-      /* the row is draggable with a mouse, so it says so */
-      cursor: grab;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    .phone-strip.is-dragging { cursor: grabbing; user-select: none; }
-    .phone-strip.is-dragging img { pointer-events: none; }
-    .phone-strip::-webkit-scrollbar { display: none; }
-    .phone-strip:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .phone-track { display: flex; align-items: flex-start; gap: 24px; width: max-content; }
-    /* an absolute basis, never a percentage: the track is width: max-content,
-       so a percentage basis has nothing definite to resolve against and the
-       items stop being a row at all */
-    .phone-track > .phone-figure { flex: 0 0 min(300px, 66vw); }
-    .phone-track .phone-frame,
-    .phone-track .phone-caption { max-width: none; width: 100%; }
-    .phone-figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-    .phone-frame { position: relative; width: 100%; max-width: 208px; aspect-ratio: 450 / 920; }
-    .phone-shot { display: block; width: 100%; height: 100%; object-fit: contain; }
-    /* only rendered if the image fails: a phone-shaped stand-in, so a broken
-       asset still reads as a screen rather than collapsing the grid */
-    .phone-placeholder {
-      position: absolute; inset: 0; align-items: center; justify-content: center;
-      background: #E7E7E7; border-radius: 26px;
-      font-size: 12px; color: #666666; text-align: center; padding: 0 12px;
-    }
-    .phone-caption { font-size: 13px; color: #666666; text-align: center; line-height: 1.5; max-width: 208px; }
-
-    /* Four mockups as one stepped row. It needs ~912px to hold them at a useful
-       size, which only exists from 1080px where the roadmap's bleed applies —
-       below that they stay a 2x2 rather than shrink to 163px, which would be
-       smaller than the grid they replaced. Mockup width is capped at 213px
-       because the source art is 450px and would upscale past that. */
-    @media (min-width: 1080px) {
-      .phone-strip { width: calc(100% + 200px); max-width: none; margin-left: -100px; }
-    }
-
-    /* Phase 3 — mobile: phone row → contained horizontal scroll with peek
-       (same mechanism as Halliburton's card rows; scrolls internally, never
-       widens the page). Container is tabindex=0 role=group for keyboard use. */
-    @media (max-width: 600px) {
-    }
-
-    /* ═══ RB TEXT-BREAKUP ACCENTS (unique rb- prefix — no existing class reused) ═══ */
-
-    /* §02 — ROADMAP TIMELINE. The .timeline component is the same one the
-       dopas and dobrodoc cases use (horizontal rail + dots on desktop,
-       vertical rail on mobile), copied here because case pages carry their
-       own CSS. Two additions for this page: pastel dots keyed to the layer
-       a phase lived in, and a scroll wrapper.
-
-       Why the wrapper: six phases need ~152px each to stay legible, which is
-       more than the 760px column holds. .rb-road-scroll bleeds 80px each
-       side on wide screens (the hero's trick) so all six fit at once, and
-       falls back to contained horizontal scroll when they don't. The rail
-       lives on .timeline (the track), not on the scroller, so it spans the
-       full width instead of stopping at the visible edge. */
-    .rb-road-scroll {
-      margin-top: 32px; max-width: 100%; min-width: 0;
-      overflow-x: auto; overflow-y: hidden;
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    .rb-road-scroll::-webkit-scrollbar { display: none; }
-    .rb-road-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    /* Wide screens: the rail runs past the text column on the RIGHT only, so
-       phase 01 starts on the same vertical as every heading and paragraph on
-       the page. 712 + 160 = 872 still holds all five steps at 152px, so the
-       roadmap is seen whole instead of scrolled. The bleed is capped at 160
-       because 1080px leaves 184px outside the column and the rail must not
-       reach the viewport edge. max-width has to be released or the base
-       `max-width: 100%` clamps the bleed straight back to 712. */
-    @media (min-width: 1080px) {
-      .rb-road-scroll { width: calc(100% + 160px); max-width: none; margin-left: 0; }
-    }
-    /* §03 — market analysis: a comparison grid rather than prose, because the
-       point is the shape of the gap. Rows carry their own labels, hidden while
-       the header row is visible, so the whole thing becomes labelled blocks on
-       mobile instead of a table that has to scroll. */
-    /* §03 — comparison grid. Rows are the workarounds the copy already names,
-       columns the capabilities that separate them. The marks carry the meaning
-       so the gaps read at a glance; text appears only to qualify a partial,
-       which is what keeps the grid honest under a close read. Wide by nature,
-       so it scrolls inside its own box rather than moving the page. */
-    .rb-cmp-scroll {
-      margin-top: 22px; max-width: 100%; min-width: 0;
-      overflow-x: auto; overflow-y: hidden;
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    .rb-cmp-scroll::-webkit-scrollbar { display: none; }
-    .rb-cmp-scroll:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    .rb-cmp {
-      min-width: 640px;
-      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; overflow: hidden;
-    }
-    .rb-cmp-row { display: grid; grid-template-columns: 1.75fr repeat(5, 1fr); }
-    .rb-cmp-row + .rb-cmp-row { border-top: 1px solid rgba(0,0,0,0.07); }
-    .rb-cmp-row--head { background: #F5F5F5; }
-    /* the one row with no gaps in it — tinted so the shape of the column reads
-       before any of the labels do */
-    .rb-cmp-row--self { background: var(--rb-screen-bg); }
-    .rb-cmp-c {
-      padding: 12px 12px; display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start; gap: 5px; text-align: center;
-    }
-    .rb-cmp-c--name {
-      align-items: flex-start; text-align: left; padding-left: 16px;
-      font-size: 13px; font-weight: 500; color: #1A1A1A; line-height: 1.4;
-    }
-    .rb-cmp-row--head .rb-cmp-c {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #666666; line-height: 1.4;
-    }
-    .rb-cmp-mark { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
-    .rb-cmp-mark--yes { background: var(--rb-action-bd); }
-    .rb-cmp-mark--part {
-      background: linear-gradient(to right, var(--rb-decision-bd) 50%, transparent 50%);
-      border: 1px solid var(--rb-decision-bd);
-    }
-    .rb-cmp-mark--no { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
-    /* only ever attached to a partial: says what the half-mark is standing for */
-    .rb-cmp-note { font-size: 10px; line-height: 1.35; color: #666666; }
-
-    /* §06 — App Store listing cards. Same components as the §04 screenshots
-       (frame box, .phone-shot, onerror placeholder, caption) with the store
-       slot's own ratio; these are marketing frames, not device shots. Five of
-       them never fit a 760px column legibly, so the row scrolls at every width
-       with a clipped next card as the cue — the mechanism the flows and the
-       phone row already use. */
-
-    /* §05 — testing: one card per flow, each carrying what the round found
-       and what changed because of it. Colour does the labelling — sand for the
-       finding, sage for the fix — the same two tones the diagrams use, so a
-       problem and a change never look alike. */
-    .rb-tests { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
-    .rb-test {
-      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 24px;
-    }
-    .rb-test-flow { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 12px; }
-    .rb-test-num { color: #666666; font-weight: 500; margin-right: 7px; }
-    .rb-test-line { font-size: 13px; color: #666666; line-height: 1.6; padding-left: 12px; border-left: 2px solid; }
-    .rb-test-line + .rb-test-line { margin-top: 10px; }
-    .rb-test-line--found { border-left-color: var(--rb-decision-bd); }
-    .rb-test-line--fixed { border-left-color: var(--rb-action-bd); }
-    .rb-test-key {
-      display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #666666;
-    }
-
-    /* §07 — the slot post-launch numbers land in. Dashed on purpose: it reads
-       as reserved rather than empty, and filling it means replacing this one
-       block, not rebuilding the section. */
-    .rb-pending {
-      margin-top: 22px; border: 1px dashed var(--rb-neutral-bd); border-radius: 12px;
-      padding: 24px; display: flex; flex-direction: column; gap: 8px; max-width: 640px;
-    }
-    .rb-pending-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #666666; }
-    .rb-pending-list { display: flex; flex-direction: column; gap: 5px; }
-    .rb-pending-item { font-size: 13px; color: #666666; line-height: 1.6; padding-left: 14px; position: relative; }
-    .rb-pending-item::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: #666666; }
-
-    /* §03 — audience groups. Same shape as the Halliburton case's persona
-       cards (badge, name, Who / Pain). The hue used to fill the whole card;
-       it now lives only in the badge, so three tinted panels stop competing
-       with the flow diagrams below, which need the pastel fills to mean
-       something. No names, faces, ages or invented quotes — groups, not people. */
-    .rb-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
-    /* the card is neutral like every other card on the site; the badge is the
-       only place the group colour lives, which is enough to tell three apart */
-    .rb-group {
-      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px; padding: 24px;
-    }
-    .rb-group-head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-    .rb-group-eyebrow { display: flex; align-items: center; gap: 8px; }
-    .rb-group-badge {
-      flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 500; color: #FCFCFC; background: #1A1A1A;
-    }
-    .rb-group--investor  .rb-group-badge { background: #5E7590; }
-    .rb-group--rebalancer .rb-group-badge { background: #5B7563; }
-    .rb-group--trader .rb-group-badge { background: #676086; }
-    /* the badge is the colour anchor; this spells it out for anyone who does
-       not read G1 as a legend, and for screen readers, which skip the badge */
-    /* type scale is the site-wide card one (label 11/500 uppercase,
-       name 15/500/1.3, line 13/1.6); only the fills stay local to this page */
-    .rb-group-num {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #666666; line-height: 1.3;
-    }
-    .rb-group-name { font-size: 15px; font-weight: 500; line-height: 1.3; }
-    .rb-group-line { font-size: 13px; color: #666666; line-height: 1.6; margin-bottom: 8px; }
-    .rb-group-line:last-child { margin-bottom: 0; }
-    .rb-group-key {
-      display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #666666;
-    }
-
-    /* Research ran alongside the build all spring, so it lives inside the
-       timeline as a row of its own that spans the phases it covered rather
-       than a marker above them. The track is a 6-column grid: phases sit on
-       row 2 under the rail, the research bar on row 3 spanning columns 1-4,
-       which is what makes "parallel, not a stage before the start" legible. */
-    .timeline { display: grid; grid-template-columns: repeat(5, minmax(152px, 1fr)); margin-top: 0; position: relative; min-width: 100%; }
-    .timeline::before {
-      content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08);
-    }
-    /* min 152px per column so phases stretch to fill a wide rail and overflow
-       into a scroll instead of squeezing into unreadable columns */
-    .timeline-step { position: relative; padding-top: 48px; padding-right: 16px; }
-    .timeline-step::before {
-      content: ''; position: absolute; top: 18px; left: 0;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: #1A1A1A; border: 3px solid #F0F1F7;
-    }
-    .timeline-number { font-size: 12px; font-weight: 500; color: #666666; margin-bottom: 4px; }
-    .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .timeline-desc { font-size: 12px; color: #666666; line-height: 1.5; margin-bottom: 8px; }
-    .timeline-tag {
-      display: inline-block; font-size: 11px; color: #666666; background: #E9E9E9;
-      padding: 3px 8px; border-radius: 4px;
-    }
-    /* §08 — compact outcome stat trio (borderless, same stat family, smaller) */
-    /* §08 — the live listing, sat between the claims and the numbers so the
-       section reads assertion → evidence → summary. Borrows the roadmap's
-       bleed at wide widths; the aspect-ratio box holds the slot while the
-       image loads so the stats below never jump. */
-    .rb-shot {
-      margin-top: 28px; border-radius: 12px; overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.08); background: #E7E7E7;
-      position: relative; aspect-ratio: 3360 / 1786;
-    }
-    .rb-shot img { width: 100%; height: 100%; display: block; object-fit: cover; }
-    .rb-shot-placeholder {
-      position: absolute; inset: 0; align-items: center; justify-content: center;
-      color: #666666; font-size: 13px; text-align: center; padding: 0 16px;
-    }
-    .rb-shot-caption { font-size: 13px; color: #666666; line-height: 1.5; margin-top: 12px; max-width: 640px; }
-    @media (min-width: 1080px) {
-      .rb-shot { width: calc(100% + 200px); margin-left: -100px; }
-    }
-
-    /* ═══ RB TABS — visual match for the site's .phase-toggle, but its own
-       rb- namespace + its own scoped handler. Each .rb-tabgroup owns its
-       strip and its panels, so two groups on one page never clash. ═══ */
-    .rb-tabs {
-      display: flex; gap: 0; margin: 24px 0;
-      border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
-      overflow: hidden; width: fit-content;
-    }
-    .rb-tab {
-      padding: 10px 20px; font-size: 14px; font-weight: 500; font-family: inherit;
-      border: none; background: transparent; color: #666666; cursor: pointer;
-      border-right: 1px solid rgba(0,0,0,0.1); white-space: nowrap;
-      transition: background 150ms ease, color 150ms ease;
-    }
-    .rb-tab:last-child { border-right: none; }
-    .rb-tab:hover { background: rgba(0,0,0,0.02); }
-    /* selected, not pressed — a step down the page's own blue ramp instead
-       of solid ink, matching the toggles on the other cases */
-    .rb-tab.is-active { background: #D9D9D9; color: #1A1A1A; }
-    .rb-tabpanel { display: none; }
-    .rb-tabpanel.is-active { display: block; }
-
-    /* ═══ DIAGRAM COLOUR — one pastel vocabulary shared by §03 and §04.
-       Colour encodes the node TYPE and nothing else, so the same meaning is
-       the same hue in both diagrams (a screen is blue in the IA tree and in
-       every flow). Muted on purpose: these sit on a cool #F0F1F7 page.
-       Shape + stroke style still carry the type on their own — colour is a
-       second, redundant channel, so nothing depends on seeing it. ═══ */
-    :root {
-      --rb-screen-bg:   #E8EDF3;  --rb-screen-bd:   #BDCBDC;   /* screen  — blue  */
-      --rb-action-bg:   #E7EEE8;  --rb-action-bd:   #BECFC1;   /* action  — sage  */
-      --rb-system-bg:   #EFECF5;  --rb-system-bd:   #C5BED5;   /* system  — lilac */
-      --rb-decision-bg: #F2EBDF;  --rb-decision-bd: #D6C7AF;   /* decision— sand  */
-      --rb-end-bg:      #F7EBE9;  --rb-end-bd:      #D7BCB7;   /* end     — clay  */
-      --rb-stage-bg:    #E7E7E7;                               /* flow area        */
-      --rb-neutral-bd:  rgba(0,0,0,0.28);                      /* sheet / off-app */
-    }
-
-    /* Shared commentary line under a diagram (§03, §04) */
-    .rb-note { font-size: 14px; color: #666666; line-height: 1.7; margin-top: 22px; max-width: 640px; }
-    .rb-note + .rb-note { margin-top: 12px; }
-
-    /* Diagram legend — the thing that makes a schematic read as an artefact.
-       Node types are told apart by fill / stroke style only, never colour. */
-    .rb-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
-    .rb-key-item { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #666666; }
-    .rb-key-mark { width: 18px; height: 12px; border-radius: 3px; flex-shrink: 0; }
-
-    /* ——— Discovery only: a defined area with a real scrollbar ————————
-       Every flow sits on one. The tinted panel says where the diagram begins
-       and ends; the drawn bar under it says the contents move. */
-    .rb-stage {
-      margin-top: 14px; padding: 4px 0 10px;
-      background: var(--rb-stage-bg); border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
-    }
-    /* A drawn scrollbar rather than the native one. macOS resolves scrollbars
-       to overlays that reserve no space and fade out when idle, and no CSS
-       property overrides that — so the one affordance this area exists to give
-       would be invisible exactly when it is needed. This one is always on, and
-       draggable. */
-    .rb-stage-bar {
-      position: relative; height: 6px; margin: 2px 14px 4px;
-      border-radius: 100px; background: rgba(0,0,0,0.09);
-      cursor: grab; touch-action: none;
-      /* the thumb carries an inline pixel width from the last measurement; if a
-         resize outruns the redraw, clipping here is what stops a stale width
-         from widening the page */
-      overflow: hidden;
-    }
-    .rb-stage-bar[hidden] { display: none; }
-    .rb-stage-bar:active { cursor: grabbing; }
-    .rb-stage-bar-thumb {
-      position: absolute; top: 0; left: 0; height: 100%; min-width: 28px;
-      border-radius: 100px; background: rgba(0,0,0,0.30);
-      transition: background 150ms ease;
-    }
-    .rb-stage-bar:hover .rb-stage-bar-thumb { background: rgba(0,0,0,0.44); }
-    /* the track needs trailing room or the last branch card sits flush on the
-       right edge and reads as cut off */
-    .rb-track { padding-right: 20px; }
-
-    /* §03 — user flows, drawn left→right the way flow diagrams are actually
-       read. .rb-track is a flex row; a fork opens into branch rows stacked
-       above and below the axis, joined by a spine + elbows. On a phone the
-       track scrolls inside .rb-flow (the same contained-scroll mechanism the
-       card rows use), so the page itself never moves sideways. */
-    .rb-flow {
-      margin-top: 0; padding: 0 14px 10px; max-width: 100%; min-width: 0;
-      overflow-x: auto; overflow-y: hidden;
-      scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    /* the native bar stays hidden: .rb-stage-bar below is the visible one */
-    .rb-flow::-webkit-scrollbar { display: none; }
-    .rb-flow:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-    /* 20 top clears the 17px boundary label that hangs above the lane; 14
-       bottom lands the content the same 24px from both inner edges of the
-       stage once the stage's own 4px and the flow's 10px are counted in */
-    .rb-track { display: flex; align-items: center; width: max-content; padding: 20px 2px 14px; }
-
-    /* connector with an arrowhead */
-    .rb-link { flex: 0 0 30px; position: relative; height: 1px; background: rgba(0,0,0,0.22); }
-    .rb-link::after {
-      content: ''; position: absolute; right: 0; top: 50%;
-      width: 5px; height: 5px; transform: translateY(-50%) rotate(45deg);
-      border-top: 1px solid rgba(0,0,0,0.38); border-right: 1px solid rgba(0,0,0,0.38);
-    }
-
-    /* fork: rows stacked around the axis, spine trimmed to the outer centres */
-    .rb-branches { position: relative; display: flex; flex-direction: column; gap: 18px; padding-left: 48px; flex: 0 0 auto; }
-    .rb-branches::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; border-left: 1px solid rgba(0,0,0,0.24); }
-    .rb-branches::after { content: ''; position: absolute; left: 0; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
-    .rb-branch { position: relative; display: flex; align-items: center; }
-    .rb-branch::before { content: ''; position: absolute; left: -24px; top: 50%; width: 24px; border-top: 1px solid rgba(0,0,0,0.24); }
-    /* these trim the spine above the first branch and below the last one by
-       painting over it — so they have to match whatever is behind the rail,
-       which is the stage, not the page */
-    .rb-branch:first-child::after { content: ''; position: absolute; left: -26px; bottom: 50%; height: 2000px; width: 4px; background: var(--rb-stage-bg); }
-    .rb-branch:last-child::after { content: ''; position: absolute; left: -26px; top: 50%; height: 2000px; width: 4px; background: var(--rb-stage-bg); }
-    .rb-branch-label {
-      flex: 0 0 auto; max-width: 118px; margin-right: 12px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
-      color: #666666; line-height: 1.35;
-    }
-
-    /* the app boundary — a lane crossing the track; everything right of it is off-app */
-    .rb-bound { position: relative; flex: 0 0 1px; align-self: stretch; margin: 0 32px; border-left: 1px dashed rgba(0,0,0,0.34); }
-    .rb-bound-label {
-      position: absolute; top: 0; left: 50%; transform: translate(-50%, -100%);
-      white-space: nowrap; background: var(--rb-stage-bg); padding: 0 8px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;
-    }
-
-    .rb-step {
-      display: inline-flex; flex-direction: column; gap: 3px;
-      flex: 0 0 196px; width: 196px; padding: 11px 15px;
-      background: #FCFCFC; border: 1px solid rgba(0,0,0,0.20); border-radius: 10px;
-      position: relative;
-    }
-    .rb-step-kind { font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: #666666; }
-    .rb-step-title { font-size: 14px; font-weight: 500; color: #1A1A1A; line-height: 1.35; }
-    .rb-step-line { font-size: 12px; color: #666666; line-height: 1.45; }
-    .rb-step--screen { background: var(--rb-screen-bg); border-color: var(--rb-screen-bd); }
-    .rb-step--action { border-radius: 100px; padding-left: 19px; padding-right: 19px; background: var(--rb-action-bg); border-color: var(--rb-action-bd); }
-    .rb-step--system { border-style: dotted; background: var(--rb-system-bg); border-color: var(--rb-system-bd); }
-    .rb-step--sheet, .rb-step--outside { border-style: dashed; border-color: var(--rb-neutral-bd); background: transparent; }
-    .rb-step--outside .rb-step-title { color: #666666; }
-    /* the pill shape already marks a terminal node, so the fill only has to be
-       calm — black made an ordinary node the loudest thing in the diagram */
-    .rb-step--end {
-      background: var(--rb-end-bg); border-color: var(--rb-end-bd);
-      border-radius: 100px; padding-left: 19px; padding-right: 19px;
-    }
-    /* decision: hexagon built from two clipped layers — the outer one shows
-       through as a 1px outline, so the shape reads as stroked, not filled. */
-    .rb-dec { display: inline-block; padding: 1px; background: var(--rb-decision-bd); }
-    .rb-dec, .rb-dec-in { clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 15px 100%, 0 50%); }
-    .rb-dec-in { background: var(--rb-decision-bg); padding: 12px 28px; display: flex; flex-direction: column; gap: 3px; }
-
-    /* legend marks for the flow vocabulary */
-    .rb-key-mark--screen { background: var(--rb-screen-bg); border: 1px solid var(--rb-screen-bd); }
-    .rb-key-mark--action { background: var(--rb-action-bg); border: 1px solid var(--rb-action-bd); border-radius: 100px; }
-    .rb-key-mark--system { background: var(--rb-system-bg); border: 1px dotted var(--rb-system-bd); }
-    .rb-key-mark--decision { background: var(--rb-decision-bd); border-radius: 0; clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%); }
-    .rb-key-mark--end { background: var(--rb-end-bg); border: 1px solid var(--rb-end-bd); border-radius: 100px; }
-    .rb-key-mark--outside { background: transparent; border: 1px dashed var(--rb-neutral-bd); }
-
-    /* §04 — what the screens run on: one paragraph naming the hard part, and a
-       flat row of chips. Chip/flex based, so the row wraps instead of ever
-       widening the page. */
-    .rb-tech-challenge { font-size: 14px; color: #666666; line-height: 1.7; max-width: 640px; }
-    .rb-tech-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-    .rb-tech-chip { font-size: 12px; color: #666666; background: #E9E9E9; border-radius: 6px; padding: 5px 11px; line-height: 1.5; white-space: nowrap; }
-
-    /* ——— FLOATING TOC PILL ———
-       The halliburton case's pill, shown at every width here: it names the
-       section you are in and opens the list on click. This page has no sidebar,
-       so the pill is the whole table of contents rather than a mobile stand-in
-       for one. */
-    /* the section pill belongs to the page, not to the menu on top of it */
-    body.nav-open .toc-pill { opacity: 0; pointer-events: none; }
-    .toc-pill { display: flex; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200; transition: opacity 240ms ease; }
-    .toc-pill-trigger {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(26,26,26,0.92);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      color: #fff; border: none; border-radius: 100px;
-      padding: 10px 18px 10px 14px;
-      font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
-    }
-    .toc-pill-num { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; }
-    .toc-pill-chevron { width: 14px; height: 14px; transition: transform 0.2s; opacity: 0.6; }
-    .toc-pill.open .toc-pill-chevron { transform: rotate(180deg); }
-    .toc-pill-menu {
-      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-      background: rgba(26,26,26,0.96);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border-radius: 16px; padding: 8px; min-width: 210px; display: none;
-    
-      /* 10 entries at 417px tall put its top at -95px on an 844x390
-         landscape phone — the first entries were unreachable. */
-      max-height: 70vh; overflow-y: auto;
-    }
-    .toc-pill.open .toc-pill-menu { display: block; }
-    .toc-pill-menu a {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px; border-radius: 10px; font-size: 13px;
-      color: rgba(255,255,255,0.6); transition: background 0.15s, color 0.15s;
-    }
-    .toc-pill-menu a:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .toc-pill-menu a.active { color: #fff; background: rgba(255,255,255,0.1); }
-    .toc-pill-menu .pill-num { font-size: 11px; color: rgba(255,255,255,0.62); flex-shrink: 0; }
-    .toc-pill-menu a.active .pill-num { color: rgba(255,255,255,0.85); }
-
-    /* ——— RESPONSIVE ——— */
-    @media (max-width: 1024px) {
-      .case-hero-image { width: 100%; margin-left: 0; }
-    }
-    @media (max-width: 768px) {
-      /* one gap under the header and the same one before the image, so the
-         hero reads as three even steps rather than a small one and a big one */
-      /* the hero's own bottom padding and the next section's top padding
-         were stacking to 96px between the last hero line and the first
-         heading; the section supplies that gap on its own */
-      /* body copy runs one step down on a phone; 1.7 leading is kept, so
-         the line box goes 27.2 -> 23.8 */
-      .section-text { font-size: 14px; }
-      /* one step tighter than desktop the whole way down the hero */
-      .case-hero { padding-top: 24px; padding-bottom: 0; }
-      .case-hero .cta-row { margin-top: 24px; }
-      .case-hero-image { margin-top: 24px; }
-      .case-hero-detail { margin-top: 24px; }
-      .case-hero h1 { font-size: 36px; margin-bottom: 12px; }
-      /* section names track the hero down; subheads keep one step below */
-      .section-heading { font-size: 32px; }
-      .subsection-heading { font-size: 24px; margin-top: 40px; }
-      .next-case { flex-direction: column; gap: 8px; text-align: center; }
-      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
-      .footer-right { flex-wrap: wrap; justify-content: center; }
-      /* 64px between sections is a desktop measure standing on a phone */
-      .case-section { padding: 40px 0 0; }
-      .rb-groups { grid-template-columns: 1fr; }
-      .rb-tests { grid-template-columns: 1fr; }
-      /* the grid keeps its shape and scrolls inside itself — stacking it into
-         blocks would destroy the one thing it is for, which is the column of
-         gaps read top to bottom */
-      .rb-cmp-c { padding: 10px 8px; }
-      .rb-cmp-c--name { padding-left: 14px; }
-      /* Mobile keeps the horizontal rail rather than unrolling it into a tall
-         vertical list. .rb-road-scroll is already the scroller and already
-         carries the rail on the .timeline track, so the phases only need a
-         width that guarantees a peek at the next one — and the wrapper has to
-         keep clipping, which is why the old `overflow: visible` release and
-         the mask reset are both gone. */
-      .timeline { grid-template-columns: repeat(5, 72%); gap: 0; padding-left: 0; min-width: 0; }
-      .rb-road-scroll { scroll-snap-type: x proximity; }
-      .timeline-step { scroll-snap-align: start; padding-top: 48px; padding-left: 0; padding-right: 16px; }
-      /* tab strip → bounded internal scroll; a clipped next tab is the peek */
-      .rb-tabs {
-        width: 100%; max-width: 100%; min-width: 0;
-        flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
-        scrollbar-width: none; -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-      }
-      .rb-tabs::-webkit-scrollbar { display: none; }
-      .rb-tabs:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-      /* Scroll affordance. A clipped next tab is the primary cue, but tab
-         boundaries can land exactly on the strip edge at some widths (360px
-         does), which makes a scrollable strip look complete. This fade is
-         toggled by JS only while there is more to the right, so the edge
-         always reads as "continues". */
-      /* flow rails tighten so step text keeps as much width as possible */
-      .rb-flow li { padding-left: 18px; }
-      .rb-step::after, .rb-decwrap::after { left: -18px; width: 18px; }
-      .rb-step { padding: 10px 13px; }
-      .rb-step--action, .rb-step--end { padding-left: 16px; padding-right: 16px; }
-      .rb-dec-in { padding: 11px 22px; }
-      .rb-bound-label { margin-left: 10px; }
-    }
-      /* Visible only when focused: a keyboard user should not have to tab
-       through the header on every page to reach the case. */
-    .skip-link {
-      position: absolute; left: 12px; top: -60px; z-index: 100;
-      background: #1A1A1A; color: #F8F8F8; font-size: 14px; font-weight: 500;
-      padding: 10px 16px; border-radius: 8px; transition: top 150ms ease;
-    }
-    .skip-link:focus { top: 12px; }
-  
-    /* Honour the system setting: the site animates a cursor loop, reveal-on-
-       scroll, a staggered timeline and smooth scrolling. */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-      .timeline-step { opacity: 1 !important; transform: none !important; }
-      
-    }
-      /* One list rhythm across the cases: 14px at 1.7, the same as the
-       secondary text it sits beside. */
-    .case-section li, .section-text li { font-size: 14px; line-height: 1.7; }
-  
-    /* ——— MOBILE: card sets → contained horizontal-scroll rows (peek + a11y) ———
-       Same pattern as the other cases. The pastel fills stay; only the
-       flow changes. */
-    @media (max-width: 600px) {
-      .rb-groups,
-      .rb-tests {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: stretch;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scroll-snap-type: x proximity;
-      }
-      .rb-groups::-webkit-scrollbar,
-      .rb-tests::-webkit-scrollbar { display: none; }
-      .rb-groups:focus-visible,
-      .rb-tests:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
-      .rb-groups > .rb-group,
-      .rb-tests > .rb-test { scroll-snap-align: start; }
-      .rb-groups > .rb-group { flex: 0 0 82%; }
-      .rb-tests > .rb-test { flex: 0 0 82%; }
-    }
-
-
-    /* ——— EDGE FADE ———
-       A scrollable row dissolves on whichever side still holds content, so it
-       says "there is more this way" before you touch it. Conditional, never
-       decorative: the attribute is only there while something is actually left
-       in that direction, so the fade cannot claim more where the row ends.
-
-       :focus-within drops the mask — otherwise a keyboard user tabbing to the
-       last visible card watches their own focus ring dissolve. */
-    [data-fade] {
-      /* 34px is right on a phone, where the row is 342px wide; on a 1028px
-         sheet the same 34px is a third of the proportion and barely registers,
-         so it grows with the viewport and stops before it eats a column */
-      --fade-edge: clamp(34px, 6vw, 72px);
-    }
-    [data-fade="right"] {
-      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
-              mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-edge)), transparent 100%);
-    }
-    [data-fade="left"] {
-      -webkit-mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
-              mask-image: linear-gradient(to left, #000 calc(100% - var(--fade-edge)), transparent 100%);
-    }
-    [data-fade="both"] {
-      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
-              mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-edge), #000 calc(100% - var(--fade-edge)), transparent 100%);
-    }
-    [data-fade]:focus-within {
-      -webkit-mask-image: none;
-              mask-image: none;
-    }
-    /* ——— FULL-SCREEN MENU ———
-       Two bars rather than three: with three links behind it, three bars would
-       just repeat the count. Closed they are parallel; open each rotates from
-       its own centre into the X, the second 40ms behind the first — that
-       offset is what makes it read as a movement rather than a state change.
-
-       The panel is a curtain: clip-path from the top edge, on a symmetric
-       expo curve so it leaves and arrives decisively instead of easing out
-       into nothing. The links do not fade in behind it — each one sits in its
-       own overflow box and rises out of it, which is why they read as arriving
-       rather than appearing. 80ms apart, and the first waits for the curtain
-       to be most of the way down. */
-    .navburger {
-      display: inline-flex; position: relative; z-index: 120;
-      /* a flex sibling will squeeze this below the 44px touch floor */
-      flex: 0 0 44px;
-      width: 44px; height: 44px; margin-right: -10px;
-      align-items: center; justify-content: center;
-      background: none; border: 0; padding: 0; cursor: pointer;
-      color: #1A1A1A;
-    }
-    .navburger-box { position: relative; display: block; width: 22px; height: 12px; }
-    .navburger-box i {
-      position: absolute; left: 0; width: 100%; height: 1.5px;
-      background: currentColor; border-radius: 2px;
-      transform-origin: 50% 50%;
-      transition: transform 420ms cubic-bezier(.2,.9,.3,1.25);
-    }
-    .navburger-box i:nth-child(1) { top: 0; }
-    .navburger-box i:nth-child(2) { bottom: 0; transition-delay: 40ms; }
-    body.nav-open .navburger-box i:nth-child(1) { transform: translateY(5.25px) rotate(45deg); }
-    body.nav-open .navburger-box i:nth-child(2) { transform: translateY(-5.25px) rotate(-45deg); }
-    .navburger:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 2px; border-radius: 6px; }
-
-    .navoverlay {
-      position: fixed; inset: 0; z-index: 110;
-      background: #F0F1F7;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 104px 24px 28px;
-      clip-path: inset(0 0 100% 0);
-      visibility: hidden;
-      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 640ms;
-    }
-    body.nav-open .navoverlay {
-      clip-path: inset(0 0 0 0);
-      visibility: visible;
-      transition: clip-path 640ms cubic-bezier(.76,0,.24,1), visibility 0s 0s;
-    }
-    body.nav-open { overflow: hidden; }
-
-    .navoverlay-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
-    .navitem {
-      display: flex; align-items: baseline; gap: 16px;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      color: #1A1A1A;
-    }
-    .navitem:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
-    .navitem-num {
-      flex: 0 0 auto; font-size: 12px; font-weight: 500; color: #666666;
-      font-variant-numeric: tabular-nums;
-    }
-    /* the box the line rises out of */
-    .navitem-mask { display: block; overflow: hidden; padding-bottom: 2px; }
-    .navitem-text {
-      display: block;
-      font-size: clamp(32px, 9vw, 52px); font-weight: 600;
-      line-height: 1.06; letter-spacing: -0.035em;
-      transform: translateY(112%);
-      transition: transform 640ms cubic-bezier(.76,0,.24,1);
-    }
-    body.nav-open .navitem-text { transform: translateY(0); }
-    body.nav-open .navitem:nth-child(1) .navitem-text { transition-delay: 180ms; }
-    body.nav-open .navitem:nth-child(2) .navitem-text { transition-delay: 260ms; }
-    .navitem:hover .navitem-text { color: #666666; }
-    .navitem:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 4px; }
-    /* the panel takes focus on open only to move the reading position; it is a
-       container, not a control, so it draws no ring — every link inside keeps
-       its own */
-    .navoverlay:focus, .navoverlay:focus-visible { outline: none; }
-
-    .navoverlay-foot {
-      width: 100%; max-width: 1100px; margin: 40px auto 0;
-      display: flex; justify-content: space-between; align-items: baseline;
-      font-size: 13px; color: #666666;
-      opacity: 0; transform: translateY(8px);
-      transition: opacity 400ms ease 380ms, transform 400ms ease 380ms;
-    }
-    body.nav-open .navoverlay-foot { opacity: 1; transform: none; }
-    .navoverlay-foot a:hover { color: #1A1A1A; }
-
-    @media (min-width: 769px) {
-      .navburger, .navoverlay { display: none; }
-    }
-
-    /* Present for screen readers and the document outline, not on screen. */
-    .visually-hidden {
-      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="../../assets/images/rebalancer/rebalancer-hero.webp">
+  <link rel="stylesheet" href="../../assets/css/case.css?v=9">
+  <script src="../../assets/js/handoff.js?v=7"></script>
+  <script>document.documentElement.classList.add('js'); Handoff.expect();</script>
 </head>
 <body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="shade"></div>
+  <div class="progress" id="progress"></div>
 
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- HEADER -->
-  <div class="pagewash" aria-hidden="true"></div>
-
-  <header class="case-header">
-    <div class="case-header-inner">
-      <a href="../../" class="case-header-back">&larr; Back</a>
-      <span class="case-header-name">Rebalancer</span>
-      <button class="navburger" type="button" id="navburger" aria-expanded="false" aria-controls="navOverlay">
-        <span class="visually-hidden">Menu</span>
-        <span class="navburger-box" aria-hidden="true"><i></i><i></i></span>
-      </button>
+  <header class="nav" id="nav">
+    <a class="back" id="home" href="../../">← Portfolio <span>· Rebalancer</span></a>
+    <div class="nav-r">
+      <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
     </div>
   </header>
 
-  <div class="navoverlay" id="navOverlay" aria-hidden="true" tabindex="-1">
-      <nav class="navoverlay-inner" aria-label="Menu">
-        <a class="navitem" href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf"><span class="navitem-num">01</span><span class="navitem-mask"><span class="navitem-text">Download CV &#8595;</span></span></a>
-        <a class="navitem" href="mailto:yuryuryury@icloud.com"><span class="navitem-num">02</span><span class="navitem-mask"><span class="navitem-text">Get in touch &#8594;</span></span></a>
-      </nav>
-      <div class="navoverlay-foot">
-        <span>Batumi, Georgia</span>
-        <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn &#8599;</a>
-      </div>
-  </div>
+  <nav class="rail" id="rail" aria-label="Chapters"></nav>
 
-  <main id="main">
-
-  <!-- HERO -->
-  <div class="container">
-    <section class="case-hero">
-      <h1>Rebalancer</h1>
-      <p class="case-hero-meta">Crypto Rebalancing &middot; Mobile app &middot; iOS</p>
-      <div class="case-hero-image">
-        <img src="../../assets/images/rebalancer/rebalancer-hero.webp" alt="Rebalancer — crypto portfolio rebalancing app" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1440" height="900" fetchpriority="high">
-        <span class="case-hero-image-placeholder" style="display:none">Cover image coming soon</span>
-      </div>
-      <div class="case-hero-detail">
-        <p class="case-hero-role">Solo Lead UX + AI &mdash; design and build with Claude Code</p>
-        <p class="case-hero-result">Designed and built solo, from concept to App Store</p>
-      </div>
-      <div class="cta-row">
-        <a href="https://apps.apple.com/app/id6767200669" class="cta-pill" target="_blank" rel="noopener" aria-label="App Store (opens in new tab)"><svg viewBox="0 0 814 1000" fill="currentColor" aria-hidden="true"><path d="M788 340c-6 5-110 63-110 194 0 152 133 205 137 207-2 8-21 74-68 141-41 59-85 118-151 118-66 0-83-38-159-38-74 0-100 39-160 39-60 2-106-63-148-122C34 758 0 646 0 540c0-170 110-260 219-262 63-1 116 43 155 43 38 0 102-53 178-53 32 0 122 3 180 88"/><path d="M553 176c31-37 53-89 47-140-45 2-100 30-132 67-29 33-55 86-48 137 50 4 101-25 133-64z"/></svg>View on the App Store &#8599;</a>
-      </div>
-    
+  <main>
+    <!-- 00 -->
+    <section class="sec hero" data-scene="0" id="top">
+      <span class="num rv">Case 02 · Rebalancer · iOS</span>
+      <h1 class="rv">Rebalancer</h1>
+      <p class="lead rv">Designed and built solo, from concept to App Store.</p>
+      <dl class="meta rv">
+        <div><dt>Role</dt><dd>Solo Lead UX + AI — design and build with Claude Code</dd></div>
+        <div><dt>Product</dt><dd>Crypto Rebalancing</dd></div>
+        <div><dt>Platform</dt><dd>Mobile app · iOS</dd></div>
+      </dl>
+      <div class="links rv"><a href="https://apps.apple.com/app/id6767200669" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>View on the App Store ↗</a></div>
+      <figure class="hero-fig" id="heroFig" style="--ar:1440/900"><img id="heroImg" src="../../assets/images/rebalancer/rebalancer-hero.webp" alt="Rebalancer — crypto portfolio rebalancing app"></figure>
+      <script>Handoff.land(document.getElementById('heroFig'), document.getElementById('heroImg'), { radius: 18 });</script>
     </section>
 
-    <!-- 01 — PROBLEM & CONTEXT -->
-    <section id="section-01" class="case-section">
-      <h2 class="section-heading">Problem &amp; Context</h2>
-      <p class="section-text">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT. If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
-    </section>
-
-    <!-- 02 — ROADMAP -->
-    <section id="section-02" class="case-section">
-      <h2 class="section-heading">Roadmap</h2>
-      <p class="section-text">I owned every layer of this one &mdash; concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications &mdash; built with Claude Code.</p>
-
-      <div class="rb-road-scroll" tabindex="0" role="group" aria-label="Design process in five stages, from research to post-launch">
-        <div class="timeline">
-          <div class="timeline-step">
-            <p class="timeline-number">01</p>
-            <p class="timeline-title">Research</p>
-            <p class="timeline-desc">Competitor analysis, reviews on the App Store and YouTube, Telegram channels, interviews with the crypto community. Nobody treated an ALT/ALT pair as something you could keep and watch.</p>
-            <span class="timeline-tag">Interviews and competitor review</span>
-          </div>
-          <div class="timeline-step">
-            <p class="timeline-number">02</p>
-            <p class="timeline-title">Prototype</p>
-            <p class="timeline-desc">Several concepts ran side by side. I committed to one &mdash; the pair as the only object the app asks you to create &mdash; and cut the rest instead of keeping options open.</p>
-            <span class="timeline-tag">Concepts cut to one</span>
-          </div>
-          <div class="timeline-step">
-            <p class="timeline-number">03</p>
-            <p class="timeline-title">Testing and iteration</p>
-            <p class="timeline-desc">Two rounds through TestFlight, then reworking what testers actually stumbled on rather than what looked worth polishing.</p>
-            <span class="timeline-tag">Two TestFlight rounds</span>
-          </div>
-          <div class="timeline-step">
-            <p class="timeline-number">04</p>
-            <p class="timeline-title">Publish on the App Store</p>
-            <p class="timeline-desc">Shipping was a design decision too: what to leave out so the first version could stand on its own, and what the listing should promise.</p>
-            <span class="timeline-tag">Shipped to the App Store</span>
-          </div>
-          <div class="timeline-step">
-            <p class="timeline-number">05</p>
-            <p class="timeline-title">Analytics and post-launch research</p>
-            <p class="timeline-desc">Analytics went in to replace opinion with behaviour, and the reading of reviews and channels carried on after release rather than stopping at launch.</p>
-            <span class="timeline-tag">Analytics wired in</span>
-          </div>
+    <!-- 01 -->
+    <section class="sec" data-scene="1" id="problem" data-title="Problem">
+      <div class="col">
+        <span class="num rv">01</span>
+        <h2 class="rv">Problem &amp; Context</h2>
+        <p class="lead rv">I rebalance crypto myself, and the pair I actually care about is almost never one an exchange will show me. Everything is priced against USDT.</p>
+        <div class="card ratio rv" aria-hidden="true">
+          <div><span>SOL</span><i>/</i><span class="q">USDT</span></div>
+          <div><span>XRP</span><i>/</i><span class="q">USDT</span><em>÷</em></div>
+          <div class="r"><span>SOL</span><i>/</i><span>XRP</span><small>the pair I actually care about</small></div>
         </div>
+        <p class="muted rv" style="margin-top:18px">If I want to know where SOL stands against XRP, no exchange and no wallet treats that as something I can keep on a list and watch.</p>
       </div>
     </section>
 
-    <!-- 03 — RESEARCH -->
-    <section id="section-03" class="case-section">
-      <h2 class="section-heading">Research</h2>
-      <p class="section-text">Three questions came first: whether anything already did this, who keeps running into it, and how few decisions each path could take.</p>
-
-      <h3 class="subsection-heading">Market analysis</h3>
-      <div class="rb-cmp-scroll" tabindex="0" role="group" aria-label="Comparison grid — scrollable">
-        <div class="rb-cmp">
-          <div class="rb-cmp-row rb-cmp-row--head">
-            <span class="rb-cmp-c rb-cmp-c--name">Where people look now</span>
-            <span class="rb-cmp-c">Any ALT/ALT pair</span>
-            <span class="rb-cmp-c">Kept as a pair</span>
-            <span class="rb-cmp-c">Ratio history</span>
-            <span class="rb-cmp-c">Alert on the ratio</span>
-            <span class="rb-cmp-c">Holdings in it</span>
-          </div>
-          <div class="rb-cmp-row">
-            <span class="rb-cmp-c rb-cmp-c--name">TradingView spread charts</span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
-              <span class="rb-cmp-note">a chart layout</span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-            </span>
-          </div>
-          <div class="rb-cmp-row">
-            <span class="rb-cmp-c rb-cmp-c--name">Community Pine scripts</span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
-              <span class="rb-cmp-note">per chart, per script</span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-            </span>
-          </div>
-          <div class="rb-cmp-row">
-            <span class="rb-cmp-c rb-cmp-c--name">Converters &mdash; Coinbase, MetaMask and the rest</span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
-              <span class="rb-cmp-note">one amount, typed in</span>
-            </span>
-          </div>
-          <div class="rb-cmp-row">
-            <span class="rb-cmp-c rb-cmp-c--name">Portfolio trackers</span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-              <span class="rb-cmp-note">fixed bases</span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--no" role="img" aria-label="no"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
-              <span class="rb-cmp-note">of the portfolio</span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--part" role="img" aria-label="partly"></span>
-              <span class="rb-cmp-note">on the USD price</span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-          </div>
-          <div class="rb-cmp-row rb-cmp-row--self">
-            <span class="rb-cmp-c rb-cmp-c--name">Rebalancer</span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-            <span class="rb-cmp-c">
-              <span class="rb-cmp-mark rb-cmp-mark--yes" role="img" aria-label="yes"></span>
-            </span>
-          </div>
-        </div>
+    <!-- 02 -->
+    <section class="sec" data-scene="2" id="roadmap" data-title="Roadmap">
+      <div class="col">
+        <span class="num rv">02</span>
+        <h2 class="rv">Roadmap</h2>
+        <p class="lead rv">I owned every layer of this one — concept, product design, the iOS app, the backend, the servers, the APIs and the push notifications — built with Claude Code.</p>
+        <ol class="steps hx" id="steps">
+          <li class="rv"><b>01</b><h3>Research</h3><p>Competitor analysis, reviews on the App Store and YouTube, Telegram channels, interviews with the crypto community. Nobody treated an ALT/ALT pair as something you could keep and watch.</p><span class="tag">Interviews and competitor review</span></li>
+          <li class="rv"><b>02</b><h3>Prototype</h3><p>Several concepts ran side by side. I committed to one — the pair as the only object the app asks you to create — and cut the rest instead of keeping options open.</p><span class="tag">Concepts cut to one</span></li>
+          <li class="rv"><b>03</b><h3>Testing and iteration</h3><p>Two rounds through TestFlight, then reworking what testers actually stumbled on rather than what looked worth polishing.</p><span class="tag">Two TestFlight rounds</span></li>
+          <li class="rv"><b>04</b><h3>Publish on the App Store</h3><p>Shipping was a design decision too: what to leave out so the first version could stand on its own, and what the listing should promise.</p><span class="tag">Shipped to the App Store</span></li>
+          <li class="rv"><b>05</b><h3>Analytics and post-launch research</h3><p>Analytics went in to replace opinion with behaviour, and the reading of reviews and channels carried on after release rather than stopping at launch.</p><span class="tag">Analytics wired in</span></li>
+        </ol>
       </div>
-      <div class="rb-key" aria-hidden="true">
-        <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--yes"></span>Does it</span>
-        <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--part"></span>Partly</span>
-        <span class="rb-key-item"><span class="rb-cmp-mark rb-cmp-mark--no"></span>Doesn't</span>
-      </div>
-
-      <h3 class="subsection-heading">User personas</h3>
-      <p class="section-text">Three groups came out of the conversations and the reading.</p>
-      <div class="rb-groups" tabindex="0" role="group" aria-label="Audience groups — scrollable">
-        <div class="rb-group rb-group--investor">
-          <div class="rb-group-head">
-            <span class="rb-group-eyebrow">
-              <span class="rb-group-badge" aria-hidden="true">G1</span>
-              <span class="rb-group-num">Group 1</span>
-            </span>
-            <span class="rb-group-name">Crypto investor</span>
-          </div>
-          <p class="rb-group-line"><span class="rb-group-key">Who</span>Holds several alts and moves between them on the pair's ratio, not the dollar price.</p>
-          <p class="rb-group-line"><span class="rb-group-key">Pain</span>No exchange or wallet shows ALT/ALT directly &mdash; you read two USDT prices and divide them yourself.</p>
-        </div>
-        <div class="rb-group rb-group--rebalancer">
-          <div class="rb-group-head">
-            <span class="rb-group-eyebrow">
-              <span class="rb-group-badge" aria-hidden="true">G2</span>
-              <span class="rb-group-num">Group 2</span>
-            </span>
-            <span class="rb-group-name">Experienced rebalancer</span>
-          </div>
-          <p class="rb-group-line"><span class="rb-group-key">Who</span>Follows the ratio by hand &mdash; a spreadsheet, or arithmetic in their head &mdash; and keeps coming back to check.</p>
-          <p class="rb-group-line"><span class="rb-group-key">Pain</span>It all rests on remembering to look. Nothing watches the number, so the moment can pass unnoticed.</p>
-        </div>
-        <div class="rb-group rb-group--trader">
-          <div class="rb-group-head">
-            <span class="rb-group-eyebrow">
-              <span class="rb-group-badge" aria-hidden="true">G3</span>
-              <span class="rb-group-num">Group 3</span>
-            </span>
-            <span class="rb-group-name">Technical trader</span>
-          </div>
-          <p class="rb-group-line"><span class="rb-group-key">Who</span>Technical enough to chart a spread in TradingView or write their own indicator.</p>
-          <p class="rb-group-line"><span class="rb-group-key">Pain</span>The workaround never becomes a product: TradingView advises against alerts on spread charts, and a script needs an account and setup.</p>
-        </div>
-      </div>
-    
-
-      <h3 class="subsection-heading">User flows</h3>
-      <p class="section-text">Each flow came out of one question: how few decisions can this take? What follows are the paths I settled on &mdash; and, in the last one, the line where the product deliberately stops.</p>
-
-      <div class="rb-tabgroup">
-        <div class="rb-tabs" role="tablist" aria-label="User flows" tabindex="0">
-          <button class="rb-tab is-active" data-rb-tab="discovery" role="tab" aria-selected="true">Discovery</button>
-          <button class="rb-tab" data-rb-tab="pair" role="tab" aria-selected="false">Create pair</button>
-          <button class="rb-tab" data-rb-tab="alert" role="tab" aria-selected="false">Set alert</button>
-          <button class="rb-tab" data-rb-tab="sim" role="tab" aria-selected="false">Simulate</button>
-          <button class="rb-tab" data-rb-tab="hold" role="tab" aria-selected="false">Holdings</button>
-          <button class="rb-tab" data-rb-tab="moment" role="tab" aria-selected="false">Alert fires</button>
-        </div>
-
-        <div class="rb-tabpanel is-active" data-rb-panel="discovery" role="tabpanel">
-            <div class="rb-stage">
-              <div class="rb-flow" tabindex="0" role="group" aria-label="Discovery, one path from the store listing to keeping the app">
-              <div class="rb-track">
-              <div class="rb-step rb-step--outside">
-                <span class="rb-step-kind">Off-app</span>
-                <span class="rb-step-title">App Store listing</span>
-                <span class="rb-step-line">Five screenshots and a description &mdash; no trial, no preview</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-decwrap">
-                <div class="rb-dec"><div class="rb-dec-in">
-                  <span class="rb-step-kind">Decision</span>
-                  <span class="rb-step-title">Does this solve my problem?</span>
-                </div></div>
-              </div>
-              <div class="rb-branches">
-                <div class="rb-branch">
-                  <span class="rb-branch-label">No</span>
-                <div class="rb-step rb-step--end">
-                  <span class="rb-step-kind">End</span>
-                  <span class="rb-step-title">Never installed</span>
-                  <span class="rb-step-line">The listing is the entire pitch</span>
-                </div>
-                </div>
-                <div class="rb-branch">
-                  <span class="rb-branch-label">Yes</span>
-                  <div class="rb-step rb-step--action">
-                    <span class="rb-step-kind">Action</span>
-                    <span class="rb-step-title">Install</span>
-                  </div>
-                  <div class="rb-bound"><span class="rb-bound-label">Inside the app</span></div>
-                  <div class="rb-step rb-step--sheet">
-                    <span class="rb-step-kind">Sheet</span>
-                    <span class="rb-step-title">Disclaimer</span>
-                    <span class="rb-step-line">A notice with one button &mdash; nothing to answer</span>
-                  </div>
-                  <span class="rb-link" aria-hidden="true"></span>
-                  <div class="rb-step rb-step--screen">
-                    <span class="rb-step-kind">Screen</span>
-                    <span class="rb-step-title">Empty watchlist</span>
-                    <span class="rb-step-line">One line, one button, no tour</span>
-                  </div>
-                  <span class="rb-link" aria-hidden="true"></span>
-                  <div class="rb-decwrap">
-                    <div class="rb-dec"><div class="rb-dec-in">
-                      <span class="rb-step-kind">Decision</span>
-                      <span class="rb-step-title">Obvious what to do here?</span>
-                    </div></div>
-                  </div>
-                  <div class="rb-branches">
-                    <div class="rb-branch">
-                      <span class="rb-branch-label">No</span>
-                    <div class="rb-step rb-step--end">
-                      <span class="rb-step-kind">End</span>
-                      <span class="rb-step-title">Leaves with nothing</span>
-                      <span class="rb-step-line">Nothing on screen explains a ratio</span>
-                    </div>
-                    </div>
-                    <div class="rb-branch">
-                      <span class="rb-branch-label">Yes</span>
-                      <div class="rb-step rb-step--action">
-                        <span class="rb-step-kind">Action</span>
-                        <span class="rb-step-title">Tap Add pair</span>
-                      </div>
-                      <span class="rb-link" aria-hidden="true"></span>
-                      <div class="rb-step rb-step--system">
-                        <span class="rb-step-kind">System</span>
-                        <span class="rb-step-title">A live pair appears</span>
-                        <span class="rb-step-line">Seeded and already tracking, not a blank form</span>
-                      </div>
-                      <span class="rb-link" aria-hidden="true"></span>
-                      <div class="rb-step rb-step--action">
-                        <span class="rb-step-kind">Action</span>
-                        <span class="rb-step-title">Swap in your own coins</span>
-                      </div>
-                      <span class="rb-link" aria-hidden="true"></span>
-                      <div class="rb-decwrap">
-                        <div class="rb-dec"><div class="rb-dec-in">
-                          <span class="rb-step-kind">Decision</span>
-                          <span class="rb-step-title">Worth keeping?</span>
-                        </div></div>
-                      </div>
-                      <div class="rb-branches">
-                        <div class="rb-branch">
-                          <span class="rb-branch-label">No</span>
-                        <div class="rb-step rb-step--end">
-                          <span class="rb-step-kind">End</span>
-                          <span class="rb-step-title">Deleted</span>
-                          <span class="rb-step-line">Straight back to the empty state</span>
-                        </div>
-                        </div>
-                        <div class="rb-branch">
-                          <span class="rb-branch-label">Yes</span>
-                        <div class="rb-step rb-step--end">
-                          <span class="rb-step-kind">End</span>
-                          <span class="rb-step-title">Kept</span>
-                          <span class="rb-step-line">An alert on it is the next thing to do</span>
-                        </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              </div>
-            </div>
-              <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
-            </div>
-        </div>
-        <div class="rb-tabpanel" data-rb-panel="pair" role="tabpanel">
-          <div class="rb-stage">
-            <div class="rb-flow" tabindex="0" role="group" aria-label="Create a custom pair, read left to right">
-              <div class="rb-track">
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Tap +</span>
-                <span class="rb-step-line">From the watchlist</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--sheet">
-                <span class="rb-step-kind">Sheet</span>
-                <span class="rb-step-title">Token selector</span>
-                <span class="rb-step-line">Search the catalogue</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Pick base</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Pick quote</span>
-              </div>
-              <div class="rb-branches">
-                <div class="rb-branch">
-                  <span class="rb-branch-label">If picked the wrong way round</span>
-                  <div class="rb-step rb-step--action">
-                    <span class="rb-step-kind">Action</span>
-                    <span class="rb-step-title">Swap sides</span>
-                    <span class="rb-step-line">Same pair, reversed</span>
-                  </div>
-                </div>
-                <div class="rb-branch">
-                  <div class="rb-step rb-step--end">
-                    <span class="rb-step-kind">End</span>
-                    <span class="rb-step-title">Pair is live</span>
-                    <span class="rb-step-line">Tracked from that moment</span>
-                  </div>
-                </div>
-              </div>
-              </div>
-            </div>
-            <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
-          </div>
-          <p class="rb-note">Two picks, no form. The pair is the only thing the app asks you to create, so I kept it to two decisions &mdash; and made the sides swappable instead of expecting people to get the order right first time.</p>
-        </div>
-
-        <div class="rb-tabpanel" data-rb-panel="alert" role="tabpanel">
-          <div class="rb-stage">
-            <div class="rb-flow" tabindex="0" role="group" aria-label="Set an alert on a pair, read left to right">
-              <div class="rb-track">
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Pair detail</span>
-                <span class="rb-step-line">Opened from the watchlist</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">New alert</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--sheet">
-                <span class="rb-step-kind">Sheet</span>
-                <span class="rb-step-title">Prefilled at the current ratio</span>
-                <span class="rb-step-line">Opens on today's number</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-decwrap">
-                <div class="rb-dec"><div class="rb-dec-in">
-                  <span class="rb-step-kind">Decision</span>
-                  <span class="rb-step-title">Notifications allowed?</span>
-                </div></div>
-              </div>
-              <div class="rb-branches">
-                <div class="rb-branch">
-                  <span class="rb-branch-label">Not yet</span>
-                  <div class="rb-step rb-step--system">
-                    <span class="rb-step-kind">System</span>
-                    <span class="rb-step-title">Permission banner</span>
-                    <span class="rb-step-line">Asks once; the alert is still saved</span>
-                  </div>
-                </div>
-                <div class="rb-branch">
-                  <span class="rb-branch-label">Yes</span>
-                  <div class="rb-step rb-step--action">
-                    <span class="rb-step-kind">Action</span>
-                    <span class="rb-step-title">Set the threshold</span>
-                  </div>
-                  <span class="rb-link" aria-hidden="true"></span>
-                  <div class="rb-step rb-step--end">
-                    <span class="rb-step-kind">End</span>
-                    <span class="rb-step-title">Alert armed</span>
-                  </div>
-                </div>
-              </div>
-              </div>
-            </div>
-            <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
-          </div>
-          <p class="rb-note">The prefill is the whole design. An empty field asks &ldquo;what number?&rdquo; &mdash; prefilled with where the ratio sits right now, it asks &ldquo;how far from here?&rdquo; &mdash; which is the question I always arrived with myself.</p>
-          <p class="rb-note">The permission branch saves the alert either way. Making the notification prompt a precondition would have meant losing the thing the person came to do.</p>
-        </div>
-
-        <div class="rb-tabpanel" data-rb-panel="sim" role="tabpanel">
-          <div class="rb-stage">
-            <div class="rb-flow" tabindex="0" role="group" aria-label="Simulate a rebalance, read left to right">
-              <div class="rb-track">
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Pair detail</span>
-                <span class="rb-step-line">Simulator lives here, not in the list</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Enter amounts</span>
-                <span class="rb-step-line">What you'd move</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-decwrap">
-                <div class="rb-dec"><div class="rb-dec-in">
-                  <span class="rb-step-kind">Decision</span>
-                  <span class="rb-step-title">More than two steps?</span>
-                </div></div>
-              </div>
-              <div class="rb-branches">
-                <div class="rb-branch">
-                  <span class="rb-branch-label">Within Free</span>
-                  <div class="rb-step rb-step--end">
-                    <span class="rb-step-kind">End</span>
-                    <span class="rb-step-title">See the outcome</span>
-                    <span class="rb-step-line">Before committing to anything</span>
-                  </div>
-                </div>
-                <div class="rb-branch">
-                  <span class="rb-branch-label">Beyond Free</span>
-                  <div class="rb-step rb-step--sheet">
-                    <span class="rb-step-kind">Sheet</span>
-                    <span class="rb-step-title">Paywall</span>
-                    <span class="rb-step-line">Pro: unlimited chain steps</span>
-                  </div>
-                </div>
-              </div>
-              </div>
-            </div>
-            <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
-          </div>
-          <p class="rb-note">The simulator answers &ldquo;what would this do&rdquo; without doing it. Free stops at two steps in a chain; deeper chains are where Pro begins &mdash; I put the paywall where the tool starts doing planning work, not at the front door.</p>
-        </div>
-
-        <div class="rb-tabpanel" data-rb-panel="hold" role="tabpanel">
-          <div class="rb-stage">
-            <div class="rb-flow" tabindex="0" role="group" aria-label="Track holdings, read left to right">
-              <div class="rb-track">
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Coins</span>
-                <span class="rb-step-line">Its own tab</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--action">
-                <span class="rb-step-kind">Action</span>
-                <span class="rb-step-title">Enter what you hold</span>
-                <span class="rb-step-line">Edited in place, hideable</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Prices move</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--end">
-                <span class="rb-step-kind">End</span>
-                <span class="rb-step-title">Totals recalculate</span>
-                <span class="rb-step-line">In the denomination you choose</span>
-              </div>
-              </div>
-            </div>
-            <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
-          </div>
-          <p class="rb-note">The only flow here with no branch, and that's the point: Coins is a ledger of what you own. Anything that behaves like an exchange rate belongs to the simulator &mdash; keeping those apart is what stops the app from implying it can trade for you.</p>
-        </div>
-
-        <div class="rb-tabpanel" data-rb-panel="moment" role="tabpanel">
-          <div class="rb-stage">
-            <div class="rb-flow" tabindex="0" role="group" aria-label="What happens when an alert fires, ending outside the app">
-              <div class="rb-track">
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Threshold crossed</span>
-                <span class="rb-step-line">Ratio reaches your number</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--system">
-                <span class="rb-step-kind">System</span>
-                <span class="rb-step-title">Push delivered</span>
-                <span class="rb-step-line">Even with the app closed</span>
-              </div>
-              <span class="rb-link" aria-hidden="true"></span>
-              <div class="rb-step rb-step--screen">
-                <span class="rb-step-kind">Screen</span>
-                <span class="rb-step-title">Open and check</span>
-                <span class="rb-step-line">Chart, holdings, simulator</span>
-              </div>
-              <div class="rb-bound"><span class="rb-bound-label">Outside the app</span></div>
-              <div class="rb-step rb-step--outside">
-                <span class="rb-step-kind">Off-app</span>
-                <span class="rb-step-title">Execute on the exchange</span>
-                <span class="rb-step-line">Rebalancer never places the order</span>
-              </div>
-              </div>
-            </div>
-            <div class="rb-stage-bar"><span class="rb-stage-bar-thumb"></span></div>
-          </div>
-          <p class="rb-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature &mdash; a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
-        </div>
-
-        <div class="rb-key" aria-hidden="true">
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--screen"></span>Screen</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--action"></span>Action</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--system"></span>System</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--decision"></span>Decision</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--end"></span>End</span>
-          <span class="rb-key-item"><span class="rb-key-mark rb-key-mark--outside"></span>Sheet / off-app</span>
-        </div>
-      </div>
-    
     </section>
 
-    <!-- 04 — PROTOTYPE -->
-    <section id="section-04" class="case-section">
-      <h2 class="section-heading">Prototype</h2>
-      <p class="section-text">There was no Figma stage. I built the prototype with Claude Code, iterating on a real phone &mdash; screens and system decided together.</p>
-
-      <h3 class="subsection-heading">Screens</h3>
-      <div class="phone-strip" tabindex="0" role="group" aria-label="App screenshots, four screens — drag or scroll">
-        <div class="phone-track">
-        <div class="phone-figure">
-          <div class="phone-frame">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-pairs-watchlist.webp" alt="Rebalancer watchlist: an expanded SOL/XRP pair with its ratio chart, above a list of other tracked pairs" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="450" height="920">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">Watchlist &mdash; the open pair, then the rest as rows with sparklines</p>
-        </div>
-        <div class="phone-figure">
-          <div class="phone-frame">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-simulator.webp" alt="The rebalance simulator on the SOL/XRP screen, showing step 1 and step 2 of a swap chain with the ratio for each" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="450" height="920">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">Simulator &mdash; each leg priced at a target ratio, against the current one</p>
-        </div>
-        <div class="phone-figure">
-          <div class="phone-frame">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-alerts-push.webp" alt="iPhone lock screen with four Rebalancer alerts delivered, each naming a pair and the ratio it reached" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="450" height="920">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">Alerts &mdash; delivered on the lock screen when a ratio crosses its threshold</p>
-        </div>
-        <div class="phone-figure">
-          <div class="phone-frame">
-            <img class="phone-shot" src="../../assets/images/rebalancer/rebalancer-pair-detail.webp" alt="The SOL/XRP pair screen with its ratio chart and a tracked-coins block restating each holding in the other coin" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="450" height="920">
-            <span class="phone-placeholder" style="display:none">Screenshot coming soon</span>
-          </div>
-          <p class="phone-caption">Pair screen &mdash; both holdings restated in the coin on the other side</p>
-        </div>
-        </div>
+    <!-- 03 -->
+    <section class="sec" data-scene="3" id="research" data-title="Research">
+      <div class="col">
+        <span class="num rv">03</span>
+        <h2 class="rv">Research</h2>
+        <h3 class="rv" style="margin-top:40px">Market analysis</h3>
       </div>
-    
-
-      <h3 class="subsection-heading">Biggest challenge</h3>
-
-      <p class="rb-tech-challenge">The alert is the product, and an alert has to arrive with the app closed &mdash; that one requirement pulled a backend behind a one-person design project. Price sources that answer a phone refuse a data centre, iOS background refresh cannot be trusted, and an alert that has fired must not fire again: every one of those is a server problem, not a screen.</p>
-
-      <div class="rb-tech-chips">
-        <span class="rb-tech-chip">Cloudflare Workers</span>
-        <span class="rb-tech-chip">Cron Triggers</span>
-        <span class="rb-tech-chip">KV</span>
-        <span class="rb-tech-chip">D1</span>
-        <span class="rb-tech-chip">R2</span>
-        <span class="rb-tech-chip">Expo Push</span>
-        <span class="rb-tech-chip">APNs</span>
-        <span class="rb-tech-chip">Pages</span>
-        <span class="rb-tech-chip">StoreKit 2</span>
+      <div class="cmp-wrap rv">
+        <div class="cmp-sheet" tabindex="0" role="group" aria-label="Market analysis — scrollable" data-hxs="thead th:not(.who)">
+          <table class="cmp">
+            <caption class="sr-only">Where people look now, and what each one does</caption>
+            <colgroup><col class="who"><col span="5"></colgroup>
+            <thead><tr><th class="who" scope="col">Where people look now</th><th scope="col">Any ALT/ALT pair</th><th scope="col">Kept as a pair</th><th scope="col">Ratio history</th><th scope="col">Alert on the ratio</th><th scope="col">Holdings in it</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">TradingView spread charts</th><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk p"></i><span class="sr-only">Partly</span><small>a chart layout</small></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk n"></i><span class="sr-only">Doesn't</span></td><td><i class="mk n"></i><span class="sr-only">Doesn't</span></td></tr>
+              <tr><th scope="row">Community Pine scripts</th><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk p"></i><span class="sr-only">Partly</span><small>per chart, per script</small></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk n"></i><span class="sr-only">Doesn't</span></td></tr>
+              <tr><th scope="row">Converters — Coinbase, MetaMask and the rest</th><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk n"></i><span class="sr-only">Doesn't</span></td><td><i class="mk n"></i><span class="sr-only">Doesn't</span></td><td><i class="mk n"></i><span class="sr-only">Doesn't</span></td><td><i class="mk p"></i><span class="sr-only">Partly</span><small>one amount, typed in</small></td></tr>
+              <tr><th scope="row">Portfolio trackers</th><td><i class="mk n"></i><span class="sr-only">Doesn't</span><small>fixed bases</small></td><td><i class="mk n"></i><span class="sr-only">Doesn't</span></td><td><i class="mk p"></i><span class="sr-only">Partly</span><small>of the portfolio</small></td><td><i class="mk p"></i><span class="sr-only">Partly</span><small>on the USD price</small></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td></tr>
+              <tr class="me"><th scope="row">Rebalancer</th><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td><td><i class="mk y"></i><span class="sr-only">Does it</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mkey" aria-hidden="true"><span><i class="mk y"></i>Does it</span><span><i class="mk p"></i>Partly</span><span><i class="mk n"></i>Doesn't</span></div>
       </div>
-    
+      <div class="col">
+        <h3 class="rv" style="margin-top:56px">User personas — 3 groups</h3>
+        <div class="personas hx" id="personas">
+          <div class="card persona rv" data-g="0"><i style="background:#8FD3FF">G1</i><h3>Crypto investor</h3><p><b>Who</b>Holds several alts and moves between them on the pair's ratio, not the dollar price.</p><p><b>Pain</b>No exchange or wallet shows ALT/ALT directly — you read two USDT prices and divide them yourself.</p></div>
+          <div class="card persona rv" data-g="1"><i style="background:#FFD08A">G2</i><h3>Experienced rebalancer</h3><p><b>Who</b>Follows the ratio by hand — a spreadsheet, or arithmetic in their head — and keeps coming back to check.</p><p><b>Pain</b>It all rests on remembering to look. Nothing watches the number, so the moment can pass unnoticed.</p></div>
+          <div class="card persona rv" data-g="2"><i style="background:#B8F0C9">G3</i><h3>Technical trader</h3><p><b>Who</b>Technical enough to chart a spread in TradingView or write their own indicator.</p><p><b>Pain</b>The workaround never becomes a product: TradingView advises against alerts on spread charts, and a script needs an account and setup.</p></div>
+        </div>
+
+        <h3 class="rv" style="margin-top:56px">User flows — 6 flows</h3>
+        <div class="tabs rv" role="tablist" aria-label="Flow">
+          <button role="tab" aria-selected="true" aria-controls="f1" id="t-f1">Discovery</button>
+          <button role="tab" aria-selected="false" aria-controls="f2" id="t-f2">Create pair</button>
+          <button role="tab" aria-selected="false" aria-controls="f3" id="t-f3">Set alert</button>
+          <button role="tab" aria-selected="false" aria-controls="f4" id="t-f4">Simulate</button>
+          <button role="tab" aria-selected="false" aria-controls="f5" id="t-f5">Holdings</button>
+          <button role="tab" aria-selected="false" aria-controls="f6" id="t-f6">Alert fires</button>
+        </div>
+        <div class="card uf" role="tabpanel" id="f1" aria-labelledby="t-f1">
+          <ol class="fl">
+            <li><div class="fn" data-k="off"><i>Off-app</i>App Store listing<small>Five screenshots and a description — no trial, no preview</small></div></li>
+            <li class="fx"><div class="fn" data-k="decision"><i>Decision</i>Does this solve my problem?</div><div class="fx-out"><span class="fb-l">No</span><div class="fn" data-k="end"><i>End</i>Never installed<small>The listing is the entire pitch</small></div></div></li>
+            <li class="fs yes"><span>Yes</span></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Install</div></li>
+            <li class="fs"><span>Inside the app</span></li>
+            <li><div class="fn" data-k="off"><i>Sheet</i>Disclaimer<small>A notice with one button — nothing to answer</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Empty watchlist<small>One line, one button, no tour</small></div></li>
+            <li class="fx"><div class="fn" data-k="decision"><i>Decision</i>Obvious what to do here?</div><div class="fx-out"><span class="fb-l">No</span><div class="fn" data-k="end"><i>End</i>Leaves with nothing<small>Nothing on screen explains a ratio</small></div></div></li>
+            <li class="fs yes"><span>Yes</span></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Tap Add pair</div></li>
+            <li><div class="fn" data-k="system"><i>System</i>A live pair appears<small>Seeded and already tracking, not a blank form</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Swap in your own coins</div></li>
+            <li><div class="fn" data-k="decision"><i>Decision</i>Worth keeping?</div></li>
+            <li class="fbr end" style="--b:2">
+              <div class="fb"><span class="fb-l">No</span><ol class="fl"><li><div class="fn" data-k="end"><i>End</i>Deleted<small>Straight back to the empty state</small></div></li></ol></div>
+              <div class="fb"><span class="fb-l">Yes</span><ol class="fl"><li><div class="fn" data-k="end"><i>End</i>Kept<small>An alert on it is the next thing to do</small></div></li></ol></div>
+            </li>
+          </ol>
+        </div>
+        <div class="card uf" role="tabpanel" id="f2" aria-labelledby="t-f2" hidden>
+          <ol class="fl">
+            <li><div class="fn" data-k="action"><i>Action</i>Tap +<small>From the watchlist</small></div></li>
+            <li><div class="fn" data-k="off"><i>Sheet</i>Token selector<small>Search the catalogue</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Pick base</div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Pick quote</div></li>
+            <li class="fbr end" style="--b:2">
+              <div class="fb"><span class="fb-l">If picked the wrong way round</span><ol class="fl"><li><div class="fn" data-k="action"><i>Action</i>Swap sides<small>Same pair, reversed</small></div></li></ol></div>
+              <div class="fb"><ol class="fl"><li><div class="fn" data-k="end"><i>End</i>Pair is live<small>Tracked from that moment</small></div></li></ol></div>
+            </li>
+          </ol>
+          <p class="uf-note">Two picks, no form. The pair is the only thing the app asks you to create, so I kept it to two decisions — and made the sides swappable instead of expecting people to get the order right first time.</p>
+        </div>
+        <div class="card uf" role="tabpanel" id="f3" aria-labelledby="t-f3" hidden>
+          <ol class="fl">
+            <li><div class="fn" data-k="screen"><i>Screen</i>Pair detail<small>Opened from the watchlist</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>New alert</div></li>
+            <li><div class="fn" data-k="off"><i>Sheet</i>Prefilled at the current ratio<small>Opens on today's number</small></div></li>
+            <li><div class="fn" data-k="decision"><i>Decision</i>Notifications allowed?</div></li>
+            <li class="fbr end" style="--b:2">
+              <div class="fb"><span class="fb-l">Not yet</span><ol class="fl"><li><div class="fn" data-k="system"><i>System</i>Permission banner<small>Asks once; the alert is still saved</small></div></li></ol></div>
+              <div class="fb"><span class="fb-l">Yes</span><ol class="fl"><li><div class="fn" data-k="action"><i>Action</i>Set the threshold</div></li><li><div class="fn" data-k="end"><i>End</i>Alert armed</div></li></ol></div>
+            </li>
+          </ol>
+          <p class="uf-note">The prefill is the whole design. An empty field asks “what number?” — prefilled with where the ratio sits right now, it asks “how far from here?” — which is the question I always arrived with myself.</p>
+          <p class="uf-note">The permission branch saves the alert either way. Making the notification prompt a precondition would have meant losing the thing the person came to do.</p>
+        </div>
+        <div class="card uf" role="tabpanel" id="f4" aria-labelledby="t-f4" hidden>
+          <ol class="fl">
+            <li><div class="fn" data-k="screen"><i>Screen</i>Pair detail<small>Simulator lives here, not in the list</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Enter amounts<small>What you'd move</small></div></li>
+            <li><div class="fn" data-k="decision"><i>Decision</i>More than two steps?</div></li>
+            <li class="fbr end" style="--b:2">
+              <div class="fb"><span class="fb-l">Within Free</span><ol class="fl"><li><div class="fn" data-k="end"><i>End</i>See the outcome<small>Before committing to anything</small></div></li></ol></div>
+              <div class="fb"><span class="fb-l">Beyond Free</span><ol class="fl"><li><div class="fn" data-k="off"><i>Sheet</i>Paywall<small>Pro: unlimited chain steps</small></div></li></ol></div>
+            </li>
+          </ol>
+          <p class="uf-note">The simulator answers “what would this do” without doing it. Free stops at two steps in a chain; deeper chains are where Pro begins — I put the paywall where the tool starts doing planning work, not at the front door.</p>
+        </div>
+        <div class="card uf" role="tabpanel" id="f5" aria-labelledby="t-f5" hidden>
+          <ol class="fl">
+            <li><div class="fn" data-k="screen"><i>Screen</i>Coins<small>Its own tab</small></div></li>
+            <li><div class="fn" data-k="action"><i>Action</i>Enter what you hold<small>Edited in place, hideable</small></div></li>
+            <li><div class="fn" data-k="system"><i>System</i>Prices move</div></li>
+            <li><div class="fn" data-k="end"><i>End</i>Totals recalculate<small>In the denomination you choose</small></div></li>
+          </ol>
+          <p class="uf-note">The only flow here with no branch, and that's the point: Coins is a ledger of what you own. Anything that behaves like an exchange rate belongs to the simulator — keeping those apart is what stops the app from implying it can trade for you.</p>
+        </div>
+        <div class="card uf" role="tabpanel" id="f6" aria-labelledby="t-f6" hidden>
+          <ol class="fl">
+            <li><div class="fn" data-k="system"><i>System</i>Threshold crossed<small>Ratio reaches your number</small></div></li>
+            <li><div class="fn" data-k="system"><i>System</i>Push delivered<small>Even with the app closed</small></div></li>
+            <li><div class="fn" data-k="screen"><i>Screen</i>Open and check<small>Chart, holdings, simulator</small></div></li>
+            <li class="fs"><span>Outside the app</span></li>
+            <li><div class="fn" data-k="off"><i>Off-app</i>Execute on the exchange<small>Rebalancer never places the order</small></div></li>
+          </ol>
+          <p class="uf-note">This is where I drew the product's edge. Rebalancer tells you the moment arrived and shows you the numbers; the trade happens on your exchange. Not a missing feature — a deliberate limit that keeps the app clear of custody, keys and order execution.</p>
+        </div>
+        <div class="fkey" aria-hidden="true"><span data-k="screen">Screen</span><span data-k="action">Action</span><span data-k="system">System</span><span data-k="decision">Decision</span><span data-k="end">End</span><span data-k="off">Sheet / off-app</span></div>
+      </div>
     </section>
 
-    <!-- 05 — TESTING -->
-    <section id="section-05" class="case-section">
-      <h2 class="section-heading">Testing</h2>
-      <p class="section-text">Two rounds through TestFlight, on other people's phones. Each flow gave up one thing I had assumed, and each one changed the build.</p>
-      <div class="rb-tests" tabindex="0" role="group" aria-label="Usability test findings — scrollable">
-        <div class="rb-test">
-          <p class="rb-test-flow"><span class="rb-test-num">01</span>Creating a pair</p>
-          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>Nobody could see how to enter the amounts they hold from the watchlist.</p>
-          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>A prompt button on the watchlist, so holdings go in without leaving the screen you are on.</p>
+    <!-- 04 -->
+    <section class="sec" data-scene="4" id="prototype" data-title="Prototype">
+      <div class="col">
+        <span class="num rv">04</span>
+        <h2 class="rv">Prototype</h2>
+        <p class="lead rv">There was no Figma stage. I built the prototype with Claude Code, iterating on a real phone — screens and system decided together.</p>
+      </div>
+      <div class="gal phones" id="screens" style="--cols:4">
+        <div class="gal-bar rv"><span class="eyebrow">Screens · 4</span></div>
+        <div class="gal-grid hx">
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="0" style="--sr:450/920" aria-label="Watchlist — open full size"><img src="../../assets/images/rebalancer/rebalancer-pairs-watchlist.webp" alt="Rebalancer watchlist: an expanded SOL/XRP pair with its ratio chart, above a list of other tracked pairs" loading="lazy" width="450" height="920"></button><figcaption><span>01</span><b>Watchlist</b> — the open pair, then the rest as rows with sparklines</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="1" style="--sr:450/920" aria-label="Simulator — open full size"><img src="../../assets/images/rebalancer/rebalancer-simulator.webp" alt="The rebalance simulator on the SOL/XRP screen, showing step 1 and step 2 of a swap chain with the ratio for each" loading="lazy" width="450" height="920"></button><figcaption><span>02</span><b>Simulator</b> — each leg priced at a target ratio, against the current one</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="2" style="--sr:450/920" aria-label="Alerts — open full size"><img src="../../assets/images/rebalancer/rebalancer-alerts-push.webp" alt="iPhone lock screen with four Rebalancer alerts delivered, each naming a pair and the ratio it reached" loading="lazy" width="450" height="920"></button><figcaption><span>03</span><b>Alerts</b> — delivered on the lock screen when a ratio crosses its threshold</figcaption></figure>
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="3" style="--sr:450/920" aria-label="Pair screen — open full size"><img src="../../assets/images/rebalancer/rebalancer-pair-detail.webp" alt="The SOL/XRP pair screen with its ratio chart and a tracked-coins block restating each holding in the other coin" loading="lazy" width="450" height="920"></button><figcaption><span>04</span><b>Pair screen</b> — both holdings restated in the coin on the other side</figcaption></figure>
         </div>
-        <div class="rb-test">
-          <p class="rb-test-flow"><span class="rb-test-num">02</span>Living with the watchlist</p>
-          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>The first thing people reached for was reordering the cards.</p>
-          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>Press and hold to drag &mdash; the order of the list is the user's, not mine.</p>
-        </div>
-        <div class="rb-test">
-          <p class="rb-test-flow"><span class="rb-test-num">03</span>Pair detail and the simulator</p>
-          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>People expected the app to remember their holdings and carry them into the simulator.</p>
-          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>A MAX button that fills in the saved holding, so the simulator starts from real numbers.</p>
-        </div>
-        <div class="rb-test">
-          <p class="rb-test-flow"><span class="rb-test-num">04</span>Hitting the free limits</p>
-          <p class="rb-test-line rb-test-line--found"><span class="rb-test-key">Found</span>The paywall landed out of nowhere and read as a wall.</p>
-          <p class="rb-test-line rb-test-line--fixed"><span class="rb-test-key">Changed</span>A plain note that the free limit is reached first, with a way to read about Pro &mdash; so going further is a choice, not an ambush.</p>
+      </div>
+      <div class="col" style="margin-top:64px">
+        <div class="card rv"><span class="eyebrow">Biggest challenge</span>
+          <p style="margin-top:10px">The alert is the product, and an alert has to arrive with the app closed — that one requirement pulled a backend behind a one-person design project. Price sources that answer a phone refuse a data centre, iOS background refresh cannot be trusted, and an alert that has fired must not fire again: every one of those is a server problem, not a screen.</p>
+          <div class="chips"><span>Cloudflare Workers</span><span>Cron Triggers</span><span>KV</span><span>D1</span><span>R2</span><span>Expo Push</span><span>APNs</span><span>Pages</span><span>StoreKit 2</span></div>
         </div>
       </div>
     </section>
 
-    <!-- 06 — PUBLISH ON THE APP STORE -->
-    <section id="section-06" class="case-section">
-      <h2 class="section-heading">Publish on the App Store</h2>
-
-      <p class="section-text">The listing had to sell the same idea in every storefront, so the cards lead with the pair &mdash; not the feature list.</p>
-      <figure class="rb-shot">
-        <img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle &ldquo;Create your own pairs&rdquo;, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" width="1824" height="970">
-        <span class="rb-shot-placeholder" style="display:none">App Store listing &mdash; image coming soon</span>
-      </figure>
-      <p class="rb-shot-caption">The product page as it stands in the store &mdash; the same pair-first pitch, from the subtitle down to the cards.</p>
-    </section>
-
-    <!-- 07 — ANALYTICS AND POST-LAUNCH RESEARCH -->
-    <section id="section-07" class="case-section">
-      <h2 class="section-heading">Analytics and post-launch research</h2>
-      <p class="section-text">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether a first alert leads to a second &mdash; the signal that it has entered someone's routine.</p>
-      <div class="rb-pending">
-        <span class="rb-pending-label">First questions</span>
-        <div class="rb-pending-list">
-          <span class="rb-pending-item">Whether a first alert leads to a second</span>
-          <span class="rb-pending-item">Which flow people stop at</span>
-          <span class="rb-pending-item">Whether the free limits sit in the right place</span>
+    <!-- 05 -->
+    <section class="sec" data-scene="5" id="testing" data-title="Testing">
+      <div class="col">
+        <span class="num rv">05</span>
+        <h2 class="rv">Testing</h2>
+        <p class="lead rv">Two rounds through TestFlight, on other people's phones. Each flow gave up one thing I had assumed, and each one changed the build.</p>
+        <div class="stack hx">
+          <div class="card rv"><span class="eyebrow">01</span><h3 style="margin-top:8px">Creating a pair</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>Nobody could see how to enter the amounts they hold from the watchlist.</dd></div><div class="c"><dt>Changed</dt><dd>A prompt button on the watchlist, so holdings go in without leaving the screen you are on.</dd></div></dl></div>
+          <div class="card rv"><span class="eyebrow">02</span><h3 style="margin-top:8px">Living with the watchlist</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>The first thing people reached for was reordering the cards.</dd></div><div class="c"><dt>Changed</dt><dd>Press and hold to drag — the order of the list is the user's, not mine.</dd></div></dl></div>
+          <div class="card rv"><span class="eyebrow">03</span><h3 style="margin-top:8px">Pair detail and the simulator</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>People expected the app to remember their holdings and carry them into the simulator.</dd></div><div class="c"><dt>Changed</dt><dd>A MAX button that fills in the saved holding, so the simulator starts from real numbers.</dd></div></dl></div>
+          <div class="card rv"><span class="eyebrow">04</span><h3 style="margin-top:8px">Hitting the free limits</h3>
+            <dl class="fc"><div class="f"><dt>Found</dt><dd>The paywall landed out of nowhere and read as a wall.</dd></div><div class="c"><dt>Changed</dt><dd>A plain note that the free limit is reached first, with a way to read about Pro — so going further is a choice, not an ambush.</dd></div></dl></div>
         </div>
       </div>
     </section>
 
-    <!-- 08 — OUTCOME -->
-    <section id="section-08" class="case-section">
-      <h2 class="section-heading">Outcome</h2>
-      <p class="section-text">It's live. One person took it from concept to the App Store &mdash; design, app, backend, delivery.</p>
-      <p class="section-text">What it settles into in daily use is the next thing to measure.</p>
-
+    <!-- 06 -->
+    <section class="sec" data-scene="6" id="publish" data-title="Publish">
+      <div class="col">
+        <span class="num rv">06</span>
+        <h2 class="rv">Publish on the App Store</h2>
+        <p class="lead rv">The listing had to sell the same idea in every storefront, so the cards lead with the pair — not the feature list.</p>
+      </div>
+      <div class="gal one" id="store">
+        <div class="gal-grid">
+          <figure class="shot rv"><button class="shot-f" type="button" data-i="0" style="--sr:1824/970" aria-label="The App Store page — open full size"><img src="../../assets/images/rebalancer/rebalancer-app-store-page.webp" alt="The Rebalancer Tool page on the App Store: icon, the subtitle “Create your own pairs”, a 5.0 rating, the Finance category, and the five listing cards" loading="lazy" width="1824" height="970"></button><figcaption>The product page as it stands in the store — the same pair-first pitch, from the subtitle down to the cards.</figcaption></figure>
+        </div>
+      </div>
     </section>
 
-    <!-- 09 — REFLECTION -->
-    <section id="section-09" class="case-section">
-      <h2 class="section-heading">Reflection</h2>
-      <p class="section-text">The backend was bigger than I scoped. Next time I&rsquo;d size the invisible parts first.</p>
-      <p class="section-text">With AI I shipped end-to-end what would take a team &mdash; but only the parts I understood.</p>
+    <!-- 07 -->
+    <section class="sec" data-scene="7" id="analytics" data-title="Analytics">
+      <div class="col">
+        <span class="num rv">07</span>
+        <h2 class="rv">Analytics and post-launch research</h2>
+        <p class="lead rv">Analytics is in place and the reading of reviews and channels carries on. The question it has to answer first: whether a first alert leads to a second — the signal that it has entered someone's routine.</p>
+        <div class="card rv" style="margin-top:32px"><span class="eyebrow">First questions</span>
+          <ul class="plain"><li>Whether a first alert leads to a second</li><li>Which flow people stop at</li><li>Whether the free limits sit in the right place</li></ul>
+        </div>
+      </div>
     </section>
 
-    <!-- NEXT CASE -->
-    <a href="../dobrodoc/" class="next-case">
-      <span class="next-case-label">Next case &rarr;</span>
-      <span class="next-case-name">DobroDoc+ &mdash; Online Medical App</span>
-    </a>
-  </div>
-
-  <div class="toc-pill" id="tocPill">
-    <nav class="toc-pill-menu" id="tocPillMenu" aria-label="Sections">
-      <a href="#section-01" data-section="section-01"><span class="pill-num">01</span> Problem</a>
-      <a href="#section-02" data-section="section-02"><span class="pill-num">02</span> Roadmap</a>
-      <a href="#section-03" data-section="section-03"><span class="pill-num">03</span> Research</a>
-      <a href="#section-04" data-section="section-04"><span class="pill-num">04</span> Prototype</a>
-      <a href="#section-05" data-section="section-05"><span class="pill-num">05</span> Testing</a>
-      <a href="#section-06" data-section="section-06"><span class="pill-num">06</span> Publish</a>
-      <a href="#section-07" data-section="section-07"><span class="pill-num">07</span> Analytics</a>
-      <a href="#section-08" data-section="section-08"><span class="pill-num">08</span> Outcome</a>
-      <a href="#section-09" data-section="section-09"><span class="pill-num">09</span> Reflection</a>
-    </nav>
-    <button class="toc-pill-trigger" id="tocPillTrigger" aria-expanded="false" aria-controls="tocPillMenu">
-      <span class="toc-pill-num" id="tocPillNum">01</span>
-      <span id="tocPillLabel">Problem</span>
-      <svg class="toc-pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
-    </button>
-  </div>
-
-  <!-- FOOTER -->
+    <!-- 08 -->
+    <section class="sec" data-scene="8" id="outcome" data-title="Outcome & reflection">
+      <div class="col">
+        <span class="num rv">08 — Outcome</span>
+        <p class="big rv">It's live. One person took it from concept to the App Store — design, app, backend, delivery.</p>
+        <p class="lead rv">What it settles into in daily use is the next thing to measure.</p>
+        <span class="num rv" style="margin-top:12vh">09 — Reflection</span>
+        <blockquote class="rv">The backend was bigger than I scoped. Next time I’d size the invisible parts first.</blockquote>
+        <blockquote class="rv">With AI I shipped end-to-end what would take a team — but only the parts I understood.</blockquote>
+      </div>
+      <div class="next rv">
+        <a class="n" href="../dobrodoc/"><small>Next case →</small>DobroDoc+</a>
+        <div class="ct"><a href="mailto:yuryuryury@icloud.com">Email</a><a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a><a href="../../assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a></div>
+      </div>
+    </section>
   </main>
 
-  <footer class="footer">
-    <div class="footer-inner">
-      <div><span class="footer-name">Yurii Fokin</span> &middot; <span class="footer-role">Lead UX Designer</span></div>
-      <div class="footer-right">
-        <a href="mailto:yuryuryury@icloud.com">Email</a>
-        <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
-        <span>Batumi, GE</span>
-      </div>
-    </div>
-  </footer>
-
+  <!-- versioned, so a phone that saw an older build doesn't keep it -->
+  <script src="../../assets/js/perf.js?v=13"></script>
   <script>
-    // ——— FULL-SCREEN MENU ———
-    // State lives on <body> so the burger, the curtain and the lines can all
-    // key off one class. The panel stays in the DOM (a curtain cannot animate
-    // out of display:none) and is taken out of the a11y tree instead.
-    (function () {
-      var btn = document.getElementById('navburger');
-      var overlay = document.getElementById('navOverlay');
-      if (!btn || !overlay) return;
-      var lastFocus = null;
-
-      function setOpen(on) {
-        document.body.classList.toggle('nav-open', on);
-        btn.setAttribute('aria-expanded', on ? 'true' : 'false');
-        overlay.setAttribute('aria-hidden', on ? 'false' : 'true');
-        if (on) {
-          lastFocus = document.activeElement;
-          // Move the reading position into the panel without ringing a control.
-          // This used to focus the first link, which made Safari on iOS paint
-          // its focus-visible outline around "Download CV" the instant the menu
-          // opened — a scripted .focus() counts as focus-visible, so a pointer
-          // tap produced a keyboard-style ring. The panel carries tabindex="-1"
-          // and takes the focus itself: VoiceOver and Tab still start inside it,
-          // and nothing draws a box.
-          setTimeout(function () { overlay.focus(); }, 360);
-        } else if (lastFocus) {
-          lastFocus.focus();
-        }
-      }
-      var isOpen = function () { return document.body.classList.contains('nav-open'); };
-
-      btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!isOpen()); });
-      overlay.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
-
-      document.addEventListener('keydown', function (e) {
-        if (!isOpen()) return;
-        if (e.key === 'Escape') { setOpen(false); return; }
-        // a full-screen panel that lets Tab wander behind it is a trap of its
-        // own kind — the loop keeps focus on what is actually on screen
-        if (e.key !== 'Tab') return;
-        var items = [btn].concat([].slice.call(overlay.querySelectorAll('a')));
-        var i = items.indexOf(document.activeElement);
-        // focus starts on the panel itself, which is not one of the stops
-        if (i === -1) { e.preventDefault(); items[e.shiftKey ? items.length - 1 : 0].focus(); return; }
-        var next = e.shiftKey ? (i - 1 + items.length) % items.length : (i + 1) % items.length;
-        e.preventDefault();
-        items[next].focus();
-      });
-
-      window.addEventListener('resize', function () {
-        if (window.innerWidth > 768 && isOpen()) setOpen(false);
-      });
-    })();
-
-    // ——— MOBILE TOC PILL: scroll spy + toggle ———
-    // Labels come from the menu links themselves, so adding or renaming a
-    // section means editing one place, not a map that drifts out of sync.
-    (function () {
-      var HEADER_OFFSET = 76;   // sticky header is 57px; the rest is breathing room
-      var pill = document.getElementById('tocPill');
-      if (!pill) return;
-      var trigger = document.getElementById('tocPillTrigger');
-      var num = document.getElementById('tocPillNum');
-      var label = document.getElementById('tocPillLabel');
-      var links = [].slice.call(pill.querySelectorAll('.toc-pill-menu a[data-section]'));
-      var entries = links.map(function (a) {
-        var n = a.querySelector('.pill-num');
-        return {
-          link: a,
-          el: document.getElementById(a.dataset.section),
-          num: n ? n.textContent.trim() : '',
-          text: a.textContent.replace(n ? n.textContent : '', '').trim()
-        };
-      }).filter(function (e) { return e.el; });
-      if (!entries.length) return;
-
-      function sync() {
-        var y = window.scrollY + 120, active = entries[0];
-        entries.forEach(function (e) { if (e.el.offsetTop <= y) active = e; });
-        // A short last section starts below the furthest the page will ever
-        // scroll, so its own top never crosses the line and it could never
-        // become active. Once the reader is at the bottom, it is the one.
-        if (window.scrollY >= document.documentElement.scrollHeight - window.innerHeight - 2)
-          active = entries[entries.length - 1];
-        entries.forEach(function (e) { e.link.classList.toggle('active', e === active); });
-        num.textContent = active.num;
-        label.textContent = active.text;
-      }
-      window.addEventListener('scroll', sync, { passive: true });
-      window.addEventListener('resize', sync);
-      sync();
-
-      function setOpen(on) {
-        pill.classList.toggle('open', on);
-        trigger.setAttribute('aria-expanded', on ? 'true' : 'false');
-      }
-      trigger.addEventListener('click', function () { setOpen(!pill.classList.contains('open')); });
-      links.forEach(function (a) {
-        a.addEventListener('click', function (ev) {
-          var el = document.getElementById(a.dataset.section);
-          if (el) {
-            // scroll here rather than leaning on the hash: the offset is
-            // explicit, and the URL updates without a second jump. The section's
-            // own 104px of top padding already clears the 57px sticky header,
-            // which is why no scroll-margin is needed on any of the cases.
-            ev.preventDefault();
-            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET, behavior: 'smooth' });
-            if (history.replaceState) history.replaceState(null, '', '#' + a.dataset.section);
-          }
-          setOpen(false);
-        });
-      });
-      document.addEventListener('click', function (e) { if (!pill.contains(e.target)) setOpen(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
-    })();
-
-    // RB TABS — every .rb-tabgroup is self-contained: a click retargets only
-    // the buttons and panels INSIDE its own group, so multiple tab groups on
-    // this page can never clear each other's active state.
-    document.querySelectorAll('.rb-tabgroup').forEach(function (group) {
-      var tabs = group.querySelectorAll('.rb-tabs .rb-tab');
-      var panels = group.querySelectorAll('.rb-tabpanel');
-      tabs.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var name = btn.getAttribute('data-rb-tab');
-          tabs.forEach(function (b) {
-            var on = b === btn;
-            b.classList.toggle('is-active', on);
-            b.setAttribute('aria-selected', on ? 'true' : 'false');
-          });
-          panels.forEach(function (p) {
-            p.classList.toggle('is-active', p.getAttribute('data-rb-panel') === name);
-          });
-        });
-      });
-    });
-
-    // Tab strips: flag "there is more to the right" so the CSS fade can show.
-    // Cheap, passive, and self-correcting on resize / scroll / tab switch.
-    // Drawn scrollbars for the Discovery flows — see the CSS note on why the
-    // native one can't do this job. Each rail sits after its flow; the thumb
-    // mirrors position and is draggable.
-    (function () {
-      var bars = [].slice.call(document.querySelectorAll('.rb-stage-bar'));
-      if (!bars.length) return;
-      bars.forEach(function (bar) {
-        var flow = bar.previousElementSibling;
-        if (!flow || !flow.classList.contains('rb-flow')) return;
-        var thumb = bar.querySelector('.rb-stage-bar-thumb');
-
-        function draw() {
-          var max = flow.scrollWidth - flow.clientWidth;
-          if (max <= 4) { bar.hidden = true; return; }
-          bar.hidden = false;
-          var ratio = flow.clientWidth / flow.scrollWidth;
-          var w = Math.min(bar.clientWidth, Math.max(28, bar.clientWidth * ratio));
-          thumb.style.width = w + 'px';
-          thumb.style.transform =
-            'translateX(' + (flow.scrollLeft / max) * (bar.clientWidth - w) + 'px)';
-        }
-
-        function scrollTo(clientX) {
-          var r = bar.getBoundingClientRect();
-          var w = thumb.offsetWidth;
-          var travel = r.width - w;
-          if (travel <= 0) return;
-          var x = Math.min(Math.max(clientX - r.left - w / 2, 0), travel);
-          flow.scrollLeft = (x / travel) * (flow.scrollWidth - flow.clientWidth);
-        }
-
-        var dragging = false;
-        bar.addEventListener('pointerdown', function (e) {
-          dragging = true;
-          bar.setPointerCapture(e.pointerId);
-          scrollTo(e.clientX);
-          e.preventDefault();
-        });
-        bar.addEventListener('pointermove', function (e) { if (dragging) scrollTo(e.clientX); });
-        bar.addEventListener('pointerup', function () { dragging = false; });
-        bar.addEventListener('pointercancel', function () { dragging = false; });
-
-        flow.addEventListener('scroll', draw, { passive: true });
-        window.addEventListener('resize', draw);
-        draw();
-        // the panel is hidden until its tab is opened, so it measures as zero
-        // until then — redraw whenever a tab or the layout switch is used
-        document.querySelectorAll('.rb-tab').forEach(function (b) {
-          b.addEventListener('click', function () { setTimeout(draw, 60); });
-        });
-      });
-    })();
-
-  
-  
-    // ——— SCREENS: a drifting row ———
-    // Ported from the Halliburton case's mockup gallery. The position is
-    // carried in a variable rather than read back off the element: 22px/s is
-    // 0.35px a frame and scrollLeft rounds to integers, so reading it back
-    // rounded every step to zero and the row never moved.
-    (function () {
-      var strip = document.querySelector('.phone-strip');
-      var track = strip && strip.querySelector('.phone-track');
-      if (!strip || !track) return;
-
-      // A second copy of the row makes the wrap seamless: when the scroll
-      // passes the halfway mark we subtract it, and the pixels under the
-      // pointer do not change. The copies are decorative.
-      [].slice.call(track.children).forEach(function (node) {
-        var copy = node.cloneNode(true);
-        copy.setAttribute('aria-hidden', 'true');
-        [].forEach.call(copy.querySelectorAll('img'), function (im) { im.setAttribute('loading', 'lazy'); });
-        track.appendChild(copy);
-      });
-
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      var SPEED = 22;              // px per second — a drift, not a carousel
-      var half = 0, paused = false, userUntil = 0, mine = -1, last = 0, pos = 0;
-      function measure() { half = track.scrollWidth / 2; }
-      measure();
-      window.addEventListener('resize', measure);
-      if (window.ResizeObserver) new ResizeObserver(measure).observe(track);
-
-      var dragging = false, startX = 0, startScroll = 0;
-      strip.addEventListener('pointerenter', function () { paused = true; });
-      strip.addEventListener('pointerleave', function () { if (!dragging) paused = false; });
-
-      // ——— DRAG TO SCROLL ———
-      // Mouse only. Touch already pans the row natively with momentum, and
-      // taking that over would replace a good gesture with a worse one.
-      strip.addEventListener('pointerdown', function (e) {
-        if (e.pointerType !== 'mouse' || e.button !== 0) return;
-        dragging = true;
-        startX = e.clientX;
-        startScroll = strip.scrollLeft;
-        strip.classList.add('is-dragging');
-        strip.setPointerCapture(e.pointerId);
-        e.preventDefault();               // no ghost image, no text selection
-      });
-      strip.addEventListener('pointermove', function (e) {
-        if (!dragging) return;
-        var next = startScroll - (e.clientX - startX);
-        // the track is two copies, so the drag can wrap and keep going
-        if (half > 0) {
-          if (next < 0) { next += half; startScroll += half; }
-          else if (next >= half) { next -= half; startScroll -= half; }
-        }
-        strip.scrollLeft = next;
-        pos = next;
-        mine = strip.scrollLeft;
-      });
-      function endDrag(e) {
-        if (!dragging) return;
-        dragging = false;
-        strip.classList.remove('is-dragging');
-        if (e && e.pointerId != null && strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
-        userUntil = performance.now() + 1500;
-      }
-      strip.addEventListener('pointerup', endDrag);
-      strip.addEventListener('pointercancel', endDrag);
-      strip.addEventListener('focusin',  function () { paused = true; });
-      strip.addEventListener('focusout', function () { paused = false; });
-      // Our own writes fire scroll too — only a value we did not set is the user.
-      strip.addEventListener('scroll', function () {
-        if (Math.abs(strip.scrollLeft - mine) > 1.5) {
-          userUntil = performance.now() + 1500;
-          pos = strip.scrollLeft;          // hand the position over to the user
-        }
-      }, { passive: true });
-
-      function step(now) {
-        var dt = last ? Math.min(now - last, 50) : 16;
-        last = now;
-        if (half > 0) {
-          if (dragging) { /* the pointer owns the position */ }
-          else if (!paused && now > userUntil) {
-            pos += SPEED * dt / 1000;
-            if (pos >= half) pos -= half;
-            strip.scrollLeft = pos;
-            mine = strip.scrollLeft;
-          } else if (strip.scrollLeft >= half) {
-            pos = strip.scrollLeft - half;
-            strip.scrollLeft = pos;
-            mine = strip.scrollLeft;
-          }
-        }
-        requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    })();
-
-    // ——— HERO TILT ———
-    // The mat turns toward the pointer: at the top edge the top recedes and
-    // the bottom comes forward, and the same on the other axis. Five degrees
-    // is the whole range — enough to read as depth, small enough that the
-    // image never stops being a flat thing you are looking at.
-    //
-    // The transform lives on the element and nothing else moves, so the bleed,
-    // the margins and the page width are all untouched by it.
-    (function () {
-      var el = document.querySelector('.case-hero-image');
-      if (!el) return;
-      // a finger has no hover, and a coarse pointer would fire this on tap
-      if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      var MAX = 5;            // degrees, per axis
-      var LIFT = 6;           // px toward the viewer at the centre
-      var frame = null, tx = 0, ty = 0;
-
-      function draw() {
-        frame = null;
-        el.style.transform =
-          'perspective(1400px) rotateX(' + tx.toFixed(2) + 'deg) rotateY(' + ty.toFixed(2) + 'deg) translateZ(' + LIFT + 'px)';
-      }
-
-      el.addEventListener('pointermove', function (e) {
-        if (e.pointerType !== 'mouse') return;
-        var r = el.getBoundingClientRect();
-        // -1 at the left/top edge, +1 at the right/bottom
-        var x = (e.clientX - r.left) / r.width * 2 - 1;
-        var y = (e.clientY - r.top) / r.height * 2 - 1;
-        // pointer at the top -> top away, bottom forward; pointer at the left
-        // -> left away, right forward
-        tx = -y * MAX;
-        ty = x * MAX;
-        el.classList.add('is-tilting');
-        if (!frame) frame = requestAnimationFrame(draw);
-      });
-
-      el.addEventListener('pointerleave', function () {
-        if (frame) { cancelAnimationFrame(frame); frame = null; }
-        el.classList.remove('is-tilting');
-        el.style.transform = 'perspective(1400px)';
-      });
-    })();
-
-    // ——— EDGE FADE ———
-    // Finds the containers that actually scroll sideways and marks which side
-    // still has content. No selector list to keep in sync: it asks the layout,
-    // so a row that only scrolls under a breakpoint is marked exactly when it
-    // does, and unmarked when it stops.
-    (function () {
-      var updates = [];
-
-      function attach(el) {
-        if (el.dataset.faded) return;
-        el.dataset.faded = '1';
-        function update() {
-          var left = el.scrollLeft > 4;
-          var right = el.scrollWidth - el.scrollLeft - el.clientWidth > 4;
-          // a sheet with a sticky row-header rail must never fade its left edge
-          if (el.getAttribute('data-fade-sides') === 'right') left = false;
-          var side = left && right ? 'both' : right ? 'right' : left ? 'left' : '';
-          if (side) el.setAttribute('data-fade', side);
-          else el.removeAttribute('data-fade');
-        }
-        el.addEventListener('scroll', update, { passive: true });
-        updates.push(update);
-        update();
-      }
-
-      function scan() {
-        var all = document.querySelectorAll('*');
-        for (var i = 0; i < all.length; i++) {
-          var ox = getComputedStyle(all[i]).overflowX;
-          if ((ox === 'auto' || ox === 'scroll') && all[i].scrollWidth - all[i].clientWidth > 2) attach(all[i]);
-        }
-        for (var j = 0; j < updates.length; j++) updates[j]();
-      }
-
-      scan();
-      var t;
-      function later() { clearTimeout(t); t = setTimeout(scan, 120); }
-      window.addEventListener('resize', later);
-      // a panel behind a tab has no width until shown, so re-check after a click
-      document.addEventListener('click', later, true);
-    })();
+    // the world behind the chapters: a motif per chapter, and the case's accent
+    window.CASE = { world: ['', 'scatter', 'road', 'clusters', 'screens', 'rings', 'gates', 'loop', 'planet'], accent: [0.82, 0.56, 1.0] };
   </script>
-
+  <script src="../../assets/js/case-depth.js?v=10"></script>
+  <script src="../../assets/js/case-kit.js?v=25"></script>
 </body>
 </html>
