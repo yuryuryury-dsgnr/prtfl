@@ -266,9 +266,9 @@
 
       // the work: four wide pictures in a row; on a phone a column, read top to bottom
       var cw = mobile ? W * 0.84 : Math.min(W * 0.58, H * 0.62 * 1.6, 1100), ch = cw / (mobile ? 1.3 : 1.6);
-      var gap = mobile ? ch * 0.36 : cw * 0.08, dpr = Math.min(2, env.dpr || 1), y0 = mobile ? H * 0.02 : 0;
+      var gap = mobile ? ch * 0.36 : cw * 0.08, dpr = Math.min(2, env.dpr || 1), y0 = mobile ? -H * 0.035 : 0;
       // the overview stands far enough back that the whole row fills most of the screen
-      var span = 4 * (mobile ? ch : cw) + 3 * gap, dOv = span * F / ((mobile ? H : W) * (mobile ? 0.7 : 0.74));
+      var span = 4 * (mobile ? ch : cw) + 3 * gap, dOv = span * F / ((mobile ? H : W) * (mobile ? 0.6 : 0.74));
       this.size = [cw, ch]; this.y0 = y0;
       this.cases = [];
       for (var k = 0; k < 4; k++) {
