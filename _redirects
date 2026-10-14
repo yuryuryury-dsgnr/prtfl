@@ -1,2 +1,12 @@
 # The CV asset was renamed; the old URL is already out in sent applications.
 /assets/CV_Yurii_Fokin.pdf  /assets/CV_Yurii_Designer.pdf  301
+
+# The lab's one page is the folder itself; the earlier variants were folded into it.
+/lab/directions/b  /lab/directions/  301
+/lab/directions/a  /lab/directions/  301
+/lab/directions/c  /lab/directions/  301
+/lab/directions/d  /lab/directions/  301
+/lab/directions/flow  /lab/directions/  301
+/lab/directions/signal  /lab/directions/  301
+/lab/directions/gallery  /lab/directions/  301
+/lab/directions/gravity  /lab/directions/  301
