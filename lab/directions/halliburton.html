@@ -196,7 +196,7 @@
     .wide { width: min(1180px, 100%); }
     .jm-goal { margin-top: 18px; color: rgba(233,236,242,.85); }
     .jm-goal .eyebrow { display: block; margin-bottom: 6px; }
-    .jm-sheet { margin-top: 16px; overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--card); scrollbar-width: thin; scrollbar-color: rgba(233,236,242,.2) transparent; }
+    .jm-sheet { margin-top: 16px; overflow-x: auto; overflow-y: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--card); scrollbar-width: thin; scrollbar-color: rgba(233,236,242,.2) transparent; }
     .jm { --lw: 118px; width: 100%; min-width: calc(var(--lw) + var(--n) * 150px); table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 13.5px; line-height: 1.45; }
     .jm col.lc { width: var(--lw); }
     .jm th, .jm td { padding: 14px 16px; vertical-align: top; text-align: left; font-weight: 400; border-top: 1px solid var(--line); transition: background .3s; }
@@ -347,6 +347,10 @@
         overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding: 0 var(--left); scrollbar-width: none; }
       .hx::-webkit-scrollbar { display: none; }
       .hx > * { flex: 0 0 84%; min-width: 0; margin: 0 !important; scroll-snap-align: start; }
+      /* a rail moves sideways only: a vertical drag on it is the page's. Its cards come in by fading
+         alone, since a card still rising into place would hang below the rail and make it scroll */
+      .hx, .tg-wrap { overflow-y: hidden; }
+      .hx > .rv { transform: none; }
       .hx-bar { display: flex; align-items: center; gap: 12px; margin-top: 16px; font: 500 11px/1 var(--mono); color: var(--muted); cursor: pointer; }
       .hx-bar .hx-n { min-width: 52px; color: var(--fg); }
       .hx-bar i { position: relative; flex: 1; height: 1px; background: var(--line); overflow: hidden; }
