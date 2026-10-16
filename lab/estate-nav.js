@@ -1,4 +1,5 @@
-// The three real-estate concepts, one switcher on each of them: the points, the tour, the loft.
+// The three real-estate concepts, one switcher on each of them: the points, the tour, the loft,
+// and the way back to the lab's index.
 // A pill at the top (under the bar on a phone); the page fades out before the next one loads.
 (function () {
   var PAGES = [
@@ -15,6 +16,7 @@
     '.ec-switch a i{font:normal 500 10px/1 "JetBrains Mono",ui-monospace,monospace;color:rgba(238,240,246,.4)}',
     '.ec-switch a:hover{color:#EEF0F6;background:rgba(238,240,246,.07)}',
     '.ec-switch a.on{color:#06070A;background:#E8C27A}.ec-switch a.on i{color:rgba(6,7,10,.55)}',
+    '.ec-switch a.ec-lab{color:rgba(238,240,246,.85);border-right:1px solid rgba(238,240,246,.14);border-radius:999px 0 0 999px;margin-right:2px}',
     '.ec-switch a:focus-visible{outline:2px solid #E8C27A;outline-offset:2px}',
     '@media (max-width:760px){.ec-switch{top:62px}.ec-switch a{padding:6px 11px}}',
     '.ec-fade{position:fixed;inset:0;z-index:100;background:#06070A;opacity:0;pointer-events:none;transition:opacity .35s}',
@@ -24,7 +26,7 @@
   var nav = document.createElement('nav');
   nav.className = 'ec-switch';
   nav.setAttribute('aria-label', 'Real-estate concepts');
-  nav.innerHTML = PAGES.map(function (p) {
+  nav.innerHTML = '<a class="ec-lab" href="../" aria-label="All lab projects">Lab</a>' + PAGES.map(function (p) {
     var on = here.indexOf(p.key) >= 0;
     return '<a href="' + p.href + '"' + (on ? ' class="on" aria-current="page"' : '') + '><i>' + p.n + '</i>' + p.name + '</a>';
   }).join('');

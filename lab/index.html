@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab — Yurii Fokin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="The sandbox: concepts and studies that aren't on the site yet.">
+  <meta name="theme-color" content="#06070A">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #06070A; --fg: #EEF0F6; --muted: rgba(238,240,246,.55); --line: rgba(238,240,246,.12); --card: #0E0F13; --mono: 'JetBrains Mono', ui-monospace, monospace; --pad: clamp(16px, 5vw, 72px); --accent: #E8C27A; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.5; padding: 0 var(--pad) 96px; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 14px; }
+
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; font-size: 14px; font-weight: 500; }
+    .nav a:last-child { color: var(--muted); transition: color .2s; } .nav a:last-child:hover { color: var(--fg); }
+    header.top { padding: clamp(48px, 10vh, 112px) 0 clamp(32px, 6vh, 64px); max-width: 640px; }
+    .eyebrow { font: 500 11px/1 var(--mono); color: var(--accent); letter-spacing: .06em; text-transform: uppercase; display: block; margin-bottom: 14px; }
+    h1 { font-size: clamp(40px, 6vw, 80px); font-weight: 600; letter-spacing: -0.05em; line-height: .98; }
+    header.top p { margin-top: 16px; font-size: 17px; color: rgba(238,240,246,.72); }
+
+    section { margin-top: clamp(40px, 7vh, 72px); }
+    section > h2 { display: flex; align-items: baseline; gap: 12px; font-size: 20px; font-weight: 600; letter-spacing: -0.02em; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+    section > h2 span { font: 500 11px/1 var(--mono); color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 20px; margin-top: 22px; }
+
+    .card { display: flex; flex-direction: column; border-radius: 16px; background: var(--card); border: 1px solid var(--line); overflow: hidden; transition: border-color .25s, transform .35s cubic-bezier(.2,.8,.2,1); }
+    .card:hover { border-color: rgba(232,194,122,.5); transform: translateY(-3px); }
+    .card figure { aspect-ratio: 16 / 10; overflow: hidden; background: #000; border-bottom: 1px solid var(--line); }
+    .card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+    .card:hover img { transform: scale(1.03); }
+    .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card h3 { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 17px; font-weight: 600; letter-spacing: -0.015em; }
+    .card h3 i { font: normal 500 11px/1 var(--mono); color: var(--muted); }
+    .card p { font-size: 14px; color: rgba(238,240,246,.7); }
+    .card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
+    .card .tags span { font: 500 10px/1 var(--mono); color: var(--muted); padding: 5px 8px; border-radius: 999px; border: 1px solid var(--line); }
+    .card .tags span.live { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+    .card .go { font: 500 11px/1 var(--mono); color: var(--accent); margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="./"><b>Lab</b></a>
+    <a href="../">← Portfolio</a>
+  </nav>
+
+  <header class="top">
+    <span class="eyebrow">Yurii Fokin · the sandbox</span>
+    <h1>The lab.</h1>
+    <p>Concepts and studies that aren't on the site, kept here to open, compare and come back to.</p>
+  </header>
+
+  <section>
+    <h2>Real estate <span>three ways to sell a home</span></h2>
+    <div class="grid">
+      <a class="card" href="estate/">
+        <figure><img src="thumbs/estate.jpg" alt="The flat drawn in points, sun falling across the living room floor" loading="lazy"></figure>
+        <div class="body">
+          <h3>Residence 14B <i>01</i></h3>
+          <p>From the city at night to the tower, the floor plan and the rooms, all in points, with a June day of sun through the windows.</p>
+          <div class="tags"><span>scroll</span><span>raw WebGL</span><span>points</span></div>
+        </div>
+      </a>
+      <a class="card" href="estate-tour/">
+        <figure><img src="thumbs/tour.jpg" alt="A white model of the living room with a real city outside the windows" loading="lazy"></figure>
+        <div class="body">
+          <h3>Residence 14B, the tour <i>02</i></h3>
+          <p>The same flat walked through at eye height: daylight worked out per window, and a real 360° photograph of a city outside.</p>
+          <div class="tags"><span>scroll</span><span>raw WebGL</span><span>real panoramas</span></div>
+        </div>
+      </a>
+      <a class="card" href="estate-loft/">
+        <figure><img src="thumbs/loft.jpg" alt="A two-level loft as a cut-away dollhouse, furnished" loading="lazy"></figure>
+        <div class="body">
+          <h3>Loft 7 <i>03</i></h3>
+          <p>A duplex that builds itself as you scroll, then a dollhouse to play with: lift a floor off, move the furniture, change the finishes.</p>
+          <div class="tags"><span>scroll</span><span>three.js</span><span>3D models</span><span>game</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Home page directions <span>where the portfolio's home came from</span></h2>
+    <div class="grid">
+      <a class="card" href="../">
+        <figure><img src="thumbs/dive.jpg" alt="The work column of the live home page" loading="lazy"></figure>
+        <div class="body">
+          <h3>Dive <i>live</i></h3>
+          <p>The greeting pours into the layers and the camera dives through them to the work. Now the site's home page.</p>
+          <div class="tags"><span class="live">on the site</span><span>scroll</span><span>raw WebGL</span></div>
+        </div>
+      </a>
+      <a class="card" href="directions/matter.html">
+        <figure><img src="thumbs/matter.jpg" alt="The greeting drawn in fine grains of light" loading="lazy"></figure>
+        <div class="body">
+          <h3>Matter</h3>
+          <p>The greeting and the cases made of matter: the letters break up into the case covers as you scroll.</p>
+          <div class="tags"><span>scroll</span><span>raw WebGL</span><span>particles</span></div>
+        </div>
+      </a>
+      <a class="card" href="directions/depth.html">
+        <figure><img src="thumbs/depth.jpg" alt="A block of coloured strata, the skills pinned to its layers" loading="lazy"></figure>
+        <div class="body">
+          <h3>Depth</h3>
+          <p>A flight down into a block of strata, with the work hung in the depth below it.</p>
+          <div class="tags"><span>scroll</span><span>raw WebGL</span><span>3D flight</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Studies <span>earlier experiments</span></h2>
+    <div class="grid">
+      <a class="card" href="backgrounds/">
+        <figure><img src="thumbs/bg1.jpg" alt="A light page over a soft moving background" loading="lazy"></figure>
+        <div class="body">
+          <h3>Background studies</h3>
+          <p>Six backgrounds for a light page, each with what it costs in code and in motion.</p>
+          <div class="tags"><span>CSS</span><span>canvas</span></div>
+        </div>
+      </a>
+      <a class="card" href="backgrounds-2/">
+        <figure><img src="thumbs/bg2.jpg" alt="A dark page with a panel of background options" loading="lazy"></figure>
+        <div class="body">
+          <h3>Background studies II</h3>
+          <p>A second set, on the dark page, with a panel to switch between them and compare.</p>
+          <div class="tags"><span>CSS</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+</body>
+</html>
