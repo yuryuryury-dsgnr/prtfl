@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Residence 14B — tour (draft)</title>
+  <title>Residence 14B — the tour</title>
   <meta name="robots" content="noindex">
-  <meta name="description" content="A concept: a home presented by the scroll, from the city down to the sun on its floor.">
+  <meta name="description" content="A concept: a walk through a home that is still on paper, lit by a June sun, with a real city outside its windows.">
   <meta name="theme-color" content="#06070A">
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,6 +55,9 @@
     .scroll-hint .hint-t { min-width: 14ch; }
 
     .cap-side { left: var(--pad); top: clamp(92px, 15vh, 150px); max-width: 420px; }
+    .cap-low { left: var(--pad); bottom: clamp(56px, 10vh, 104px); max-width: 420px; }
+    .cap .credit { margin-top: 10px; font: 500 10px/1.5 var(--mono); color: rgba(238,240,246,.4); }
+    .cap .credit a { border-bottom: 1px solid rgba(238,240,246,.25); }
 
     /* a room: a card at the bottom left, its numbers set like a listing */
     .cap-room { left: var(--pad); bottom: clamp(56px, 10vh, 104px); width: min(380px, calc(100vw - 2 * var(--pad))); }
@@ -103,7 +106,7 @@
 
     /* a phone: the words go to the bottom, over a fade, and the picture is lifted above them */
     @media (max-width: 760px) {
-      .cap-side, .cap-sun { top: auto; bottom: 0; left: 0; right: 0; max-width: none; padding: 64px 16px 30px; background: linear-gradient(transparent, rgba(6,7,10,.86) 40%); }
+      .cap-side, .cap-sun, .cap-low { top: auto; bottom: 0; left: 0; right: 0; max-width: none; padding: 64px 16px 30px; background: linear-gradient(transparent, rgba(6,7,10,.86) 40%); }
       .cap-hero { bottom: 92px; }
       .cap-room { left: 0; right: 0; bottom: 0; width: auto; padding: 56px 16px 26px; background: linear-gradient(transparent, rgba(6,7,10,.9) 30%); }
       .cap-room ul { display: none; }
@@ -134,46 +137,46 @@
   <div class="loading" id="loading" aria-hidden="true"><span>building <b id="loadPct">0</b>%</span></div>
 
   <header class="nav">
-    <a class="nav-brand" href="#" data-stage="0"><b>Residence 14B</b><span>a concept</span></a>
+    <a class="nav-brand" href="#" data-stage="0"><b>Residence 14B</b><span>the tour</span></a>
     <nav class="nav-links">
+      <a href="../estate/">The first concept</a>
       <a href="../../">← Portfolio</a>
       <a class="pill" href="#details" data-stage="9">Book a viewing</a>
     </nav>
   </header>
 
   <nav class="meter" id="meter" aria-label="Sections">
-    <button data-stage="0">00 · Arrive</button>
-    <button data-stage="1">01 · Location</button>
-    <button data-stage="2">02 · Building</button>
-    <button data-stage="3">03 · Plan</button>
-    <button data-stage="4">04 · Rooms</button>
-    <button data-stage="7">05 · Light</button>
-    <button data-stage="9">06 · Details</button>
+    <button data-stage="0">00 · Model</button>
+    <button data-stage="2">01 · Plan</button>
+    <button data-stage="3">02 · Inside</button>
+    <button data-stage="4">03 · Rooms</button>
+    <button data-stage="7">04 · The view</button>
+    <button data-stage="9">05 · Details</button>
   </nav>
 
   <section class="cap cap-hero" data-cap="0">
-    <span class="eyebrow">Residence 14B · Halden Hill</span>
-    <h1>A home above<br>the river.</h1>
-    <p>Four rooms on the fourteenth floor, and the sun in every one of them.</p>
+    <span class="eyebrow">Residence 14B · the tour</span>
+    <h1>A home, before<br>it exists.</h1>
+    <p>Walk through a flat that is still on paper, lit by the June sun, with a real city outside its windows.</p>
   </section>
   <div class="scroll-hint" data-hint data-drive data-mouse="scroll down|keep scrolling|scroll back" data-touch="swipe up|keep swiping|swipe back"></div>
 
   <section class="cap cap-side" data-cap="1">
-    <span class="eyebrow">01 · Location</span>
-    <h2>Ten minutes<br>from everything.</h2>
-    <p>The metro, the river park and the old town are all a short walk away.</p>
+    <span class="eyebrow">01 · The model</span>
+    <h2>Built from<br>the drawings.</h2>
+    <p>Every wall, door and window where the plan puts them, and the light worked out from where the sun is.</p>
   </section>
 
   <section class="cap cap-side" data-cap="2">
-    <span class="eyebrow">02 · The building</span>
-    <h2>Floor 14 of 22.</h2>
-    <p>46 metres up, above the treeline: the river on one side, the old town on the other.</p>
+    <span class="eyebrow">02 · The plan</span>
+    <h2>160 m², seven rooms.</h2>
+    <p>The rooms you live in face south and west. The rest keep to the quiet side.</p>
   </section>
 
-  <section class="cap cap-side" data-cap="3">
-    <span class="eyebrow">03 · The plan</span>
-    <h2>160 m², laid out<br>around the light.</h2>
-    <p>The rooms you live in face south and west. The rest keep to the quiet side.</p>
+  <section class="cap cap-low" data-cap="3">
+    <span class="eyebrow">03 · Inside</span>
+    <h2>Come in.</h2>
+    <p>From the front door the eye goes straight to the light in the living room.</p>
   </section>
 
   <section class="cap cap-room" data-cap="4">
@@ -187,7 +190,7 @@
     <span class="eyebrow">05 · Kitchen</span>
     <div class="area"><b>18.7</b>m²</div>
     <p>An island in the middle, open to the living room, with a window over the counter.</p>
-    <ul><li>Island<b>2.1 m</b></li><li>Counter<b>Stone</b></li><li>Faces<b>South</b></li></ul>
+    <ul><li>Island<b>2.1 m</b></li><li>Counter<b>Stone</b></li><li>Morning sun<b>Yes</b></li></ul>
   </section>
 
   <section class="cap cap-room" data-cap="6">
@@ -198,13 +201,13 @@
   </section>
 
   <section class="cap cap-sun" data-cap="7-8">
-    <span class="eyebrow">07 · Light</span>
-    <h2>A day in June.</h2>
-    <p>Scroll through it: where the sun falls, hour by hour, from the first light to sunset.</p>
+    <span class="eyebrow">07 · The view</span>
+    <h2>A day at<br>the window.</h2>
+    <p>Scroll through a June day: the sun across the floor, and the city outside from noon to night.</p>
   </section>
   <div class="clock" id="clock" aria-hidden="true">
     <svg class="arc" viewBox="0 0 220 64"><line x1="0" y1="62" x2="220" y2="62"/><path d="M4 62 Q110 -40 216 62"/><circle id="sunDot" r="5" cx="4" cy="62"/></svg>
-    <b id="clockT">07:00</b><span id="clockS">Morning</span>
+    <b id="clockT">12:00</b><span id="clockS">Midday</span>
   </div>
 
   <section class="cap cap-end" data-cap="9" id="details">
@@ -219,7 +222,8 @@
       <div><dt>Ready</dt><dd>Q3 2027</dd></div>
     </dl>
     <div class="price"><b>€ 1,240,000</b><button class="cta" id="book" type="button">Book a viewing →</button></div>
-    <p class="note" id="note">A concept by Yurii Fokin. The residence, the building and the city are made up.</p>
+    <p class="note" id="note">A concept by Yurii Fokin. The flat is made up; the views outside are real.</p>
+    <p class="credit">Panoramas: <a href="https://polyhaven.com/a/homecoming_center_rooftop" target="_blank" rel="noopener">Dario Barresi</a>, <a href="https://polyhaven.com/a/sunset_jhbcentral" target="_blank" rel="noopener">Dimitrios Savva &amp; Greg Zaal</a> · Poly Haven, CC0</p>
     <button class="top" data-stage="0">back to the start ↑</button>
   </section>
 
@@ -227,16 +231,12 @@
 
   <main class="fallback">
     <h1>Residence 14B</h1>
-    <p>A home above the river. Four rooms on the fourteenth floor, and the sun in every one of them.</p>
-    <h2>Location</h2>
-    <p>The metro, the river park and the old town are all a short walk away.</p>
-    <h2>The building</h2>
-    <p>Floor 14 of 22, 46 metres up, above the treeline.</p>
+    <p>A home, before it exists: a walk through a flat that is still on paper, lit by the June sun, with a real city outside its windows.</p>
     <h2>The plan</h2>
     <p>160 m². Living &amp; dining 39.5 m², kitchen 18.7 m², bedroom 27.8 m², study 20.2 m², dressing room &amp; bath 20.2 m², bath 9 m², hall 24.6 m².</p>
     <h2>Details</h2>
-    <p>Ceilings 3.0 m. Faces south and west. Ready Q3 2027. € 1,240,000.</p>
-    <p>A concept by Yurii Fokin. The residence, the building and the city are made up.</p>
+    <p>Floor 14 of 22. Ceilings 3.0 m. Faces south and west. Ready Q3 2027. € 1,240,000.</p>
+    <p>A concept by Yurii Fokin. The flat is made up; the views outside are real (Poly Haven, CC0).</p>
   </main>
 
   <div class="track"></div>
@@ -244,6 +244,6 @@
   <script src="../../assets/js/perf.js?v=13"></script>
   <script src="../../assets/js/hint.js?v=6"></script>
   <script src="../../assets/js/bkit.js?v=26"></script>
-  <script src="estate.js?v=1"></script>
+  <script src="tour.js?v=1"></script>
 </body>
 </html>
