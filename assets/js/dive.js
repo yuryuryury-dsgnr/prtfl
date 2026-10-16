@@ -396,7 +396,7 @@
       var Z_GLOBE = zCam - F * 1.5, gr = Math.min(W, H) * (up ? 0.36 : H < 400 ? 0.22 : 0.27), gc = [0, yEnd + H * (H < 500 ? 0.24 : 0.12), Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
-        put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 1.0 - 0.55 * qq, 0.78 - 0.10 * qq, 0.36 + 0.64 * qq, 3, 0);
+        put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 0.62 + 0.33 * qq, 0.84 - 0.18 * qq, 0.78 - 0.36 * qq, 3, 0);
       }
       gl.useProgram(prog);
       [['aPos', P], ['aCol', C], ['aInfo', I], ['aAlt', L2]].forEach(function (bf) {
