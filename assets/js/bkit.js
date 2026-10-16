@@ -57,7 +57,7 @@
       if (c.links) {
         a = document.createElement('div'); a.className = 'tag';
         a.innerHTML = '<a class="tag-main" href="' + c.href + '">' + inner + '</a><span class="tag-st">' +
-          c.links.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</span>';
+          c.links.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + (l[2] || '') + l[0] + ' ↗</a>'; }).join('') + '</span>';
         main = a.querySelector('.tag-main');
       } else {
         a = main = document.createElement('a');

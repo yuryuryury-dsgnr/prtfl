@@ -5,20 +5,31 @@
 // that then scrolls like a page, one to one with the finger or the wheel, every case readable and
 // clickable the whole way. A planet at the end.
 (function () {
+  // the live projects' marks, the same as on the case pages' buttons
+  var IC = {
+    apple: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>',
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></svg>',
+    web: '<svg class="web" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.6 3.9 5.8 3.9 9.5s-1.3 6.9-3.9 9.5c-2.6-2.6-3.9-5.8-3.9-9.5S9.4 5.1 12 2.5z"/></svg>'
+  };
   var CASES = [
     { img: 'assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'cases/halliburton/' },
-    { img: 'assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: 'cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669']] },
-    { img: 'assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: 'cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353'], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc']] },
-    { img: 'assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: 'cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/']] }
+    { img: 'assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: 'cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669', IC.apple]] },
+    { img: 'assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: 'cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353', IC.apple], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc', IC.play]] },
+    { img: 'assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: 'cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/', IC.web]] }
   ];
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
+  // the skills, one to a layer, from what shows on the surface down to what holds it up (words from the CV).
+  // They hang in one column on the block's left: pinned at the same x, the layers' waves move them all
+  // alike, so they stay in order and never run into each other
   var LABELS = [
-    { layer: 0, x: -0.2, text: 'Interface', note: 'Main, Explore, Detail, Request Access, Admin' },
-    { layer: 2, x: 0.25, text: 'Design system', note: 'Three-tier token architecture' },
-    { layer: 4, x: -0.35, text: 'Information architecture', note: '4 personas · 5 flows · IA' },
-    { layer: 6, x: 0.15, text: 'Research', note: '10 participants across 4 roles' },
-    { layer: 7, x: -0.05, text: 'Pipeline', note: 'Figma MCP · live specs' }
-  ];
+    { layer: 0, text: 'Wireframes and mockups', note: 'Lo-fi & hi-fi prototypes' },
+    { layer: 1, text: 'Design system architecture', note: 'Variables, tokens, components, layouts' },
+    { layer: 2, text: 'Web and app development', note: 'Shipped to the App Store with Claude Code' },
+    { layer: 3, text: 'Discovery & Research', note: 'Interviews, usability testing, CJM, IA' },
+    { layer: 4, text: 'Market analysis', note: 'Competitors, comparative analysis, SWOT' },
+    { layer: 5, text: 'Design team management', note: 'Hiring, mentoring, 1-to-1s, Scrum' },
+    { layer: 6, text: 'Analytics', note: 'Google Analytics, RevenueCat' }
+  ], LABEL_X = -0.42;
   // stages: 0 hello · 1 layers · 2 the top of the work · 3 its bottom · 4 contact.
   // Between 2 and 3 the column scrolls like a page: no stops, nothing settles there
   var TOP = 2, END = 3, LAST = 4;
@@ -38,12 +49,15 @@
     laid = W + 'x' + H + mob;
     var F0 = H * 0.96;
     var cw = mob ? W * 0.9 : Math.min(W * 0.58, H * 0.62 * 1.6, 1100), ch = cw / (mob ? 1.3 : 1.6);
-    var gap = ch * (mob ? 0.46 : 0.24);
+    // (a short screen leaves room under each picture for its label in three lines)
+    var gap = ch * (mob ? 0.46 : H < 500 ? 0.42 : 0.24);
     // the distance at which a picture takes this much of the screen's width
     var d = F0 * cw / (W * (mob ? 0.92 : 0.46));
     var k = F0 / d; // world to screen
     // the camera's height with the first picture's top at 22% of the screen, and with the last one's bottom at 74%
-    var top = -(H * 0.5 - H * 0.22) / k + ch / 2, bottom = -3 * (ch + gap) - ch / 2 + (H * 0.74 - H * 0.5) / k;
+    // (on a short screen the first picture starts lower, clear of the title above it)
+    var topAt = Math.max(0.22, 120 / H);
+    var top = -(H * 0.5 - H * topAt) / k + ch / 2, bottom = -3 * (ch + gap) - ch / 2 + (H * 0.74 - H * 0.5) / k;
     COL.cw = cw; COL.ch = ch; COL.gap = gap; COL.d = d; COL.top = top; COL.bottom = bottom; COL.run = (top - bottom) * k / H;
     // the scroll track, in screens: a short hold where a shape is read, none from the column on
     var RUNS = [1.2, 1.7, COL.run, END_RUN], HOLDS = [0.45, 0, 0], pos = 0.12;
@@ -61,7 +75,9 @@
     // the track is as long as the flight
     document.querySelector('.track').style.height = ((pos + 1) * 100) + 'vh';
   }
-  layout(innerWidth, window.Perf ? Perf.vh() : innerHeight, innerWidth < 760);
+  // a phone held upright gets the phone's layout; on its side it is laid out like a small screen
+  function upright(W, H) { return W < 760 && H > W; }
+  layout(innerWidth, window.Perf ? Perf.vh() : innerHeight, upright(innerWidth, window.Perf ? Perf.vh() : innerHeight));
 
   var VS = [
     'precision highp float;',
@@ -308,12 +324,15 @@
       planes[k].ready = true;
     },
     build: function (env) {
-      var W = env.W, H = env.H, mobile = env.mobile, R = Math.random, i;
+      // mobile: a phone's point budget; up: a phone held upright, for the layout
+      var W = env.W, H = env.H, mobile = env.mobile, up = upright(W, H), R = Math.random, i;
       F = H * 0.96;
-      layout(W, H, mobile);
+      layout(W, H, up);
+      this.up = up;
+      this.labelX = null;
       // the greeting, each point with a place waiting for it in the strata; exactly as many grains
       // as Matter draws its greeting with on this screen, scattered as Matter scatters them
-      var g = BKit.greeting(W, H, mobile), gn = g.length / 2, names = matterCount(W, H, mobile);
+      var g = BKit.greeting(W, H, up), gn = g.length / 2, names = matterCount(W, H, up);
       var stars = mobile ? 3000 : 9000, extra = mobile ? 7000 : 26000, dust = mobile ? 700 : 2600, globe = mobile ? 7000 : 16000;
       count = stars + names + extra + dust + globe;
       // straight into the arrays the GPU takes, no lists growing on the way
@@ -374,10 +393,10 @@
       // the planet hangs below the column, as far down as a screen of scroll carries the camera,
       // a little deeper than the pictures, so it rises into view a little slower than they leave
       var zCam = Z_COL + COL.d, yEnd = COL.bottom - END_RUN * H * COL.d / F;
-      var Z_GLOBE = zCam - F * 1.5, gr = Math.min(W, H) * (mobile ? 0.36 : 0.27), gc = [0, yEnd + H * 0.12, Z_GLOBE];
+      var Z_GLOBE = zCam - F * 1.5, gr = Math.min(W, H) * (up ? 0.36 : 0.27), gc = [0, yEnd + H * (H < 500 ? 0.24 : 0.12), Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
-        put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 0.62 + 0.33 * qq, 0.84 - 0.18 * qq, 0.78 - 0.36 * qq, 3, 0);
+        put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 1.0 - 0.55 * qq, 0.78 - 0.10 * qq, 0.36 + 0.64 * qq, 3, 0);
       }
       gl.useProgram(prog);
       [['aPos', P], ['aCol', C], ['aInfo', I], ['aAlt', L2]].forEach(function (bf) {
@@ -498,19 +517,24 @@
       }
       if (drew) { gl.disableVertexAttribArray(QU.aPos); gl.disableVertexAttribArray(QU.aUv); }
 
-      // labels pinned to the front face of the block; once they have faded they are left alone
+      // the skills, on the block's front face: a column under the headline's left edge, running from the
+      // middle of the top layer to the middle of the last one at an even step (the layers' own thickness
+      // varies with their waves); once they have faded they are left alone
       var near = Math.max(0, 1 - Math.abs(stage - 1) / 0.35);
       if (near > 0 || this.labelsUp) {
         this.labelsUp = near > 0;
-        for (k = 0; k < LABELS.length; k++) {
-          var lb = LABELS[k], el = labels[k];
-          var lx = lb.x * BLOCK_X * 2 * (env.mobile ? 0.3 : 1);
-          var ly = (yb(lb.layer, lx, Z_STRATA_FRONT) + yb(lb.layer + 1, lx, Z_STRATA_FRONT)) / 2;
-          var seen = project(lx, ly, Z_STRATA_FRONT + 2, W, H);
-          css(el, 'opacity', seen ? Math.max(0, Math.min(1, near * 1.8 - k * 0.16)).toFixed(3) : '0');
-          if (!seen) continue;
-          if (!el._w) el._w = el.offsetWidth;
-          css(el, 'transform', 'translate(' + Math.max(12, Math.min(PT.x - 3.5, W - el._w - 12)).toFixed(1) + 'px,' + (PT.y - 10).toFixed(1) + 'px)');
+        var lx = LABEL_X * BLOCK_X * 2 * (this.up ? 0.3 : 1), nl = LABELS.length;
+        var top = LABELS[0].layer, bot = LABELS[nl - 1].layer;
+        var seen = project(lx, (yb(top, lx, Z_STRATA_FRONT) + yb(top + 1, lx, Z_STRATA_FRONT)) / 2, Z_STRATA_FRONT + 2, W, H), y0 = PT.y;
+        seen = seen && project(lx, (yb(bot, lx, Z_STRATA_FRONT) + yb(bot + 1, lx, Z_STRATA_FRONT)) / 2, Z_STRATA_FRONT + 2, W, H);
+        var y1 = PT.y, colX = this.labelX == null ? (this.labelX = document.querySelector('.cap-layers').offsetLeft) : this.labelX;
+        // a short screen has a thin block: the labels keep their own room, and the column stays on the screen
+        var step = Math.max((y1 - y0) / (nl - 1), 21);
+        y0 = Math.min(y0, H - 28 - step * (nl - 1)); y1 = y0 + step * (nl - 1);
+        for (k = 0; k < nl; k++) {
+          var el = labels[k];
+          css(el, 'opacity', seen ? Math.max(0, Math.min(1, near * 2 - k * 0.1)).toFixed(3) : '0');
+          if (seen) css(el, 'transform', 'translate(' + colX + 'px,' + (y0 + (y1 - y0) * k / (nl - 1) - 10).toFixed(1) + 'px)');
         }
       }
 
@@ -542,8 +566,9 @@
       if (hint) {
         var at = stage < 0.05 ? 0 : stage > LAST - 0.02 ? 2 : 1;
         if (at !== hintAt) { hintAt = at; hint.say(at); hint.el.classList.toggle('is-back', at === 2); }
-        var overCases = W < 1000 && stage > 1.6 && stage < END + 0.4;
-        css(hint.el, 'opacity', performance.now() - lastScroll > 900 && env.go < 0 && !overCases ? '1' : '0');
+        // and not where it would sit on the skills or the cases, where they fill a narrow or a short screen
+        var overCases = W < 1000 && stage > 1.6 && stage < END + 0.4, overSkills = H < 560 && Math.abs(stage - 1) < 0.45;
+        css(hint.el, 'opacity', performance.now() - lastScroll > 900 && env.go < 0 && !overCases && !overSkills ? '1' : '0');
       }
       // the section title is the top of the column: it scrolls away with it, fading out under the bar
       var title = this.title || (this.title = document.querySelector('.work-title'));

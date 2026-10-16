@@ -69,16 +69,14 @@
     .no-gl .scroll-hint { display: none; }
     .scroll-hint .hint-t { min-width: 14ch; } /* the pill keeps its width as the words change */
 
-    .cap-layers { left: var(--pad); top: clamp(88px, 13vh, 132px); max-width: 600px; padding-right: 16px; }
-    .cap-layers h2 { font-size: clamp(28px, 3.4vw, 48px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; }
-    .cap-layers p { margin-top: 14px; color: rgba(238,240,246,.75); font-size: clamp(15px, 1.2vw, 17px); max-width: 540px; }
-    /* on a phone the words sit higher, clear of the top of the strata */
-    @media (max-width: 760px) { .cap-layers { top: 78px; } .cap-layers p { margin-top: 10px; } }
+    /* a section's name, where the next screen has "Selected work" */
+    .cap-layers { left: var(--pad); top: clamp(76px, 11vh, 104px); }
+    .cap-layers h2 { font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; letter-spacing: -0.035em; }
     .dive-labels { position: fixed; inset: 0; z-index: 9; pointer-events: none; }
     .fl { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; font: 500 11px/1 var(--mono); white-space: nowrap; opacity: 0; will-change: transform, opacity; }
     .fl i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(6,7,10,.6), 0 0 16px currentColor; flex: 0 0 auto; }
-    .fl span { color: var(--fg); background: rgba(6,7,10,.62); padding: 5px 8px; border-radius: 5px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-    .fl b { font-weight: 500; color: var(--muted); }
+    .fl span { color: var(--fg); background: rgba(6,7,10,.86); padding: 5px 8px; border-radius: 5px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .fl b { font-weight: 500; color: rgba(238,240,246,.74); }
     @media (max-width: 760px) { .fl b { display: none; } }
 
     .cap-work { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -93,7 +91,9 @@
     .tag .short { display: none; }
     .tag-main { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
     .tag-st { display: flex; gap: 14px; margin-left: 14px; }
-    .tag-st a { font: 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s; }
+    .tag-st a { display: inline-flex; align-items: center; gap: 5px; font: 500 11px/1 var(--mono); color: var(--muted); white-space: nowrap; transition: color .2s; }
+    .tag-st svg { flex: none; width: 12px; height: 12px; margin-top: -1px; fill: currentColor; }
+    .tag-st svg.web { margin-top: 0; fill: none; stroke: currentColor; stroke-width: 1.8; }
     .tag-st a:hover, .tag-st a:focus-visible { color: var(--fg); }
     .tag.on .tag-st a { color: rgba(238,240,246,.8); }
     .tag.narrow small, .tag.narrow em, .tag.narrow .tag-st, .tag.narrow .long { display: none; }
@@ -112,6 +112,12 @@
     .cap-end { left: 0; right: 0; bottom: clamp(64px, 11vh, 112px); text-align: center; padding: 0 16px; }
     .cap-end h2 { font-size: clamp(32px, 5vw, 72px); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
     .cap-end .row { display: flex; gap: 12px 24px; justify-content: center; flex-wrap: wrap; margin-top: 26px; font-weight: 500; }
+    /* a phone on its side: the words get smaller and lower, out of the way of the greeting and the planet */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .cap-hero { bottom: 72px; max-width: 74%; } .cap-hero p { font-size: 14px; }
+      .fl { font-size: 10px; } .fl span { padding: 4px 7px; }
+      .cap-end { bottom: 24px; } .cap-end h2 { font-size: 26px; } .cap-end .row { margin-top: 14px; } .cap-end .top { margin-top: 12px; }
+    }
     .cap-end .row a { border-bottom: 1px solid rgba(238,240,246,.35); transition: border-color .2s; }
     .cap-end .row a:hover { border-color: var(--fg); }
     .cap-end .top { display: inline-block; margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); background: none; border: 0; cursor: pointer; }
@@ -135,6 +141,8 @@
     .fallback li a { display: flex; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(238,240,246,.12); }
     .fallback li b { font-size: 20px; font-weight: 600; }
     .fallback li span { color: var(--muted); }
+    .fallback h2 { margin-top: 56px; font-size: 22px; font-weight: 600; }
+    .fallback .skills { margin-top: 16px; } .fallback .skills li { padding: 12px 0; border-bottom: 1px solid rgba(238,240,246,.12); color: rgba(238,240,246,.8); }
   </style>
 </head>
 <body>
@@ -167,9 +175,7 @@
   <div class="scroll-hint" data-hint data-drive data-mouse="scroll down|keep scrolling|scroll back" data-touch="swipe up|keep swiping|swipe back"></div>
 
   <section class="cap cap-layers" data-cap="1">
-    <span class="eyebrow">Under the surface</span>
-    <h2>Most of the work is in the layers nobody sees.</h2>
-    <p>On Halliburton's first unified data platform I'm the sole designer — from the research at the bottom to the pipeline that hands design to code.</p>
+    <h2>Skills</h2>
   </section>
   <div class="dive-labels" id="diveLabels" aria-hidden="true"></div>
 
@@ -189,6 +195,16 @@
     <h1>Hi! I'm Yurii.</h1>
     <p>I'm a Lead UX Designer at DXC Luxoft, on Halliburton's data platform. Currently building through an AI-native design-to-code pipeline.</p>
     <ul id="fallbackList"></ul>
+    <h2>Skills</h2>
+    <ul class="skills">
+      <li>Wireframes and mockups — lo-fi &amp; hi-fi prototypes</li>
+      <li>Design system architecture — variables, tokens, components, layouts</li>
+      <li>Web and app development — shipped to the App Store with Claude Code</li>
+      <li>Discovery &amp; Research — interviews, usability testing, CJM, IA</li>
+      <li>Market analysis — competitors, comparative analysis, SWOT</li>
+      <li>Design team management — hiring, mentoring, 1-to-1s, Scrum</li>
+      <li>Analytics — Google Analytics, RevenueCat</li>
+    </ul>
   </main>
 
   <div class="track"></div>
@@ -196,7 +212,7 @@
   <script src="assets/js/perf.js?v=13"></script>
   <script src="assets/js/hint.js?v=6"></script>
   <script src="assets/js/handoff.js?v=7"></script>
-  <script src="assets/js/bkit.js?v=25"></script>
-  <script src="assets/js/dive.js?v=41"></script>
+  <script src="assets/js/bkit.js?v=26"></script>
+  <script src="assets/js/dive.js?v=45"></script>
 </body>
 </html>
