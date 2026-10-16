@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Loft 7 — a duplex to play with</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A concept: a two-level loft as a dollhouse you can turn, open up, refurnish and light from morning to night.">
+  <meta name="theme-color" content="#06070A">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #06070A; --fg: #EEF0F6; --muted: rgba(238,240,246,.55); --line: rgba(238,240,246,.14); --glass: rgba(16,17,22,.72); --mono: 'JetBrains Mono', ui-monospace, monospace; --accent: #E8C27A; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); -webkit-font-smoothing: antialiased; overscroll-behavior: none; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+    #gl.grab { cursor: grab; } #gl.grabbing { cursor: grabbing; } #gl.point { cursor: pointer; }
+
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 18px clamp(16px, 3vw, 32px); font-size: 14px; font-weight: 500; pointer-events: none; }
+    .nav > * { pointer-events: auto; }
+    .nav-brand b { font-weight: 600; } .nav-brand span { color: var(--muted); margin-left: 8px; font: 500 11px/1 var(--mono); }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: var(--muted); transition: color .2s; } .nav-links a:hover { color: var(--fg); }
+    @media (max-width: 640px) { .nav-links a.more { display: none; } .nav-brand span { display: none; } }
+
+    /* the opening words, gone once the model is touched */
+    .intro { position: fixed; z-index: 10; left: clamp(16px, 5vw, 72px); top: clamp(84px, 14vh, 140px); max-width: 420px; pointer-events: none; transition: opacity .8s, transform .8s; }
+    .intro.gone { opacity: 0; transform: translateY(-10px); }
+    .eyebrow { font: 500 11px/1 var(--mono); color: var(--accent); letter-spacing: .06em; text-transform: uppercase; display: block; margin-bottom: 14px; }
+    .intro h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 600; letter-spacing: -0.05em; line-height: .98; }
+    .intro p { margin-top: 14px; font-size: 15px; line-height: 1.55; color: rgba(238,240,246,.75); }
+    .intro ul { list-style: none; margin-top: 18px; display: grid; gap: 7px; font: 500 11px/1.3 var(--mono); color: var(--muted); }
+    .intro li b { color: var(--fg); font-weight: 500; }
+    @media (max-width: 760px) { .intro { top: 70px; right: 16px; max-width: none; } .intro p { font-size: 14px; } .intro ul { display: none; } }
+
+    /* the rooms' pins, and what is under the pointer */
+    .pins { position: fixed; inset: 0; z-index: 8; pointer-events: none; }
+    .pin { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 7px; padding: 5px 9px 5px 6px; border-radius: 999px; background: var(--glass); border: 1px solid var(--line); font: 500 11px/1 var(--mono); white-space: nowrap; pointer-events: auto; opacity: 0; transition: opacity .35s, background .2s, border-color .2s; will-change: transform; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    .pin i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    .pin b { font-weight: 500; color: var(--muted); }
+    .pin:hover, .pin.on { background: rgba(232,194,122,.16); border-color: rgba(232,194,122,.6); }
+    .tip { position: fixed; z-index: 12; left: 0; top: 0; padding: 9px 12px; border-radius: 10px; background: var(--glass); border: 1px solid var(--line); font-size: 13px; pointer-events: none; opacity: 0; transition: opacity .2s; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); max-width: 240px; }
+    .tip b { display: block; font-weight: 600; } .tip span { display: block; margin-top: 3px; font: 500 10px/1.4 var(--mono); color: var(--muted); }
+    .tip.on { opacity: 1; }
+
+    /* the room card when a room is chosen */
+    .card { position: fixed; z-index: 11; left: clamp(16px, 5vw, 72px); top: 50%; transform: translateY(-50%) translateX(-12px); width: 280px; padding: 18px; border-radius: 16px; background: var(--glass); border: 1px solid var(--line); opacity: 0; pointer-events: none; transition: opacity .4s, transform .4s; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+    .card.on { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
+    .card .area { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; font: 500 13px/1 var(--mono); color: var(--muted); }
+    .card .area b { font: 600 40px/1 'Inter'; letter-spacing: -0.04em; color: var(--fg); }
+    .card h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+    .card p { margin-top: 10px; font-size: 13px; line-height: 1.5; color: rgba(238,240,246,.72); }
+    .card .back { margin-top: 14px; font: 500 11px/1 var(--mono); color: var(--accent); }
+    @media (max-width: 760px) { .card { top: auto; bottom: 150px; left: 16px; right: 16px; width: auto; transform: translateY(8px); } .card.on { transform: none; } .card .area b { font-size: 30px; } }
+
+    /* the controls */
+    .bar { position: fixed; z-index: 15; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 18px; background: var(--glass); border: 1px solid var(--line); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); max-width: calc(100vw - 24px); }
+    .grp { display: flex; align-items: center; gap: 4px; padding: 0 4px; }
+    .grp + .grp { border-left: 1px solid var(--line); padding-left: 10px; margin-left: 4px; }
+    .lbl { font: 500 10px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-right: 4px; }
+    .seg { padding: 8px 11px; border-radius: 12px; font-size: 13px; font-weight: 500; color: var(--muted); transition: background .2s, color .2s; white-space: nowrap; }
+    .seg:hover { color: var(--fg); } .seg.on { background: rgba(238,240,246,.12); color: var(--fg); }
+    .sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; background-size: cover; background-position: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); transition: border-color .2s, transform .2s; }
+    .sw:hover { transform: scale(1.08); } .sw.on { border-color: var(--accent); }
+    .time { display: flex; align-items: center; gap: 10px; }
+    .time output { font: 500 13px/1 var(--mono); min-width: 5ch; font-variant-numeric: tabular-nums; }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 150px; height: 26px; background: none; }
+    input[type=range]::-webkit-slider-runnable-track { height: 3px; border-radius: 3px; background: linear-gradient(90deg, #2a3350, #8fb4ff 25%, #ffe2a8 55%, #ff9b5c 80%, #1d2034); }
+    input[type=range]::-moz-range-track { height: 3px; border-radius: 3px; background: linear-gradient(90deg, #2a3350, #8fb4ff 25%, #ffe2a8 55%, #ff9b5c 80%, #1d2034); }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(232,194,122,.2), 0 0 14px var(--accent); }
+    input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: var(--accent); }
+    .icon { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; color: var(--muted); } .icon:hover { color: var(--fg); background: rgba(238,240,246,.08); }
+    .icon svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    @media (max-width: 900px) {
+      .bar { flex-wrap: wrap; justify-content: center; border-radius: 16px; gap: 2px; padding: 6px 8px; width: calc(100vw - 24px); }
+      .grp + .grp { border-left: 0; padding-left: 4px; margin-left: 0; }
+      .grp.t { order: -1; width: 100%; justify-content: center; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 4px; }
+      input[type=range] { width: min(240px, 56vw); }
+      .lbl { display: none; }
+      .seg { padding: 7px 9px; font-size: 12px; }
+    }
+
+    .credit { position: fixed; z-index: 9; right: clamp(16px, 3vw, 32px); top: 52px; font: 500 10px/1.5 var(--mono); color: rgba(238,240,246,.38); text-align: right; }
+    .credit a { border-bottom: 1px solid rgba(238,240,246,.2); }
+    @media (max-width: 760px) { .credit { display: none; } }
+
+    .loading { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; font: 500 11px/1 var(--mono); color: var(--muted); background: var(--bg); transition: opacity .7s; }
+    .loading b { color: var(--fg); font-weight: 500; }
+    .fail .loading { display: none; }
+    .fallback { display: none; }
+    .fail .fallback { display: block; position: fixed; inset: 0; padding: 120px clamp(16px, 6vw, 88px); max-width: 760px; }
+    .fail .bar, .fail .intro, .fail #gl { display: none; }
+  </style>
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.169.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.169.0/examples/jsm/" } }
+  </script>
+</head>
+<body>
+  <canvas id="gl" class="grab" aria-label="A model of the loft. Drag to turn it, tap a room or a piece of furniture."></canvas>
+  <div class="loading" id="loading" aria-hidden="true"><span>furnishing <b id="loadPct">0</b>%</span></div>
+
+  <header class="nav">
+    <a class="nav-brand" href="./"><b>Loft 7</b><span>a duplex to play with</span></a>
+    <nav class="nav-links">
+      <a class="more" href="../estate-tour/">The tour</a>
+      <a class="more" href="../estate/">The first concept</a>
+      <a href="../../">← Portfolio</a>
+    </nav>
+  </header>
+
+  <section class="intro" id="intro">
+    <span class="eyebrow">Loft 7 · two levels, 96 m²</span>
+    <h1>Take it apart.</h1>
+    <p>A duplex as a dollhouse: turn it, lift off the upper floor, move the furniture, change the floors and walls, and run the sun from morning to night.</p>
+    <ul>
+      <li><b>Drag</b> to turn · <b>scroll</b> or pinch to zoom</li>
+      <li><b>Tap a room</b> to go in · <b>drag a piece</b> to move it</li>
+    </ul>
+  </section>
+
+  <div class="pins" id="pins" aria-hidden="true"></div>
+  <div class="tip" id="tip" aria-hidden="true"><b></b><span></span></div>
+
+  <aside class="card" id="card" aria-live="polite">
+    <h2 id="cardName">Living room</h2>
+    <div class="area"><b id="cardArea">22.6</b>m²</div>
+    <p id="cardText"></p>
+    <button class="back" id="cardBack" type="button">← whole flat</button>
+  </aside>
+
+  <div class="bar" role="toolbar" aria-label="Model controls">
+    <div class="grp" role="group" aria-label="Levels">
+      <span class="lbl">Level</span>
+      <button class="seg on" data-level="both" type="button">Both</button>
+      <button class="seg" data-level="lower" type="button">Lower</button>
+      <button class="seg" data-level="upper" type="button">Upper</button>
+    </div>
+    <div class="grp t">
+      <label class="time"><span class="sr-only">Time of day</span><input id="time" type="range" min="5.5" max="23" step="0.05" value="16.5"><output id="timeOut">16:30</output></label>
+    </div>
+    <div class="grp" role="group" aria-label="Floor">
+      <span class="lbl">Floor</span>
+      <button class="sw on" data-floor="oak" type="button" aria-label="Oak planks" style="background-image:url(tex/laminate_floor_02_Diffuse.jpg)"></button>
+      <button class="sw" data-floor="herringbone" type="button" aria-label="Herringbone parquet" style="background-image:url(tex/herringbone_parquet_Diffuse.jpg)"></button>
+      <button class="sw" data-floor="concrete" type="button" aria-label="Polished concrete" style="background-image:url(tex/concrete_wall_008_Diffuse.jpg)"></button>
+    </div>
+    <div class="grp" role="group" aria-label="Walls">
+      <span class="lbl">Walls</span>
+      <button class="sw on" data-walls="plaster" type="button" aria-label="White plaster" style="background-image:url(tex/plastered_wall_Diffuse.jpg)"></button>
+      <button class="sw" data-walls="concrete" type="button" aria-label="Board-formed concrete" style="background-image:url(tex/concrete_slab_wall_Diffuse.jpg)"></button>
+      <button class="sw" data-walls="clay" type="button" aria-label="Warm clay" style="background-color:#c9a383;background-image:url(tex/beige_wall_001_Diffuse.jpg);background-blend-mode:multiply"></button>
+    </div>
+    <div class="grp">
+      <button class="icon" id="reset" type="button" aria-label="Back to the whole flat"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+    </div>
+  </div>
+
+  <p class="credit">Furniture &amp; textures: <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a>, CC0<br>A concept by Yurii Fokin; the loft is made up</p>
+
+  <main class="fallback">
+    <h1>Loft 7</h1>
+    <p>A concept: a two-level loft of 96 m² as a dollhouse you can turn, open up, refurnish and light from morning to night. It needs WebGL, which this browser has turned off.</p>
+  </main>
+
+  <script type="module" src="loft.js?v=1"></script>
+</body>
+</html>
