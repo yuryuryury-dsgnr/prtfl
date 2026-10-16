@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Residence 14B — a concept</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A concept: a home presented by the scroll, from the city down to the sun on its floor.">
+  <meta name="theme-color" content="#06070A">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #06070A; --fg: #EEF0F6; --muted: rgba(238,240,246,.55); --mono: 'JetBrains Mono', ui-monospace, monospace; --pad: clamp(16px, 6vw, 88px); --accent: #E8C27A; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+    ::selection { background: var(--accent); color: var(--bg); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    #gl { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; display: block; }
+    .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; pointer-events: none; background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.6) 100%); }
+
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(16px, 4vw, 40px); font-size: 14px; font-weight: 500; }
+    .nav-brand b { font-weight: 600; } .nav-brand span { color: var(--muted); margin-left: 8px; font: 500 11px/1 var(--mono); }
+    .nav-links { display: flex; gap: 22px; align-items: center; }
+    .nav-links a:not(.pill) { color: var(--muted); transition: color .2s; }
+    .nav-links a:not(.pill):hover { color: var(--fg); }
+    .pill { border: 1px solid rgba(232,194,122,.45); color: var(--accent); border-radius: 999px; padding: 7px 15px; transition: background .2s, border-color .2s; }
+    .pill:hover { background: rgba(232,194,122,.1); border-color: var(--accent); }
+    @media (max-width: 640px) { .nav-links a:not(.pill) { display: none; } .nav-brand span { display: none; } }
+
+    .meter { position: fixed; z-index: 20; right: clamp(16px, 4vw, 40px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; }
+    .meter button { background: none; border: 0; cursor: pointer; padding: 5px 0; font: 500 10px/1 var(--mono); color: var(--muted); display: flex; gap: 8px; align-items: center; justify-content: flex-end; transition: color .4s; }
+    .meter button::after { content: ''; width: 14px; height: 1px; background: currentColor; transition: width .4s cubic-bezier(.2,.8,.2,1); }
+    .meter button:hover, .meter button.on { color: var(--fg); }
+    .meter button.on::after { width: 28px; background: var(--accent); }
+    @media (max-width: 760px) { .meter { display: none; } }
+
+    .track { height: 1400vh; }
+    .cap { position: fixed; z-index: 10; opacity: 0; visibility: hidden; will-change: opacity, transform; }
+    .eyebrow { font: 500 11px/1 var(--mono); color: var(--accent); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 14px; display: block; }
+    .cap h1 { font-size: clamp(40px, 6vw, 84px); font-weight: 600; letter-spacing: -0.05em; line-height: .98; }
+    .cap h2 { font-size: clamp(26px, 3vw, 42px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.05; }
+    .cap p { margin-top: 14px; font-size: clamp(15px, 1.3vw, 17px); color: rgba(238,240,246,.78); max-width: 34ch; }
+
+    .cap-hero { left: var(--pad); bottom: clamp(84px, 14vh, 140px); max-width: 640px; padding-right: 16px; }
+    .cap-hero p { max-width: 38ch; }
+    .scroll-hint[data-hint] { position: fixed; z-index: 12; left: var(--pad); bottom: clamp(26px, 5vh, 48px); margin: 0;
+      padding: 7px 12px 7px 9px; border-radius: 999px; background: rgba(6,7,10,.66); pointer-events: none; opacity: 0; transition: opacity .6s; }
+    .no-gl .scroll-hint { display: none; }
+    .scroll-hint .hint-t { min-width: 14ch; }
+
+    .cap-side { left: var(--pad); top: clamp(92px, 15vh, 150px); max-width: 420px; }
+
+    /* a room: a card at the bottom left, its numbers set like a listing */
+    .cap-room { left: var(--pad); bottom: clamp(56px, 10vh, 104px); width: min(380px, calc(100vw - 2 * var(--pad))); }
+    .cap-room .area { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; font: 500 15px/1 var(--mono); color: var(--muted); }
+    .cap-room .area b { font: 600 clamp(44px, 5vw, 68px)/1 'Inter'; letter-spacing: -0.05em; color: var(--fg); }
+    .cap-room ul { list-style: none; margin-top: 18px; border-top: 1px solid rgba(238,240,246,.14); }
+    .cap-room li { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid rgba(238,240,246,.1); font-size: 13px; color: rgba(238,240,246,.7); }
+    .cap-room li b { font-weight: 500; color: var(--fg); }
+
+    /* the day: the hour, big, and what the sun is doing */
+    .cap-sun { left: var(--pad); top: clamp(92px, 15vh, 150px); max-width: 420px; }
+    .clock { position: fixed; z-index: 10; left: var(--pad); bottom: clamp(56px, 10vh, 104px); opacity: 0; visibility: hidden; }
+    .clock b { display: block; font: 500 clamp(56px, 8vw, 112px)/1 var(--mono); letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+    .clock span { display: block; margin-top: 10px; font: 500 12px/1.3 var(--mono); color: var(--accent); }
+    .clock .arc { display: block; width: 220px; height: 64px; margin-bottom: 12px; overflow: visible; }
+    .clock .arc path { fill: none; stroke: rgba(238,240,246,.22); stroke-width: 1; stroke-dasharray: 2 4; }
+    .clock .arc circle { fill: var(--accent); }
+    .clock .arc line { stroke: rgba(238,240,246,.22); stroke-width: 1; }
+
+    /* the floor plan's rooms and the places around the building, pinned to the world */
+    .labels { position: fixed; inset: 0; z-index: 9; pointer-events: none; }
+    .fl { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 9px; font: 500 11px/1 var(--mono); white-space: nowrap; opacity: 0; visibility: hidden; will-change: transform, opacity; }
+    .fl i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(6,7,10,.6), 0 0 16px var(--accent); flex: 0 0 auto; }
+    .fl span { color: var(--fg); background: rgba(6,7,10,.84); padding: 5px 8px; border-radius: 5px; }
+    .fl b { font-weight: 500; color: var(--accent); }
+    .fl.room { transform-origin: 50% 50%; }
+    .fl.room i { display: none; }
+    .fl.room span { background: none; padding: 0; text-align: center; line-height: 1.5; text-shadow: 0 0 10px #06070A, 0 0 4px #06070A; }
+    .fl.room span b { display: block; color: rgba(238,240,246,.6); }
+    .fl.here i { width: 9px; height: 9px; }
+    .fl.here span { color: var(--bg); background: var(--accent); }
+    .fl.here b { color: rgba(6,7,10,.62); }
+
+    .cap-end { left: var(--pad); top: 50%; margin-top: -210px; width: min(440px, calc(100vw - 2 * var(--pad))); }
+    .specs { display: grid; grid-template-columns: 1fr 1fr; margin-top: 22px; border-top: 1px solid rgba(238,240,246,.14); }
+    .specs div { padding: 11px 0; border-bottom: 1px solid rgba(238,240,246,.1); }
+    .specs dt { font: 500 10px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .specs dd { margin-top: 6px; font-size: 15px; font-weight: 500; }
+    .price { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 22px; flex-wrap: wrap; }
+    .price b { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; }
+    .cta { font: 600 14px/1 'Inter'; color: var(--bg); background: var(--accent); border: 0; border-radius: 999px; padding: 13px 20px; cursor: pointer; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+    .cta:hover { transform: translateY(-2px); }
+    .cap .note { margin-top: 16px; font: 500 11px/1.5 var(--mono); color: var(--muted); }
+    .cap .note.lit { color: var(--accent); }
+    .cap-end .top { display: inline-block; margin-top: 18px; font: 500 11px/1 var(--mono); color: var(--muted); background: none; border: 0; cursor: pointer; }
+
+    /* a phone: the words go to the bottom, over a fade, and the picture is lifted above them */
+    @media (max-width: 760px) {
+      .cap-side, .cap-sun { top: auto; bottom: 0; left: 0; right: 0; max-width: none; padding: 64px 16px 30px; background: linear-gradient(transparent, rgba(6,7,10,.86) 40%); }
+      .cap-hero { bottom: 92px; }
+      .cap-room { left: 0; right: 0; bottom: 0; width: auto; padding: 56px 16px 26px; background: linear-gradient(transparent, rgba(6,7,10,.9) 30%); }
+      .cap-room ul { display: none; }
+      .cap-sun p { display: none; }
+      .clock { left: auto; right: 16px; bottom: auto; top: 76px; text-align: right; }
+      .clock b { font-size: 44px; }
+      .clock .arc { display: none; }
+      .cap-end { top: auto; bottom: 0; margin: 0; left: 0; right: 0; width: auto; padding: 72px 16px 22px; background: linear-gradient(transparent, rgba(6,7,10,.92) 22%); }
+      .specs dd { font-size: 14px; }
+      .fl b { display: none; }
+      .fl.room b { display: block; }
+    }
+
+    .loading { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; font: 500 11px/1 var(--mono); color: var(--muted); transition: opacity .7s; pointer-events: none; }
+    .loading b { font-weight: 500; color: var(--fg); }
+
+    .fallback { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .no-gl .fallback { position: relative; z-index: 15; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; padding: 120px var(--pad); max-width: 900px; }
+    .no-gl .track, .no-gl .meter, .no-gl .cap, .no-gl #gl, .no-gl .loading, .no-gl .labels, .no-gl .clock { display: none; }
+    .fallback h1 { font-size: clamp(40px, 7vw, 88px); font-weight: 600; letter-spacing: -0.05em; line-height: 1; }
+    .fallback h2 { margin-top: 48px; font-size: 22px; font-weight: 600; }
+    .fallback p, .fallback li { margin-top: 12px; color: rgba(238,240,246,.8); }
+  </style>
+</head>
+<body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="loading" id="loading" aria-hidden="true"><span>building <b id="loadPct">0</b>%</span></div>
+
+  <header class="nav">
+    <a class="nav-brand" href="#" data-stage="0"><b>Residence 14B</b><span>a concept</span></a>
+    <nav class="nav-links">
+      <a href="../../">← Portfolio</a>
+      <a class="pill" href="#details" data-stage="9">Book a viewing</a>
+    </nav>
+  </header>
+
+  <nav class="meter" id="meter" aria-label="Sections">
+    <button data-stage="0">00 · Arrive</button>
+    <button data-stage="1">01 · Location</button>
+    <button data-stage="2">02 · Building</button>
+    <button data-stage="3">03 · Plan</button>
+    <button data-stage="4">04 · Rooms</button>
+    <button data-stage="7">05 · Light</button>
+    <button data-stage="9">06 · Details</button>
+  </nav>
+
+  <section class="cap cap-hero" data-cap="0">
+    <span class="eyebrow">Residence 14B · Halden Hill</span>
+    <h1>A home above<br>the river.</h1>
+    <p>Four rooms on the fourteenth floor, and the sun in every one of them.</p>
+  </section>
+  <div class="scroll-hint" data-hint data-drive data-mouse="scroll down|keep scrolling|scroll back" data-touch="swipe up|keep swiping|swipe back"></div>
+
+  <section class="cap cap-side" data-cap="1">
+    <span class="eyebrow">01 · Location</span>
+    <h2>Ten minutes<br>from everything.</h2>
+    <p>The metro, the river park and the old town are all a short walk away.</p>
+  </section>
+
+  <section class="cap cap-side" data-cap="2">
+    <span class="eyebrow">02 · The building</span>
+    <h2>Floor 14 of 22.</h2>
+    <p>46 metres up, above the treeline: the river on one side, the old town on the other.</p>
+  </section>
+
+  <section class="cap cap-side" data-cap="3">
+    <span class="eyebrow">03 · The plan</span>
+    <h2>160 m², laid out<br>around the light.</h2>
+    <p>The rooms you live in face south and west. The rest keep to the quiet side.</p>
+  </section>
+
+  <section class="cap cap-room" data-cap="4">
+    <span class="eyebrow">04 · Living &amp; dining</span>
+    <div class="area"><b>39.5</b>m²</div>
+    <p>Glass on two sides, so the room is lit from late morning until sunset.</p>
+    <ul><li>Windows<b>2.65 m tall</b></li><li>Floor<b>Oak, heated</b></li><li>Faces<b>South, west</b></li></ul>
+  </section>
+
+  <section class="cap cap-room" data-cap="5">
+    <span class="eyebrow">05 · Kitchen</span>
+    <div class="area"><b>18.7</b>m²</div>
+    <p>An island in the middle, open to the living room, with a window over the counter.</p>
+    <ul><li>Island<b>2.1 m</b></li><li>Counter<b>Stone</b></li><li>Faces<b>South</b></li></ul>
+  </section>
+
+  <section class="cap cap-room" data-cap="6">
+    <span class="eyebrow">06 · Bedroom</span>
+    <div class="area"><b>27.8</b>m²</div>
+    <p>Away from the street, with a dressing room and a second bath behind it.</p>
+    <ul><li>Window<b>3.2 m wide</b></li><li>Dressing room<b>20.2 m²</b></li><li>Faces<b>South</b></li></ul>
+  </section>
+
+  <section class="cap cap-sun" data-cap="7-8">
+    <span class="eyebrow">07 · Light</span>
+    <h2>A day in June.</h2>
+    <p>Scroll through it: where the sun falls, hour by hour, from the first light to sunset.</p>
+  </section>
+  <div class="clock" id="clock" aria-hidden="true">
+    <svg class="arc" viewBox="0 0 220 64"><line x1="0" y1="62" x2="220" y2="62"/><path d="M4 62 Q110 -40 216 62"/><circle id="sunDot" r="5" cx="4" cy="62"/></svg>
+    <b id="clockT">07:00</b><span id="clockS">Morning</span>
+  </div>
+
+  <section class="cap cap-end" data-cap="9" id="details">
+    <span class="eyebrow">08 · Details</span>
+    <h2>Residence 14B</h2>
+    <dl class="specs">
+      <div><dt>Area</dt><dd>160 m²</dd></div>
+      <div><dt>Rooms</dt><dd>Living, kitchen, bedroom, study</dd></div>
+      <div><dt>Floor</dt><dd>14 of 22</dd></div>
+      <div><dt>Ceilings</dt><dd>3.0 m</dd></div>
+      <div><dt>Faces</dt><dd>South &amp; west</dd></div>
+      <div><dt>Ready</dt><dd>Q3 2027</dd></div>
+    </dl>
+    <div class="price"><b>€ 1,240,000</b><button class="cta" id="book" type="button">Book a viewing →</button></div>
+    <p class="note" id="note">A concept by Yurii Fokin. The residence, the building and the city are made up.</p>
+    <button class="top" data-stage="0">back to the start ↑</button>
+  </section>
+
+  <div class="labels" id="labels" aria-hidden="true"></div>
+
+  <main class="fallback">
+    <h1>Residence 14B</h1>
+    <p>A home above the river. Four rooms on the fourteenth floor, and the sun in every one of them.</p>
+    <h2>Location</h2>
+    <p>The metro, the river park and the old town are all a short walk away.</p>
+    <h2>The building</h2>
+    <p>Floor 14 of 22, 46 metres up, above the treeline.</p>
+    <h2>The plan</h2>
+    <p>160 m². Living &amp; dining 39.5 m², kitchen 18.7 m², bedroom 27.8 m², study 20.2 m², dressing room &amp; bath 20.2 m², bath 9 m², hall 24.6 m².</p>
+    <h2>Details</h2>
+    <p>Ceilings 3.0 m. Faces south and west. Ready Q3 2027. € 1,240,000.</p>
+    <p>A concept by Yurii Fokin. The residence, the building and the city are made up.</p>
+  </main>
+
+  <div class="track"></div>
+
+  <script src="../../assets/js/perf.js?v=13"></script>
+  <script src="../../assets/js/hint.js?v=6"></script>
+  <script src="../../assets/js/bkit.js?v=26"></script>
+  <script src="estate.js?v=1"></script>
+</body>
+</html>
