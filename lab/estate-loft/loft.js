@@ -1,25 +1,28 @@
-// Loft 7: a two-level loft as a dollhouse to play with.
-// The shell (walls, slabs, the stair, the kitchen, the bed) is built here from the plan; the furniture
-// is real photoscanned models (Poly Haven, CC0) loaded as glTF, the way a client's own model would be.
-// The walls between the camera and the rooms sink to a low cut as it goes round, with the cut drawn
-// dark like a section; the upper level lifts off; the sun follows the time of day through the
-// windows and casts the window grids' shadows; furniture can be picked up and moved.
+// Loft 7: a two-level loft that builds itself as you scroll, then becomes a dollhouse to play with.
+// The same scroll as the other two concepts (bkit.js: stages, captions, the rail, settling): the plan
+// on its plinth, the walls rising, the furniture dropping in, the top floor lifting off, a flight
+// through three rooms, a day of sun scrolled through, and at the end the model is handed over:
+// turn it, open a room, move the furniture, change the finishes.
+// The shell is built here from the plan; the furniture is real photoscanned models (Poly Haven, CC0)
+// loaded as glTF, the way a client's own model would be; three.js draws it.
+// The walls between the camera and the rooms sink to a low cut, drawn dark like a section; the sun
+// follows the hour through the windows and casts the window grids' shadows.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+const touch = window.Perf ? Perf.touch : matchMedia('(hover: none) and (pointer: coarse)').matches;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const root = document.documentElement;
 const canvas = document.getElementById('gl');
 
-let renderer;
+let renderer = null;
 try {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-} catch (e) { root.classList.add('fail'); throw e; }
-renderer.setPixelRatio(Math.min(devicePixelRatio, touch ? 1.75 : 2));
-renderer.setSize(innerWidth, innerHeight, false);
+} catch (e) { console.error(e); }
+if (!renderer) { root.classList.add('no-gl'); throw new Error('no WebGL'); }
+renderer.setPixelRatio(window.Perf ? Perf.dpr : Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -32,13 +35,11 @@ const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
 const camera = new THREE.PerspectiveCamera(36, innerWidth / innerHeight, 0.1, 200);
+// the controls are only handed over at the end; until then the scroll drives the camera
 const controls = new OrbitControls(camera, canvas);
+controls.enabled = false; controls.enableZoom = false; controls.enablePan = false;
 controls.enableDamping = true; controls.dampingFactor = 0.08;
-controls.enablePan = false;
-controls.minDistance = 3.5; controls.maxDistance = 46;
 controls.minPolarAngle = 0.12; controls.maxPolarAngle = 1.42;
-controls.listenToKeyEvents(window);
-
 // ——— the plan, in metres: x runs east, z south (towards the viewer at the start), y up ———
 const W = 10, D = 7, H = 6, UP = 3.0, SLAB = 0.25, T = 0.2;
 const CUT = 0.42; // how low a wall sinks when the camera is outside it
@@ -382,8 +383,7 @@ function place(p) {
   g.userData = { name, lvl, file, drop: 0, bounce: -1, home: g.position.clone(), fixed: ex.hang != null || typeof ex.y === 'number' || ex.y === 'top' };
   items.push(g);
 }
-
-// ——— the rooms ———
+// ——— the rooms, for play ———
 const ROOMS = [
   { name: 'Living room', area: '22.6', level: 'both', lvl: 0, at: [2.6, 1.2, 4.6], cam: [5.4, 4.2, 12.5], tgt: [2.8, 1.3, 4.6],
     text: 'Double height and 5.5 m of steel windows to the west: the evening sun comes right across the floor.' },
@@ -410,10 +410,11 @@ ROOMS.forEach((r, i) => {
   r.el = b; r.v = new THREE.Vector3(...r.at);
 });
 const card = document.getElementById('card');
-let room = -1;
+let room = -1, level = 'both', playing = false;
 function goRoom(i) {
+  if (!playing) return;
   const r = ROOMS[i];
-  room = i; hideIntro();
+  room = i;
   setLevel(r.level, true);
   // a phone sees less across, so it stands further back
   const k = portrait() ? 1.75 : 1;
@@ -422,67 +423,106 @@ function goRoom(i) {
   document.getElementById('cardArea').textContent = r.area;
   document.getElementById('cardText').textContent = r.text;
   card.classList.add('on');
-  frameView();
-  ROOMS.forEach((q, k) => q.el.classList.toggle('on', k === i));
+  ROOMS.forEach((q, j) => q.el.classList.toggle('on', j === i));
 }
+function closeRoom() { room = -1; card.classList.remove('on'); ROOMS.forEach(q => q.el.classList.remove('on')); }
 function home() {
-  room = -1; card.classList.remove('on'); frameView();
-  ROOMS.forEach(q => q.el.classList.remove('on'));
-  setLevel('both', true);
-  fly(...defaultView());
+  closeRoom(); setLevel('both', true);
+  const p = poseOf(ST[2], 2), e = eyeOf(p);
+  fly([e.x, e.y, e.z], [p.t.x, p.t.y, p.t.z]);
 }
 document.getElementById('cardBack').addEventListener('click', home);
 document.getElementById('reset').addEventListener('click', home);
-function defaultView() {
-  const k = portrait() ? 2.25 : 1.32;
-  return [[W / 2 + 7.6 * k, 7.4 * k, D / 2 + 10.5 * k], [W / 2, 1.9, D / 2]];
-}
-
-// ——— levels: the upper floor lifts off to show the lower one ———
-let level = 'both', upperY = 0;
 function setLevel(l, quiet) {
   level = l;
   document.querySelectorAll('[data-level]').forEach(b => b.classList.toggle('on', b.dataset.level === l));
-  if (!quiet && l === 'upper') fly([W / 2 + 6, UP + 7.5, D / 2 + 9.5], [W / 2, UP + 0.8, D / 2]);
-  if (!quiet && l === 'lower') fly([W / 2 + 6, 9.5, D / 2 + 8.5], [W / 2, 0.8, D / 2]);
-  renderer.shadowMap.needsUpdate = true;
+  if (!quiet && l === 'upper') fly([W / 2 + 6, UP + 7.5, D / 2 + 9.5].map((c, j) => [W / 2, UP + 0.8, D / 2][j] + (c - [W / 2, UP + 0.8, D / 2][j]) * (portrait() ? 1.7 : 1)), [W / 2, UP + 0.8, D / 2]);
+  if (!quiet && l === 'lower') fly([W / 2 + 6, 9.5, D / 2 + 8.5].map((c, j) => [W / 2, 0.8, D / 2][j] + (c - [W / 2, 0.8, D / 2][j]) * (portrait() ? 1.7 : 1)), [W / 2, 0.8, D / 2]);
 }
-document.querySelectorAll('[data-level]').forEach(b => b.addEventListener('click', () => { hideIntro(); room = -1; card.classList.remove('on'); frameView(); setLevel(b.dataset.level); }));
-
-// ——— the camera's flights ———
+document.querySelectorAll('[data-level]').forEach(b => b.addEventListener('click', () => { closeRoom(); setLevel(b.dataset.level); }));
 let flight = null;
-function fly(pos, tgt, dur = 1.3) {
+function fly(pos, tgt, dur = 1.2) {
   flight = { t: 0, dur: reduce ? 0.01 : dur, p0: camera.position.clone(), t0: controls.target.clone(), p1: new THREE.Vector3(...pos), t1: new THREE.Vector3(...tgt) };
-  controls.enabled = false;
 }
-
-// ——— the controls ———
 const out = document.getElementById('timeOut'), time = document.getElementById('time');
-time.addEventListener('input', () => { hideIntro(); setTime(+time.value); });
+time.addEventListener('input', () => { userH = +time.value; });
 document.querySelectorAll('[data-floor]').forEach(b => b.addEventListener('click', () => {
-  hideIntro(); setFloor(b.dataset.floor);
+  setFloor(b.dataset.floor);
   document.querySelectorAll('[data-floor]').forEach(q => q.classList.toggle('on', q === b));
 }));
 document.querySelectorAll('[data-walls]').forEach(b => b.addEventListener('click', () => {
-  hideIntro(); setWalls(b.dataset.walls);
+  setWalls(b.dataset.walls);
   document.querySelectorAll('[data-walls]').forEach(q => q.classList.toggle('on', q === b));
 }));
-const intro = document.getElementById('intro');
-let introGone = false;
-function hideIntro() { if (!introGone) { introGone = true; intro.classList.add('gone'); } }
 
-// ——— picking furniture up ———
+// ——— the story: a pose per stage, the camera on a sphere round a target ———
+// 0 the plan · 1 the walls · 2 furnished · 3 the lower level · 4 living · 5 kitchen · 6 bedroom ·
+// 7 → 8 a day, scrolled like a page · 9 play
+const LAST = 9, DAY = 7;
+// az: round from the south (0) towards the east; pol: from straight down; r: how far; h: the hour.
+// room: a close view, which a phone takes less far back than a view of the whole loft
+const ST = [
+  { t: [5, 0, 3.5], az: 0.35, pol: 0.26, r: 19.5, h: 16.5 },
+  { t: [5, 1.8, 3.5], az: 0.9, pol: 0.98, r: 19.5, h: 16.5 },
+  { t: [5, 1.9, 3.5], az: 0.63, pol: 1.12, r: 18.8, h: 16.5 },
+  { t: [5, 0.5, 3.5], az: 0.45, pol: 0.82, r: 16.5, h: 16.5 },
+  { t: [2.8, 1.2, 4.6], az: 0.32, pol: 1.22, r: 8.8, h: 16.5, room: 1 },
+  { t: [3.0, 0.4, 1.6], az: 0.06, pol: 0.7, r: 10.2, h: 10, room: 1 },
+  { t: [8.2, 3.6, 4.8], az: 0.63, pol: 1.12, r: 7.9, h: 13, room: 1 },
+  { t: [5, 1.8, 3.5], az: 1.2, pol: 1.05, r: 19.5, h: 7 },
+  { t: [5, 1.8, 3.5], az: -0.65, pol: 1.05, r: 19.5, h: 22 },
+  null // play: wherever the reader leaves the camera
+];
+let userH = 18;
+const user = { t: new THREE.Vector3(5, 1.9, 3.5), az: 0.63, pol: 1.12, r: 18.8, set: false };
+const P0 = { t: new THREE.Vector3(), az: 0, pol: 0, r: 0 }, P1 = { t: new THREE.Vector3(), az: 0, pol: 0, r: 0 }, EYE = new THREE.Vector3(), TGT = new THREE.Vector3();
+function poseOf(s, n, outp = { t: new THREE.Vector3(), az: 0, pol: 0, r: 0 }) {
+  if (!s) { outp.t.copy(user.t); outp.az = user.az; outp.pol = user.pol; outp.r = user.r; return outp; }
+  const k = portrait() ? (s.room ? 1.5 : 1.75) : 1;
+  outp.t.set(s.t[0], s.t[1], s.t[2]); outp.az = s.az; outp.pol = s.pol; outp.r = s.r * k;
+  return outp;
+}
+function eyeOf(p, v = new THREE.Vector3()) {
+  return v.set(p.t.x + p.r * Math.sin(p.pol) * Math.sin(p.az), p.t.y + p.r * Math.cos(p.pol), p.t.z + p.r * Math.sin(p.pol) * Math.cos(p.az));
+}
+// the scroll track: screens per flight, and a hold where a stage is read; the day is scrolled like a page
+const keys = [], stops = [];
+(function () {
+  const RUNS = [1.6, 1.5, 1.3, 1.2, 1.1, 1.3, 1.2, 3.0, 1.4], HOLD = 0.4;
+  let pos = 0.15;
+  keys.push([0, 0], [pos, 0]); stops.push(0);
+  RUNS.forEach((r, i) => {
+    pos += r; keys.push([pos, i + 1]); stops.push(pos);
+    if (i + 1 < LAST && i + 1 !== DAY) { pos += HOLD; keys.push([pos, i + 1]); }
+  });
+  keys.forEach(k => { k[0] /= pos; });
+  for (let i = 1; i < stops.length; i++) stops[i] /= pos;
+  document.querySelector('.track').style.height = ((pos + 1) * 100) + 'vh';
+})();
+
+// on a wide screen the model sits right of centre, clear of the words on the left;
+// on a phone it is lifted, clear of the words at the bottom
+// (in play, a phone's model drops back down: the words above it are shorter, the controls take the bottom)
+let viewW = innerWidth, viewH = innerHeight;
+function frameView(W = viewW, H = viewH) {
+  viewW = W; viewH = H;
+  const sx = !portrait() && W > 900 ? 1.2 : 1, sy = portrait() ? (playing ? 1.12 : 1.3) : 1, oy = portrait() ? H * (playing ? 0.02 : 0.3) : 0;
+  camera.fov = portrait() ? 52 : 36;
+  camera.aspect = W * sx / (H * sy);
+  if (sx > 1 || sy > 1) camera.setViewOffset(W * sx, H * sy, 0, oy, W, H); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
+}
+
+// ——— picking furniture up, in play ———
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), HIT = new THREE.Vector3();
 const tip = document.getElementById('tip'), tipB = tip.querySelector('b'), tipS = tip.querySelector('span');
 let hover = null, drag = null, down = null;
+function aim(e) { ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(ndc, camera); }
 function pick(e) {
-  ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
-  ray.setFromCamera(ndc, camera);
-  const hits = ray.intersectObjects(pickable, false);
-  for (const h of hits) {
+  aim(e);
+  for (const h of ray.intersectObjects(pickable, false)) {
     const g = h.object.userData.item;
     if (!g.visible || (g.userData.lvl && level === 'lower')) continue;
-    // the cut away walls don't hide anything, so a hit below a wall's cut counts as a hit
     return g;
   }
   return null;
@@ -495,7 +535,7 @@ function showTip(g, e) {
   tip.classList.add('on');
 }
 canvas.addEventListener('pointerdown', (e) => {
-  hideIntro();
+  if (!playing) return;
   down = { x: e.clientX, y: e.clientY, g: pick(e) };
   const g = down.g;
   if (g && !g.userData.fixed) {
@@ -504,18 +544,18 @@ canvas.addEventListener('pointerdown', (e) => {
     ray.ray.intersectPlane(plane, HIT);
     drag = { g, dx: g.position.x - HIT.x, dz: g.position.z - HIT.z, moved: false };
     canvas.setPointerCapture(e.pointerId);
-    canvas.className = 'grabbing';
+    canvas.classList.add('grabbing');
   }
 });
 canvas.addEventListener('pointermove', (e) => {
+  if (!playing) return;
   if (drag) {
-    ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
-    ray.setFromCamera(ndc, camera);
+    aim(e);
     if (ray.ray.intersectPlane(plane, HIT)) {
       const g = drag.g;
       g.position.x = Math.max(0.4, Math.min(W - 0.4, HIT.x + drag.dx));
       g.position.z = Math.max(0.4, Math.min(D - 0.4, HIT.z + drag.dz));
-      // upstairs there is floor only over the kitchen strip and over the dining room: not over the double height
+      // upstairs there is floor only over the kitchen strip and over the dining room, not over the double height
       if (g.userData.lvl && g.position.z > 2.75 && g.position.x < 6.5) { if (g.position.x > 5.2) g.position.x = 6.5; else g.position.z = 2.75; }
       drag.moved = true;
       renderer.shadowMap.needsUpdate = true;
@@ -525,14 +565,14 @@ canvas.addEventListener('pointermove', (e) => {
   }
   if (e.pointerType !== 'mouse') return;
   const g = pick(e);
-  if (g !== hover) { hover = g; canvas.className = g ? 'point' : 'grab'; }
+  if (g !== hover) { hover = g; canvas.classList.toggle('point', !!g); }
   showTip(g, e);
 });
 function up(e) {
   const d = down; down = null;
   if (drag) {
-    const g = drag.g, moved = drag.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 4;
-    drag = null; controls.enabled = !flight; canvas.className = 'grab';
+    const g = drag.g, moved = drag.moved && d && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 4;
+    drag = null; canvas.classList.remove('grabbing');
     if (!moved) g.userData.bounce = 0;
     if (e.pointerType !== 'mouse') setTimeout(() => tip.classList.remove('on'), 900);
     return;
@@ -543,102 +583,153 @@ canvas.addEventListener('pointerup', up);
 canvas.addEventListener('pointercancel', up);
 canvas.addEventListener('pointerleave', () => { if (!drag) { tip.classList.remove('on'); hover = null; } });
 
-// ——— loading, then the house builds itself ———
-const pct = document.getElementById('loadPct'), loading = document.getElementById('loading');
-manager.onProgress = (u, done, total) => { pct.textContent = Math.round(done / total * 100); };
-let started = 0;
-Promise.all(files.map(f => new Promise((res, rej) => loader.load('models/' + f + '/' + f + '.gltf', g => { models[f] = g.scene; res(); }, undefined, rej))))
-  .then(() => {
-    PIECES.forEach(place);
-    // the glass globes glow at night
-    items.forEach(g => { if (g.userData.file === 'modern_ceiling_lamp_01') g.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.material.emissive = new THREE.Color(0xffc583); glowMats.add(m.material); } }); });
-    setTime(+time.value);
-    loading.style.opacity = 0; setTimeout(() => loading.remove(), 800);
-    started = performance.now();
-    const [p, t] = defaultView();
-    camera.position.set(p[0] * 1.5 - 4, p[1] * 2.2, p[2] * 1.3); controls.target.set(...t);
-    fly(p, t, reduce ? 0.01 : 3.4);
-    items.forEach((g, i) => { g.userData.drop = reduce ? -1 : 1.7 + i * 0.07; });
-  })
-  .catch(e => { console.error(e); root.classList.add('fail'); });
-
-// ——— every frame ———
-const clock = new THREE.Clock();
+// ——— the renderer the scroll shell drives ———
 const ease = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-function frame() {
-  const dt = Math.min(0.05, clock.getDelta()), t = started ? (performance.now() - started) / 1000 : 0;
-  const k = 1 - Math.exp(-dt * 7);
-  if (flight) {
-    flight.t += dt / flight.dur;
-    const f = ease(Math.min(1, flight.t));
-    camera.position.lerpVectors(flight.p0, flight.p1, f);
-    controls.target.lerpVectors(flight.t0, flight.t1, f);
-    if (flight.t >= 1) { flight = null; controls.enabled = !drag; }
-  }
-  controls.update();
-
-  // the facades between the camera and the rooms sink; the rest stand to the top of their level
-  const full = level === 'lower' ? UB : H, grow = started ? Math.min(1, Math.max(0, (t - 0.35) / 1.1)) : 0;
-  for (const s in SIDES) {
-    const S = SIDES[s], target = (S.out(camera.position) ? CUT : full) * (reduce ? 1 : ease(grow));
-    S.h += (target - S.h) * k; S.plane.constant = S.h + 0.001;
-  }
-  inner.h = H * (reduce ? 1 : ease(grow)); inner.plane.constant = inner.h;
-  base.scale.y = started ? (reduce ? 1 : 0.02 + 0.98 * ease(Math.min(1, t / 0.6))) : 0.02;
-  // the upper floor comes down onto the walls, and lifts off when the lower one is shown
-  const drop = started ? (reduce ? 0 : 7 * (1 - ease(Math.min(1, Math.max(0, (t - 0.9) / 1.0))))) : 7;
-  upperY += ((level === 'lower' ? 5.5 : 0) - upperY) * k;
-  upper.position.y = upperY + drop;
-  upper.visible = upper.position.y < 5.2;
-  if (Math.abs((level === 'lower' ? 5.5 : 0) - upperY) > 0.01 || t < 4.5) renderer.shadowMap.needsUpdate = true;
-  // furniture drops in, and bounces when it is tapped
-  for (const g of items) {
-    const u = g.userData;
-    if (u.drop >= 0) {
-      const f = Math.max(0, Math.min(1, (t - u.drop) / 0.7));
-      g.visible = t > u.drop;
-      g.position.y = f < 1 ? 2.2 * (1 - f) * (1 - f) - Math.sin(f * Math.PI) * 0.05 * (1 - f) : 0;
-      if (f >= 1) u.drop = -1;
-    }
-    if (u.bounce >= 0) {
-      u.bounce += dt;
-      const b = u.bounce;
-      g.scale.set(1 + Math.sin(b * 22) * 0.06 * Math.exp(-b * 6), 1 - Math.sin(b * 22) * 0.09 * Math.exp(-b * 6), 1 + Math.sin(b * 22) * 0.06 * Math.exp(-b * 6));
-      g.position.y = Math.max(0, Math.sin(Math.min(1, b / 0.3) * Math.PI) * 0.12);
-      renderer.shadowMap.needsUpdate = true;
-      if (b > 0.8) { u.bounce = -1; g.scale.set(1, 1, 1); g.position.y = 0; }
-    }
-  }
-
-  renderer.render(scene, camera);
-
-  // the rooms' pins, over their rooms
-  const iw = innerWidth, ih = innerHeight;
-  for (let i = 0; i < ROOMS.length; i++) {
-    const r = ROOMS[i];
-    V.copy(r.v); V.y += r.lvl ? upper.position.y : 0;
-    V.project(camera);
-    const hide = !started || t < 3 || V.z > 1 || (r.lvl && level === 'lower') || (!r.lvl && level === 'upper') || (room >= 0 && room !== i);
-    const o = hide ? '0' : '1';
-    if (r.el._o !== o) { r.el._o = o; r.el.style.opacity = o; r.el.style.pointerEvents = hide ? 'none' : ''; }
-    if (!hide) r.el.style.transform = 'translate(' + ((V.x * 0.5 + 0.5) * iw).toFixed(1) + 'px,' + ((-V.y * 0.5 + 0.5) * ih).toFixed(1) + 'px) translate(-50%,-50%)';
-  }
-  requestAnimationFrame(frame);
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const clockEl = document.getElementById('clock'), clockT = document.getElementById('clockT'), clockS = document.getElementById('clockS');
+let lastScroll = -1e9, hintAt = -1, clockMin = -1, upperY = 7, shownHour = -1;
+addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });
+function css(el, k, v) { const c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
+function dayWords(h) {
+  return h < 9 ? 'Morning: the sun in the east windows' : h < 13 ? 'Late morning, from the south' : h < 17 ? 'Afternoon: round to the west' :
+    h < 20 ? 'Evening, through the big west windows' : h < 21 ? 'Sunset' : 'Night: the lamps are on';
 }
-requestAnimationFrame(frame);
 
-// on a wide screen the model sits right of centre, clear of the words and the room card on the left
-function frameView() {
-  renderer.setSize(innerWidth, innerHeight, false);
-  // (and on a phone, lower down, clear of the words at the top)
-  // (on a phone, lower down, clear of the words at the top; with a room's card open, higher, clear of the card)
-  const sx = !portrait() && innerWidth > 900 ? 1.2 : 1, sy = portrait() ? (room >= 0 ? 1.36 : 1.22) : 1, oy = portrait() && room >= 0 ? innerHeight * 0.36 : 0;
-  camera.fov = portrait() ? 52 : 36;
-  camera.aspect = innerWidth * sx / (innerHeight * sy);
-  if (sx > 1 || sy > 1) camera.setViewOffset(innerWidth * sx, innerHeight * sy, 0, oy, innerWidth, innerHeight); else camera.clearViewOffset();
-  camera.updateProjectionMatrix();
-}
-frameView();
-addEventListener('resize', frameView);
+const R = {
+  init() { return true; },
+  load(tick) {
+    manager.onProgress = (u, done, total) => tick(done / total);
+    return Promise.all(files.map(f => new Promise((res, rej) => loader.load('models/' + f + '/' + f + '.gltf', g => { models[f] = g.scene; res(); }, undefined, rej))))
+      .then(() => {
+        PIECES.forEach(place);
+        // the glass globes glow at night
+        items.forEach(g => { if (g.userData.file === 'modern_ceiling_lamp_01') g.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.material.emissive = new THREE.Color(0xffc583); glowMats.add(m.material); } }); });
+        // each piece drops in at its own moment of the second stage
+        items.forEach((g, i) => { g.userData.at = 1.12 + i / items.length * 0.72; });
+      });
+  },
+  build(env) {
+    renderer.setPixelRatio(env.dpr);
+    renderer.setSize(env.W, env.H, false);
+    frameView(env.W, env.H);
+    if (!user.set) { poseOf(ST[2], 2, P0); user.t.copy(P0.t); user.az = P0.az; user.pol = P0.pol; user.r = P0.r; }
+  },
+  setDpr(env) { renderer.setPixelRatio(env.dpr); renderer.setSize(env.W, env.H, false); },
+  frame(env) {
+    const stage = Math.min(LAST, Math.max(0, env.stage)), dt = env.dt / 1000, k = 1 - Math.exp(-dt * 7);
+    const n = Math.min(LAST - 1, Math.floor(stage)), f0 = stage - n, f = n === DAY ? f0 : ease(f0);
+
+    // play begins once the last stage is reached, and ends as soon as the page is scrolled back
+    const play = stage > LAST - 0.02;
+    if (play !== playing) {
+      playing = play;
+      root.classList.toggle('playing', play);
+      canvas.classList.toggle('play', play);
+      canvas.style.touchAction = play ? 'none' : 'pan-y';
+      frameView();
+      if (play) { poseOf(null, 9, P0); controls.target.copy(P0.t); eyeOf(P0, camera.position); time.value = userH; }
+      else { closeRoom(); drag = null; flight = null; tip.classList.remove('on'); if (level !== 'both') setLevel('both', true); }
+      controls.enabled = play;
+    }
+    if (playing) {
+      if (flight) {
+        flight.t += dt / flight.dur;
+        const e = ease(Math.min(1, flight.t));
+        camera.position.lerpVectors(flight.p0, flight.p1, e);
+        controls.target.lerpVectors(flight.t0, flight.t1, e);
+        if (flight.t >= 1) flight = null;
+      }
+      controls.enabled = !drag && !flight;
+      controls.update();
+      // where the reader leaves the camera is where the way back starts from
+      const v = EYE.copy(camera.position).sub(controls.target);
+      user.t.copy(controls.target); user.r = v.length(); user.pol = Math.acos(Math.max(-1, Math.min(1, v.y / user.r))); user.az = Math.atan2(v.x, v.z); user.set = true;
+    } else {
+      // between two stages: the target moves, the camera swings round it, the distance changes on a log scale
+      poseOf(ST[n], n, P0); poseOf(ST[n + 1], n + 1, P1);
+      let daz = P1.az - P0.az; if (daz > Math.PI) daz -= 2 * Math.PI; else if (daz < -Math.PI) daz += 2 * Math.PI;
+      TGT.lerpVectors(P0.t, P1.t, f);
+      P0.t.copy(TGT); P0.az += daz * f; P0.pol += (P1.pol - P0.pol) * f; P0.r = P0.r * Math.pow(P1.r / P0.r, f);
+      eyeOf(P0, camera.position);
+      camera.lookAt(TGT);
+    }
+
+    // the hour: each stage has its own; through the day it follows the scroll; in play the slider has it
+    const hA = ST[n] ? ST[n].h : userH, hB = ST[n + 1] ? ST[n + 1].h : userH;
+    const h = playing ? userH : hA + (hB - hA) * f;
+    if (Math.abs(h - shownHour) > 0.004) { shownHour = h; setTime(h); }
+
+    // the build: the walls rise out of the plan, the top floor comes down onto them, the furniture drops in
+    const grow = reduce ? (stage > 0.5 ? 1 : 0.02) : Math.max(0.02, ease(clamp01((stage - 0.12) / 0.83)));
+    const lift = playing ? (level === 'lower' ? 5.5 : 0) : 5.5 * ease(clamp01((stage - 2.5) / 0.5)) * (1 - ease(clamp01((stage - 5.35) / 0.6)));
+    upperY += (lift - upperY) * (playing ? k : 1);
+    const drop = 7 * (1 - ease(clamp01((stage - 0.45) / 0.55)));
+    upper.position.y = upperY + drop;
+    upper.visible = upper.position.y < 5.2;
+    const full = H - (H - UB) * Math.min(1, upperY / 5.5);
+    for (const s in SIDES) {
+      const S = SIDES[s], target = S.out(camera.position) ? Math.min(CUT, full * grow) : full * grow;
+      S.h += (target - S.h) * k; S.plane.constant = S.h + 0.001;
+    }
+    inner.plane.constant = H * grow;
+    let moving = stage < 2.1 || Math.abs(lift - upperY) > 0.01 || (stage > 0.4 && stage < 1.05);
+    for (const g of items) {
+      const u = g.userData;
+      if (!playing || u.bounce < 0) {
+        const p = clamp01((stage - u.at) / 0.24);
+        g.visible = p > 0;
+        // a fall, and a small bounce as it lands
+        g.position.y = p < 0.8 ? 2.4 * (1 - p / 0.8) * (1 - p / 0.8) : Math.sin((p - 0.8) / 0.2 * Math.PI) * 0.06;
+      }
+      if (playing && u.bounce >= 0) {
+        u.bounce += dt;
+        const b = u.bounce, w = Math.sin(b * 22) * Math.exp(-b * 6);
+        g.scale.set(1 + w * 0.06, 1 - w * 0.09, 1 + w * 0.06);
+        g.position.y = Math.max(0, Math.sin(Math.min(1, b / 0.3) * Math.PI) * 0.12);
+        moving = true;
+        if (b > 0.8) { u.bounce = -1; g.scale.set(1, 1, 1); g.position.y = 0; }
+      }
+    }
+    if (moving) renderer.shadowMap.needsUpdate = true;
+
+    renderer.render(scene, camera);
+
+    // in play, the rooms' pins over their rooms
+    const iw = env.W, ih = env.H;
+    for (let i = 0; i < ROOMS.length; i++) {
+      const r = ROOMS[i];
+      let hide = !playing || (r.lvl && level === 'lower') || (!r.lvl && level === 'upper') || (room >= 0 && room !== i);
+      if (!hide) { EYE.copy(r.v); EYE.y += r.lvl ? upper.position.y : 0; EYE.project(camera); hide = EYE.z > 1; }
+      const o = hide ? '0' : '1';
+      if (r.el._o !== o) { r.el._o = o; r.el.style.opacity = o; r.el.style.pointerEvents = hide ? 'none' : ''; }
+      if (!hide) r.el.style.transform = 'translate(' + ((EYE.x * 0.5 + 0.5) * iw).toFixed(1) + 'px,' + ((-EYE.y * 0.5 + 0.5) * ih).toFixed(1) + 'px) translate(-50%,-50%)';
+    }
+
+    // the clock, through the day
+    const co = clamp01((stage - 6.6) / 0.3) * (1 - clamp01((stage - 8.2) / 0.3));
+    css(clockEl, 'opacity', co.toFixed(3)); css(clockEl, 'visibility', co > 0.01 ? 'visible' : 'hidden');
+    if (co > 0.01) {
+      const mins = Math.round(h * 6) * 10;
+      if (mins !== clockMin) {
+        clockMin = mins;
+        clockT.textContent = String(Math.floor(mins / 60)).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0');
+        clockS.textContent = dayWords(h);
+      }
+    }
+    // the scroll hint, as on the other pages
+    const hint = window.Hint;
+    if (hint) {
+      const at = stage < 0.05 ? 0 : stage > LAST - 0.02 ? 2 : 1;
+      if (at !== hintAt) { hintAt = at; hint.say(at); hint.el.classList.toggle('is-back', at === 2); }
+      const room2 = iw >= 1000 && ih >= 700 ? stage < 3.5 : stage < 0.05;
+      css(hint.el, 'opacity', performance.now() - lastScroll > 900 && room2 && !playing ? '1' : '0');
+    }
+  },
+  workAt() { return false; },
+  coverAt() { return -1; },
+  free(stage) { return stage > DAY - 0.02 && stage < DAY + 1.02; }
+};
+
+BKit({ cases: [], renderer: R, keys, stops, last: LAST });
 // a handle for the test scripts
-window.__loft = { camera, controls, setTime, setLevel, goRoom, home, fly, defaultView, get ready() { return started > 0; } };
+window.__loft = { camera, controls, goRoom, home, get ready() { return items.length > 0; }, get playing() { return playing; } };
