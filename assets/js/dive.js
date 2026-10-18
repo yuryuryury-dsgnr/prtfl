@@ -333,7 +333,11 @@
       // the greeting, each point with a place waiting for it in the strata; exactly as many grains
       // as Matter draws its greeting with on this screen, scattered as Matter scatters them
       var g = BKit.greeting(W, H, up), gn = g.length / 2, names = matterCount(W, H, up);
-      var stars = mobile ? 3000 : 9000, extra = mobile ? 7000 : 26000, dust = mobile ? 700 : 2600, globe = mobile ? 7000 : 16000;
+      // the planet's size; on a phone or a tablet, as many of its points as keep them as close together as
+      // a desktop's (an upright iPhone's 7000 match it), or on a smaller planet they pile up into a white ball
+      var touch = !!(window.Perf && Perf.touch), gr = Math.min(W, H) * (up ? 0.36 : H < 400 ? 0.22 : 0.27);
+      var globe = touch ? Math.round(Math.min(mobile ? 7000 : 16000, 7000 * Math.pow(gr / 145, 2))) : mobile ? 7000 : 16000;
+      var stars = mobile ? 3000 : 9000, extra = mobile ? 7000 : 26000, dust = mobile ? 700 : 2600;
       count = stars + names + extra + dust + globe;
       // straight into the arrays the GPU takes, no lists growing on the way
       var P = new Float32Array(count * 3), C = new Float32Array(count * 3), I = new Float32Array(count * 4), L2 = new Float32Array(count * 3), n = 0;
@@ -393,7 +397,7 @@
       // the planet hangs below the column, as far down as a screen of scroll carries the camera,
       // a little deeper than the pictures, so it rises into view a little slower than they leave
       var zCam = Z_COL + COL.d, yEnd = COL.bottom - END_RUN * H * COL.d / F;
-      var Z_GLOBE = zCam - F * 1.5, gr = Math.min(W, H) * (up ? 0.36 : H < 400 ? 0.22 : 0.27), gc = [0, yEnd + H * (H < 500 ? 0.24 : 0.12), Z_GLOBE];
+      var Z_GLOBE = zCam - F * 1.5, gc = [0, yEnd + H * (H < 500 ? 0.24 : 0.12), Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
         put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 0.62 + 0.33 * qq, 0.84 - 0.18 * qq, 0.78 - 0.36 * qq, 3, 0);
@@ -423,7 +427,9 @@
         { s: 1.5, e: [30, -232, -1180], t: [0, -236, -2600], f: 520 },
         { s: TOP, e: [0, COL.top, Z_COL + COL.d], t: [0, COL.top, Z_COL], f: COL.d },
         { s: END, e: [0, COL.bottom, Z_COL + COL.d], t: [0, COL.bottom, Z_COL], f: COL.d },
-        { s: LAST, e: [0, yEnd, zCam], t: [0, yEnd, Z_GLOBE], f: F * 1.5 }
+        // the focus stays on the column to the end; a phone reads the column closer, so on a touch screen it
+        // moves on to stand as far from the planet as a desktop's does (or the planet blurs into a glowing ball)
+        { s: LAST, e: [0, yEnd, zCam], t: [0, yEnd, Z_GLOBE], f: touch ? F * 1.26 : COL.d }
       ];
       this.stations = stations;
       this.yEnd = yEnd;
@@ -446,7 +452,7 @@
       var s0 = S[Math.max(0, i - 1)], s1 = S[Math.min(iRow, i)], s2 = S[Math.min(iRow, i + 1)], s3 = S[Math.min(iRow, i + 2)];
       if (i < iRow) { catmull(e, s0.e, s1.e, s2.e, s3.e, f); catmull(t, s0.t, s1.t, s2.t, s3.t, f); }
       else { lerp3(e, S[i].e, S[i + 1].e, f); lerp3(t, S[i].t, S[i + 1].t, f); }
-      var focus = s1.f + (s2.f - s1.f) * f;
+      var focus = S[i].f + (S[i + 1].f - S[i].f) * f;
       var camY = e[1];
       // the greeting gathers by the clock, so a slow phone still gets it in time
       if (this.introAt == null) this.introAt = performance.now();
