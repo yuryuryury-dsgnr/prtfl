@@ -20,7 +20,8 @@
     // section: a title over the column from this case on; aspect: the plane keeps the film's own frame
     { img: 'assets/images/ertori/ertori-poster-light.jpg', film: ['assets/images/ertori/ertori-film-light-720.mp4', 'assets/images/ertori/ertori-film-light-1080.mp4'], aspect: 16 / 9,
       section: 'Indie projects', name: 'Ertori', line: 'All your apps and sites. One screen.', href: 'https://ertori.com/', external: true, cta: IC.web + 'Visit website ↗' },
-    { img: 'assets/images/wobl/wobl-poster.jpg', film: ['assets/images/wobl/wobl-film-720.mp4', 'assets/images/wobl/wobl-film-1080.mp4'], name: 'Wobl: Party Games', short: 'Wobl', line: 'Fifteen party games for one phone.', href: 'https://apps.apple.com/app/id6792764513', external: true, cta: IC.apple + 'App Store ↗' }
+    // filmW: the cuts' widths, smallest first; the plane gets the first one as wide as it is seen
+    { img: 'assets/images/wobl/wobl-poster.jpg', film: ['assets/images/wobl/wobl-film-960.mp4', 'assets/images/wobl/wobl-film-1280.mp4', 'assets/images/wobl/wobl-film-1600.mp4'], filmW: [960, 1280, 1600], name: 'Wobl: Party Games', short: 'Wobl', line: 'Fifteen party games for one phone.', href: 'https://apps.apple.com/app/id6792764513', external: true, cta: IC.apple + 'App Store ↗' }
   ];
   var N = CASES.length;
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
@@ -328,7 +329,9 @@
         v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
         v.style.cssText = 'position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none';
         // the larger cut only where the plane is seen that large in device px
-        v.dataset.src = c.film[innerWidth * Math.min(2, devicePixelRatio || 1) * (innerWidth < 760 ? 0.92 : 0.46) > 1300 ? 1 : 0];
+        var seen = innerWidth * Math.min(2, devicePixelRatio || 1) * (innerWidth < 760 ? 0.92 : 0.46), cut = c.film.length - 1;
+        if (c.filmW) { while (cut > 0 && c.filmW[cut - 1] >= seen * 0.95) cut--; } else cut = seen > 1300 ? 1 : 0;
+        v.dataset.src = c.film[cut];
         // a new frame is uploaded only when the film has one (where the browser can say so)
         if (v.requestVideoFrameCallback) { var onFrame = function () { f.fresh = true; v.requestVideoFrameCallback(onFrame); }; v.requestVideoFrameCallback(onFrame); }
         document.body.appendChild(v);
