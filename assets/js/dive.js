@@ -21,7 +21,7 @@
     { img: 'assets/images/ertori/ertori-poster-light.jpg', film: ['assets/images/ertori/ertori-film-light-720.mp4', 'assets/images/ertori/ertori-film-light-1080.mp4'], aspect: 16 / 9,
       section: 'Indie projects', name: 'Ertori', line: 'All your apps and sites. One screen.', href: 'https://ertori.com/', external: true, cta: IC.web + 'Visit website ↗' },
     // filmW: the cuts' widths, smallest first; the plane gets the first one as wide as it is seen
-    { img: 'assets/images/wobl/wobl-poster-keynote.jpg', film: ['assets/images/wobl/wobl-film-960.mp4', 'assets/images/wobl/wobl-film-1280.mp4', 'assets/images/wobl/wobl-film-1600.mp4'], filmW: [960, 1280, 1600], name: 'Wobl: Party Games', short: 'Wobl', line: 'Fifteen party games for one phone.', href: 'https://apps.apple.com/app/id6792764513', external: true, cta: IC.apple + 'App Store ↗' }
+    { img: 'assets/images/wobl/wobl-poster-keynote.jpg', film: ['assets/images/wobl/wobl-film-960.mp4', 'assets/images/wobl/wobl-film-1280.mp4', 'assets/images/wobl/wobl-film-1600.mp4'], filmW: [960, 1280, 1600], aspect: 16 / 10, name: 'Wobl: Party Games', short: 'Wobl', line: 'Fifteen party games for one phone.', href: 'https://apps.apple.com/app/id6792764513', external: true, cta: IC.apple + 'App Store ↗' }
   ];
   var N = CASES.length;
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
