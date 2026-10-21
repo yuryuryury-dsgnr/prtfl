@@ -19,7 +19,8 @@
     // no case page yet: the film is the preview and the label goes to the live site.
     // section: a title over the column from this case on; aspect: the plane keeps the film's own frame
     { img: 'assets/images/ertori/ertori-poster-light.jpg', film: ['assets/images/ertori/ertori-film-light-720.mp4', 'assets/images/ertori/ertori-film-light-1080.mp4'], aspect: 16 / 9,
-      section: 'Indie projects', name: 'Ertori', line: 'All your apps and sites. One screen.', href: 'https://ertori.com/', external: true, cta: 'Visit website ↗' }
+      section: 'Indie projects', name: 'Ertori', line: 'All your apps and sites. One screen.', href: 'https://ertori.com/', external: true, cta: IC.web + 'Visit website ↗' },
+    { img: 'assets/images/wobl/wobl-cover.webp', name: 'Wobl: Party Games', short: 'Wobl', line: 'Fifteen party games for one phone.', href: 'https://apps.apple.com/app/id6792764513', external: true, cta: IC.apple + 'App Store ↗' }
   ];
   var N = CASES.length;
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
