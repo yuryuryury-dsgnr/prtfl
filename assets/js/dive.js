@@ -18,7 +18,7 @@
     { img: 'assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: 'cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/', IC.web]] },
     // no case page yet: the film is the preview and the label goes to the live site.
     // section: a title over the column from this case on; aspect: the plane keeps the film's own frame
-    { img: 'assets/images/ertori/ertori-poster.jpg', film: ['assets/images/ertori/ertori-film-720.mp4', 'assets/images/ertori/ertori-film-1080.mp4'], aspect: 16 / 9,
+    { img: 'assets/images/ertori/ertori-poster-light.jpg', film: ['assets/images/ertori/ertori-film-light-720.mp4', 'assets/images/ertori/ertori-film-light-1080.mp4'], aspect: 16 / 9,
       section: 'Indie projects', name: 'Ertori', line: 'All your apps and sites. One screen.', href: 'https://ertori.com/', external: true, cta: 'Visit website ↗' }
   ];
   var N = CASES.length;
