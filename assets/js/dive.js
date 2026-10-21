@@ -1,9 +1,9 @@
 // Dive: Matter's opening and Depth's flight in one world.
 // The greeting is drawn in points on the screen's own plane, crisp, as in Matter, with Matter's
 // dust drifting behind it. The first scroll pours the letters down into a cut-away block of
-// strata, and the camera dives through the block to the work: four wide pictures in a column
-// that then scrolls like a page, one to one with the finger or the wheel, every case readable and
-// clickable the whole way. A planet at the end.
+// strata, and the camera dives through the block to the work: wide pictures in a column (an indie
+// project's film among them, playing on its plane) that then scrolls like a page, one to one with
+// the finger or the wheel, every case readable and clickable the whole way. A planet at the end.
 (function () {
   // the live projects' marks, the same as on the case pages' buttons
   var IC = {
@@ -15,8 +15,13 @@
     { img: 'assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'cases/halliburton/' },
     { img: 'assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: 'cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669', IC.apple]] },
     { img: 'assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: 'cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353', IC.apple], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc', IC.play]] },
-    { img: 'assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: 'cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/', IC.web]] }
+    { img: 'assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: 'cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/', IC.web]] },
+    // no case page yet: the film is the preview and the label goes to the live site.
+    // section: a title over the column from this case on; aspect: the plane keeps the film's own frame
+    { img: 'assets/images/ertori/ertori-poster.jpg', film: ['assets/images/ertori/ertori-film-720.mp4', 'assets/images/ertori/ertori-film-1080.mp4'], aspect: 16 / 9,
+      section: 'Indie projects', name: 'Ertori', line: 'All your apps and sites. One screen.', href: 'https://ertori.com/', external: true, cta: 'Visit website ↗' }
   ];
+  var N = CASES.length;
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
   // the skills, one to a layer, from what shows on the surface down to what holds it up (words from the CV).
   // They hang in one column on the block's left: pinned at the same x, the layers' waves move them all
@@ -54,10 +59,20 @@
     // the distance at which a picture takes this much of the screen's width
     var d = F0 * cw / (W * (mob ? 0.92 : 0.46));
     var k = F0 / d; // world to screen
+    // the pictures top to bottom, the first one's centre at 0: each as tall as its frame, a gap for its label
+    // under it, and more room above a picture that opens a section, for the section's title
+    var y = ch / 2;
+    COL.ys = []; COL.hs = [];
+    for (var c = 0; c < N; c++) {
+      var h = CASES[c].aspect ? cw / CASES[c].aspect : ch;
+      if (c) y -= gap + (CASES[c].section ? (mob ? 76 : 116) / k : 0);
+      COL.ys.push(y - h / 2); COL.hs.push(h);
+      y -= h;
+    }
     // the camera's height with the first picture's top at 22% of the screen, and with the last one's bottom at 74%
     // (on a short screen the first picture starts lower, clear of the title above it)
     var topAt = Math.max(0.22, 120 / H);
-    var top = -(H * 0.5 - H * topAt) / k + ch / 2, bottom = -3 * (ch + gap) - ch / 2 + (H * 0.74 - H * 0.5) / k;
+    var top = -(H * 0.5 - H * topAt) / k + ch / 2, bottom = y + (H * 0.74 - H * 0.5) / k;
     COL.cw = cw; COL.ch = ch; COL.gap = gap; COL.d = d; COL.top = top; COL.bottom = bottom; COL.run = (top - bottom) * k / H;
     // the scroll track, in screens: a short hold where a shape is read, none from the column on
     var RUNS = [1.2, 1.7, COL.run, END_RUN], HOLDS = [0.45, 0, 0], pos = 0.12;
@@ -188,14 +203,14 @@
     '}'
   ].join('\n');
 
-  var gl, prog, qprog, U = {}, QU = {}, A = {}, buffers = {}, count = 0, F = 800, images = [], planes = [], labels = [];
+  var gl, prog, qprog, U = {}, QU = {}, A = {}, buffers = {}, count = 0, F = 800, images = [], films = [], planes = [], labels = [];
   var view = new Float32Array(16), proj = new Float32Array(16);
   var ATTRS = [['aPos', 3], ['aCol', 3], ['aInfo', 4], ['aAlt', 3]];
   var PAL = PALETTE.map(function (h) { return BKit.hex(h); });
   // what each frame works out, kept from frame to frame rather than made anew sixty times a second
   var E = [0, 0, 0], T = [0, 0, 0], PT = { x: 0, y: 0 };
-  var rects = [0, 1, 2, 3].map(function () { return { ok: false, x: 0, y: 0, w: 0, h: 0 }; });
-  var tags = [0, 1, 2, 3].map(function () { return { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 }; });
+  var rects = CASES.map(function () { return { ok: false, x: 0, y: 0, w: 0, h: 0 }; });
+  var tags = CASES.map(function () { return { x: -1e4, y: -1e4, w: 0, top: 0, o: 0 }; });
 
   function perspective(fovy, aspect, near, far) {
     var f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
@@ -289,7 +304,7 @@
       ['uView', 'uProj', 'uLift', 'uNear', 'uFocus', 'uTex', 'uAlpha', 'uLit', 'uRad', 'uSize', 'uTop'].forEach(function (n) { QU[n] = gl.getUniformLocation(qprog, n); });
       QU.aPos = gl.getAttribLocation(qprog, 'aPos'); QU.aUv = gl.getAttribLocation(qprog, 'aUv');
       planes = [];
-      for (var k = 0; k < 4; k++) planes.push({ buf: gl.createBuffer(), tex: gl.createTexture() });
+      for (var k = 0; k < N; k++) planes.push({ buf: gl.createBuffer(), tex: gl.createTexture() });
       gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND);
       return true;
     },
@@ -299,17 +314,43 @@
       images = CASES.map(function (c, k) {
         var im = new Image();
         // decoded off the main thread first, so the upload doesn't stall the greeting
-        im.onload = function () { (im.decode ? im.decode() : Promise.resolve()).catch(function () {}).then(function () { if (self.size) self.picture(k); }); };
+        im.onload = function () { (im.decode ? im.decode() : Promise.resolve()).catch(function () {}).then(function () { if (self.cases) self.picture(k); }); };
         im.src = c.img;
         return im;
       });
+      // a film: its poster above stands in until it plays. The element sits in the page, unseen (a phone
+      // may not decode a video that isn't in it); nothing loads before its plane is near
+      films = CASES.map(function (c) {
+        if (!c.film) return null;
+        var v = document.createElement('video'), f = { el: v, fresh: false, want: false, blocked: false, loading: false };
+        v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+        v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+        v.style.cssText = 'position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none';
+        // the larger cut only where the plane is seen that large in device px
+        v.dataset.src = c.film[innerWidth * Math.min(2, devicePixelRatio || 1) * (innerWidth < 760 ? 0.92 : 0.46) > 1300 ? 1 : 0];
+        // a new frame is uploaded only when the film has one (where the browser can say so)
+        if (v.requestVideoFrameCallback) { var onFrame = function () { f.fresh = true; v.requestVideoFrameCallback(onFrame); }; v.requestVideoFrameCallback(onFrame); }
+        document.body.appendChild(v);
+        return f;
+      });
+      // with autoplay off (a phone in Low Power Mode) a film on the screen starts at the next touch,
+      // inside the touch's own handler, as the browser requires
+      function wake() {
+        films.forEach(function (f) {
+          if (f && f.blocked && f.want) { f.blocked = false; var pr = f.el.play(); if (pr && pr.catch) pr.catch(function () { f.blocked = true; }); }
+        });
+      }
+      addEventListener('touchend', wake, { passive: true });
+      addEventListener('click', wake);
+      // a hidden tab draws nothing, so its films stop too (they start again with the frames)
+      document.addEventListener('visibilitychange', function () { if (document.hidden) films.forEach(function (f) { if (f) f.el.pause(); }); });
       return (document.fonts ? document.fonts.load('700 100px Inter') : Promise.resolve()).then(function () { tick(1); });
     },
     // a case's picture, cropped to its plane at the size it is seen on the screen, onto the GPU
     picture: function (k) {
       var img = images[k];
       if (!img.complete || !img.naturalWidth) return;
-      var cw = this.size[0] * this.texScale, ch = this.size[1] * this.texScale, dpr = this.texDpr;
+      var cw = this.cases[k].w * this.texScale, ch = this.cases[k].h * this.texScale, dpr = this.texDpr;
       var ia = img.naturalWidth / img.naturalHeight, ra = cw / ch;
       var sw = ia > ra ? img.naturalHeight * ra : img.naturalWidth, shh = ia > ra ? img.naturalHeight : img.naturalWidth / ra;
       var tc = document.createElement('canvas'); tc.width = Math.round(cw * dpr); tc.height = Math.round(ch * dpr);
@@ -321,7 +362,30 @@
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      planes[k].ready = true;
+      // (a film's next frame goes in whole again: the texture is the picture's size now)
+      planes[k].ready = true; planes[k].fw = 0;
+    },
+    // a film's newest frame onto its plane's texture, straight from the video
+    frameOf: function (k) {
+      var v = films[k].el, p = planes[k];
+      gl.bindTexture(gl.TEXTURE_2D, p.tex);
+      if (p.fw === v.videoWidth) gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, v);
+      else { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, v); p.fw = v.videoWidth; }
+      p.ready = true;
+    },
+    // a film starts loading a few screens before its plane comes up, plays only while the plane is on
+    // the screen (rects: where it was a frame ago), and its frames go onto the plane as they come
+    film: function (k, q, H) {
+      var f = films[k], v = f.el, r = rects[k];
+      if (q > 0.002 && r.ok && r.y < H * 3 && !f.loading) { f.loading = true; v.preload = 'auto'; v.src = v.dataset.src; }
+      f.want = q > 0.002 && r.ok && r.y < H && r.y + r.h > 0;
+      if (f.want && v.paused && !f.blocked && !f.asking) {
+        f.asking = true;
+        var pr = v.play();
+        if (pr && pr.then) pr.then(function () { f.asking = false; }, function () { f.asking = false; f.blocked = true; });
+        else f.asking = false;
+      } else if (!f.want && !v.paused) v.pause();
+      if (!v.paused && v.readyState >= 2 && (f.fresh || !v.requestVideoFrameCallback)) { f.fresh = false; this.frameOf(k); }
     },
     build: function (env) {
       // mobile: a phone's point budget; up: a phone held upright, for the layout
@@ -374,22 +438,23 @@
       // the rest of the strata, inner surfaces included: the dive passes between them
       for (i = 0; i < extra; i++) strata(2);
 
-      // the work: four wide pictures in a column, read top to bottom
-      var cw = COL.cw, ch = COL.ch, gap = COL.gap;
+      // the work: wide pictures in a column, read top to bottom
+      var cw = COL.cw;
       // world units to screen px where the column is read
-      this.size = [cw, ch]; this.texScale = F / COL.d; this.texDpr = Math.min(2, env.dpr || 1);
-      for (var p = 0; p < 4; p++) planes[p].ready = false;
+      this.texScale = F / COL.d; this.texDpr = Math.min(2, env.dpr || 1);
+      for (var p = 0; p < N; p++) planes[p].ready = false;
       this.cases = [];
-      for (var k = 0; k < 4; k++) {
-        var cy = -k * (ch + gap), z = Z_COL, x0 = -cw / 2, x1 = cw / 2, ya = cy + ch / 2, yz = cy - ch / 2;
+      this.secH = null;
+      for (var k = 0; k < N; k++) {
+        var cy = COL.ys[k], ch = COL.hs[k], z = Z_COL, x0 = -cw / 2, x1 = cw / 2, ya = cy + ch / 2, yz = cy - ch / 2;
+        // corners: top left, top right, bottom left, bottom right
+        this.cases.push({ center: [0, cy, z], corners: [[x0, ya, z], [x1, ya, z], [x0, yz, z], [x1, yz, z]], w: cw, h: ch });
         this.picture(k);
         gl.bindBuffer(gl.ARRAY_BUFFER, planes[k].buf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
           x0, ya, z, 0, 0, x0, yz, z, 0, 1, x1, ya, z, 1, 0,
           x1, ya, z, 1, 0, x0, yz, z, 0, 1, x1, yz, z, 1, 1
         ]), gl.STATIC_DRAW);
-        // corners: top left, top right, bottom left, bottom right
-        this.cases.push({ center: [0, cy, z], corners: [[x0, ya, z], [x1, ya, z], [x0, yz, z], [x1, yz, z]], w: cw, h: ch });
       }
       // Matter's dust, in screen px from the top left (Matter counts from the centre), across the whole width
       for (i = 0; i < dust; i++) { var dl = 0.12 + R() * 0.22; put(R() * W, R() * H, 0, 0.7 * dl, 0.8 * dl, 0.95 * dl, 4, 0); }
@@ -493,11 +558,12 @@
 
       // the pictures, laid over the light, all equally lit. Hovering lifts a picture and lets the
       // others fall back a little, rather than lighting it up
-      var drew = false, sz = this.size, vis = shown(stage);
-      for (k = 0; k < 4; k++) {
+      var drew = false, vis = shown(stage);
+      for (k = 0; k < N; k++) {
         var q = vis;
         // once the hand-off box above the canvas has crossed in, the plane under it goes
         if (env.go === k && env.g > 0.11 && window.Handoff) q = 0;
+        if (films[k]) this.film(k, q, H);
         if (q < 0.002 || !planes[k].ready) continue;
         if (!drew) {
           gl.useProgram(qprog); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -505,13 +571,14 @@
           gl.uniformMatrix4fv(QU.uView, false, view); gl.uniformMatrix4fv(QU.uProj, false, proj);
           gl.uniform1i(QU.uTex, 0); gl.activeTexture(gl.TEXTURE0);
           gl.uniform1f(QU.uNear, F * 0.35); gl.uniform1f(QU.uFocus, focus);
-          gl.uniform2f(QU.uSize, sz[0], sz[1]); gl.uniform1f(QU.uRad, env.mobile ? 12 : 18);
+          gl.uniform1f(QU.uRad, env.mobile ? 12 : 18);
           // in device px: the canvas height, and the band under the bar where pictures fade out
           var dp = gl.canvas.height / H;
           gl.uniform3f(QU.uTop, gl.canvas.height, (env.mobile ? 58 : 64) * dp, (env.mobile ? 118 : 132) * dp);
           drew = true;
         }
         var h = env.hov[k];
+        gl.uniform2f(QU.uSize, this.cases[k].w, this.cases[k].h);
         gl.uniform1f(QU.uLift, h * 22);
         gl.uniform1f(QU.uLit, 1 - 0.28 * (env.any - h));
         gl.uniform1f(QU.uAlpha, q);
@@ -547,7 +614,7 @@
       // where each case is on screen now, for the hit test, the hand-off and its label;
       // a label fades out under the bar, as its picture does
       var bar0 = env.mobile ? 58 : 64, bar1 = env.mobile ? 104 : 120;
-      for (k = 0; k < 4; k++) {
+      for (k = 0; k < N; k++) {
         var cn = this.cases[k].corners, r = rects[k], tg = tags[k];
         var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, blx = 0, bly = 0, brx = 0, bry = 0;
         r.ok = true;
@@ -586,6 +653,16 @@
         // it starts where the pictures start: the column's left edge as it stands on the screen
         css(title, 'left', (W / 2 - COL.cw * F / COL.d / 2).toFixed(1) + 'px');
       }
+      // a later section's title (the shell puts it before the section's first label) stands over that
+      // section's first picture and rides with it, fading out under the bar the same way
+      var secs = this.secs || (this.secs = [].slice.call(document.querySelectorAll('.sec-title')));
+      if (secs.length && this.secH == null) this.secH = secs.map(function (el) { return el.offsetHeight; });
+      for (var s = 0; s < secs.length; s++) {
+        var se = secs[s], sr = rects[+se.dataset.k], sy = sr.y - this.secH[s] - (env.mobile ? 18 : 30);
+        var so = sr.ok ? vis * smooth((sy + this.secH[s] - bar0) / (bar1 - bar0)) : 0;
+        css(se, 'opacity', so.toFixed(3)); css(se, 'visibility', so > 0.01 ? '' : 'hidden');
+        if (so > 0.01) css(se, 'transform', 'translate(' + sr.x.toFixed(1) + 'px,' + sy.toFixed(1) + 'px)');
+      }
     },
     workAt: function (stage) { return openable(stage); },
     // from the column to the end the scroll is a page's: nothing settles it and the picture keeps up with it
@@ -593,7 +670,7 @@
     coverRect: function (k) { var r = rects[k]; return { x: r.x, y: r.y, w: r.w, h: r.h }; },
     coverImage: function (k) { return images[k]; },
     coverAt: function (x, y) {
-      for (var k = 0; k < 4; k++) {
+      for (var k = 0; k < N; k++) {
         var r = rects[k];
         if (r.ok && openable(env0.stage) && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return k;
       }

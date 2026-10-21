@@ -29,14 +29,17 @@
       dpr: window.Perf ? Perf.dpr : Math.min(window.devicePixelRatio || 1, 2),
       t: 0, dt: 16.7, s: 0, stage: 0,
       mouse: { p: 0, x: -9999, y: -9999, on: 0 },
-      hover: -1, hov: [0, 0, 0, 0], any: 0,
+      hover: -1, hov: CASES.map(function () { return 0; }), any: 0,
       go: -1, g: 0, wave: { x: 0, y: 0, t: -10 },
       tags: null
     };
 
     var list = document.getElementById('fallbackList');
+    // a case with no page of its own (c.external) goes to its live site, in a new tab
+    function out(c) { return c.external ? ' target="_blank" rel="noopener"' : ''; }
     if (list) list.innerHTML = CASES.map(function (c) {
-      return '<li><a href="' + c.href + '"><b>' + c.name + '</b><span>' + c.line + '</span></a>' +
+      return (c.section ? '<li><h3>' + c.section + '</h3></li>' : '') +
+        '<li><a href="' + c.href + '"' + out(c) + '><b>' + c.name + '</b><span>' + c.line + '</span></a>' +
         (c.links || []).map(function (l) { return ' <a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + ' ↗</a>'; }).join('') + '</li>';
     }).join('');
 
@@ -51,24 +54,30 @@
     // a case with a live project (c.links) gets those links beside "View case"; links can't nest,
     // so then the label is a box holding the case link and the project links
     var tags = CASES.map(function (c, k) {
+      // a case that opens a section (c.section) has the section's title before it; the renderer places it
+      if (c.section) {
+        var sec = document.createElement('h2'); sec.className = 'sec-title'; sec.dataset.k = k; sec.textContent = c.section;
+        capWork.appendChild(sec);
+      }
       var inner = '<span><b><i>0' + (k + 1) + '</i><span class="long">' + c.name + '</span><span class="short">' + (c.short || c.name) +
-        '</span></b><small>' + c.line + '</small></span><em>View case →</em>';
+        '</span></b><small>' + c.line + '</small></span><em>' + (c.cta || 'View case →') + '</em>';
       var a, main;
       if (c.links) {
         a = document.createElement('div'); a.className = 'tag';
-        a.innerHTML = '<a class="tag-main" href="' + c.href + '">' + inner + '</a><span class="tag-st">' +
+        a.innerHTML = '<a class="tag-main" href="' + c.href + '"' + out(c) + '>' + inner + '</a><span class="tag-st">' +
           c.links.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + (l[2] || '') + l[0] + ' ↗</a>'; }).join('') + '</span>';
         main = a.querySelector('.tag-main');
       } else {
         a = main = document.createElement('a');
         a.className = 'tag'; a.href = c.href; a.innerHTML = inner;
+        if (c.external) { a.target = '_blank'; a.rel = 'noopener'; }
       }
       a.addEventListener('mouseenter', function () { env.hover = k; });
       a.addEventListener('mouseleave', function () { env.hover = -1; });
       a.addEventListener('focusin', function () { env.hover = k; reveal(k); });
       a.addEventListener('focusout', function () { env.hover = -1; });
-      // a modified click (a new tab, a new window) is the browser's
-      main.addEventListener('click', function (e) { if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return; e.preventDefault(); go(k); });
+      // a modified click (a new tab, a new window) is the browser's, and so is a link out to a live site
+      main.addEventListener('click', function (e) { if (c.external || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return; e.preventDefault(); go(k); });
       capWork.appendChild(a);
       return a;
     });
@@ -209,6 +218,8 @@
     var goStart = 0;
     function go(k) {
       if (env.go >= 0) return;
+      // a live site opens beside the portfolio, which stays where it was
+      if (CASES[k].external) { window.open(CASES[k].href, '_blank', 'noopener'); return; }
       if (!inWork()) { location.href = CASES[k].href; return; }
       env.go = k; env.hover = k; goStart = performance.now();
       // the cover crosses into a box that grows to fill the screen (handoff.js); the camera still flies in under it
@@ -274,7 +285,7 @@
       if (ring && mouseSeen && tx > -9000) { rx += (tx - rx) * 0.22; ry += (ty - ry) * 0.22; put(ring, 'transform', 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px)'); }
 
       env.any = 0;
-      for (var i = 0; i < 4; i++) { env.hov[i] += ((env.hover === i ? 1 : 0) - env.hov[i]) * 0.12 * k; env.any = Math.max(env.any, env.hov[i]); }
+      for (var i = 0; i < env.hov.length; i++) { env.hov[i] += ((env.hover === i ? 1 : 0) - env.hov[i]) * 0.12 * k; env.any = Math.max(env.any, env.hov[i]); }
       if (env.hover !== litTag) { litTag = env.hover; for (i = 0; i < tags.length; i++) tags[i].classList.toggle('on', litTag === i); }
 
       if (env.go >= 0) {

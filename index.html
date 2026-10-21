@@ -81,6 +81,8 @@
 
     .cap-work { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
     .cap-work .work-title { position: absolute; left: var(--pad); top: clamp(76px, 11vh, 104px); font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; letter-spacing: -0.035em; }
+    /* a later section's title over its first picture; the renderer moves it with the column */
+    .cap-work .sec-title { position: absolute; left: 0; top: 0; font-size: clamp(22px, 2.4vw, 32px); font-weight: 600; letter-spacing: -0.035em; line-height: 1.2; white-space: nowrap; }
     .tag { position: absolute; left: 0; top: 0; pointer-events: auto; padding: 10px 0 0; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
     .tag b { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; display: block; }
     .tag b i { font: normal 500 11px/1 var(--mono); color: var(--muted); margin-right: 8px; }
@@ -141,6 +143,7 @@
     .fallback li a { display: flex; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(238,240,246,.12); }
     .fallback li b { font-size: 20px; font-weight: 600; }
     .fallback li span { color: var(--muted); }
+    .fallback li h3 { margin-top: 40px; padding-bottom: 14px; border-bottom: 1px solid rgba(238,240,246,.12); font-size: 18px; font-weight: 600; }
     .fallback h2 { margin-top: 56px; font-size: 22px; font-weight: 600; }
     .fallback .skills { margin-top: 16px; } .fallback .skills li { padding: 12px 0; border-bottom: 1px solid rgba(238,240,246,.12); color: rgba(238,240,246,.8); }
   </style>
@@ -212,7 +215,7 @@
   <script src="assets/js/perf.js?v=13"></script>
   <script src="assets/js/hint.js?v=6"></script>
   <script src="assets/js/handoff.js?v=7"></script>
-  <script src="assets/js/bkit.js?v=26"></script>
-  <script src="assets/js/dive.js?v=49"></script>
+  <script src="assets/js/bkit.js?v=27"></script>
+  <script src="assets/js/dive.js?v=50"></script>
 </body>
 </html>
