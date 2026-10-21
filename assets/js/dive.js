@@ -374,7 +374,7 @@
       p.ready = true;
     },
     // a film starts loading a few screens before its plane comes up, plays only while the plane is on
-    // the screen (rects: where it was a frame ago), and its frames go onto the plane as they come
+    // the screen (where this frame put it), and its frames go onto the plane as they come
     film: function (k, q, H) {
       var f = films[k], v = f.el, r = rects[k];
       if (q > 0.002 && r.ok && r.y < H * 3 && !f.loading) { f.loading = true; v.preload = 'auto'; v.src = v.dataset.src; }
@@ -382,7 +382,8 @@
       if (f.want && v.paused && !f.blocked && !f.asking) {
         f.asking = true;
         var pr = v.play();
-        if (pr && pr.then) pr.then(function () { f.asking = false; }, function () { f.asking = false; f.blocked = true; });
+        // (only a refusal waits for a touch; a start cut short by a pause is simply tried again)
+        if (pr && pr.then) pr.then(function () { f.asking = false; }, function (e) { f.asking = false; f.blocked = e && e.name === 'NotAllowedError'; });
         else f.asking = false;
       } else if (!f.want && !v.paused) v.pause();
       if (!v.paused && v.readyState >= 2 && (f.fresh || !v.requestVideoFrameCallback)) { f.fresh = false; this.frameOf(k); }
@@ -563,7 +564,6 @@
         var q = vis;
         // once the hand-off box above the canvas has crossed in, the plane under it goes
         if (env.go === k && env.g > 0.11 && window.Handoff) q = 0;
-        if (films[k]) this.film(k, q, H);
         if (q < 0.002 || !planes[k].ready) continue;
         if (!drew) {
           gl.useProgram(qprog); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -630,6 +630,7 @@
         tg.x = blx; tg.y = by; tg.w = brx - blx; tg.top = y0; tg.o = vis * smooth((by - bar0) / (bar1 - bar0));
       }
       env.tags = tags;
+      for (k = 0; k < N; k++) if (films[k]) this.film(k, vis, H);
       // the closing words ride up with the planet, as one block of the page (translate: the shell owns transform)
       var capEnd = this.capEnd || (this.capEnd = document.querySelector('.cap-end'));
       if (capEnd) css(capEnd, 'translate', '0 ' + (stage > END ? Math.max(0, (camY - this.yEnd) / 1.5) : 0).toFixed(1) + 'px');
