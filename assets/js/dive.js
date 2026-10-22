@@ -13,7 +13,7 @@
   };
   var CASES = [
     { img: 'assets/images/halliburton/halliburton-hero.webp', name: 'Data Marketplace · Halliburton', short: 'Halliburton', line: 'Cut data search from weeks to minutes', href: 'cases/halliburton/' },
-    { img: 'assets/images/rebalancer/rebalancer-hero.webp', name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: 'cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669', IC.apple]] },
+    { img: 'assets/images/rebalancer/rebalancer-poster-live.jpg', film: ['assets/images/rebalancer/rebalancer-film-960.mp4', 'assets/images/rebalancer/rebalancer-film-1280.mp4', 'assets/images/rebalancer/rebalancer-film-1600.mp4'], filmW: [960, 1280, 1600], aspect: 16 / 10, name: 'Rebalancer', line: 'Built solo, shipped to App Store', href: 'cases/rebalancer/', links: [['App Store', 'https://apps.apple.com/app/id6767200669', IC.apple]] },
     { img: 'assets/images/dobrodoc/dobrodoc-cover-v3.webp', name: 'DobroDoc+', line: 'Cut booking time 40% in usability tests', href: 'cases/dobrodoc/', links: [['App Store', 'https://apps.apple.com/app/id1483029353', IC.apple], ['Google Play', 'https://play.google.com/store/apps/details?id=domus.dobrodoc', IC.play]] },
     { img: 'assets/images/dopas/dopas-cover-v3.webp', name: 'dopas.dp.ua', line: 'Launched from zero, now generating revenue', href: 'cases/dopas/', links: [['Website', 'https://www.dopas.dp.ua/', IC.web]] },
     // no case page yet: the film is the preview and the label goes to the live site.
