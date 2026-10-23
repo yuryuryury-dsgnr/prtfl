@@ -94,6 +94,18 @@
   }
   // a phone held upright gets the phone's layout; on its side it is laid out like a small screen
   function upright(W, H) { return W < 760 && H > W; }
+  // the top of the closing words on the shortest viewport a phone's toolbar leaves: they stand on its bottom
+  // (with the toolbar out), while the canvas, and the planet on it, is as tall as the viewport gets
+  function capTop(H) {
+    var cap = document.querySelector('.cap-end');
+    if (!cap) return H;
+    var p = document.createElement('div');
+    p.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
+    document.body.appendChild(p);
+    var sv = Math.min(p.offsetHeight || innerHeight, innerHeight);
+    p.remove();
+    return sv - parseFloat(getComputedStyle(cap).bottom) - cap.offsetHeight;
+  }
   layout(innerWidth, window.Perf ? Perf.vh() : innerHeight, upright(innerWidth, window.Perf ? Perf.vh() : innerHeight));
 
   var VS = [
@@ -405,6 +417,15 @@
       // the planet's size; on a phone or a tablet, as many of its points as keep them as close together as
       // a desktop's (an upright iPhone's 7000 match it), or on a smaller planet they pile up into a white ball
       var touch = !!(window.Perf && Perf.touch), gr = Math.min(W, H) * (up ? 0.36 : H < 400 ? 0.22 : 0.27);
+      // where it stands on the screen at the end (1.5F deep, a world unit is 1/1.5 px): its centre from the top and
+      // its radius. It keeps clear of the closing words, wherever a toolbar or a zoomed page leaves them, and of the
+      // bar: it rises first, and only gets smaller where there is no room left to rise
+      var pc = H * (H < 500 ? 0.34 : 0.42), pr = gr / 1.5, lo = capTop(H) - (env.mobile ? 32 : 24), hi = env.mobile ? 104 : 120;
+      if (pc + pr > lo) {
+        pc = Math.max(hi + pr, lo - pr);
+        if (pc + pr > lo) { pr = Math.max(H * 0.08, (lo - hi) / 2); pc = hi + pr; }
+        gr = pr * 1.5;
+      }
       var globe = touch ? Math.round(Math.min(mobile ? 7000 : 16000, 7000 * Math.pow(gr / 145, 2))) : mobile ? 7000 : 16000;
       var stars = mobile ? 3000 : 9000, extra = mobile ? 7000 : 26000, dust = mobile ? 700 : 2600;
       count = stars + names + extra + dust + globe;
@@ -467,7 +488,7 @@
       // the planet hangs below the column, as far down as a screen of scroll carries the camera,
       // a little deeper than the pictures, so it rises into view a little slower than they leave
       var zCam = Z_COL + COL.d, yEnd = COL.bottom - END_RUN * H * COL.d / F;
-      var Z_GLOBE = zCam - F * 1.5, gc = [0, yEnd + H * (H < 500 ? 0.24 : 0.12), Z_GLOBE];
+      var Z_GLOBE = zCam - F * 1.5, gc = [0, yEnd + (H / 2 - pc) * 1.5, Z_GLOBE];
       for (i = 0; i < globe; i++) {
         var yS = 1 - (i / (globe - 1)) * 2, rad = Math.sqrt(Math.max(0, 1 - yS * yS)), th = i * 2.39996323, qq = yS * 0.5 + 0.5;
         put(gc[0] + Math.cos(th) * rad * gr, gc[1] + yS * gr, gc[2] + Math.sin(th) * rad * gr, 1.0 - 0.55 * qq, 0.78 - 0.10 * qq, 0.36 + 0.64 * qq, 3, 0);
