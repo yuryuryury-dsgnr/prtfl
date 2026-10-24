@@ -323,17 +323,6 @@ ul.plain li:first-child { border-top: 0; }
 .links .ic { flex: none; width: 16px; height: 16px; margin: -2px 2px 0 -2px; fill: currentColor; }
 .links .ic.web { margin-top: 0; fill: none; stroke: currentColor; stroke-width: 1.7; }
 
-/* a pair the exchanges never show: two prices against the dollar, divided */
-.ratio { margin-top: 32px; padding: 8px 22px; font: 500 clamp(18px, 1.7vw, 22px)/1 var(--mono); }
-.ratio div { display: flex; align-items: center; gap: 10px; padding: 16px 0; }
-.ratio div + div { border-top: 1px solid var(--line); }
-.ratio i { font-style: normal; color: var(--muted); }
-.ratio .q { color: var(--muted); }
-.ratio em { margin-left: auto; font-style: normal; color: var(--muted); }
-.ratio .r { border-top: 1px solid rgba(233,236,242,.45); }
-.ratio .r span { color: #8FE3AE; }
-.ratio small { margin-left: auto; max-width: 46%; font: 400 13px/1.3 'Inter', sans-serif; color: var(--muted); text-align: right; }
-
 /* a dead end to the side of a flow: the decision's “no”, and where it leads */
 .fl > li.fx { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; }
 .fl > li.fx > .fn { grid-column: 2; grid-row: 1; }
