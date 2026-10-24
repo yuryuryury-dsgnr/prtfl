@@ -45,6 +45,8 @@ img { display: block; max-width: 100%; }
 /* ——— content ——— */
 main { position: relative; z-index: 5; }
 .sec { position: relative; padding: 22vh var(--left) 10vh; min-height: 110vh; }
+/* a section of a line or two is as tall as its words, so it leaves no screen of empty space under them */
+.sec.brief { min-height: 0; }
 .col { width: var(--col); }
 .num { font: 500 12px/1 var(--mono); color: var(--muted); letter-spacing: .04em; display: block; margin-bottom: 18px; }
 h2 { font-size: clamp(34px, 4.6vw, 64px); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
