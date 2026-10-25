@@ -429,12 +429,24 @@
   // A wide sheet that scrolls sideways ([data-hxs]) counts the parts its attribute names instead of its children.
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function railItems(el) { return el.dataset.hxs ? el.querySelectorAll(el.dataset.hxs) : el.children; }
+  // The sheet itself goes into a shade that darkens whichever edge still hides more of it (the left one starts
+  // where its pinned column ends), so a table cut at the screen's edge reads as one to swipe.
   var rails = [].slice.call(document.querySelectorAll('.hx, [data-hxs]')).map(function (el) {
+    var shade = null;
+    if (el.dataset.hxs) {
+      shade = document.createElement('div');
+      shade.className = 'hx-shade' + (el.classList.contains('tg-wrap') ? ' bleed' : '');
+      el.parentNode.insertBefore(shade, el);
+      shade.appendChild(el);
+      shade.insertAdjacentHTML('beforeend', '<i class="hx-sl"></i><i class="hx-sr"></i>');
+    }
     var bar = document.createElement('div');
     bar.className = 'hx-bar'; bar.setAttribute('aria-hidden', 'true');
     bar.innerHTML = '<span class="hx-n"></span><i><b></b></i><span class="hx-go">swipe</span>';
-    el.parentNode.insertBefore(bar, el.nextSibling);
-    var r = { el: el, bar: bar, n: railItems(el).length, idx: -1, on: false, step: 1, max: 1, num: bar.querySelector('.hx-n'), thumb: bar.querySelector('b') };
+    var box = shade || el;
+    box.parentNode.insertBefore(bar, box.nextSibling);
+    var r = { el: el, bar: bar, n: railItems(el).length, idx: -1, on: false, step: 1, max: 1, num: bar.querySelector('.hx-n'), thumb: bar.querySelector('b'),
+      shade: shade, pin: el.querySelector('.who, .lane'), l: null, rt: null };
     r.thumb.style.width = (100 / r.n) + '%';
     el.addEventListener('scroll', function () { railUpdate(r); if (r.el.scrollLeft > 8) bar.classList.add('used'); }, { passive: true });
     // the bar itself steps to the next card, and wraps to the first after the last
@@ -451,6 +463,7 @@
       r.step = r.on && it[1] ? it[1].offsetLeft - it[0].offsetLeft : 1;
       r.max = Math.max(1, r.el.scrollWidth - r.el.clientWidth);
       r.x = r.el.scrollLeft;
+      if (r.shade) r.shade.style.setProperty('--hx-l', (r.pin ? r.pin.offsetWidth : 0) + 'px');
     });
     rails.forEach(function (r) { railShow(r, r.x); });
   }
@@ -459,10 +472,15 @@
     var i = !r.on ? 0 : x >= r.max - 2 ? r.n - 1 : Math.min(r.n - 1, Math.round(x / r.step));
     put(r.thumb, 'transform', 'translateX(' + (Math.min(1, x / r.max) * (r.n - 1) * 100).toFixed(1) + '%)');
     if (i !== r.idx) { r.idx = i; r.num.textContent = pad(i + 1) + ' / ' + pad(r.n); if (r.onIdx) r.onIdx(i); }
+    if (r.shade) {
+      var l = r.on && x > 2, rt = r.on && x < r.max - 2;
+      if (l !== r.l) { r.l = l; r.shade.classList.toggle('more-l', l); }
+      if (rt !== r.rt) { r.rt = rt; r.shade.classList.toggle('more-r', rt); }
+    }
   }
   // a journey map, swiped: the stage in view is the lit one
   rails.forEach(function (r) {
-    var panel = r.el.classList.contains('jm-sheet') && r.el.parentNode;
+    var panel = r.el.classList.contains('jm-sheet') && r.el.closest('.jm-panel');
     if (panel) r.onIdx = function (i) { if (r.on && (touch || innerWidth <= 860)) panel.light(i); };
   });
   function railOf(el) { for (var k = 0; k < rails.length; k++) if (rails[k].el === el) return rails[k]; return null; }

@@ -454,6 +454,20 @@ blockquote + blockquote { margin-top: 26px; }
 
 @media (max-width: 860px) { .sec { padding-top: 16vh; min-height: 100vh; } }
 
+/* a sheet wider than its box: the edge that still hides more of it is shaded, the left one from where the
+   pinned column ends (--hx-l), so the cut reads as more to swipe; a sheet run edge to edge shades the screen's edges */
+.hx-shade { position: relative; }
+.hx-shade > i { position: absolute; top: 1px; bottom: 1px; z-index: 3; width: 56px; pointer-events: none; opacity: 0; transition: opacity .35s; }
+/* the left one is the pinned column's shadow: no wider than a cell's padding, so the column in view stays clear */
+.hx-shade .hx-sl { left: calc(1px + var(--hx-l, 0px)); width: 22px; background: linear-gradient(to right, #0C0E13, rgba(12,14,19,0)); }
+.hx-shade .hx-sr { right: 1px; border-radius: 0 15px 15px 0; background: linear-gradient(to left, #0C0E13 8%, rgba(12,14,19,0)); }
+.hx-shade.more-l .hx-sl, .hx-shade.more-r .hx-sr { opacity: 1; }
+.hx-shade.bleed > i { top: 0; bottom: 0; width: 40px; border-radius: 0; }
+.hx-shade.bleed .hx-sl { left: calc(-1 * var(--left)); background: linear-gradient(to right, var(--bg), rgba(7,8,11,0)); }
+.hx-shade.bleed .hx-sr { right: calc(-1 * var(--left)); background: linear-gradient(to left, var(--bg), rgba(7,8,11,0)); }
+/* not before the sheet itself has come up */
+.js .hx-shade > .rv:not(.in) ~ i { visibility: hidden; }
+
 /* on a phone the long lists run sideways: a swipe through them instead of screens of scrolling */
 .hx-bar { display: none; }
 @media (max-width: 860px) {
