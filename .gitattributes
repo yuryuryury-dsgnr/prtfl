@@ -1,0 +1,7 @@
+# The site is deployed from `git archive`; these are the workbench, not the site, so they stay out of it.
+.gitattributes export-ignore
+.gitignore export-ignore
+.claude/ export-ignore
+serve.sh export-ignore
+server.py export-ignore
+tools/ export-ignore

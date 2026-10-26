@@ -7,6 +7,8 @@
 //   · ?fps on the URL shows the frame rate and the resolution in use
 (function () {
   var touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+  // Lenis is served from the site itself, next to this file, so no outside host can change it
+  var lenisSrc = new URL('../vendor/lenis-1.1.13/lenis.min.js', document.currentScript.src).href;
   var steps = [2, 1.5, 1];
   var native = window.devicePixelRatio || 1;
   var level = 0;
@@ -62,7 +64,7 @@
     function make() { if (window.Lenis) cb(new Lenis(opts)); }
     if (window.Lenis) return make();
     var s = document.createElement('script');
-    s.src = 'https://unpkg.com/lenis@1.1.13/dist/lenis.min.js'; s.async = true; s.onload = make;
+    s.src = lenisSrc; s.async = true; s.onload = make;
     document.head.appendChild(s);
   };
 
