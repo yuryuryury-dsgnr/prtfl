@@ -23,7 +23,7 @@
     add('web-vitals-with-attribution.js');
     add('array.no-external.js').onload = function () {
       if (!window.posthog || !posthog.init) return;
-      posthog.init('phc_s8RLYXFxEE89DCb3hnRoRdSCDTPauLCTnwJMAt2j9nfR', {
+      posthog.init('phc_sCFQExz2a9WHJBRnTeuGZKvW7MQARWFXQqnfFRKf4ydU', {
         api_host: 'https://eu.i.posthog.com',
         ui_host: 'https://eu.posthog.com',
         cookieless_mode: 'always',
