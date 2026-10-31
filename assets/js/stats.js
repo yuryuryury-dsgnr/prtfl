@@ -1,6 +1,7 @@
 // Visit counts for yuryury.com: PostHog, EU Cloud (Frankfurt). What it records and why is on /privacy/.
-//   · nothing is fetched until the page has loaded, its frames run smooth and the browser is idle, so the
-//     library never competes with the fonts, the pictures or the WebGL warm-up; it runs once
+//   · a page asks for this file only from its load event (one inline line), and this file fetches the
+//     library only once the frames run smooth and the browser is idle, so nothing here competes with the
+//     fonts, the pictures or the WebGL warm-up; it runs once
 //   · cookieless: no cookies, nothing in the browser's storage, no recordings, no identify()
 //   · the library is served from the site itself, in the build that never loads code from anywhere else;
 //     its one extension, web vitals (how fast the page loads), sits next to it from the same npm release
@@ -41,16 +42,18 @@
   }
   // After load the scene is often still on its first frames (built, shaders compiled, first pictures
   // uploaded), and an idle moment between two frames comes long before that is over. So the wait is for
-  // the frames to run smooth: ten in a row under 25 ms. A page whose frames never get there (a slow phone,
-  // Low Power Mode) or that draws none (a hidden tab) goes on after 4 s.
+  // the frames to run smooth: a quarter of a second of frames under 40 ms each (warm-up hitches run
+  // longer; 30, 60 and 120 Hz screens all pass). A page whose frames never get there (a slow phone) or
+  // that draws none (a hidden tab) goes on after 4 s.
   function afterLoad() {
     var last = 0, calm = 0, done = false;
     function go() { if (!done) { done = true; idle(); } }
     function tick(t) {
       if (done) return;
-      calm = last && t - last < 25 ? calm + 1 : 0;
+      var d = last ? t - last : 1e9;
       last = t;
-      if (calm >= 10) go(); else requestAnimationFrame(tick);
+      calm = d < 40 ? calm + d : 0;
+      if (calm >= 250) go(); else requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
     setTimeout(go, 4000);
