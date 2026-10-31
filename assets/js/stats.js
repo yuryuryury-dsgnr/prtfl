@@ -41,17 +41,19 @@
   }
   // After load the scene is often still on its first frames (built, shaders compiled, first pictures
   // uploaded), and an idle moment between two frames comes long before that is over. So the wait is for
-  // the frames to run smooth: ten in a row under 25 ms. A page that never gets there (a slow phone, Low
-  // Power Mode) goes on after 4 s. A hidden tab draws no frames, so it waits until it is seen.
+  // the frames to run smooth: ten in a row under 25 ms. A page whose frames never get there (a slow phone,
+  // Low Power Mode) or that draws none (a hidden tab) goes on after 4 s.
   function afterLoad() {
-    var t0 = 0, last = 0, calm = 0;
+    var last = 0, calm = 0, done = false;
+    function go() { if (!done) { done = true; idle(); } }
     function tick(t) {
-      if (!t0) t0 = t;
+      if (done) return;
       calm = last && t - last < 25 ? calm + 1 : 0;
       last = t;
-      if (calm >= 10 || t - t0 > 4000) idle(); else requestAnimationFrame(tick);
+      if (calm >= 10) go(); else requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+    setTimeout(go, 4000);
   }
 
   if (document.readyState === 'complete') afterLoad();
