@@ -125,6 +125,9 @@
     .cap-end .row a { border-bottom: 1px solid rgba(238,240,246,.35); transition: border-color .2s; }
     .cap-end .row a:hover { border-color: var(--fg); }
     .cap-end .top { display: inline-block; margin-top: 22px; font: 500 11px/1 var(--mono); color: var(--muted); background: none; border: 0; cursor: pointer; }
+    /* on the same line as "back to the start", so the closing words keep the height the planet is measured against */
+    .cap-end .legal { margin-left: 22px; transition: color .2s; }
+    .cap-end .legal:hover { color: var(--fg); }
 
     .ring { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 50%; border: 1px solid rgba(238,240,246,.5); display: grid; place-items: center; opacity: 0; transition: width .4s cubic-bezier(.2,.8,.2,1), height .4s cubic-bezier(.2,.8,.2,1), margin .4s cubic-bezier(.2,.8,.2,1), background .3s, border-color .3s, opacity .3s; }
     .ring span { font: 600 11px/1 'Inter'; color: #06070A; opacity: 0; transition: opacity .2s; }
@@ -148,6 +151,10 @@
     .fallback li h3 { margin-top: 40px; padding-bottom: 14px; border-bottom: 1px solid rgba(238,240,246,.12); font-size: 18px; font-weight: 600; }
     .fallback h2 { margin-top: 56px; font-size: 22px; font-weight: 600; }
     .fallback .skills { margin-top: 16px; } .fallback .skills li { padding: 12px 0; border-bottom: 1px solid rgba(238,240,246,.12); color: rgba(238,240,246,.8); }
+    /* with the scene up, the privacy link is in the closing words; this one is for the page without WebGL,
+       and stays out of the keyboard's way while the plain page is hidden */
+    .fallback .legal { display: none; }
+    .no-gl .fallback .legal { display: block; margin-top: 56px; font-size: 14px; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -193,7 +200,7 @@
       <a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a>
       <!-- the CV is hidden for now: <a href="assets/CV_Yurii_Designer.pdf" download="CV_Yurii_Designer.pdf">Download CV ↓</a> -->
     </div>
-    <button class="top" data-stage="0">back to the start ↑</button>
+    <button class="top" data-stage="0">back to the start ↑</button><a class="top legal" href="privacy/">privacy</a>
   </section>
 
   <main class="fallback" id="work">
@@ -210,6 +217,7 @@
       <li>Design team management — hiring, mentoring, 1-to-1s, Scrum</li>
       <li>Analytics — Google Analytics, RevenueCat</li>
     </ul>
+    <p class="legal"><a href="privacy/">Privacy</a></p>
   </main>
 
   <div class="track"></div>
@@ -219,5 +227,7 @@
   <script src="assets/js/handoff.js?v=7"></script>
   <script src="assets/js/bkit.js?v=27"></script>
   <script src="assets/js/dive.js?v=61"></script>
+  <!-- visit counts, started once the page is idle; what they record: /privacy/ -->
+  <script src="assets/js/stats.js?v=1" defer></script>
 </body>
 </html>

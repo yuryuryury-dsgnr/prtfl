@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy — Yurii Fokin</title>
+  <meta name="description" content="What yuryury.com records about visits: anonymous usage statistics with PostHog, stored in the EU. No cookies, nothing stored in your browser.">
+  <link rel="canonical" href="https://yuryury.com/privacy/">
+  <meta name="theme-color" content="#06070A">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #06070A; --fg: #EEF0F6; --muted: rgba(238,240,246,.55); --line: rgba(238,240,246,.12); --pad: clamp(16px, 6vw, 88px); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; background: var(--bg); }
+    body { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; font-family: 'Inter', -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; border-radius: 6px; }
+    ::selection { background: #8FD3FF; color: var(--bg); }
+    .nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px var(--pad); font-size: 14px; font-weight: 500; }
+    .pill { border: 1px solid rgba(238,240,246,.25); border-radius: 999px; padding: 7px 15px; }
+    main { flex: 1; padding: 10vh var(--pad) 14vh; max-width: 820px; }
+    .code { font: 500 12px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+    h1 { margin-top: 18px; font-size: clamp(40px, 6.4vw, 80px); font-weight: 700; letter-spacing: -0.05em; line-height: .98; }
+    .lead { margin-top: 26px; max-width: 620px; font-size: 19px; color: rgba(238,240,246,.82); }
+    h2 { margin-top: 52px; padding-bottom: 12px; border-bottom: 1px solid var(--line); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+    p, li { font-size: 16px; color: rgba(238,240,246,.74); }
+    h2 + p, h2 + ul { margin-top: 14px; }
+    ul { list-style: none; }
+    li { position: relative; padding: 6px 0 6px 20px; }
+    li::before { content: ''; position: absolute; left: 2px; top: 17px; width: 6px; height: 1px; background: var(--muted); }
+    p a { color: var(--fg); border-bottom: 1px solid rgba(238,240,246,.35); }
+    .updated { margin-top: 52px; font: 500 12px/1.4 'JetBrains Mono', ui-monospace, monospace; color: var(--muted); }
+    footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 22px var(--pad); border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+    footer div { display: flex; gap: 18px; }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a href="../">Portfolio</a>
+    <a class="pill" href="mailto:yuryuryury@icloud.com">Get in touch →</a>
+  </header>
+  <main>
+    <span class="code">Privacy</span>
+    <h1>What this site records.</h1>
+    <p class="lead">This portfolio counts its visits with PostHog, to see which pages and which work get read. The count is anonymous: no cookies, nothing stored in your browser, nothing that tells who you are.</p>
+
+    <h2>Who handles it</h2>
+    <p>PostHog Inc. collects the statistics for this site. They are stored in the EU, in Frankfurt.</p>
+
+    <h2>What is recorded</h2>
+    <ul>
+      <li>the pages you view, and the page you came from (the referrer)</li>
+      <li>clicks on links and buttons, and where on the page clicks and the pointer land, for a heatmap</li>
+      <li>how far down a page you scroll and how long it stays open</li>
+      <li>browser and device type, screen size, language and time zone</li>
+      <li>how fast the page loads</li>
+    </ul>
+
+    <h2>Your IP address</h2>
+    <p>It is not stored. It is hashed together with your browser’s user agent and a salt that changes every day, only to count unique visitors per day, and then discarded.</p>
+
+    <h2>What is not done</h2>
+    <ul>
+      <li>no cookies, and nothing is saved in your browser’s storage</li>
+      <li>no session recordings</li>
+      <li>no identification: visits are not tied to a name, an account or a profile</li>
+      <li>no advertising, and the data is never sold</li>
+    </ul>
+
+    <h2>How long, and on what basis</h2>
+    <p>The statistics are kept for up to one year. The legal basis is legitimate interest (GDPR Art. 6(1)(f)): knowing which parts of this portfolio are read, with as little data as that takes.</p>
+
+    <h2>Questions</h2>
+    <p>The site is run by Yurii Fokin. Write to <a href="mailto:yuryuryury@icloud.com">yuryuryury@icloud.com</a>.</p>
+
+    <p class="updated">Updated 31 October 2026</p>
+  </main>
+  <footer>
+    <span>Portfolio · Yurii Fokin</span>
+    <div><a href="mailto:yuryuryury@icloud.com">Email</a><a href="https://www.linkedin.com/in/yuryury/" target="_blank" rel="noopener">LinkedIn</a></div>
+  </footer>
+  <script src="../assets/js/stats.js?v=1" defer></script>
+</body>
+</html>
