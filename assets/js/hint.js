@@ -3,7 +3,8 @@
 // around them. The element carries both sets of words; the device picks one:
 //   <div data-hint data-mouse="scroll to …|click anywhere" data-touch="swipe up to …|tap anywhere"></div>
 // With data-drive the words don't cycle: the page picks them with Hint.say(i), and a class of
-// is-back on the element turns the gesture the other way.
+// is-back on the element turns the gesture the other way. With data-fit the words' box takes the
+// width of the words it holds and eases to the next one's, so a centred hint stays centred on them.
 (function () {
   var el = document.querySelector('[data-hint]');
   if (!el) return;
@@ -35,11 +36,14 @@
   el.classList.add(touch ? 'is-touch' : 'is-mouse');
   el.innerHTML = '<span class="hint-g" aria-hidden="true"><i></i></span><span class="hint-t" aria-hidden="true"></span><span class="sr-only"></span>';
   var t = el.querySelector('.hint-t');
-  var sr = el.querySelector('.sr-only'), drive = el.hasAttribute('data-drive');
+  var sr = el.querySelector('.sr-only'), drive = el.hasAttribute('data-drive'), fit = el.hasAttribute('data-fit');
+  // one mono character is 1ch plus the letter-spacing; a pixel spare so the last one is never clipped
+  function size(s) { if (fit) t.style.width = 'calc(' + s.length + ' * (1ch + .02em) + 1px)'; }
+  if (fit) { t.style.overflow = 'hidden'; t.style.transition = 'width .45s cubic-bezier(.2,.8,.2,1)'; }
   sr.textContent = drive ? words[0] : words.join(' · ');
   // the verb is what to do, so it is the bright part
   function render(s) { var k = s.indexOf(' '); t.innerHTML = k < 0 ? '<b>' + s + '</b>' : '<b>' + s.slice(0, k) + '</b>' + s.slice(k); }
-  render(words[0]);
+  render(words[0]); size(words[0]);
 
   // each character runs through data glyphs and settles, left to right
   var GLYPHS = '01·:/<>+=#', run = 0;
@@ -68,7 +72,7 @@
     el: el,
     say: function (k) {
       if (k === i || !words[k]) return;
-      var from = words[i]; i = k; sr.textContent = words[k];
+      var from = words[i]; i = k; sr.textContent = words[k]; size(words[k]);
       if (reduce) render(words[k]); else decode(from, words[k]);
     }
   };
@@ -79,6 +83,6 @@
   setInterval(function () {
     if (+(cap.style.opacity || 1) < 0.1) return;
     var from = words[i]; i = (i + 1) % words.length;
-    decode(from, words[i]);
+    size(words[i]); decode(from, words[i]);
   }, 3400);
 })();

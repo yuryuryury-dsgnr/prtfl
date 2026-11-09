@@ -274,9 +274,7 @@
     var sp = Math.max(2.2, Math.sqrt((cw * chh * 4) / (mobile ? 32000 : 120000)));
     return Math.floor(cw / sp) * Math.floor(chh / sp) * 4;
   }
-  // the scroll hint rests while the page moves
-  var lastScroll = -1e9, hintAt = -1;
-  addEventListener('scroll', function () { lastScroll = performance.now(); }, { passive: true });
+  var hintAt = -1;
 
   // the column comes up out of the dark after the dive; from then on it scrolls away like a page
   function shown(stage) { return smooth((stage - 1.45) / 0.45); }
@@ -659,15 +657,17 @@
       // the closing words ride up with the planet, as one block of the page (translate: the shell owns transform)
       var capEnd = this.capEnd || (this.capEnd = document.querySelector('.cap-end'));
       if (capEnd) css(capEnd, 'translate', '0 ' + (stage > END ? Math.max(0, (camY - this.yEnd) / 1.5) : 0).toFixed(1) + 'px');
-      // the scroll hint: at the top, on the way, at the bottom; it shows once the page is still, and not
-      // over the cases where they fill a narrow screen
+      // the scroll hint: at the top, on the way, at the bottom; on screen the whole way, but not over the
+      // cases, where it would only pull the eye off them
       var hint = window.Hint;
       if (hint) {
         var at = stage < 0.05 ? 0 : stage > LAST - 0.02 ? 2 : 1;
         if (at !== hintAt) { hintAt = at; hint.say(at); hint.el.classList.toggle('is-back', at === 2); }
-        // and not where it would sit on the skills or the cases, where they fill a narrow or a short screen
-        var overCases = W < 1000 && stage > 1.6 && stage < END + 0.4, overSkills = H < 560 && Math.abs(stage - 1) < 0.45;
-        css(hint.el, 'opacity', performance.now() - lastScroll > 900 && env.go < 0 && !overCases && !overSkills ? '1' : '0');
+        // and not where it would sit on the skills, where they fill a short screen, nor on a phone on its
+        // side at the end, where the closing words come down to the bottom edge
+        var overCases = stage > 1.6 && stage < END + 0.4, overSkills = H < 560 && Math.abs(stage - 1) < 0.45,
+          overEnd = H < 500 && stage > END;
+        css(hint.el, 'opacity', env.go < 0 && !overCases && !overSkills && !overEnd ? '1' : '0');
       }
       // the section title is the top of the column: it scrolls away with it, fading out under the bar
       var title = this.title || (this.title = document.querySelector('.work-title'));
