@@ -37,14 +37,40 @@
   function goTo(el) { if (lenis) lenis.scrollTo(el, { offset: -20, duration: reduce ? 0 : 1.4 }); else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }
 
   var sections = [].slice.call(document.querySelectorAll('[data-scene]'));
+  var chapters = sections.filter(function (s) { return s.dataset.title; }).map(function (s) {
+    return { id: s.id, n: s.querySelector('.num').textContent.slice(0, 2), t: s.dataset.title };
+  });
   var rail = document.getElementById('rail');
-  rail.innerHTML = sections.filter(function (s) { return s.dataset.title; }).map(function (s) {
-    return '<a href="#' + s.id + '" data-id="' + s.id + '">' + s.querySelector('.num').textContent.slice(0, 2) + ' <span>' + s.dataset.title + '</span></a>';
-  }).join('');
+  rail.innerHTML = chapters.map(function (c) { return '<a href="#' + c.id + '" data-id="' + c.id + '">' + c.n + ' <span>' + c.t + '</span></a>'; }).join('');
   rail.addEventListener('click', function (e) {
     var a = e.target.closest('a'); if (!a) return;
     e.preventDefault(); goTo(document.getElementById(a.dataset.id));
   });
+
+  // ——— contents: a pill at the bottom names the chapter in hand and opens on all of them, any one a tap away ———
+  var toc = document.createElement('div');
+  toc.className = 'toc';
+  toc.innerHTML = '<nav class="toc-menu" id="tocMenu" aria-label="Contents">' +
+    chapters.map(function (c) { return '<a href="#' + c.id + '" data-id="' + c.id + '"><i>' + c.n + '</i>' + c.t + '</a>'; }).join('') + '</nav>' +
+    '<button class="toc-btn" type="button" aria-expanded="false" aria-controls="tocMenu"><span class="toc-n"></span><span class="toc-t">Contents</span>' +
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>';
+  document.body.appendChild(toc);
+  var tocBtn = toc.querySelector('.toc-btn'), tocN = toc.querySelector('.toc-n'), tocT = toc.querySelector('.toc-t');
+  var tocLinks = [].slice.call(toc.querySelectorAll('.toc-menu a'));
+  function tocOpen(on) { toc.classList.toggle('open', on); tocBtn.setAttribute('aria-expanded', on ? 'true' : 'false'); }
+  tocBtn.addEventListener('click', function () { tocOpen(!toc.classList.contains('open')); });
+  toc.querySelector('.toc-menu').addEventListener('click', function (e) {
+    var a = e.target.closest('a'); if (!a) return;
+    e.preventDefault(); tocOpen(false); goTo(document.getElementById(a.dataset.id));
+  });
+  document.addEventListener('click', function (e) { if (!toc.contains(e.target)) tocOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && toc.classList.contains('open')) { tocOpen(false); tocBtn.focus(); } });
+  // the chapter in hand (k counts the hero too: above the first chapter the pill just says Contents)
+  function tocShow(k) {
+    var c = chapters[k - 1];
+    tocN.textContent = c ? c.n : ''; tocT.textContent = c ? c.t : 'Contents';
+    for (var i = 0; i < tocLinks.length; i++) tocLinks[i].classList.toggle('on', i === k - 1);
+  }
 
   // ——— reveal ———
   var io = new IntersectionObserver(function (es) {
@@ -564,6 +590,7 @@
     if (solid !== env.solid) { nav.classList.toggle('solid', solid); env.solid = solid; }
     if (k !== env.k) {
       for (i = 0; i < railLinks.length; i++) { var cur = i === k - 1; railLinks[i].classList.toggle('on', cur); if (cur) railLinks[i].setAttribute('aria-current', 'true'); else railLinks[i].removeAttribute('aria-current'); }
+      tocShow(k);
       env.k = k;
     }
 
