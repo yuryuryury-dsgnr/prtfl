@@ -317,18 +317,20 @@ ul.plain li:first-child { border-top: 0; }
 .cyc li:nth-child(3)::after { content: '←'; right: 100%; top: 50%; width: 26px; text-align: center; transform: translateY(-50%); }
 .cyc li:nth-child(4)::after { content: '↑'; bottom: 100%; left: 50%; height: 26px; line-height: 26px; transform: translateX(-50%); }
 .cyc li.on { border-color: rgba(233,236,242,.45); background: rgba(233,236,242,.06); color: rgba(233,236,242,.85); }
-/* a longer process: numbered steps top to bottom, lit the same way */
-.loop { list-style: none; counter-reset: loop; display: grid; gap: 8px; margin-top: 14px; }
-.loop li { counter-increment: loop; display: grid; grid-template-columns: 26px 128px 1fr; align-items: baseline; column-gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; font-size: 13.5px; color: var(--muted); transition: border-color .5s, background .5s, color .5s; }
-.loop li::before { content: counter(loop, decimal-leading-zero); font: 500 11px/1.4 var(--mono); }
-.loop li b { font-size: 15px; font-weight: 600; color: var(--fg); }
-/* on a phone the step's name sits over its line */
+/* a longer process: its steps in one numbered chain, back round to the first; the step in hand lit the same way */
+.loop { list-style: none; counter-reset: loop; display: flex; flex-wrap: wrap; align-items: center; row-gap: 10px; margin-top: 14px; }
+.loop li { counter-increment: loop; display: flex; align-items: center; }
+.loop li b { display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; font-weight: 500; white-space: nowrap; transition: border-color .5s, background .5s; }
+.loop li b::before { content: counter(loop, decimal-leading-zero); font: 500 10.5px/1 var(--mono); color: var(--muted); }
+.loop li::after { content: '→'; margin: 0 8px; font-size: 13px; color: var(--muted); }
+.loop li:last-child::after { content: '↺'; }
+.loop li.on b { border-color: rgba(233,236,242,.45); background: rgba(233,236,242,.06); }
+/* on a phone one step fits a row, so the chain runs down */
 @media (max-width: 860px) {
-  .loop li { grid-template-columns: 26px 1fr; }
-  .loop li::before { grid-row: span 2; }
-  .loop li b { margin-bottom: 2px; }
+  .loop, .loop li { flex-direction: column; align-items: flex-start; }
+  .loop { row-gap: 0; }
+  .loop li::after { content: '↓'; margin: 5px 0 5px 22px; line-height: 1; }
 }
-.loop li.on { border-color: rgba(233,236,242,.45); background: rgba(233,236,242,.06); color: rgba(233,236,242,.85); }
 
 /* the live product, one tap away */
 .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
