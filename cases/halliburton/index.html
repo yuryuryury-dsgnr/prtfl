@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="../../assets/images/halliburton/halliburton-hero.webp">
-  <link rel="stylesheet" href="../../assets/css/case.css?v=11">
+  <link rel="stylesheet" href="../../assets/css/case.css?v=12">
   <script src="../../assets/js/handoff.js?v=7"></script>
   <script>document.documentElement.classList.add('js'); Handoff.expect();</script>
 </head>
@@ -328,26 +328,29 @@
     <section class="sec" data-scene="8" id="postlaunch" data-title="Post-launch">
       <div class="col">
         <span class="num rv">08</span>
-        <h2 class="rv">Post-launch Research</h2>
+        <h2 class="rv">Post-launch Analytics</h2>
+        <p class="lead rv">After launch I set up product analytics in PostHog — funnels like Amplitude and session replays like Hotjar, in one tool. Every change went the same way: find where people drop off, learn why, test the fix with users, then prove it with an A/B test.</p>
         <div class="stack hx">
-          <div class="card vps rv"><span class="eyebrow">What we'll measure</span><dl class="vps">
-            <div><dt>Adoption</dt><dd>Active users, onboarding completion, return visits.</dd></div>
-            <div><dt>Task success</dt><dd>Time-to-find, search-to-access, first-attempt access.</dd></div>
-            <div><dt>Satisfaction</dt><dd>Micro-surveys and interviews triggered in-product.</dd></div>
-            <div><dt>Pain points</dt><dd>Friction from session replays, tickets, heatmaps.</dd></div>
+          <div class="card vps rv"><span class="eyebrow">Metrics we improved</span><dl class="vps">
+            <div><dt>Sign-up conversion</dt><dd>From the first visit to a completed sign-up.</dd></div>
+            <div><dt>Activation rate</dt><dd>New users who reach the first value: a data product found and access requested.</dd></div>
+            <div><dt>Retention / churn</dt><dd>Who comes back week after week, and where people drop off for good.</dd></div>
           </dl></div>
-          <div class="card vps rv"><span class="eyebrow">Modern research stack</span><dl class="vps">
-            <div><dt>Analytics copilot</dt><dd>Natural-language queries across usage data.</dd></div>
-            <div><dt>AI session replay</dt><dd>LLM insights instead of hundreds of recordings.</dd></div>
-            <div><dt>Continuous interviews</dt><dd>Weekly short calls, built in, not one-off studies.</dd></div>
-            <div><dt>Feedback synthesis</dt><dd>Surveys, tickets, and interviews themed by LLM.</dd></div>
+          <div class="card vps rv"><span class="eyebrow">Tools</span><dl class="vps">
+            <div><dt>PostHog · tracking plan</dt><dd>Events from a tracking plan, built into funnels, cohorts and retention.</dd></div>
+            <div><dt>In-app surveys</dt><dd>A short survey pops up when someone leaves mid-flow.</dd></div>
+            <div><dt>Maze</dt><dd>Records the moderated usability tests: clicks, mouse paths, misclicks.</dd></div>
+            <div><dt>A/B tests</dt><dd>Half of the users get the new design, for about a month.</dd></div>
           </dl></div>
-          <div class="card rv"><span class="eyebrow">Feedback-driven iteration</span>
-            <ol class="cyc" id="cyc">
-              <li><b>Listen</b>Surveys, replays, interviews, support tickets.</li>
-              <li><b>Synthesize</b>Theme findings, prioritize by impact.</li>
-              <li><b>Ship</b>Fix the worst friction in short cycles.</li>
-              <li><b>Validate</b>Re-measure to confirm the metric moved.</li>
+          <div class="card rv"><span class="eyebrow">How a metric gets better</span>
+            <ol class="loop" id="cyc">
+              <li><b>Pick the metric</b>Sign-up, activation or retention — one at a time.</li>
+              <li><b>Find where</b>The tracking plan’s events in PostHog show where the funnel drops off.</li>
+              <li><b>Find why</b>Usability tests, and a survey for those who leave.</li>
+              <li><b>Hypothesis</b>What change should move the metric.</li>
+              <li><b>Design</b>The fix, tested with users before it ships.</li>
+              <li><b>A/B test</b>50% of users, for about a month.</li>
+              <li><b>Measure</b>The result against the goal, with guardrail metrics, so nothing else got worse.</li>
             </ol></div>
         </div>
       </div>
