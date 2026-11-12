@@ -25,17 +25,17 @@
   ];
   var N = CASES.length;
   var PALETTE = ['#F2D3A0', '#E7A96B', '#C96B4B', '#8E3B46', '#4B3A5C', '#2F5D7C', '#3E9C9C', '#9ED8C8'];
-  // the skills, one to a layer, from what shows on the surface down to what holds it up (words from the CV).
+  // the skills, one to a layer, top to bottom (words from the CV).
   // They hang in one column on the block's left: pinned at the same x, the layers' waves move them all
   // alike, so they stay in order and never run into each other
   var LABELS = [
-    { layer: 0, text: 'Wireframes and mockups', note: 'Lo-fi & hi-fi prototypes' },
-    { layer: 1, text: 'Design system architecture', note: 'Variables, tokens, components, layouts' },
-    { layer: 2, text: 'Web and app development', note: 'Shipped to the App Store with Claude Code' },
-    { layer: 3, text: 'Discovery & Research', note: 'Interviews, usability testing, CJM, IA' },
-    { layer: 4, text: 'Market analysis', note: 'Competitors, comparative analysis, SWOT' },
-    { layer: 5, text: 'Design team management', note: 'Hiring, mentoring, 1-to-1s, Scrum' },
-    { layer: 6, text: 'Analytics', note: 'Amplitude, Hotjar, PostHog, Maze' }
+    { layer: 0, text: 'Discovery & Research', note: 'Interviews, usability testing, CJM, IA' },
+    { layer: 1, text: 'Market analysis', note: 'Competitors, comparative analysis, SWOT' },
+    { layer: 2, text: 'Wireframes and mockups', note: 'Lo-fi & hi-fi prototypes' },
+    { layer: 3, text: 'Design system architecture', note: 'Variables, tokens, components, layouts' },
+    { layer: 4, text: 'Design team management', note: 'Hiring, mentoring, 1-to-1s, Scrum' },
+    { layer: 5, text: 'Web and app development', note: 'Shipped to the App Store with Claude Code' },
+    { layer: 6, text: 'Analytics', note: 'Amplitude, Mixpanel, Hotjar, PostHog, Maze' }
   ], LABEL_X = -0.42;
   // stages: 0 hello · 1 layers · 2 the top of the work · 3 its bottom · 4 contact.
   // Between 2 and 3 the column scrolls like a page: no stops, nothing settles there
