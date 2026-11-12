@@ -35,7 +35,7 @@
     { layer: 3, text: 'Discovery & Research', note: 'Interviews, usability testing, CJM, IA' },
     { layer: 4, text: 'Market analysis', note: 'Competitors, comparative analysis, SWOT' },
     { layer: 5, text: 'Design team management', note: 'Hiring, mentoring, 1-to-1s, Scrum' },
-    { layer: 6, text: 'Analytics', note: 'Google Analytics, RevenueCat' }
+    { layer: 6, text: 'Analytics', note: 'Amplitude, Hotjar, PostHog, Maze' }
   ], LABEL_X = -0.42;
   // stages: 0 hello · 1 layers · 2 the top of the work · 3 its bottom · 4 contact.
   // Between 2 and 3 the column scrolls like a page: no stops, nothing settles there
