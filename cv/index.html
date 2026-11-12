@@ -205,6 +205,10 @@
     }
     .cv-contact-value svg { flex: 0 0 auto; width: 1em; height: 1em; opacity: 0.5; }
     .cv-contact-value a { text-decoration: underline; text-underline-offset: 0.15em; }
+    /* Location sits in the card's top-right corner, level with the name */
+    .cv-head { position: relative; }
+    .cv-contacts .cv-loc { position: absolute; top: var(--card-pad); right: var(--card-pad); text-align: right; }
+    .cv-loc .cv-contact-value { justify-content: flex-end; }
 
     /* ——— EXPERIENCE ——— */
     .cv-job + .cv-job { margin-top: 4.6mm; }
@@ -574,11 +578,11 @@
                     <a href="https://yuryury.com" target="_blank" rel="noopener">yuryury.com</a>
                   </span>
                 </li>
-                <li>
+                <li class="cv-loc">
                   <span class="cv-contact-label">Location</span>
                   <span class="cv-contact-value">
                     <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a5.5 5.5 0 0 0-5.5 5.5C2.5 9.6 8 16 8 16s5.5-6.4 5.5-10.5A5.5 5.5 0 0 0 8 0Zm0 7.8a2.3 2.3 0 1 1 0-4.6 2.3 2.3 0 0 1 0 4.6Z"/></svg>
-                    Batumi, Georgia · open to EU/US remote
+                    Batumi, Georgia
                   </span>
                 </li>
               </ul>
