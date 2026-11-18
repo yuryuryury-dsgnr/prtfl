@@ -16,9 +16,10 @@
 #     's/og-default-v2\.png/og-default-v3.png/'
 #
 # The geometry was matched to the hand-drawn original by sampling its pixels:
-# ground #F8F7F4, an 80px side margin, the eyebrow's cap-top at y=76, the
-# headline at y=195, the subtitle at y=295, the pill text at y=415 and the
-# bottom row at y=538. Check a redraw against those numbers, not by eye.
+# an 80px side margin, the eyebrow's cap-top at y=76, the headline at y=195,
+# the subtitle at y=295 and the bottom row at y=538. Since v3 the card stands on
+# the site's night (#07080B) with its star dust, and the subtitle keeps to one
+# line, so the pills sit at y=387. Check a redraw against those numbers, not by eye.
 
 set -e
 
